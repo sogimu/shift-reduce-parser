@@ -1,10 +1,5 @@
+#include "catch2/catch_all.hpp"
 
-#include "doctest.h"
-
-//#include "libs/nlohmann_json/json.hpp"
-//#include "enums.h"
-//#include "lexical_tokens.h"
-//#include "syntax_tree.h"
 #include "utils/utils.h"
 
 using namespace std;
