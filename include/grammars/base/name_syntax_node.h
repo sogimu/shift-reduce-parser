@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
+// #include <vector>
 #include <string>
 
-#include "enums.h"
+// #include "enums.h"
 #include "i_syntax_node.h"
 
 class ISyntaxNodeVisitor;
@@ -16,6 +16,8 @@ public:
     NameSyntaxNode(const std::string& value);
 
     void accept(const std::shared_ptr<ISyntaxNodeVisitor>& visitor) override;
+
+    bool operator==(const ISyntaxNodeSP& node) const override;
 
     std::string value() const;
 

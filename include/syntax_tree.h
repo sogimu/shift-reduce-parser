@@ -3,11 +3,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <set>
+// #include <set>
 #include <memory>
-#include <stack>
+// #include <stack>
 #include <map>
-#include <iomanip>
+// #include <iomanip>
 #include <functional>
 #include <optional>
 
@@ -37,6 +37,7 @@
 #include "grammars/scope_grammar.h"
 #include "grammars/if_expression_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
+#include "syntax_node_empty_visitor.h"
 
 //#include "grammars/f/e/sum/sum_grammar.h"
 //#include "grammars/f/e/diff/diff_grammar.h"
@@ -255,7 +256,26 @@ public:
     {
         bool result = true;
         const auto& our_range = DfsRange<ISyntaxNodeSP>{std::vector<ISyntaxNodeSP> {root()} };
+        // iterative_dfs(root(), [](const auto& node)->bool
+        //               {
+        //                 SyntaxNodeEmptyVisitor::Handlers handlers;
+        //                 handlers.default_handler = [](const ISyntaxNodeSP& node)
+        //                 {
+        //                   std::cout << "Tree A: " << node->text() << std::endl;
+        //                 };
+        //                 const auto& visitor = std::make_shared<SyntaxNodeEmptyVisitor>( handlers );
+        //                 node->accept(visitor);
+        //                 return false;
+        //               });
+        // for(const auto& i : our_range)
+        // {
+        //   std::cout << "Tree A: " << i->text() << std::endl;
+        // }
         const auto& their_range = DfsRange<ISyntaxNodeSP>{std::vector<ISyntaxNodeSP> {syntax_tree.root()} };
+        // for(const auto& i : their_range)
+        // {
+        //   std::cout << "Tree B: " << i->text() << std::endl;
+        // }
         zip_container c(our_range, their_range);
         for( const auto& [a, b] : c)
         {
@@ -264,7 +284,7 @@ public:
                 result = false;
                 break;
             }
-            if( a.value()->text() != b.value()->text() )
+            if( a.value() != b.value() )
             {
                 result = false;
                 break;

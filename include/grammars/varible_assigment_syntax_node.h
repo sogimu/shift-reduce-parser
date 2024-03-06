@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
+// #include <vector>
 #include <string>
 
-#include "enums.h"
+// #include "enums.h"
 #include "i_syntax_node.h"
 
 class ISyntaxNodeVisitor;

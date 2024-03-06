@@ -1,0 +1,27 @@
+﻿---
+BasedOnStyle: Microsoft
+AccessModifierOffset: '4'
+AlignEscapedNewlines: Left
+AllowAllConstructorInitializersOnNextLine: 'true'
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLambdasOnASingleLine: Inline
+AlwaysBreakTemplateDeclarations: 'Yes'
+BinPackArguments: 'false'
+BinPackParameters: 'false'
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
+DerivePointerAlignment: 'false'
+FixNamespaceComments: 'true'
+IncludeBlocks: Regroup
+IndentCaseLabels: 'false'
+IndentPPDirectives: AfterHash
+IndentWidth: '4'
+Language: Cpp
+NamespaceIndentation: All
+PointerAlignment: Left
+SpaceBeforeCtorInitializerColon: 'false'
+SpaceInEmptyParentheses: 'false'
+SpacesInParentheses: 'true'
+TabWidth: '4'
+UseTab: Never

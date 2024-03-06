@@ -1,16 +1,17 @@
 #pragma once
 
-#include <iostream>
+// #include <iostream>
 #include <vector>
 #include <string>
-#include <set>
+// #include <set>
 #include <memory>
-#include <stack>
-#include <map>
-#include <iomanip>
-#include <functional>
-#include <optional>
+// #include <stack>
+// #include <map>
+// #include <iomanip>
+// #include <functional>
+// #include <optional>
 
+#include "enums.h"
 #include "lexical_tokens.h"
 #include "i_feature.h"
 
@@ -33,6 +34,11 @@ struct ISyntaxNode
     };
 
     virtual void accept(const std::shared_ptr<ISyntaxNodeVisitor>& visitor) = 0;
+
+    Token_Type type() const
+    {
+      return mType;
+    }
 
     const std::string& text() const
     {
@@ -63,6 +69,11 @@ struct ISyntaxNode
         return mChildren;
     }
 
+    virtual bool operator==(const ISyntaxNodeSP& node) const
+    {
+      return true;
+    }
+
     auto begin()
     {
         return mChildren.begin();
@@ -88,3 +99,9 @@ private:
     std::string mText;
     std::vector<ISyntaxNodeSP> mChildren;
 };
+
+
+inline bool operator==(const ISyntaxNodeSP& a, const ISyntaxNodeSP& node)
+{
+  return true;
+}
