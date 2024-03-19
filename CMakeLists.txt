@@ -98,11 +98,12 @@ set(SOURCES
 #    src/grammars/f.cpp
 #    src/grammars/t.cpp
 #    src/grammars/p.cpp
-    main.cpp
+    # main.cpp
 )
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
+add_subdirectory ("parser")
 add_subdirectory ("tests/unit_tests")
 
 target_include_directories(${PROJECT_NAME} PUBLIC "include" "include/grammars")

@@ -274,134 +274,84 @@ class SyntaxTree
             [&n, &s]( const ISyntaxNodeSP& node ) -> bool {
                 SyntaxNodeEmptyVisitor::Handlers handlers;
                 handlers.bol_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "BOL"
-                      << "}";
+                    s << "{" << "BOL" << "}";
                 };
                 handlers.plus_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "PLUS"
-                      << "}";
+                    s << "{" << "PLUS" << "}";
                 };
                 handlers.minus_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "MINUS"
-                      << "}";
+                    s << "{" << "MINUS" << "}";
                 };
                 handlers.number_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "NUMBER"
-                      << "}";
+                    s << "{" << "NUMBER" << "}";
                 };
                 handlers.f_syntax_node = [&s]( const FSyntaxNodeSP& node ) {
-                    s << "{"
-                      << "F" << '(' << std::to_string( node->value() ) << ')' << "}";
+                    s << "{" << "F" << '(' << std::to_string( node->value() ) << ')' << "}";
                 };
                 handlers.sum_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "SUM"
-                      << "}";
+                    s << "{" << "SUM" << "}";
                 };
                 handlers.diff_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "DIFF"
-                      << "}";
+                    s << "{" << "DIFF" << "}";
                 };
                 handlers.e_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "E"
-                      << "}";
+                    s << "{" << "E" << "}";
                 };
                 handlers.eol_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "EOL"
-                      << "}";
+                    s << "{" << "EOL" << "}";
                 };
                 handlers.semicolon_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "SEMICOLON"
-                      << "}";
+                    s << "{" << "SEMICOLON" << "}";
                 };
                 handlers.expression_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "EXPRESSION"
-                      << "}";
+                    s << "{" << "EXPRESSION" << "}";
                 };
                 handlers.scope_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "SCOPE"
-                      << "}";
+                    s << "{" << "SCOPE" << "}";
                 };
                 handlers.open_curly_bracket_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "OPEN_CURLY_BRACKET"
-                      << "}";
+                    s << "{" << "OPEN_CURLY_BRACKET" << "}";
                 };
                 handlers.close_curly_bracket_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "CLOSE_CURLY_BRACKET"
-                      << "}";
+                    s << "{" << "CLOSE_CURLY_BRACKET" << "}";
                 };
                 handlers.computational_expression_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "COMPUTATIONAL_EXPRESSION"
-                      << "}";
+                    s << "{" << "COMPUTATIONAL_EXPRESSION" << "}";
                 };
                 handlers.conditional_expression_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "CONDITIONAL_EXPRESSION"
-                      << "}";
+                    s << "{" << "CONDITIONAL_EXPRESSION" << "}";
                 };
                 handlers.print_expression_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "PRINT_EXPRESSION"
-                      << "}";
+                    s << "{" << "PRINT_EXPRESSION" << "}";
                 };
                 handlers.equal_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "EQUAL"
-                      << "}";
+                    s << "{" << "EQUAL" << "}";
                 };
                 handlers.less_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "LESS"
-                      << "}";
+                    s << "{" << "LESS" << "}";
                 };
                 handlers.more_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "MORE"
-                      << "}";
+                    s << "{" << "MORE" << "}";
                 };
                 handlers.if_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "IF"
-                      << "}";
+                    s << "{" << "IF" << "}";
                 };
                 handlers.if_expression_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "IF_EXPRESSION"
-                      << "}";
+                    s << "{" << "IF_EXPRESSION" << "}";
                 };
                 handlers.print_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "PRINT"
-                      << "}";
+                    s << "{" << "PRINT" << "}";
                 };
                 handlers.print_expression_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "PRINT_EXPRESSION"
-                      << "}";
+                    s << "{" << "PRINT_EXPRESSION" << "}";
                 };
 
                 handlers.varible_assigment_syntax_node = [&s]( const ISyntaxNodeSP& ) {
-                    s << "{"
-                      << "VARIBLE ASSIGMENT"
-                      << "}";
+                    s << "{" << "VARIBLE ASSIGMENT" << "}";
                 };
 
                 handlers.name_syntax_node = [&s]( const NameSyntaxNodeSP& node ) {
-                    s << "{"
-                      << "NAME" << '(' << node->value() << ')' << "}";
+                    s << "{" << "NAME" << '(' << node->value() << ')' << "}";
                 };
                 for ( int i = 0; i < n; ++i )
                     s << "   ";

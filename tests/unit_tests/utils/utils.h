@@ -136,8 +136,8 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                             ISyntaxNodeSP argument1 = std::get<ISyntaxNodeSP>( arguments.back() );
                             arguments.pop_back();
                             const auto& e = std::make_shared<VaribleAssigmentSyntaxNode>();
-                            e->Add( argument0 );
                             e->Add( argument1 );
+                            e->Add( argument0 );
                             arguments.push_back( e );
                         }
                         else if ( arg == "ExpressionSyntaxNode" )

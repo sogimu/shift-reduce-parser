@@ -14,8 +14,8 @@ VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& 
                                                         const ComputationalExpressionSyntaxNodeSP& node ):
     ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT }
 {
-    Add( node );
     Add( name );
+    Add( node );
 }
 
 std::string VaribleAssigmentSyntaxNode::name() const
