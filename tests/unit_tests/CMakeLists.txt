@@ -5,12 +5,12 @@ project(unit_tests VERSION 0.0.1 LANGUAGES CXX)
 add_subdirectory(libs/googletest)
 
 add_executable(unit_tests
-    syntax_tree_test.cpp
-    # dfs_pre_order_range_test.cpp
-    create_syntax_node_tree_test.cpp
-    main.cpp
+    src/syntax_tree_test.cpp
+    # src/dfs_pre_order_range_test.cpp
+    src/create_syntax_node_tree_test.cpp
+    src/main.cpp
 )
 # target_link_libraries(unit_tests PRIVATE shift-reduce-parser Catch2::Catch2)
 target_link_libraries(unit_tests PRIVATE shift-reduce-parser GTest::gtest_main)
-# target_include_directories(unit_tests PUBLIC "libs/ doctest/include")
+target_include_directories(unit_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_features(unit_tests PRIVATE cxx_std_20)

@@ -24,7 +24,8 @@ class FSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this<FSyn
 
     void accept( const std::shared_ptr<ISyntaxNodeVisitor>& visitor ) override;
 
-    bool operator==(const ISyntaxNodeSP& node) const override;
+    bool compare( const ISyntaxNode& node ) const override;
+
         private:
     int mValue;
 };

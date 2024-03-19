@@ -8,22 +8,20 @@
 
 class ISyntaxNodeVisitor;
 
-class NameSyntaxNode :
-    public ISyntaxNode,
-    public std::enable_shared_from_this<NameSyntaxNode>
+class NameSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this<NameSyntaxNode>
 {
-public:
-    NameSyntaxNode(const std::string& value);
+        public:
+    NameSyntaxNode( const std::string& value );
 
-    void accept(const std::shared_ptr<ISyntaxNodeVisitor>& visitor) override;
+    void accept( const std::shared_ptr<ISyntaxNodeVisitor>& visitor ) override;
 
-    bool operator==(const ISyntaxNodeSP& node) const override;
+    bool compare( const ISyntaxNode& node ) const override;
 
     std::string value() const;
 
-private:
+        private:
     std::string mValue;
-
 };
 
 using NameSyntaxNodeSP = std::shared_ptr<NameSyntaxNode>;
+using NameSyntaxNodeCSP = std::shared_ptr<const NameSyntaxNode>;

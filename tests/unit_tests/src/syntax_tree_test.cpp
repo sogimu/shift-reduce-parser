@@ -12,7 +12,7 @@
 using namespace std;
 
 // Demonstrate some basic assertions.
-TEST( Styntax_tree, BasicAssertions )
+TEST( BasicAssertions, Styntax_tree )
 {
     std::vector<LexicalTokens::LexicalToken> tokens{ { "{", Token_Type::OPEN_CURLY_BRACKET },
                                                      { "m", Token_Type::NAME },
@@ -23,7 +23,7 @@ TEST( Styntax_tree, BasicAssertions )
 
     LexicalTokens lexical_tokens{ tokens };
     SyntaxTree expected_syntax_tree( lexical_tokens );
-    
+
     const auto& syntax_tree = CreateSyntaxNodeTree( R"""(
                 {
                   "ScopeSyntaxNode": [
@@ -40,7 +40,7 @@ TEST( Styntax_tree, BasicAssertions )
                               "ComputationalExpressionSyntaxNode": [
                                 {
                                   "FSyntaxNode": [
-                                    41
+                                    42
                                   ]
                                 }
                               ]
@@ -52,7 +52,7 @@ TEST( Styntax_tree, BasicAssertions )
                   ]
                 }
                 )""" );
-    
+
     EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
