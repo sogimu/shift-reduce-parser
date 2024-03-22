@@ -9,15 +9,18 @@
 #include <vector>
 
 PrintExpressionSyntaxNode::PrintExpressionSyntaxNode(
-    const ComputationalExpressionSyntaxNodeSP& computational_expression ):
-    ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
+   const ComputationalExpressionSyntaxNodeSP& computational_expression )
+   : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
 {
-    Add( computational_expression );
+   Add( computational_expression );
 }
 
-void PrintExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor ) { visitor->visit( shared_from_this() ); }
+void PrintExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+{
+   visitor->visit( shared_from_this() );
+}
 
 ComputationalExpressionSyntaxNodeSP PrintExpressionSyntaxNode::computational_expression() const
 {
-    return std::dynamic_pointer_cast<ComputationalExpressionSyntaxNode>( this->operator[]( 0 ) );
+   return std::dynamic_pointer_cast< ComputationalExpressionSyntaxNode >( this->operator[]( 0 ) );
 }

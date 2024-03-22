@@ -7,4 +7,7 @@
 #include <string>
 #include <vector>
 
-void PlusSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor ) { visitor->visit( shared_from_this() ); }
+void PlusSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+{
+   visitor->visit( shared_from_this() );
+}

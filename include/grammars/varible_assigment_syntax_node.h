@@ -9,23 +9,23 @@
 class ISyntaxNodeVisitor;
 
 class NameSyntaxNode;
-using NameSyntaxNodeSP = std::shared_ptr<NameSyntaxNode>;
+using NameSyntaxNodeSP = std::shared_ptr< NameSyntaxNode >;
 
 class ComputationalExpressionSyntaxNode;
-using ComputationalExpressionSyntaxNodeSP = std::shared_ptr<ComputationalExpressionSyntaxNode>;
+using ComputationalExpressionSyntaxNodeSP = std::shared_ptr< ComputationalExpressionSyntaxNode >;
 
-class VaribleAssigmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this<VaribleAssigmentSyntaxNode>
+class VaribleAssigmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< VaribleAssigmentSyntaxNode >
 {
-        public:
-    VaribleAssigmentSyntaxNode() = default;
-    VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node );
+public:
+   VaribleAssigmentSyntaxNode() = default;
+   VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node );
 
-    std::string name() const;
-    ComputationalExpressionSyntaxNodeSP computational_expression() const;
+   std::string name() const;
+   ComputationalExpressionSyntaxNodeSP computational_expression() const;
 
-    void accept( const std::shared_ptr<ISyntaxNodeVisitor>& visitor ) override;
-    bool compare( const ISyntaxNode& node ) const override;
+   void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
+   bool compare( const ISyntaxNode& node ) const override;
 };
 
-using VaribleAssigmentSyntaxNodeSP = std::shared_ptr<VaribleAssigmentSyntaxNode>;
-using VaribleAssigmentSyntaxNodeCSP = std::shared_ptr<const VaribleAssigmentSyntaxNode>;
+using VaribleAssigmentSyntaxNodeSP = std::shared_ptr< VaribleAssigmentSyntaxNode >;
+using VaribleAssigmentSyntaxNodeCSP = std::shared_ptr< const VaribleAssigmentSyntaxNode >;

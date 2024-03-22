@@ -1,6 +1,6 @@
 #include "syntax_tree.h"
 
-//SyntaxTree::SyntaxTree()
+// SyntaxTree::SyntaxTree()
 //{
 
 //}

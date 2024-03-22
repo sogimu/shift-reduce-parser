@@ -1,36 +1,37 @@
 #pragma once
 
-#include <vector>
-
 #include "enums.h"
-#include "i_grammar.h"
 #include "expression_syntax_node.h"
+#include "i_grammar.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
+
+#include <vector>
 
 class Scope : public IGrammar
 {
 public:
-    Scope()
-    {
-        enum class State
-        {
-            START,
-            FINISH,
-            ERROR,
-            BOL,
-            EOL,
-            OPEN_CURLY_BRACKET,
-            EXPRESSION,
-            CLOSE_CURLY_BRACKET,
-            SCOPE
-        };
+   Scope()
+   {
+      enum class State
+      {
+         START,
+         FINISH,
+         ERROR,
+         BOL,
+         EOL,
+         OPEN_CURLY_BRACKET,
+         EXPRESSION,
+         CLOSE_CURLY_BRACKET,
+         SCOPE
+      };
 
-        // OPEN_CURLY_BRACKET EXPRESSION+ CLOSE_CURLY_BRACKET
-        mProductions.emplace_back([this](const Stack& stack) -> std::optional<Plan>
-        {
+      // OPEN_CURLY_BRACKET EXPRESSION+ CLOSE_CURLY_BRACKET
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
             OpenCurlyBracketSyntaxNodeSP open_curly_bracket;
-            std::vector<ISyntaxNodeSP> expressions;
+            std::vector< ISyntaxNodeSP > expressions;
             CloseCurlyBracketSyntaxNodeSP close_curly_bracket;
 
             bool is_open_curly_bracket_found = false;
@@ -38,123 +39,123 @@ public:
             size_t distance_between_open_close_curly_bracket = 0;
 
             SyntaxNodeEmptyVisitor::Handlers close_curly_bracket_handler;
-            close_curly_bracket_handler.close_curly_bracket_syntax_node = [&is_close_curly_bracket_found, &is_open_curly_bracket_found, &distance_between_open_close_curly_bracket, &stack](const CloseCurlyBracketSyntaxNodeSP& node)
-            {
-                is_close_curly_bracket_found = true;
-            };
-            const auto& close_curly_bracket_visitor = std::make_shared<SyntaxNodeEmptyVisitor>( close_curly_bracket_handler );
-            (*stack.rbegin())->accept(close_curly_bracket_visitor);
+            close_curly_bracket_handler.close_curly_bracket_syntax_node =
+               [ &is_close_curly_bracket_found, &is_open_curly_bracket_found,
+                 &distance_between_open_close_curly_bracket, &stack ]( const CloseCurlyBracketSyntaxNodeSP& node )
+            { is_close_curly_bracket_found = true; };
+            const auto& close_curly_bracket_visitor =
+               std::make_shared< SyntaxNodeEmptyVisitor >( close_curly_bracket_handler );
+            ( *stack.rbegin() )->accept( close_curly_bracket_visitor );
 
             if( !is_close_curly_bracket_found )
-                return {};
+               return {};
 
             SyntaxNodeEmptyVisitor::Handlers open_curly_bracket_handler;
-            for( auto it=stack.rbegin(); it!=stack.rend(); ++it)
+            for( auto it = stack.rbegin(); it != stack.rend(); ++it )
             {
-                open_curly_bracket_handler.open_curly_bracket_syntax_node = [&is_open_curly_bracket_found](const OpenCurlyBracketSyntaxNodeSP& node)
-                {
-                    is_open_curly_bracket_found = true;
-                };
-                const auto& open_curly_bracket_visitor = std::make_shared<SyntaxNodeEmptyVisitor>( open_curly_bracket_handler );
-                (*it)->accept(open_curly_bracket_visitor);
-                if( is_open_curly_bracket_found )
-                {
-                    distance_between_open_close_curly_bracket = std::distance(stack.rbegin(), it) + 1;
-                    break;
-                }
+               open_curly_bracket_handler.open_curly_bracket_syntax_node =
+                  [ &is_open_curly_bracket_found ]( const OpenCurlyBracketSyntaxNodeSP& node )
+               { is_open_curly_bracket_found = true; };
+               const auto& open_curly_bracket_visitor =
+                  std::make_shared< SyntaxNodeEmptyVisitor >( open_curly_bracket_handler );
+               ( *it )->accept( open_curly_bracket_visitor );
+               if( is_open_curly_bracket_found )
+               {
+                  distance_between_open_close_curly_bracket = std::distance( stack.rbegin(), it ) + 1;
+                  break;
+               }
             }
 
             if( !is_open_curly_bracket_found || !is_close_curly_bracket_found )
-                return {};
+               return {};
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [&state](const ISyntaxNodeSP&)
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.open_curly_bracket_syntax_node =
+               [ &open_curly_bracket, &state ]( const OpenCurlyBracketSyntaxNodeSP& node )
             {
-                state = State::ERROR;
+               if( state == State::START )
+               {
+                  open_curly_bracket = node;
+                  state = State::OPEN_CURLY_BRACKET;
+               }
             };
-            handlers.open_curly_bracket_syntax_node = [&open_curly_bracket, &state](const OpenCurlyBracketSyntaxNodeSP& node)
+            handlers.expression_syntax_node = [ &expressions, &state ]( const ExpressionSyntaxNodeSP& node )
             {
-                if( state == State::START )
-                {
-                    open_curly_bracket = node;
-                    state = State::OPEN_CURLY_BRACKET;
-                }
+               if( state == State::OPEN_CURLY_BRACKET )
+               {
+                  expressions.emplace_back( node );
+                  state = State::EXPRESSION;
+               }
+               else if( state == State::EXPRESSION )
+               {
+                  expressions.emplace_back( node );
+                  state = State::EXPRESSION;
+               }
+               else if( state == State::SCOPE )
+               {
+                  expressions.emplace_back( node );
+                  state = State::EXPRESSION;
+               }
             };
-            handlers.expression_syntax_node = [&expressions, &state](const ExpressionSyntaxNodeSP& node)
+            handlers.scope_syntax_node = [ &expressions, &state ]( const ScopeSyntaxNodeSP& node )
             {
-                if( state == State::OPEN_CURLY_BRACKET )
-                {
-                    expressions.emplace_back(node);
-                    state = State::EXPRESSION;
-                }
-                else if( state == State::EXPRESSION )
-                {
-                    expressions.emplace_back(node);
-                    state = State::EXPRESSION;
-                }
-                else if( state == State::SCOPE )
-                {
-                    expressions.emplace_back(node);
-                    state = State::EXPRESSION;
-                }
-            };
-            handlers.scope_syntax_node = [&expressions, &state](const ScopeSyntaxNodeSP& node)
-            {
-                if( state == State::OPEN_CURLY_BRACKET )
-                {
-                    expressions.emplace_back(node);
-                    state = State::EXPRESSION;
-                }
-                else if( state == State::EXPRESSION )
-                {
-                    expressions.emplace_back(node);
-                    state = State::SCOPE;
-                }
-                else if( state == State::SCOPE)
-                {
-                    expressions.emplace_back(node);
-                    state = State::SCOPE;
-                }
+               if( state == State::OPEN_CURLY_BRACKET )
+               {
+                  expressions.emplace_back( node );
+                  state = State::EXPRESSION;
+               }
+               else if( state == State::EXPRESSION )
+               {
+                  expressions.emplace_back( node );
+                  state = State::SCOPE;
+               }
+               else if( state == State::SCOPE )
+               {
+                  expressions.emplace_back( node );
+                  state = State::SCOPE;
+               }
             };
 
-            handlers.close_curly_bracket_syntax_node = [&close_curly_bracket, &state](const CloseCurlyBracketSyntaxNodeSP& node)
+            handlers.close_curly_bracket_syntax_node =
+               [ &close_curly_bracket, &state ]( const CloseCurlyBracketSyntaxNodeSP& node )
             {
-                if( state == State::EXPRESSION )
-                {
-                    close_curly_bracket = node;
-                    state = State::FINISH;
-                }
-                else if( state == State::SCOPE )
-                {
-                    close_curly_bracket = node;
-                    state = State::FINISH;
-                }
-
+               if( state == State::EXPRESSION )
+               {
+                  close_curly_bracket = node;
+                  state = State::FINISH;
+               }
+               else if( state == State::SCOPE )
+               {
+                  close_curly_bracket = node;
+                  state = State::FINISH;
+               }
             };
 
-            iterate_over_last_n_nodes(stack, distance_between_open_close_curly_bracket, handlers);
+            iterate_over_last_n_nodes( stack, distance_between_open_close_curly_bracket, handlers );
 
             if( state != State::FINISH )
-                return {};
+               return {};
 
-            std::reverse(expressions.begin(), expressions.end());
+            std::reverse( expressions.begin(), expressions.end() );
 
             Plan plan;
-            plan.to_remove.nodes.push_back(open_curly_bracket);
+            plan.to_remove.nodes.push_back( open_curly_bracket );
             for( const auto& expression : expressions )
-                plan.to_remove.nodes.push_back(expression);
-            plan.to_remove.nodes.push_back(close_curly_bracket);
+               plan.to_remove.nodes.push_back( expression );
+            plan.to_remove.nodes.push_back( close_curly_bracket );
 
-            const auto& scope_node = std::make_shared<ScopeSyntaxNode>(expressions);
-            plan.to_add.nodes.push_back(scope_node);
+            const auto& scope_node = std::make_shared< ScopeSyntaxNode >( expressions );
+            plan.to_add.nodes.push_back( scope_node );
             return plan;
-        });
+         } );
 
-        // BOL SCOPE EOL
-        mProductions.emplace_back([this](const Stack& stack) -> std::optional<Plan>
-        {
+      // BOL SCOPE EOL
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
             BolSyntaxNodeSP bol;
             ScopeSyntaxNodeSP scope;
             EolSyntaxNodeSP eol;
@@ -162,105 +163,95 @@ public:
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [&state](const ISyntaxNodeSP&)
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.bol_syntax_node = [ &bol, &state ]( const BolSyntaxNodeSP& node )
             {
-                state = State::ERROR;
+               if( state == State::START )
+               {
+                  bol = node;
+                  state = State::BOL;
+               }
             };
-            handlers.bol_syntax_node = [&bol, &state](const BolSyntaxNodeSP& node)
+            handlers.scope_syntax_node = [ &scope, &state ]( const ScopeSyntaxNodeSP& node )
             {
-                if( state == State::START )
-                {
-                    bol = node;
-                    state = State::BOL;
-                }
+               if( state == State::BOL )
+               {
+                  scope = node;
+                  state = State::SCOPE;
+               }
             };
-            handlers.scope_syntax_node = [&scope, &state](const ScopeSyntaxNodeSP& node)
+            handlers.eol_syntax_node = [ &eol, &state ]( const EolSyntaxNodeSP& node )
             {
-                if( state == State::BOL )
-                {
-                    scope = node;
-                    state = State::SCOPE;
-                }
-            };
-            handlers.eol_syntax_node = [&eol, &state](const EolSyntaxNodeSP& node)
-            {
-                if( state == State::SCOPE )
-                {
-                    eol = node;
-                    state = State::EOL;
-                    state = State::FINISH;
-                }
+               if( state == State::SCOPE )
+               {
+                  eol = node;
+                  state = State::EOL;
+                  state = State::FINISH;
+               }
             };
 
-            iterate_over_last_n_nodes(stack, 3, handlers);
+            iterate_over_last_n_nodes( stack, 3, handlers );
 
             if( state != State::FINISH )
-                return {};
+               return {};
 
             Plan plan;
-            plan.to_remove.nodes.push_back(bol);
-            plan.to_remove.nodes.push_back(scope);
-            plan.to_remove.nodes.push_back(eol);
+            plan.to_remove.nodes.push_back( bol );
+            plan.to_remove.nodes.push_back( scope );
+            plan.to_remove.nodes.push_back( eol );
 
-            plan.to_add.nodes.push_back(scope);
+            plan.to_add.nodes.push_back( scope );
             return plan;
-        });
-//        mProductionByFeature.emplace_back(Features{ one(Token_Type::OPEN_CURLY_BRACKET), manyOf(Token_Type::EXPRESSION), one(Token_Type::CLOSE_CURLY_BRACKET) },
-//                                          [](const Stack& stack) -> Production
-//                                          {
-//                                              auto it = stack.begin();
-//                                              std::advance(it, stack.size() - 4);
-//                                              const auto& open_bracket = *(it);
-//                                              const auto& expression0 = *(it++);
-//                                              const auto& expression1 = *(it++);
-//                                              const auto& close_bracket = *(it++);
+         } );
+      //        mProductionByFeature.emplace_back(Features{ one(Token_Type::OPEN_CURLY_BRACKET),
+      //        manyOf(Token_Type::EXPRESSION), one(Token_Type::CLOSE_CURLY_BRACKET) },
+      //                                          [](const Stack& stack) -> Production
+      //                                          {
+      //                                              auto it = stack.begin();
+      //                                              std::advance(it, stack.size() - 4);
+      //                                              const auto& open_bracket = *(it);
+      //                                              const auto& expression0 = *(it++);
+      //                                              const auto& expression1 = *(it++);
+      //                                              const auto& close_bracket = *(it++);
 
-//                                              Production::Plan plan;
-//                                              plan.to_remove.nodes.push_back(open_bracket);
-//                                              plan.to_remove.nodes.push_back(expression0);
-//                                              plan.to_remove.nodes.push_back(expression1);
-//                                              plan.to_remove.nodes.push_back(close_bracket);
+      //                                              Production::Plan plan;
+      //                                              plan.to_remove.nodes.push_back(open_bracket);
+      //                                              plan.to_remove.nodes.push_back(expression0);
+      //                                              plan.to_remove.nodes.push_back(expression1);
+      //                                              plan.to_remove.nodes.push_back(close_bracket);
 
-//                                              const auto& scope = std::make_shared<ISyntaxNode>();
-//                                              scope->token = {"scope", Token_Type::SCOPE};
-//                                              scope->Add(expression0);
-//                                              scope->Add(expression1);
-//                                              plan.to_add.nodes.push_back(scope);
-//                                              return Production{plan};
-//                                          });
+      //                                              const auto& scope = std::make_shared<ISyntaxNode>();
+      //                                              scope->token = {"scope", Token_Type::SCOPE};
+      //                                              scope->Add(expression0);
+      //                                              scope->Add(expression1);
+      //                                              plan.to_add.nodes.push_back(scope);
+      //                                              return Production{plan};
+      //                                          });
 
-////        mProductionByFeature.emplace_back(Features{Token_Type::SCOPE, Token_Type::EXPRESSION}, [](const Stack& stack) -> Production
-////        {
-////            auto it = stack.begin();
-////            std::advance(it, stack.size() - 2);
-////            const auto& scope = *(it);
-////            const auto& expression = *(++it);
+      ////        mProductionByFeature.emplace_back(Features{Token_Type::SCOPE, Token_Type::EXPRESSION}, [](const
+      /// Stack& stack) -> Production /        { /            auto it = stack.begin(); /            std::advance(it,
+      /// stack.size() - 2); /            const auto& scope = *(it); /            const auto& expression = *(++it);
 
-////            Production::Plan plan;
-////            plan.to_remove.nodes.push_back(expression);
+      ////            Production::Plan plan;
+      ////            plan.to_remove.nodes.push_back(expression);
 
-////            scope->Add(expression);
-////            return Production{plan};
-////        });
+      ////            scope->Add(expression);
+      ////            return Production{plan};
+      ////        });
 
-////        mProductionByFeature.emplace_back(Features{Token_Type::BOL, Token_Type::SCOPE, Token_Type::EOL}, [](const Stack& stack) -> Production
-////        {
-////            auto it = stack.begin();
-////            std::advance(it, stack.size() - 3);
-////            const auto& bol = *it;
-////            const auto& scope = *(++it);
-////            const auto& eol = *(++it);
+      ////        mProductionByFeature.emplace_back(Features{Token_Type::BOL, Token_Type::SCOPE, Token_Type::EOL},
+      ///[](const Stack& stack) -> Production /        { /            auto it = stack.begin(); / std::advance(it,
+      /// stack.size() - 3); /            const auto& bol = *it; /            const auto& scope = *(++it); / const
+      /// auto& eol = *(++it);
 
-////            Production::Plan plan;
-////            plan.to_remove.nodes.push_back(bol);
-////            plan.to_remove.nodes.push_back(scope);
-////            plan.to_remove.nodes.push_back(eol);
+      ////            Production::Plan plan;
+      ////            plan.to_remove.nodes.push_back(bol);
+      ////            plan.to_remove.nodes.push_back(scope);
+      ////            plan.to_remove.nodes.push_back(eol);
 
-////            plan.to_add.nodes.push_back(scope);
+      ////            plan.to_add.nodes.push_back(scope);
 
-////            return Production{plan};
-////        });
-
-
-    }
+      ////            return Production{plan};
+      ////        });
+   }
 };

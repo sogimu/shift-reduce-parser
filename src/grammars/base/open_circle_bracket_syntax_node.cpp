@@ -9,5 +9,5 @@
 
 void OpenCircleBracketSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
-    visitor->visit( shared_from_this() );
+   visitor->visit( shared_from_this() );
 }

@@ -7,4 +7,7 @@
 #include <string>
 #include <vector>
 
-void LessSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor ) { visitor->visit( shared_from_this() ); }
+void LessSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+{
+   visitor->visit( shared_from_this() );
+}

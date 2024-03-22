@@ -7,4 +7,7 @@
 #include <string>
 #include <vector>
 
-void OpenCurlyBracketSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor ) { visitor->visit( shared_from_this() ); }
+void OpenCurlyBracketSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+{
+   visitor->visit( shared_from_this() );
+}

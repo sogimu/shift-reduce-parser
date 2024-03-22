@@ -10,20 +10,20 @@
 
 void IfExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
-    visitor->visit( shared_from_this() );
+   visitor->visit( shared_from_this() );
 }
 
 ConditionalExpressionSyntaxNodeSP IfExpressionSyntaxNode::conditional_expression() const
 {
-    return std::dynamic_pointer_cast<ConditionalExpressionSyntaxNode>( this->operator[]( 0 ) );
+   return std::dynamic_pointer_cast< ConditionalExpressionSyntaxNode >( this->operator[]( 0 ) );
 }
 
 ScopeSyntaxNodeSP IfExpressionSyntaxNode::true_scope() const
 {
-    return std::dynamic_pointer_cast<ScopeSyntaxNode>( this->operator[]( 1 ) );
+   return std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 1 ) );
 }
 
 ScopeSyntaxNodeSP IfExpressionSyntaxNode::false_scope() const
 {
-    return std::dynamic_pointer_cast<ScopeSyntaxNode>( this->operator[]( 2 ) );
+   return std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 2 ) );
 }

@@ -9,13 +9,16 @@
 
 class ISyntaxNodeVisitor;
 
-class MoreSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this<MoreSyntaxNode>
+class MoreSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< MoreSyntaxNode >
 {
-        public:
-    MoreSyntaxNode(): ISyntaxNode( Token_Type::MORE ) {}
+public:
+   MoreSyntaxNode()
+      : ISyntaxNode( Token_Type::MORE )
+   {
+   }
 
-    void accept( const std::shared_ptr<ISyntaxNodeVisitor>& visitor ) override;
+   void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 };
 
-using MoreSyntaxNodeSP = std::shared_ptr<MoreSyntaxNode>;
-using MoreSyntaxNodeCSP = std::shared_ptr<const MoreSyntaxNode>;
+using MoreSyntaxNodeSP = std::shared_ptr< MoreSyntaxNode >;
+using MoreSyntaxNodeCSP = std::shared_ptr< const MoreSyntaxNode >;

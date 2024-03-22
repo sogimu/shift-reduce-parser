@@ -6,6 +6,6 @@ using namespace std;
 
 class Calculator
 {
-        public:
-    double solve( const std::string& expression ) const;
+public:
+   double solve( const std::string& expression ) const;
 };

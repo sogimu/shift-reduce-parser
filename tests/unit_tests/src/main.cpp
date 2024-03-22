@@ -3,14 +3,14 @@
 
 int main( int argc, char* argv[] )
 {
-    // your setup ...
+   // your setup ...
 
-    // int result = Catch::Session().run( argc, argv );
+   // int result = Catch::Session().run( argc, argv );
 
-    // your clean-up...
+   // your clean-up...
 
-    // return result;
-    ::testing::InitGoogleTest( &argc, argv );
+   // return result;
+   ::testing::InitGoogleTest( &argc, argv );
 
-    return RUN_ALL_TESTS();
+   return RUN_ALL_TESTS();
 }

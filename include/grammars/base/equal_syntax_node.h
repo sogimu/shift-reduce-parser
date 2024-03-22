@@ -7,12 +7,15 @@
 
 class ISyntaxNodeVisitor;
 
-class EqualSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this<EqualSyntaxNode>
+class EqualSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< EqualSyntaxNode >
 {
-        public:
-    EqualSyntaxNode(): ISyntaxNode( Token_Type::EQUAL ) {}
+public:
+   EqualSyntaxNode()
+      : ISyntaxNode( Token_Type::EQUAL )
+   {
+   }
 
-    void accept( const std::shared_ptr<ISyntaxNodeVisitor>& visitor ) override;
+   void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 };
 
-using EqualSyntaxNodeSP = std::shared_ptr<EqualSyntaxNode>;
+using EqualSyntaxNodeSP = std::shared_ptr< EqualSyntaxNode >;

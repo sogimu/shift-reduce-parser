@@ -5,20 +5,21 @@
 
 #include <vector>
 
-std::vector<FSyntaxNodeSP> DiffSyntaxNode::Arguments() const
+std::vector< FSyntaxNodeSP > DiffSyntaxNode::Arguments() const
 {
-    std::vector<FSyntaxNodeSP> result;
-    SyntaxNodeEmptyVisitor::Handlers handlers;
-    handlers.f_syntax_node = [&result]( const FSyntaxNodeSP& node ) {
-        result.emplace_back( node );
-    };
+   std::vector< FSyntaxNodeSP > result;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.f_syntax_node = [ &result ]( const FSyntaxNodeSP& node ) { result.emplace_back( node ); };
 
-    const auto& visitor = std::make_shared<SyntaxNodeEmptyVisitor>( handlers );
-    for ( const auto& child : this->Children() )
-    {
-        child->accept( visitor );
-    }
-    return result;
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   for( const auto& child : this->Children() )
+   {
+      child->accept( visitor );
+   }
+   return result;
 }
 
-void DiffSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor ) { visitor->visit( shared_from_this() ); }
+void DiffSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+{
+   visitor->visit( shared_from_this() );
+}

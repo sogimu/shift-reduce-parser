@@ -8,12 +8,15 @@
 class ISyntaxNodeVisitor;
 
 class CloseCircleBracketSyntaxNode : public ISyntaxNode,
-                                     public std::enable_shared_from_this<CloseCircleBracketSyntaxNode>
+                                     public std::enable_shared_from_this< CloseCircleBracketSyntaxNode >
 {
-        public:
-    CloseCircleBracketSyntaxNode(): ISyntaxNode( Token_Type::CLOSE_CIRCLE_BRACKET ) {}
+public:
+   CloseCircleBracketSyntaxNode()
+      : ISyntaxNode( Token_Type::CLOSE_CIRCLE_BRACKET )
+   {
+   }
 
-    void accept( const std::shared_ptr<ISyntaxNodeVisitor>& visitor ) override;
+   void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 };
 
-using CloseCircleBracketSyntaxNodeSP = std::shared_ptr<CloseCircleBracketSyntaxNode>;
+using CloseCircleBracketSyntaxNodeSP = std::shared_ptr< CloseCircleBracketSyntaxNode >;

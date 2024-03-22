@@ -7,12 +7,15 @@
 
 class ISyntaxNodeVisitor;
 
-class IfSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this<IfSyntaxNode>
+class IfSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< IfSyntaxNode >
 {
-        public:
-    IfSyntaxNode(): ISyntaxNode( Token_Type::IF ) {}
+public:
+   IfSyntaxNode()
+      : ISyntaxNode( Token_Type::IF )
+   {
+   }
 
-    void accept( const std::shared_ptr<ISyntaxNodeVisitor>& visitor ) override;
+   void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 };
 
-using IfSyntaxNodeSP = std::shared_ptr<IfSyntaxNode>;
+using IfSyntaxNodeSP = std::shared_ptr< IfSyntaxNode >;

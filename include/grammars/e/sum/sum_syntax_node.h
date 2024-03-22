@@ -9,20 +9,20 @@
 
 class ISyntaxNodeVisitor;
 class ComputationalExpressionSyntaxNode;
-using ComputationalExpressionSyntaxNodeSP = std::shared_ptr<ComputationalExpressionSyntaxNode>;
+using ComputationalExpressionSyntaxNodeSP = std::shared_ptr< ComputationalExpressionSyntaxNode >;
 
-class SumSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this<SumSyntaxNode>
+class SumSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< SumSyntaxNode >
 
 {
-        public:
-    SumSyntaxNode( const FSyntaxNodeSP& f0, const FSyntaxNodeSP& f1 );
-    SumSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression0,
-                   const ComputationalExpressionSyntaxNodeSP& computational_expression1 );
+public:
+   SumSyntaxNode( const FSyntaxNodeSP& f0, const FSyntaxNodeSP& f1 );
+   SumSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression0,
+                  const ComputationalExpressionSyntaxNodeSP& computational_expression1 );
 
-    std::vector<FSyntaxNodeSP> Arguments() const;
+   std::vector< FSyntaxNodeSP > Arguments() const;
 
-    void accept( const std::shared_ptr<ISyntaxNodeVisitor>& visitor ) override;
+   void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 };
 
-using SumSyntaxNodeSP = std::shared_ptr<SumSyntaxNode>;
-using SumSyntaxNodeCSP = std::shared_ptr<const SumSyntaxNode>;
+using SumSyntaxNodeSP = std::shared_ptr< SumSyntaxNode >;
+using SumSyntaxNodeCSP = std::shared_ptr< const SumSyntaxNode >;

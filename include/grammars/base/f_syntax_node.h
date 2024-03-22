@@ -7,27 +7,39 @@
 
 class ISyntaxNodeVisitor;
 
-class FSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this<FSyntaxNode>
+class FSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< FSyntaxNode >
 
 {
-        public:
-    FSyntaxNode( const int& number ): ISyntaxNode{ Token_Type::F } { mValue = number; }
+public:
+   FSyntaxNode( const int& number )
+      : ISyntaxNode{ Token_Type::F }
+   {
+      mValue = number;
+   }
 
-    FSyntaxNode( const MinusSyntaxNodeSP& minus, const NumberSyntaxNodeSP& number ): ISyntaxNode{ Token_Type::F }
-    {
-        mValue = -1 * number->value();
-    }
+   FSyntaxNode( const MinusSyntaxNodeSP& minus, const NumberSyntaxNodeSP& number )
+      : ISyntaxNode{ Token_Type::F }
+   {
+      mValue = -1 * number->value();
+   }
 
-    FSyntaxNode( const NumberSyntaxNodeSP& number ): ISyntaxNode{ Token_Type::F } { mValue = number->value(); }
+   FSyntaxNode( const NumberSyntaxNodeSP& number )
+      : ISyntaxNode{ Token_Type::F }
+   {
+      mValue = number->value();
+   }
 
-    int value() const { return mValue; }
+   int value() const
+   {
+      return mValue;
+   }
 
-    void accept( const std::shared_ptr<ISyntaxNodeVisitor>& visitor ) override;
+   void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 
-    bool compare( const ISyntaxNode& node ) const override;
+   bool compare( const ISyntaxNode& node ) const override;
 
-        private:
-    int mValue;
+private:
+   int mValue;
 };
 
-using FSyntaxNodeSP = std::shared_ptr<FSyntaxNode>;
+using FSyntaxNodeSP = std::shared_ptr< FSyntaxNode >;
