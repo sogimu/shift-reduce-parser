@@ -1,4 +1,3 @@
-build
 .cache
 
 # Prerequisites
@@ -37,3 +36,5 @@ build
 # CMake
 CMakeLists.txt.user
 compile_commands.json
+build
+tests/*/build
