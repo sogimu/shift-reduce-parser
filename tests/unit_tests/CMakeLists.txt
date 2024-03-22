@@ -5,6 +5,7 @@ project(unit_tests VERSION 0.0.1 LANGUAGES CXX)
 add_subdirectory(libs/googletest)
 
 add_executable(unit_tests
+    src/lexical_tokens_test.cpp
     src/syntax_tree_test.cpp
     # src/dfs_pre_order_range_test.cpp
     src/create_syntax_node_tree_test.cpp

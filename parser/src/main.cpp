@@ -9,8 +9,13 @@ int main()
 {
    std::string e = R"(
     {
-      m = 42;
-      print(m);
+      if(3 < 2)
+      {
+          print(123);
+
+          3+5;
+      }
+      print(456);
     })";
 
    //        if(3 < 2)

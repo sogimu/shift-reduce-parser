@@ -20,6 +20,10 @@ public:
    {
       std::string text;
       Token_Type type;
+      bool operator==( const LexicalToken& token ) const
+      {
+         return token.type == type && token.text == text;
+      }
    };
 
    LexicalTokens( const std::string& text )
@@ -144,7 +148,7 @@ public:
          else if( didgits.count( chars.current.value() ) )
          {
             std::string token;
-            for( ; didgits.count( chars.current.value() ); chars = next_chars() )
+            for( ; chars.current && didgits.count( chars.current.value() ); chars = next_chars() )
             {
                token += chars.current.value();
             }
@@ -188,6 +192,11 @@ public:
    std::vector< LexicalToken > list() const
    {
       return tokens;
+   }
+
+   bool operator==( const LexicalTokens& lexical_tokens ) const
+   {
+      return list() == lexical_tokens.list();
    }
 
 private:
