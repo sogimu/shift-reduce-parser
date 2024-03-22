@@ -1,3 +1,0 @@
-/home/as-lizin/trash/c++/shift-reduce-parser/tests/unit_tests/build/CMakeFiles/unit_tests.dir
-/home/as-lizin/trash/c++/shift-reduce-parser/tests/unit_tests/build/CMakeFiles/edit_cache.dir
-/home/as-lizin/trash/c++/shift-reduce-parser/tests/unit_tests/build/CMakeFiles/rebuild_cache.dir
