@@ -10,6 +10,11 @@
 #include <string>
 #include <vector>
 
+SumSyntaxNode::SumSyntaxNode()
+   : ISyntaxNode{ Token_Type::SUM }
+{
+}
+
 SumSyntaxNode::SumSyntaxNode( const FSyntaxNodeSP& f0, const FSyntaxNodeSP& f1 )
    : ISyntaxNode{ Token_Type::SUM }
 {
@@ -37,6 +42,31 @@ std::vector< FSyntaxNodeSP > SumSyntaxNode::Arguments() const
       child->accept( visitor );
    }
    return result;
+}
+
+bool SumSyntaxNode::compare( const ISyntaxNode& node ) const
+{
+   bool is_equal = false;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.sum_syntax_node = [ this, &is_equal ]( const SumSyntaxNodeSP& node )
+   {
+      if( node->Children().size() != this->Children().size() )
+         return;
+      for( int i = 0; i < Children().size(); ++i )
+      {
+         const auto& lft_child = ( *this )[ i ];
+         const auto& rht_child = ( *node )[ i ];
+         if( !lft_child->compare( *rht_child ) )
+         {
+            return;
+         }
+      }
+      is_equal = true;
+   };
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   const_cast< ISyntaxNode& >( node ).accept( visitor );
+
+   return is_equal;
 }
 
 void SumSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )

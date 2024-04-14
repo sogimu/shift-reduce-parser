@@ -111,17 +111,31 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                   }
                   else if( arg == "FSyntaxNode" )
                   {
-                     size_t s = arguments.size();
-                     auto aa = arguments;
                      int argument0 = std::get< json >( arguments.back() );
                      arguments.pop_back();
                      arguments.push_back( std::make_shared< FSyntaxNode >( argument0 ) );
                   }
+                  else if( arg == "ESyntaxNode" )
+                  {
+                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& e_syntax_node = std::make_shared< ESyntaxNode >();
+                     e_syntax_node->Add( argument0 );
+                     arguments.push_back( e_syntax_node );
+                  }
+                  else if( arg == "SumSyntaxNode" )
+                  {
+                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& sum_syntax_node = std::make_shared< SumSyntaxNode >();
+                     sum_syntax_node->Add( argument1 );
+                     sum_syntax_node->Add( argument0 );
+                     arguments.push_back( sum_syntax_node );
+                  }
                   else if( arg == "ComputationalExpressionSyntaxNode" )
                   {
-
-                     size_t s = arguments.size();
-                     auto aa = arguments;
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
                      const auto& e = std::make_shared< ComputationalExpressionSyntaxNode >();
@@ -130,8 +144,6 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                   }
                   else if( arg == "VaribleAssigmentSyntaxNode" )
                   {
-                     size_t s = arguments.size();
-                     auto aa = arguments;
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
                      ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );

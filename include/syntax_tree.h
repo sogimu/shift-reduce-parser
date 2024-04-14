@@ -285,7 +285,7 @@ public:
       return result;
    }
 
-   std::string print_ast() const
+   std::string to_string() const
    {
       std::string result;
       std::stringstream s{ result };
@@ -353,6 +353,6 @@ private:
 
 inline std::ostream& operator<<( std::ostream& o, const SyntaxTree& rhs )
 {
-   o << rhs.print_ast();
+   o << rhs.to_string();
    return o;
 }

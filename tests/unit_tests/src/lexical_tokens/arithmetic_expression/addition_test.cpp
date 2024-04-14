@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TEST( ADDITION, ONE_PLUS )
+TEST( LEXICAL_TOKENS_ADDITION, ONE_PLUS )
 {
    // ARRANGE
    const auto& input = R"""(1+2;)""";
@@ -22,7 +22,7 @@ TEST( ADDITION, ONE_PLUS )
    EXPECT_EQ( lexical_tokens, expected_lexical_tokens );
 }
 
-TEST( ADDITION, MANY_PLUSs )
+TEST( LEXICAL_TOKENS_ADDITION, MANY_PLUSs )
 {
    // ARRANGE
    const auto& input = R"""(1+2+3+4;)""";

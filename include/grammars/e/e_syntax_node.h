@@ -15,6 +15,10 @@ class ESyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< ESy
 
 {
 public:
+   ESyntaxNode()
+      : ISyntaxNode{ Token_Type::E }
+   {
+   }
    ESyntaxNode( const SumSyntaxNodeSP& sum )
       : ISyntaxNode{ Token_Type::E }
    {
@@ -22,6 +26,7 @@ public:
    }
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
+   bool compare( const ISyntaxNode& node ) const override;
 };
 
 using ESyntaxNodeSP = std::shared_ptr< ESyntaxNode >;

@@ -123,7 +123,7 @@ double Calculator::solve( const std::string& expression ) const
    LexicalTokens lexical_tokens( expression );
    SyntaxTree syntax_tree( lexical_tokens );
 
-   std::cout << syntax_tree.print_ast() << std::endl;
+   std::cout << syntax_tree.to_string() << std::endl;
 
    int result = 0;
 

@@ -11,6 +11,7 @@ add_executable(unit_tests
     src/lexical_tokens/arithmetic_expression/multiplication_test.cpp
     src/lexical_tokens/arithmetic_expression/division_test.cpp
     src/lexical_tokens/arithmetic_expression/varible_expression_test.cpp
+    src/syntax_tree/arithmetic_expression/addition_test.cpp
     src/syntax_tree_test.cpp
     # src/dfs_pre_order_range_test.cpp
     src/create_syntax_node_tree_test.cpp

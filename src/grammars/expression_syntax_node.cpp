@@ -15,19 +15,25 @@ void ExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 
 bool ExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
 {
-   bool is_equal = true;
+   bool is_equal = false;
    SyntaxNodeEmptyVisitor::Handlers handlers;
    handlers.expression_syntax_node = [ this, &is_equal ]( const ExpressionSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
-      {
-         is_equal = false;
          return;
+      for( int i = 0; i < Children().size(); ++i )
+      {
+         const auto& lft_child = ( *this )[ i ];
+         const auto& rht_child = ( *node )[ i ];
+         if( !lft_child->compare( *rht_child ) )
+         {
+            return;
+         }
       }
+      is_equal = true;
    };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    const_cast< ISyntaxNode& >( node ).accept( visitor );
 
-   // node.accept( visitor );
    return is_equal;
 }

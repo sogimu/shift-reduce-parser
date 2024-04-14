@@ -203,6 +203,60 @@ public:
             plan.to_add.nodes.push_back( scope );
             return plan;
          } );
+
+      // BOL EXPRESSION EOL
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            BolSyntaxNodeSP bol;
+            ExpressionSyntaxNodeSP expression;
+            EolSyntaxNodeSP eol;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.bol_syntax_node = [ &bol, &state ]( const BolSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  bol = node;
+                  state = State::BOL;
+               }
+            };
+            handlers.expression_syntax_node = [ &expression, &state ]( const ExpressionSyntaxNodeSP& node )
+            {
+               if( state == State::BOL )
+               {
+                  expression = node;
+                  state = State::EXPRESSION;
+               }
+            };
+            handlers.eol_syntax_node = [ &eol, &state ]( const EolSyntaxNodeSP& node )
+            {
+               if( state == State::EXPRESSION )
+               {
+                  eol = node;
+                  state = State::EOL;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 3, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( bol );
+            plan.to_remove.nodes.push_back( expression );
+            plan.to_remove.nodes.push_back( eol );
+
+            std::vector< ISyntaxNodeSP > expressions{ expression };
+            const auto& scope_node = std::make_shared< ScopeSyntaxNode >( expressions );
+            plan.to_add.nodes.push_back( scope_node );
+            return plan;
+         } );
       //        mProductionByFeature.emplace_back(Features{ one(Token_Type::OPEN_CURLY_BRACKET),
       //        manyOf(Token_Type::EXPRESSION), one(Token_Type::CLOSE_CURLY_BRACKET) },
       //                                          [](const Stack& stack) -> Production
