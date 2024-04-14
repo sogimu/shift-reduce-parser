@@ -3,11 +3,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
-// #include <set>
 #include <memory>
-// #include <stack>
 #include <map>
-// #include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <functional>
+#include <optional>
 #include "enums.h"
 #include "grammars/base/bol_syntax_node.h"
 #include "grammars/base/close_curly_bracket_syntax_node.h"
@@ -36,17 +37,6 @@
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 #include "utils/dfs_pre_order_range.h"
-
-#include <functional>
-#include <optional>
-
-// #include "grammars/f/e/sum/sum_grammar.h"
-// #include "grammars/f/e/diff/diff_grammar.h"
-// #include "grammars/f/t/t_grammar.h"
-// #include "grammars/f/t/mul/mul_grammar.h"
-// #include "grammars/f/t/div/div_grammar.h"
-// #include "grammars/p.h"
-// #include "grammars/assignment.h"
 
 class SyntaxTree
 {

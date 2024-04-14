@@ -26,11 +26,6 @@ void iterative_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
          {
             for( const auto& child : node->Children() )
                stack.emplace( child, true );
-            //                if( node->first )
-            //                    stack.push({node->first, true});
-
-            //                if( node->second )
-            //                    stack.push({node->second, true});
          }
       }
       else

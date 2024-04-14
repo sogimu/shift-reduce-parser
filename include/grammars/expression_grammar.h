@@ -2,7 +2,6 @@
 
 #include "computational_expression_syntax_node.h"
 #include "conditional_expression_syntax_node.h"
-#include "enums.h"
 #include "expression_syntax_node.h"
 #include "i_grammar.h"
 #include "if_expression_syntax_node.h"

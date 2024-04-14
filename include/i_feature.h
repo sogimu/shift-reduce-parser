@@ -1,17 +1,6 @@
 #pragma once
 
-#include "lexical_tokens.h"
-
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
 #include <memory>
-#include <optional>
-#include <set>
-#include <stack>
-#include <string>
-#include <vector>
 
 class IFeature
 {

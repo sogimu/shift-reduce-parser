@@ -1,6 +1,5 @@
 #pragma once
 
-#include "enums.h"
 #include "i_grammar.h"
 #include "sum_syntax_node.h"
 #include "utils.h"

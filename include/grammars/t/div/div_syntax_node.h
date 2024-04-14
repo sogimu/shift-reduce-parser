@@ -3,8 +3,6 @@
 #include "enums.h"
 #include "i_syntax_node.h"
 
-#include <vector>
-
 class E;
 class T;
 class P;

@@ -1,19 +1,10 @@
 #pragma once
 
-// #include <iostream>
 #include <string>
 #include <vector>
-// #include <set>
 #include <memory>
-// #include <stack>
-// #include <map>
-// #include <iomanip>
-// #include <functional>
-// #include <optional>
 
 #include "enums.h"
-#include "i_feature.h"
-#include "lexical_tokens.h"
 
 class ISyntaxNodeVisitor;
 

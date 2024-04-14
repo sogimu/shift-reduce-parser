@@ -4,8 +4,6 @@
 #include "i_syntax_node.h"
 
 #include <memory>
-#include <string>
-#include <vector>
 
 class ISyntaxNodeVisitor;
 

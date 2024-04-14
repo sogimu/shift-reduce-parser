@@ -4,7 +4,6 @@
 #include "enums.h"
 #include "i_syntax_node.h"
 
-#include <string>
 #include <vector>
 
 class ISyntaxNodeVisitor;

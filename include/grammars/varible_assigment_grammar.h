@@ -2,7 +2,6 @@
 
 #include "base/name_syntax_node.h"
 #include "computational_expression_syntax_node.h"
-#include "enums.h"
 #include "i_grammar.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"

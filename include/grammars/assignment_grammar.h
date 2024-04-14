@@ -1,10 +1,6 @@
 #pragma once
 
-#include "enums.h"
-#include "features/many_of.h"
 #include "i_grammar.h"
-
-#include <vector>
 
 class F;
 class E;

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "enums.h"
-#include "lexical_tokens.h"
 #include "nlohmann_json/json.hpp"
 #include "syntax_tree.h"
-#include "utils.h"
 
 #include <vector>
+#include <variant>
+#include <string>
+#include <functional>
 
 inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
 {

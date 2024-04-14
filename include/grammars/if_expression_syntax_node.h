@@ -5,9 +5,6 @@
 #include "i_syntax_node.h"
 #include "scope_syntax_node.h"
 
-#include <string>
-#include <vector>
-
 class ISyntaxNodeVisitor;
 
 class IfExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< IfExpressionSyntaxNode >

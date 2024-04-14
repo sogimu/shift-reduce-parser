@@ -1,12 +1,8 @@
 #pragma once
 
-#include "i_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 
-#include <functional>
-#include <map>
 #include <memory>
-#include <string>
 
 using Stack = std::deque< ISyntaxNodeSP >;
 static Stack last_n_syntax_nodes( const Stack& stack, size_t n )

@@ -3,10 +3,6 @@
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
-#include "syntax_node_empty_visitor.h"
-
-#include <string>
-#include <vector>
 
 PrintExpressionSyntaxNode::PrintExpressionSyntaxNode(
    const ComputationalExpressionSyntaxNodeSP& computational_expression )

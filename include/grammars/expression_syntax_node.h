@@ -8,9 +8,6 @@
 #include "print_expression_syntax_node.h"
 #include "varible_assigment_syntax_node.h"
 
-#include <string>
-#include <vector>
-
 class ISyntaxNodeVisitor;
 
 class ExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< ExpressionSyntaxNode >

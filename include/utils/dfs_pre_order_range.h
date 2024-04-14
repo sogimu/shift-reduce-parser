@@ -1,10 +1,6 @@
 #pragma once
 
-#include <functional>
-#include <iostream>
-#include <memory>
 #include <stack>
-#include <string>
 #include <vector>
 
 template< typename Node >

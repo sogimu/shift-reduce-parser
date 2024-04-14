@@ -3,9 +3,7 @@
 #include "i_syntax_node_visitor.h"
 
 #include <functional>
-#include <map>
 #include <memory>
-#include <string>
 
 class SyntaxNodeEmptyVisitor : public ISyntaxNodeVisitor
 {

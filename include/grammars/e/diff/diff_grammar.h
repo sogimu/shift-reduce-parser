@@ -1,7 +1,6 @@
 #pragma once
 
 #include "diff_syntax_node.h"
-#include "enums.h"
 #include "i_grammar.h"
 #include "utils.h"
 

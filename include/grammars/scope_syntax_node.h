@@ -3,9 +3,7 @@
 #include "enums.h"
 #include "i_syntax_node.h"
 
-#include <string>
 #include <vector>
-// #include "expression_syntax_node.h"
 
 class ISyntaxNodeVisitor;
 

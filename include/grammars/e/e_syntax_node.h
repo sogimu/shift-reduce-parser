@@ -4,11 +4,6 @@
 #include "i_syntax_node.h"
 #include "sum/sum_syntax_node.h"
 
-#include <string>
-#include <vector>
-// #include "E/number_syntax_node.h"
-// #include "i_syntax_node_visitor.h"
-
 class ISyntaxNodeVisitor;
 
 class ESyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< ESyntaxNode >

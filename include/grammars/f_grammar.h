@@ -3,7 +3,6 @@
 #include "base/f_syntax_node.h"
 #include "base/minus_syntax_node.h"
 #include "base/number_syntax_node.h"
-#include "enums.h"
 #include "i_grammar.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"

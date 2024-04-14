@@ -5,9 +5,6 @@
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
-#include <string>
-#include <vector>
-
 ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& f0,
                                                                   const ComputationalExpressionSyntaxNodeSP& f1,
                                                                   Type type )

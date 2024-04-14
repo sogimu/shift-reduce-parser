@@ -1,7 +1,6 @@
 #pragma once
 
 #include "conditional_expression_syntax_node.h"
-#include "enums.h"
 #include "i_grammar.h"
 #include "if_expression_syntax_node.h"
 #include "scope_syntax_node.h"

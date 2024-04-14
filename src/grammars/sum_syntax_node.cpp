@@ -7,7 +7,6 @@
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
-#include <string>
 #include <vector>
 
 SumSyntaxNode::SumSyntaxNode()

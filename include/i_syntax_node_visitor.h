@@ -1,19 +1,6 @@
 #pragma once
 
-// #include <iostream>
-// #include <vector>
-// #include <string>
-// #include <set>
 #include <memory>
-// #include <stack>
-// #include <map>
-// #include <iomanip>
-// #include <functional>
-// #include <optional>
-// #include <variant>
-//
-// #include "lexical_tokens.h"
-// #include "i_feature.h"
 #include "base/bol_syntax_node.h"
 #include "base/close_circle_bracket_syntax_node.h"
 #include "base/close_curly_bracket_syntax_node.h"

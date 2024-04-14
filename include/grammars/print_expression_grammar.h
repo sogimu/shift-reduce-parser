@@ -4,7 +4,6 @@
 #include "base/open_circle_bracket_syntax_node.h"
 #include "base/print_syntax_node.h"
 #include "base/semicolon_syntax_node.h"
-#include "enums.h"
 #include "i_grammar.h"
 #include "print_expression_syntax_node.h"
 #include "utils.h"

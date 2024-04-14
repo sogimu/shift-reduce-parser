@@ -1,12 +1,10 @@
 #pragma once
 
 #include "e_syntax_node.h"
-#include "enums.h"
 #include "i_grammar.h"
 #include "sum/sum_syntax_node.h"
 
 #include <vector>
-// #include "diff/syntax_node.h"
 #include "utils.h"
 
 class E;
