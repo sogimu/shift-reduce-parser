@@ -74,42 +74,44 @@ TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-{
-  "ScopeSyntaxNode": [
     {
-      "ExpressionSyntaxNode": [
+      "ScopeSyntaxNode": [
         {
-          "ComputationalExpressionSyntaxNode": [
+          "ExpressionSyntaxNode": [
             {
-              "ESyntaxNode": [
+              "ComputationalExpressionSyntaxNode": [
                 {
-                  "SumSyntaxNode": [
+                  "ESyntaxNode": [
                     {
-                      "ComputationalExpressionSyntaxNode": [
+                      "SumSyntaxNode": [
                         {
-                          "ESyntaxNode": [
+                          "ComputationalExpressionSyntaxNode": [
                             {
-                              "SumSyntaxNode": [
+                              "ESyntaxNode": [
                                 {
-                                  "ComputationalExpressionSyntaxNode": [
+                                  "SumSyntaxNode": [
                                     {
-                                      "ESyntaxNode": [
+                                      "ComputationalExpressionSyntaxNode": [
                                         {
-                                          "SumSyntaxNode": [
+                                          "ESyntaxNode": [
                                             {
-                                              "ComputationalExpressionSyntaxNode": [
+                                              "SumSyntaxNode": [
                                                 {
-                                                  "FSyntaxNode": [
-                                                    1
+                                                  "ComputationalExpressionSyntaxNode": [
+                                                    {
+                                                      "FSyntaxNode": [
+                                                        1
+                                                      ]
+                                                    }
                                                   ]
-                                                }
-                                              ]
-                                            },
-                                            {
-                                              "ComputationalExpressionSyntaxNode": [
+                                                },
                                                 {
-                                                  "FSyntaxNode": [
-                                                    2
+                                                  "ComputationalExpressionSyntaxNode": [
+                                                    {
+                                                      "FSyntaxNode": [
+                                                        2
+                                                      ]
+                                                    }
                                                   ]
                                                 }
                                               ]
@@ -117,14 +119,14 @@ TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
                                           ]
                                         }
                                       ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "ComputationalExpressionSyntaxNode": [
+                                    },
                                     {
-                                      "FSyntaxNode": [
-                                        3
+                                      "ComputationalExpressionSyntaxNode": [
+                                        {
+                                          "FSyntaxNode": [
+                                            3
+                                          ]
+                                        }
                                       ]
                                     }
                                   ]
@@ -132,14 +134,14 @@ TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
                               ]
                             }
                           ]
-                        }
-                      ]
-                    },
-                    {
-                      "ComputationalExpressionSyntaxNode": [
+                        },
                         {
-                          "FSyntaxNode": [
-                            4
+                          "ComputationalExpressionSyntaxNode": [
+                            {
+                              "FSyntaxNode": [
+                                4
+                              ]
+                            }
                           ]
                         }
                       ]
@@ -152,12 +154,8 @@ TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
         }
       ]
     }
-  ]
-}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
-   std::cout << syntax_tree.to_string() << std::endl;
-   std::cout << expected_syntax_tree.to_string() << std::endl;
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }

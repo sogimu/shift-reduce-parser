@@ -131,6 +131,11 @@ public:
                   close_curly_bracket = node;
                   state = State::FINISH;
                }
+               else if( state == State::OPEN_CURLY_BRACKET )
+               {
+                  close_curly_bracket = node;
+                  state = State::FINISH;
+               }
             };
 
             iterate_over_last_n_nodes( stack, distance_between_open_close_curly_bracket, handlers );
@@ -138,7 +143,7 @@ public:
             if( state != State::FINISH )
                return {};
 
-            std::reverse( expressions.begin(), expressions.end() );
+            // std::reverse( expressions.begin(), expressions.end() );
 
             Plan plan;
             plan.to_remove.nodes.push_back( open_curly_bracket );

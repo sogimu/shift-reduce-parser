@@ -3,6 +3,9 @@
 #include "nlohmann_json/json.hpp"
 #include "syntax_tree.h"
 
+#include <cstddef>
+#include <iterator>
+#include <linux/limits.h>
 #include <vector>
 #include <variant>
 #include <string>
@@ -12,8 +15,6 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
 {
    using json = nlohmann::json;
    const auto& description_as_json = json::parse( description );
-
-   // using Handler = std::function<void(const json&)>;
 
    class DfsHandler
    {
@@ -87,9 +88,9 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
       [ &arguments ]( const DfsHandler::SearchPath& search_path )
       {
          std::visit(
-            [ &arguments, &search_path ]( auto&& arg )
+            [ &arguments, &search_path ]( auto&& key )
             {
-               using T = std::decay_t< decltype( arg ) >;
+               using T = std::decay_t< decltype( key ) >;
                if constexpr( std::is_same_v< T, DfsHandler::Item::NoKeyOrIndex > )
                {
                }
@@ -103,19 +104,19 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                }
                else if constexpr( std::is_same_v< T, std::string > )
                {
-                  if( arg == "NameSyntaxNode" )
+                  if( key == "NameSyntaxNode" )
                   {
                      std::string argument0 = std::get< json >( arguments.back() );
                      arguments.pop_back();
                      arguments.push_back( std::make_shared< NameSyntaxNode >( argument0 ) );
                   }
-                  else if( arg == "FSyntaxNode" )
+                  else if( key == "FSyntaxNode" )
                   {
                      int argument0 = std::get< json >( arguments.back() );
                      arguments.pop_back();
                      arguments.push_back( std::make_shared< FSyntaxNode >( argument0 ) );
                   }
-                  else if( arg == "ESyntaxNode" )
+                  else if( key == "ESyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
@@ -123,7 +124,27 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      e_syntax_node->Add( argument0 );
                      arguments.push_back( e_syntax_node );
                   }
-                  else if( arg == "SumSyntaxNode" )
+                  else if( key == "IfExpressionSyntaxNode" )
+                  {
+                     const auto& if_expression_syntax_node = std::make_shared< IfExpressionSyntaxNode >();
+                     auto it = arguments.begin();
+                     std::advance( it, arguments.size() - 2 );
+                     if( !arguments.empty() )
+                     {
+                        ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( *it );
+                        if_expression_syntax_node->Add( argument0 );
+                     }
+                     if( !arguments.empty() )
+                     {
+                        ++it;
+                        ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( *it );
+                        if_expression_syntax_node->Add( argument1 );
+                     }
+                     arguments.pop_back();
+                     arguments.pop_back();
+                     arguments.push_back( if_expression_syntax_node );
+                  }
+                  else if( key == "SumSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
@@ -134,7 +155,19 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      sum_syntax_node->Add( argument0 );
                      arguments.push_back( sum_syntax_node );
                   }
-                  else if( arg == "ComputationalExpressionSyntaxNode" )
+                  else if( key == "ConditionalExpressionSyntaxNode" )
+                  {
+                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& conditinal_expression_syntax_node =
+                        std::make_shared< ConditionalExpressionSyntaxNode >();
+                     conditinal_expression_syntax_node->Add( argument1 );
+                     conditinal_expression_syntax_node->Add( argument0 );
+                     arguments.push_back( conditinal_expression_syntax_node );
+                  }
+                  else if( key == "ComputationalExpressionSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
@@ -142,7 +175,7 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      e->Add( argument0 );
                      arguments.push_back( e );
                   }
-                  else if( arg == "VaribleAssigmentSyntaxNode" )
+                  else if( key == "VaribleAssigmentSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
@@ -153,23 +186,34 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      e->Add( argument0 );
                      arguments.push_back( e );
                   }
-                  else if( arg == "ExpressionSyntaxNode" )
+                  else if( key == "ExpressionSyntaxNode" )
                   {
-                     size_t s = arguments.size();
-                     auto aa = arguments;
-                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
-                     arguments.pop_back();
                      const auto& e = std::make_shared< ExpressionSyntaxNode >();
-                     e->Add( argument0 );
+                     if( !arguments.empty() )
+                     {
+                        ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
+                        arguments.pop_back();
+                        e->Add( argument0 );
+                     }
                      arguments.push_back( e );
                   }
-                  else if( arg == "ScopeSyntaxNode" )
+                  else if( key == "ScopeSyntaxNode" )
                   {
-                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
-                     arguments.pop_back();
-                     const auto& e = std::make_shared< ScopeSyntaxNode >();
-                     e->Add( argument0 );
-                     arguments.push_back( e );
+                     const auto& scope_syntax_node = std::make_shared< ScopeSyntaxNode >();
+                     const auto& value = search_path.back().value;
+                     if( arguments.size() >= value.size() )
+                     {
+                        for( ptrdiff_t i = arguments.size() - value.size(); i < arguments.size(); ++i )
+                        {
+                           ISyntaxNodeSP argument = std::get< ISyntaxNodeSP >( arguments[ i ] );
+                           scope_syntax_node->Add( argument );
+                        }
+                        for( ptrdiff_t i = 0; i < value.size(); ++i )
+                        {
+                           arguments.pop_back();
+                        }
+                     }
+                     arguments.push_back( scope_syntax_node );
                   }
                }
             },

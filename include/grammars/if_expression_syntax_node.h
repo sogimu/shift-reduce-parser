@@ -10,6 +10,10 @@ class ISyntaxNodeVisitor;
 class IfExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< IfExpressionSyntaxNode >
 {
 public:
+   IfExpressionSyntaxNode()
+      : ISyntaxNode{ Token_Type::IF_EXPRESSION }
+   {
+   }
    IfExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression,
                            const ScopeSyntaxNodeSP& scope )
       : ISyntaxNode{ Token_Type::IF_EXPRESSION }
@@ -19,6 +23,7 @@ public:
    }
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
+   bool compare( const ISyntaxNode& node ) const override;
 
    ConditionalExpressionSyntaxNodeSP conditional_expression() const;
    ScopeSyntaxNodeSP true_scope() const;

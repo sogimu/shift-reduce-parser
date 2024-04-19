@@ -18,11 +18,10 @@ public:
       EQUAL
    };
 
-   //    ConditionalExpressionSyntaxNode(const LessExpressionSyntaxNodeSP& less_expression_syntax_node)
-   //        : ISyntaxNode{Token_Type::CONDITIONAL_EXPRESSION}
-   //    {
-   //        Add(less_expression_syntax_node);
-   //    }
+   ConditionalExpressionSyntaxNode()
+      : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
+   {
+   }
 
    //    ConditionalExpressionSyntaxNode(const MoreExpressionSyntaxNodeSP& more_expression_syntax_node)
    //        : ISyntaxNode{Token_Type::CONDITIONAL_EXPRESSION}
@@ -34,6 +33,7 @@ public:
                                     const ComputationalExpressionSyntaxNodeSP& f1, Type type );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
+   bool compare( const ISyntaxNode& node ) const override;
 
    Type type() const;
 
