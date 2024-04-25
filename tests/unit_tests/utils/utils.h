@@ -155,6 +155,17 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      sum_syntax_node->Add( argument0 );
                      arguments.push_back( sum_syntax_node );
                   }
+                  else if( key == "VaribleAssigmentSyntaxNode" )
+                  {
+                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& varible_assignment_syntax_node = std::make_shared< SumSyntaxNode >();
+                     varible_assignment_syntax_node->Add( argument1 );
+                     varible_assignment_syntax_node->Add( argument0 );
+                     arguments.push_back( varible_assignment_syntax_node );
+                  }
                   else if( key == "ConditionalExpressionSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
