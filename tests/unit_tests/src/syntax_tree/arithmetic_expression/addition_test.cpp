@@ -1,7 +1,6 @@
 #include "syntax_tree.h"
 
 #include <gtest/gtest.h>
-#include <iostream>
 #include "utils/utils.h"
 
 using namespace std;
@@ -58,8 +57,6 @@ TEST( SYNTAX_TREE_ADDITION, ONE_PLUS )
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
-   std::cout << syntax_tree.to_string() << std::endl;
-   std::cout << expected_syntax_tree.to_string() << std::endl;
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 

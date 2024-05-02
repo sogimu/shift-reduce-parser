@@ -315,8 +315,6 @@ public:
             handlers.if_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF" << "}"; };
             handlers.if_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_EXPRESSION" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
-            handlers.print_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& )
-            { s << "{" << "PRINT_EXPRESSION" << "}"; };
 
             handlers.varible_assigment_syntax_node = [ &s ]( const ISyntaxNodeSP& )
             { s << "{" << "VARIBLE ASSIGMENT" << "}"; };

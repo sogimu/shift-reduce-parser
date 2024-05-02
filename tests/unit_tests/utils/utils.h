@@ -124,6 +124,14 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      e_syntax_node->Add( argument0 );
                      arguments.push_back( e_syntax_node );
                   }
+                  else if( key == "PrintExpressionSyntaxNode" )
+                  {
+                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& print_expression_syntax_node = std::make_shared< PrintExpressionSyntaxNode >();
+                     print_expression_syntax_node->Add( argument0 );
+                     arguments.push_back( print_expression_syntax_node );
+                  }
                   else if( key == "IfExpressionSyntaxNode" )
                   {
                      const auto& if_expression_syntax_node = std::make_shared< IfExpressionSyntaxNode >();
@@ -161,7 +169,7 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      arguments.pop_back();
                      ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
-                     const auto& varible_assignment_syntax_node = std::make_shared< SumSyntaxNode >();
+                     const auto& varible_assignment_syntax_node = std::make_shared< VaribleAssigmentSyntaxNode >();
                      varible_assignment_syntax_node->Add( argument1 );
                      varible_assignment_syntax_node->Add( argument0 );
                      arguments.push_back( varible_assignment_syntax_node );

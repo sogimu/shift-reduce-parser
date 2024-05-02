@@ -16,6 +16,7 @@ public:
    }
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
+   bool compare( const ISyntaxNode& node ) const override;
 };
 
 using PrintSyntaxNodeSP = std::shared_ptr< PrintSyntaxNode >;
