@@ -1,5 +1,6 @@
 #pragma once
 
+#include "e/diff/diff_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "sum/sum_syntax_node.h"
@@ -20,6 +21,11 @@ public:
       Add( sum );
    }
 
+   ESyntaxNode( const DiffSyntaxNodeSP& diff )
+      : ISyntaxNode{ Token_Type::E }
+   {
+      Add( diff );
+   }
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
 };

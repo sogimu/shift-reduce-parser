@@ -24,6 +24,7 @@ public:
          BOL,
          EOL,
          SUM,
+         DIFF,
          E
       };
 
@@ -55,6 +56,38 @@ public:
             plan.to_remove.nodes.push_back( sum );
 
             const auto& e_node = std::make_shared< ESyntaxNode >( sum );
+            plan.to_add.nodes.push_back( e_node );
+            return plan;
+         } );
+
+      // DIFF
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            DiffSyntaxNodeSP diff;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.diff_syntax_node = [ &diff, &state ]( const DiffSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  state = State::DIFF;
+                  diff = node;
+                  state = State::FINISH;
+               }
+            };
+            iterate_over_last_n_nodes( stack, 1, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( diff );
+
+            const auto& e_node = std::make_shared< ESyntaxNode >( diff );
             plan.to_add.nodes.push_back( e_node );
             return plan;
          } );

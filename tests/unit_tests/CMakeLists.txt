@@ -12,12 +12,12 @@ add_executable(unit_tests
     src/lexical_tokens/arithmetic_expression/division_test.cpp
     src/lexical_tokens/arithmetic_expression/varible_expression_test.cpp
     src/syntax_tree/arithmetic_expression/addition_test.cpp
+    src/syntax_tree/arithmetic_expression/diff_test.cpp
     src/syntax_tree/arithmetic_expression/circle_brackets_test.cpp
     src/syntax_tree/if_expression/if_test.cpp
     src/syntax_tree/scope_expression/scope_test.cpp
     src/syntax_tree/varible_assign_expression/varible_assign_expression_test.cpp
     src/syntax_tree/print_expression/print_test.cpp
-    src/syntax_tree_test.cpp
     src/syntax_tree_test.cpp
     # src/dfs_pre_order_range_test.cpp
     src/create_syntax_node_tree_test.cpp

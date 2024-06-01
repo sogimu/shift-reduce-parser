@@ -163,6 +163,17 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      sum_syntax_node->Add( argument0 );
                      arguments.push_back( sum_syntax_node );
                   }
+                  else if( key == "DiffSyntaxNode" )
+                  {
+                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& sum_syntax_node = std::make_shared< DiffSyntaxNode >();
+                     sum_syntax_node->Add( argument1 );
+                     sum_syntax_node->Add( argument0 );
+                     arguments.push_back( sum_syntax_node );
+                  }
                   else if( key == "VaribleAssigmentSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );

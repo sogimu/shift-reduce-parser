@@ -31,51 +31,51 @@ public:
       };
 
       // MINUS NUMBER
-      mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
-         {
-            MinusSyntaxNodeSP minus;
-            NumberSyntaxNodeSP number;
-
-            State state = State::START;
-
-            iterate_over_last_n_nodes(
-               stack, 2,
-               SyntaxNodeEmptyVisitor::Handlers{ .default_handler = [ &state ]( const ISyntaxNodeSP& )
-                                                 { state = State::ERROR; },
-                                                 .minus_syntax_node =
-                                                    [ &minus, &number, &state ]( const MinusSyntaxNodeSP& node )
-                                                 {
-                                                    if( state == State::START )
-                                                    {
-                                                       state = State::FIRST_MINUS;
-                                                       minus = node;
-                                                    }
-                                                 },
-                                                 .number_syntax_node =
-                                                    [ &number, &state ]( const NumberSyntaxNodeSP& node )
-                                                 {
-                                                    if( state == State::FIRST_MINUS )
-                                                    {
-                                                       state = State::NUMBER;
-                                                       number = node;
-                                                       state = State::FINISH;
-                                                    }
-                                                 }
-
-               } );
-
-            if( state != State::FINISH )
-               return {};
-
-            Plan plan;
-            plan.to_remove.nodes.push_back( minus );
-            plan.to_remove.nodes.push_back( number );
-
-            const auto& f_node = std::make_shared< FSyntaxNode >( minus, number );
-            plan.to_add.nodes.push_back( f_node );
-            return plan;
-         } );
+      // mProductions.emplace_back(
+      //    [ this ]( const Stack& stack ) -> std::optional< Plan >
+      //    {
+      //       MinusSyntaxNodeSP minus;
+      //       NumberSyntaxNodeSP number;
+      //
+      //       State state = State::START;
+      //
+      //       iterate_over_last_n_nodes(
+      //          stack, 2,
+      //          SyntaxNodeEmptyVisitor::Handlers{ .default_handler = [ &state ]( const ISyntaxNodeSP& )
+      //                                            { state = State::ERROR; },
+      //                                            .minus_syntax_node =
+      //                                               [ &minus, &number, &state ]( const MinusSyntaxNodeSP& node )
+      //                                            {
+      //                                               if( state == State::START )
+      //                                               {
+      //                                                  state = State::FIRST_MINUS;
+      //                                                  minus = node;
+      //                                               }
+      //                                            },
+      //                                            .number_syntax_node =
+      //                                               [ &number, &state ]( const NumberSyntaxNodeSP& node )
+      //                                            {
+      //                                               if( state == State::FIRST_MINUS )
+      //                                               {
+      //                                                  state = State::NUMBER;
+      //                                                  number = node;
+      //                                                  state = State::FINISH;
+      //                                               }
+      //                                            }
+      //
+      //          } );
+      //
+      //       if( state != State::FINISH )
+      //          return {};
+      //
+      //       Plan plan;
+      //       plan.to_remove.nodes.push_back( minus );
+      //       plan.to_remove.nodes.push_back( number );
+      //
+      //       const auto& f_node = std::make_shared< FSyntaxNode >( minus, number );
+      //       plan.to_add.nodes.push_back( f_node );
+      //       return plan;
+      //    } );
 
       // NUMBER
       mProductions.emplace_back(
