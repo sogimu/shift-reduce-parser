@@ -27,7 +27,6 @@ public:
          OPEN_CIRCLE_BRACKET,
          COMPUTATIONAL_EXPRESSION,
          CLOSE_CIRCLE_BRACKET,
-         SEMICOLON
       };
 
       // PRINT OPEN_CIRCLE_BRACKET COMPUTATIONAL_EXPRESSION CLOSE_CIRCLE_BRACKET SEMICOLON
@@ -74,20 +73,12 @@ public:
                if( state == State::COMPUTATIONAL_EXPRESSION )
                {
                   state = State::CLOSE_CIRCLE_BRACKET;
+                  state = State::FINISH;
                   close = node;
                }
             };
-            handlers.semicolon_syntax_node = [ &semiclon, &state ]( const SemicolonSyntaxNodeSP& node )
-            {
-               if( state == State::CLOSE_CIRCLE_BRACKET )
-               {
-                  semiclon = node;
-                  state = State::SEMICOLON;
-                  state = State::FINISH;
-               }
-            };
 
-            iterate_over_last_n_nodes( stack, 5, handlers );
+            iterate_over_last_n_nodes( stack, 4, handlers );
 
             if( state != State::FINISH )
                return {};
@@ -97,7 +88,6 @@ public:
             plan.to_remove.nodes.push_back( open );
             plan.to_remove.nodes.push_back( computational_expression );
             plan.to_remove.nodes.push_back( close );
-            plan.to_remove.nodes.push_back( semiclon );
 
             const auto& print_expression_node =
                std::make_shared< PrintExpressionSyntaxNode >( computational_expression );

@@ -69,6 +69,7 @@ public:
          [ this ]( const Stack& stack ) -> std::optional< Plan >
          {
             PrintExpressionSyntaxNodeSP print_expression_syntax_node;
+            SemicolonSyntaxNodeSP semicolon;
 
             State state = State::START;
 
@@ -84,14 +85,24 @@ public:
                   state = State::FINISH;
                }
             };
+            handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
+            {
+               if( state == State::PRINT_EXPRESSION )
+               {
+                  semicolon = node;
+                  state = State::SEMICOLON;
+                  state = State::FINISH;
+               }
+            };
 
-            iterate_over_last_n_nodes( stack, 1, handlers );
+            iterate_over_last_n_nodes( stack, 2, handlers );
 
             if( state != State::FINISH )
                return {};
 
             Plan plan;
             plan.to_remove.nodes.push_back( print_expression_syntax_node );
+            plan.to_remove.nodes.push_back( semicolon );
 
             const auto& expression_syntax_node =
                std::make_shared< ExpressionSyntaxNode >( print_expression_syntax_node );

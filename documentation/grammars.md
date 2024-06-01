@@ -25,7 +25,7 @@ F      -> CE
 NAME=CE -> VA
 
 //P
-PRINT(CE); -> P
+PRINT(CE) -> P
 
 //CondE
 CE==CE -> CondE
@@ -34,7 +34,7 @@ CE>CE  -> CondE
 
 //Exp
 IfExp  -> Exp
-P      -> Exp
+P;     -> Exp
 CE;    -> Exp
 CondE; -> Exp
 VA;    -> Exp
