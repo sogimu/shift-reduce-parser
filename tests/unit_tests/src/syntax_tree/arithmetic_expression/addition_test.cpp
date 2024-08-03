@@ -23,7 +23,7 @@ TEST( SYNTAX_TREE_ADDITION, ONE_PLUS )
               {
                 "ComputationalExpressionSyntaxNode": [
                   {
-                    "SumSyntaxNode": [
+                    "AdditionSyntaxNode": [
                       {
                         "ComputationalExpressionSyntaxNode": [
                           {
@@ -74,15 +74,15 @@ TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
         {
           "ComputationalExpressionSyntaxNode": [
             {
-              "SumSyntaxNode": [
+              "AdditionSyntaxNode": [
                 {
                   "ComputationalExpressionSyntaxNode": [
                     {
-                      "SumSyntaxNode": [
+                      "AdditionSyntaxNode": [
                         {
                           "ComputationalExpressionSyntaxNode": [
                             {
-                              "SumSyntaxNode": [
+                              "AdditionSyntaxNode": [
                                 {
                                   "ComputationalExpressionSyntaxNode": [
                                     {
@@ -159,7 +159,7 @@ TEST( SYNTAX_TREE_ADDITION, ADVANCE_EXPRESSION )
             {
               "ComputationalExpressionSyntaxNode": [
                 {
-                  "SumSyntaxNode": [
+                  "AdditionSyntaxNode": [
                     {
                       "ComputationalExpressionSyntaxNode": [
                         {

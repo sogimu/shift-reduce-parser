@@ -5,10 +5,6 @@
 
 #include <vector>
 
-class E;
-class T;
-class P;
-
 class MultiplySyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< MultiplySyntaxNode >
 {
 public:

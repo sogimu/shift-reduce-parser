@@ -13,12 +13,9 @@ TEST( DIVISION, ONE_DIVIDE )
    const auto& lexical_tokens = LexicalTokens( input );
 
    // ASSERT
-   LexicalTokens expected_lexical_tokens{ { { "", Token_Type::BOL },
-                                            { "1", Token_Type::INT },
-                                            { "/", Token_Type::DIVIDE },
-                                            { "2", Token_Type::INT },
-                                            { ";", Token_Type::SEMICOLON },
-                                            { "", Token_Type::EOL } } };
+   LexicalTokens expected_lexical_tokens{
+      { { "", Token_Type::BOL }, { "1", Token_Type::INT }, { "/", Token_Type::SLASH }, { "2", Token_Type::INT }, { ";", Token_Type::SEMICOLON }, { "", Token_Type::EOL } }
+   };
    EXPECT_EQ( lexical_tokens, expected_lexical_tokens );
 }
 
@@ -33,9 +30,9 @@ TEST( DIVISION, MANY_DIVIDEs )
    // ASSERT
    LexicalTokens expected_lexical_tokens{ { { "", Token_Type::BOL },
                                             { "1", Token_Type::INT },
-                                            { "/", Token_Type::DIVIDE },
+                                            { "/", Token_Type::SLASH },
                                             { "2", Token_Type::INT },
-                                            { "/", Token_Type::DIVIDE },
+                                            { "/", Token_Type::SLASH },
                                             { "3", Token_Type::INT },
                                             { ";", Token_Type::SEMICOLON },
                                             { "", Token_Type::EOL } } };

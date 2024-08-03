@@ -64,7 +64,7 @@ inline int operation_weight( const ISyntaxNodeSP& node )
    handlers.default_handler = [ &result ]( const ISyntaxNodeSP& ) { result = -1; };
    handlers.plus_syntax_node = [ &result ]( const PlusSyntaxNodeSP& node ) { result = 1; };
    handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = 1; };
-   handlers.diff_syntax_node = [ &result ]( const DiffSyntaxNodeSP& node ) { result = 2; };
+   handlers.subtraction_syntax_node = [ &result ]( const SubtractionSyntaxNodeSP& node ) { result = 2; };
    handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = 2; };
    handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = -1; };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
@@ -82,8 +82,8 @@ public:
          START,
          FINISH,
          ERROR,
-         SUM,
-         DIFF,
+         ADDITION,
+         SUBTRACTION,
          MULTIPLY,
          F,
          OPEN_CIRCLE_BRACKET,
@@ -95,8 +95,8 @@ public:
       mProductions.emplace_back(
          [ this ]( const Stack& stack ) -> std::optional< Plan >
          {
-            SumSyntaxNodeSP sum;
-            DiffSyntaxNodeSP diff;
+            AdditionSyntaxNodeSP addition;
+            SubtractionSyntaxNodeSP subtraction;
             MultiplySyntaxNodeSP multiply;
             SemicolonSyntaxNodeSP semicolon;
 
@@ -105,20 +105,20 @@ public:
             Plan plan;
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.sum_syntax_node = [ &sum, &state ]( const SumSyntaxNodeSP& node )
+            handlers.addition_syntax_node = [ &addition, &state ]( const AdditionSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  sum = node;
-                  state = State::SUM;
+                  addition = node;
+                  state = State::ADDITION;
                }
             };
-            handlers.diff_syntax_node = [ &diff, &state ]( const DiffSyntaxNodeSP& node )
+            handlers.subtraction_syntax_node = [ &subtraction, &state ]( const SubtractionSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  diff = node;
-                  state = State::DIFF;
+                  subtraction = node;
+                  state = State::SUBTRACTION;
                }
             };
             handlers.multiply_syntax_node = [ &multiply, &state ]( const MultiplySyntaxNodeSP& node )
@@ -131,7 +131,7 @@ public:
             };
             handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
             {
-               if( state == State::SUM || state == State::MULTIPLY || state == State::DIFF )
+               if( state == State::ADDITION || state == State::MULTIPLY || state == State::SUBTRACTION )
                {
                   semicolon = node;
                   state = State::FINISH;
@@ -143,10 +143,10 @@ public:
                return {};
 
             ISyntaxNodeSP expression;
-            if( sum )
-               expression = sum;
-            else if( diff )
-               expression = diff;
+            if( addition )
+               expression = addition;
+            else if( subtraction )
+               expression = subtraction;
             else if( multiply )
                expression = multiply;
             plan.to_remove.nodes.push_back( expression );
@@ -209,10 +209,10 @@ public:
                         plan.to_remove.nodes.push_back( f1 );
                         plan.to_remove.nodes.push_back( node );
 
-                        const auto& sum_node = std::make_shared< SumSyntaxNode >();
-                        sum_node->Add( f0 );
-                        sum_node->Add( f1 );
-                        plan.to_add.nodes.push_back( sum_node );
+                        const auto& addition_node = std::make_shared< AdditionSyntaxNode >();
+                        addition_node->Add( f0 );
+                        addition_node->Add( f1 );
+                        plan.to_add.nodes.push_back( addition_node );
                         plan.to_add.nodes.push_back( node );
                         plan_opt = plan;
                      };
@@ -229,10 +229,10 @@ public:
                         plan.to_remove.nodes.push_back( f1 );
                         plan.to_remove.nodes.push_back( node );
 
-                        const auto& diff_node = std::make_shared< DiffSyntaxNode >();
-                        diff_node->Add( f0 );
-                        diff_node->Add( f1 );
-                        plan.to_add.nodes.push_back( diff_node );
+                        const auto& subtraction_node = std::make_shared< SubtractionSyntaxNode >();
+                        subtraction_node->Add( f0 );
+                        subtraction_node->Add( f1 );
+                        plan.to_add.nodes.push_back( subtraction_node );
                         plan.to_add.nodes.push_back( node );
                         plan_opt = plan;
                      };
@@ -256,7 +256,8 @@ public:
                         plan.to_add.nodes.push_back( node );
                         plan_opt = plan;
                      };
-                     // handlers.minus_syntax_node = [ &new_node, f0, f1 ]( const MinusSyntaxNodeSP& node ) { new_node = std::make_shared< DiffSyntaxNode >( f0, f1 );
+                     // handlers.minus_syntax_node = [ &new_node, f0, f1 ]( const MinusSyntaxNodeSP& node ) { new_node = std::make_shared< SubtractionSyntaxNode >( f0, f1
+                     // );
                      // };
                      const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
                      prev_operation->accept( visitor );

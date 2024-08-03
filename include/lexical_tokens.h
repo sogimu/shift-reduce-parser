@@ -87,7 +87,7 @@ public:
             break;
             case '/':
             {
-               terminal_token_type = Token_Type::DIVIDE;
+               terminal_token_type = Token_Type::SLASH;
             };
             break;
             case '(':

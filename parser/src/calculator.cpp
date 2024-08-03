@@ -13,8 +13,7 @@
 #include <string>
 #include <vector>
 
-int HandleComputationalExpression( const VaribleStore& varible_store,
-                                   const ComputationalExpressionSyntaxNodeSP& expression )
+int HandleComputationalExpression( const VaribleStore& varible_store, const ComputationalExpressionSyntaxNodeSP& expression )
 {
    int result = 0;
 
@@ -24,10 +23,8 @@ int HandleComputationalExpression( const VaribleStore& varible_store,
       [ &varible_store, &syntax_node_value_by_syntax_node ]( const ISyntaxNodeSP& node ) -> bool
       {
          SyntaxNodeEmptyVisitor::Handlers handlers;
-         handlers.f_syntax_node = [ &syntax_node_value_by_syntax_node ]( const FSyntaxNodeSP& node )
-         { syntax_node_value_by_syntax_node[ node ] = node->value(); };
-         handlers.name_syntax_node =
-            [ &varible_store, &syntax_node_value_by_syntax_node ]( const NameSyntaxNodeSP& name )
+         handlers.f_syntax_node = [ &syntax_node_value_by_syntax_node ]( const FSyntaxNodeSP& node ) { syntax_node_value_by_syntax_node[ node ] = node->value(); };
+         handlers.name_syntax_node = [ &varible_store, &syntax_node_value_by_syntax_node ]( const NameSyntaxNodeSP& name )
          {
             const auto& value = varible_store[ name->value() ];
             syntax_node_value_by_syntax_node[ name ] = value;
@@ -41,14 +38,14 @@ int HandleComputationalExpression( const VaribleStore& varible_store,
       [ &result, &syntax_node_value_by_syntax_node ]( const ISyntaxNodeSP& node )
       {
          SyntaxNodeEmptyVisitor::Handlers handlers;
-         handlers.sum_syntax_node = [ &result, &syntax_node_value_by_syntax_node ]( const SumSyntaxNodeSP& node )
+         handlers.addition_syntax_node = [ &result, &syntax_node_value_by_syntax_node ]( const AdditionSyntaxNodeSP& node )
          {
             for( const auto& argument : node->Children() )
             {
                result += syntax_node_value_by_syntax_node[ argument ];
             }
          };
-         handlers.diff_syntax_node = [ &result, &syntax_node_value_by_syntax_node ]( const DiffSyntaxNodeSP& node )
+         handlers.subtraction_syntax_node = [ &result, &syntax_node_value_by_syntax_node ]( const SubtractionSyntaxNodeSP& node )
          {
             for( const auto& argument : node->Children() )
             {
@@ -61,19 +58,18 @@ int HandleComputationalExpression( const VaribleStore& varible_store,
       } );
 
    bool is_result_found = false;
-   iterative_dfs< ISyntaxNodeSP >(
-      expression,
-      [ &is_result_found, &syntax_node_value_by_syntax_node, &result ]( const ISyntaxNodeSP& node ) -> bool
-      {
-         if( is_result_found == false && syntax_node_value_by_syntax_node.contains( node ) )
-         {
-            result = syntax_node_value_by_syntax_node[ node ];
-            is_result_found = true;
-            return true;
-         }
+   iterative_dfs< ISyntaxNodeSP >( expression,
+                                   [ &is_result_found, &syntax_node_value_by_syntax_node, &result ]( const ISyntaxNodeSP& node ) -> bool
+                                   {
+                                      if( is_result_found == false && syntax_node_value_by_syntax_node.contains( node ) )
+                                      {
+                                         result = syntax_node_value_by_syntax_node[ node ];
+                                         is_result_found = true;
+                                         return true;
+                                      }
 
-         return false;
-      } );
+                                      return false;
+                                   } );
    return result;
 }
 
@@ -142,12 +138,10 @@ double Calculator::solve( const std::string& expression ) const
             varible_store.pushScope();
          };
 
-         handlers.computational_expression_syntax_node =
-            [ &varible_store ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
+         handlers.computational_expression_syntax_node = [ &varible_store ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
          { int result = HandleComputationalExpression( varible_store, computational_expression ); };
 
-         handlers.print_expression_syntax_node =
-            [ &varible_store, &node ]( const PrintExpressionSyntaxNodeSP& print_expression )
+         handlers.print_expression_syntax_node = [ &varible_store, &node ]( const PrintExpressionSyntaxNodeSP& print_expression )
          {
             ISyntaxNodeSP next_scope;
             const auto& computational_expression = print_expression->computational_expression();
@@ -156,8 +150,7 @@ double Calculator::solve( const std::string& expression ) const
             return std::optional< std::vector< ISyntaxNodeSP > >{};
          };
 
-         handlers.if_expression_syntax_node =
-            [ &varible_store, &children, &node ]( const IfExpressionSyntaxNodeSP& if_expression )
+         handlers.if_expression_syntax_node = [ &varible_store, &children, &node ]( const IfExpressionSyntaxNodeSP& if_expression )
          {
             ISyntaxNodeSP next_scope;
             const auto& condition = if_expression->conditional_expression();
@@ -176,8 +169,7 @@ double Calculator::solve( const std::string& expression ) const
                children = std::vector< ISyntaxNodeSP >{ next_scope };
             }
          };
-         handlers.varible_assigment_syntax_node =
-            [ &varible_store, &node ]( const VaribleAssigmentSyntaxNodeSP& varible_assigment )
+         handlers.varible_assigment_syntax_node = [ &varible_store, &node ]( const VaribleAssigmentSyntaxNodeSP& varible_assigment )
          {
             const auto& computational_expression = varible_assigment->computational_expression();
             const auto& value = HandleComputationalExpression( varible_store, computational_expression );

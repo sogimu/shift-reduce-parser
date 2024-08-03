@@ -22,9 +22,10 @@
 #include "base/semicolon_syntax_node.h"
 #include "computational_expression_syntax_node.h"
 #include "conditional_expression_syntax_node.h"
-#include "diff/diff_syntax_node.h"
-#include "sum/sum_syntax_node.h"
+#include "subtraction/subtraction_syntax_node.h"
+#include "addition/addition_syntax_node.h"
 #include "multiply/multiply_syntax_node.h"
+#include "division/division_syntax_node.h"
 #include "expression_syntax_node.h"
 #include "i_syntax_node.h"
 #include "if_expression_syntax_node.h"
@@ -42,9 +43,10 @@ public:
    virtual void visit( const AsteriskSyntaxNodeSP& ) = 0;
    virtual void visit( const NumberSyntaxNodeSP& ) = 0;
    virtual void visit( const FSyntaxNodeSP& ) = 0;
-   virtual void visit( const SumSyntaxNodeSP& ) = 0;
-   virtual void visit( const DiffSyntaxNodeSP& ) = 0;
+   virtual void visit( const AdditionSyntaxNodeSP& ) = 0;
+   virtual void visit( const SubtractionSyntaxNodeSP& ) = 0;
    virtual void visit( const MultiplySyntaxNodeSP& ) = 0;
+   virtual void visit( const DivisionSyntaxNodeSP& ) = 0;
    virtual void visit( const SemicolonSyntaxNodeSP& ) = 0;
    virtual void visit( const ExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const ScopeSyntaxNodeSP& ) = 0;

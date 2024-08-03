@@ -296,8 +296,8 @@ public:
             handlers.asterisk_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ASTERISK" << "}"; };
             handlers.number_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "NUMBER" << "}"; };
             handlers.f_syntax_node = [ &s ]( const FSyntaxNodeSP& node ) { s << "{" << "F" << '(' << std::to_string( node->value() ) << ')' << "}"; };
-            handlers.sum_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SUM" << "}"; };
-            handlers.diff_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "DIFF" << "}"; };
+            handlers.addition_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ADDITION" << "}"; };
+            handlers.subtraction_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SUBTRACTION" << "}"; };
             handlers.multiply_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MULTIPLY" << "}"; };
             handlers.eol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EOL" << "}"; };
             handlers.semicolon_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SEMICOLON" << "}"; };

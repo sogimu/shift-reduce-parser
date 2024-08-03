@@ -144,27 +144,27 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      arguments.pop_back();
                      arguments.push_back( if_expression_syntax_node );
                   }
-                  else if( key == "SumSyntaxNode" )
+                  else if( key == "AdditionSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
                      ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
-                     const auto& sum_syntax_node = std::make_shared< SumSyntaxNode >();
-                     sum_syntax_node->Add( argument1 );
-                     sum_syntax_node->Add( argument0 );
-                     arguments.push_back( sum_syntax_node );
+                     const auto& addition_syntax_node = std::make_shared< AdditionSyntaxNode >();
+                     addition_syntax_node->Add( argument1 );
+                     addition_syntax_node->Add( argument0 );
+                     arguments.push_back( addition_syntax_node );
                   }
-                  else if( key == "DiffSyntaxNode" )
+                  else if( key == "SubtractionSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
                      ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
-                     const auto& sum_syntax_node = std::make_shared< DiffSyntaxNode >();
-                     sum_syntax_node->Add( argument1 );
-                     sum_syntax_node->Add( argument0 );
-                     arguments.push_back( sum_syntax_node );
+                     const auto& addition_syntax_node = std::make_shared< SubtractionSyntaxNode >();
+                     addition_syntax_node->Add( argument1 );
+                     addition_syntax_node->Add( argument0 );
+                     arguments.push_back( addition_syntax_node );
                   }
                   else if( key == "MultipleSyntaxNode" )
                   {

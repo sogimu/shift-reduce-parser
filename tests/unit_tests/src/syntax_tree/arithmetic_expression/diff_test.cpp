@@ -23,7 +23,7 @@ TEST( SYNTAX_TREE_DIFF, ONE_MINUS )
         {
           "ComputationalExpressionSyntaxNode": [
             {
-              "DiffSyntaxNode": [
+              "SubtractionSyntaxNode": [
                 {
                   "ComputationalExpressionSyntaxNode": [
                     {
@@ -74,15 +74,15 @@ TEST( SYNTAX_TREE_DIFF, MANY_MINUS )
         {
           "ComputationalExpressionSyntaxNode": [
             {
-              "DiffSyntaxNode": [
+              "SubtractionSyntaxNode": [
                 {
                   "ComputationalExpressionSyntaxNode": [
                     {
-                      "DiffSyntaxNode": [
+                      "SubtractionSyntaxNode": [
                         {
                           "ComputationalExpressionSyntaxNode": [
                             {
-                              "DiffSyntaxNode": [
+                              "SubtractionSyntaxNode": [
                                 {
                                   "ComputationalExpressionSyntaxNode": [
                                     {

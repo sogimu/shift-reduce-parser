@@ -4,7 +4,7 @@
 #include "base/name_syntax_node.h"
 #include "conditional_expression_syntax_node.h"
 #include "multiply/multiply_syntax_node.h"
-#include "sum/sum_syntax_node.h"
+#include "addition/addition_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 
@@ -15,7 +15,7 @@ class ComputationalExpressionSyntaxNode : public ISyntaxNode, public std::enable
 {
 public:
    ComputationalExpressionSyntaxNode() = default;
-   ComputationalExpressionSyntaxNode( const SumSyntaxNodeSP& e )
+   ComputationalExpressionSyntaxNode( const AdditionSyntaxNodeSP& e )
       : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
    {
       Add( e );

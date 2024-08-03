@@ -1,5 +1,7 @@
 #pragma once
 
+#include "division/division_syntax_node.h"
+#include "subtraction/subtraction_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 
 #include <functional>
@@ -17,9 +19,10 @@ public:
       std::function< void( const AsteriskSyntaxNodeSP& ) > asterisk_syntax_node = [ this ]( const AsteriskSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const NumberSyntaxNodeSP& ) > number_syntax_node = [ this ]( const NumberSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FSyntaxNodeSP& ) > f_syntax_node = [ this ]( const FSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const SumSyntaxNodeSP& ) > sum_syntax_node = [ this ]( const SumSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const DiffSyntaxNodeSP& ) > diff_syntax_node = [ this ]( const DiffSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const AdditionSyntaxNodeSP& ) > addition_syntax_node = [ this ]( const AdditionSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const SubtractionSyntaxNodeSP& ) > subtraction_syntax_node = [ this ]( const SubtractionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const MultiplySyntaxNodeSP& ) > multiply_syntax_node = [ this ]( const MultiplySyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const DivisionSyntaxNodeSP& ) > division_syntax_node = [ this ]( const DivisionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const EolSyntaxNodeSP& ) > eol_syntax_node = [ this ]( const EolSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const SemicolonSyntaxNodeSP& ) > semicolon_syntax_node = [ this ]( const SemicolonSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ExpressionSyntaxNodeSP& ) > expression_syntax_node = [ this ]( const ExpressionSyntaxNodeSP& node ) { default_handler( node ); };
@@ -91,18 +94,22 @@ public:
       mHandlers.f_syntax_node( node );
    }
 
-   void visit( const SumSyntaxNodeSP& node ) override
+   void visit( const AdditionSyntaxNodeSP& node ) override
    {
-      mHandlers.sum_syntax_node( node );
+      mHandlers.addition_syntax_node( node );
    }
 
-   void visit( const DiffSyntaxNodeSP& node ) override
+   void visit( const SubtractionSyntaxNodeSP& node ) override
    {
-      mHandlers.diff_syntax_node( node );
+      mHandlers.subtraction_syntax_node( node );
    }
    void visit( const MultiplySyntaxNodeSP& node ) override
    {
       mHandlers.multiply_syntax_node( node );
+   }
+   void visit( const DivisionSyntaxNodeSP& node ) override
+   {
+      mHandlers.division_syntax_node( node );
    }
 
    void visit( const SemicolonSyntaxNodeSP& node ) override

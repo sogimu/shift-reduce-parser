@@ -20,6 +20,7 @@ set(HEADERS
     include/grammars/base/plus_syntax_node.h
     include/grammars/base/minus_syntax_node.h
     include/grammars/base/asterisk_syntax_node.h
+    include/grammars/base/slash_syntax_node.h
     include/grammars/base/number_syntax_node.h
     include/grammars/base/f_syntax_node.h
     include/grammars/base/semicolon_syntax_node.h
@@ -33,8 +34,9 @@ set(HEADERS
     include/grammars/base/close_circle_bracket_syntax_node.h
     include/grammars/base/if_syntax_node.h
     include/grammars/base/name_syntax_node.h
-    include/grammars/sum/sum_syntax_node.h
-    include/grammars/diff/diff_syntax_node.h
+    include/grammars/addition/addition_syntax_node.h
+    include/grammars/subtraction/subtraction_syntax_node.h
+    include/grammars/division/division_syntax_node.h
     include/grammars/expression_syntax_node.h
     include/grammars/scope_syntax_node.h
     include/grammars/f_grammar.h
@@ -50,13 +52,6 @@ set(HEADERS
     include/grammars/computational_expression_syntax_node.h
     include/grammars/computational_expression_grammar.h
     include/grammars/scope_grammar.h
-#    include/grammars/f/t/mul/grammar.h
-#    include/grammars/f/t/mul/syntax_node.h
-#    include/grammars/f/t/div/grammar.h
-#    include/grammars/f/t/div/syntax_node.h
-#    include/grammars/f/t/grammar.h
-#    include/grammars/f/t/syntax_node.h
-#    include/grammars/p.h
 #    include/grammars/assignment.h
 #    include/grammars/expression.h
 #    include/i_feature.h
@@ -83,9 +78,10 @@ set(SOURCES
     src/grammars/base/close_circle_bracket_syntax_node.cpp
     src/grammars/base/if_syntax_node.cpp
     src/grammars/base/name_syntax_node.cpp
-    src/grammars/sum/sum_syntax_node.cpp
+    src/grammars/addition/addition_syntax_node.cpp
+    src/grammars/subtraction/subtraction_syntax_node.cpp
     src/grammars/multiply/multiply_syntax_node.cpp
-    src/grammars/diff/diff_syntax_node.cpp
+    src/grammars/division/division_syntax_node.cpp
     src/grammars/computational_expression_syntax_node.cpp
     src/grammars/expression_syntax_node.cpp
     src/grammars/print_expression_syntax_node.cpp
