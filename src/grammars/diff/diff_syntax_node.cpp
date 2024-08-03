@@ -1,35 +1,30 @@
-#include "e/sum/sum_syntax_node.h"
+#include "diff/diff_syntax_node.h"
 
-#include "base/f_syntax_node.h"
-#include "computational_expression_syntax_node.h"
-#include "enums.h"
-#include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
 #include <vector>
 
-SumSyntaxNode::SumSyntaxNode()
-   : ISyntaxNode{ Token_Type::SUM }
+DiffSyntaxNode::DiffSyntaxNode()
+   : ISyntaxNode{ Token_Type::DIFF }
 {
 }
-
-SumSyntaxNode::SumSyntaxNode( const FSyntaxNodeSP& f0, const FSyntaxNodeSP& f1 )
-   : ISyntaxNode{ Token_Type::SUM }
+DiffSyntaxNode::DiffSyntaxNode( const FSyntaxNodeSP& f0, const FSyntaxNodeSP& f1 )
+   : ISyntaxNode{ Token_Type::DIFF }
 {
    Add( f0 );
    Add( f1 );
 }
 
-SumSyntaxNode::SumSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression0,
-                              const ComputationalExpressionSyntaxNodeSP& computational_expression1 )
-   : ISyntaxNode{ Token_Type::SUM }
+DiffSyntaxNode::DiffSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression0,
+                                const ComputationalExpressionSyntaxNodeSP& computational_expression1 )
+   : ISyntaxNode{ Token_Type::DIFF }
 {
    Add( computational_expression0 );
    Add( computational_expression1 );
 }
 
-std::vector< FSyntaxNodeSP > SumSyntaxNode::Arguments() const
+std::vector< FSyntaxNodeSP > DiffSyntaxNode::Arguments() const
 {
    std::vector< FSyntaxNodeSP > result;
    SyntaxNodeEmptyVisitor::Handlers handlers;
@@ -43,11 +38,11 @@ std::vector< FSyntaxNodeSP > SumSyntaxNode::Arguments() const
    return result;
 }
 
-bool SumSyntaxNode::compare( const ISyntaxNode& node ) const
+bool DiffSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = false;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.sum_syntax_node = [ this, &is_equal ]( const SumSyntaxNodeSP& node )
+   handlers.diff_syntax_node = [ this, &is_equal ]( const DiffSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
          return;
@@ -67,8 +62,7 @@ bool SumSyntaxNode::compare( const ISyntaxNode& node ) const
 
    return is_equal;
 }
-
-void SumSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+void DiffSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
 }

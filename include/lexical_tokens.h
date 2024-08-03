@@ -82,7 +82,7 @@ public:
             break;
             case '*':
             {
-               terminal_token_type = Token_Type::MULTIPLY;
+               terminal_token_type = Token_Type::ASTERISK;
             };
             break;
             case '/':

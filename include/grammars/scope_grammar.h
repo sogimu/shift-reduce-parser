@@ -39,11 +39,9 @@ public:
 
             SyntaxNodeEmptyVisitor::Handlers close_curly_bracket_handler;
             close_curly_bracket_handler.close_curly_bracket_syntax_node =
-               [ &is_close_curly_bracket_found, &is_open_curly_bracket_found,
-                 &distance_between_open_close_curly_bracket, &stack ]( const CloseCurlyBracketSyntaxNodeSP& node )
-            { is_close_curly_bracket_found = true; };
-            const auto& close_curly_bracket_visitor =
-               std::make_shared< SyntaxNodeEmptyVisitor >( close_curly_bracket_handler );
+               [ &is_close_curly_bracket_found, &is_open_curly_bracket_found, &distance_between_open_close_curly_bracket,
+                 &stack ]( const CloseCurlyBracketSyntaxNodeSP& node ) { is_close_curly_bracket_found = true; };
+            const auto& close_curly_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( close_curly_bracket_handler );
             ( *stack.rbegin() )->accept( close_curly_bracket_visitor );
 
             if( !is_close_curly_bracket_found )
@@ -52,11 +50,9 @@ public:
             SyntaxNodeEmptyVisitor::Handlers open_curly_bracket_handler;
             for( auto it = stack.rbegin(); it != stack.rend(); ++it )
             {
-               open_curly_bracket_handler.open_curly_bracket_syntax_node =
-                  [ &is_open_curly_bracket_found ]( const OpenCurlyBracketSyntaxNodeSP& node )
+               open_curly_bracket_handler.open_curly_bracket_syntax_node = [ &is_open_curly_bracket_found ]( const OpenCurlyBracketSyntaxNodeSP& node )
                { is_open_curly_bracket_found = true; };
-               const auto& open_curly_bracket_visitor =
-                  std::make_shared< SyntaxNodeEmptyVisitor >( open_curly_bracket_handler );
+               const auto& open_curly_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( open_curly_bracket_handler );
                ( *it )->accept( open_curly_bracket_visitor );
                if( is_open_curly_bracket_found )
                {
@@ -72,8 +68,7 @@ public:
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.open_curly_bracket_syntax_node =
-               [ &open_curly_bracket, &state ]( const OpenCurlyBracketSyntaxNodeSP& node )
+            handlers.open_curly_bracket_syntax_node = [ &open_curly_bracket, &state ]( const OpenCurlyBracketSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
@@ -118,8 +113,7 @@ public:
                }
             };
 
-            handlers.close_curly_bracket_syntax_node =
-               [ &close_curly_bracket, &state ]( const CloseCurlyBracketSyntaxNodeSP& node )
+            handlers.close_curly_bracket_syntax_node = [ &close_curly_bracket, &state ]( const CloseCurlyBracketSyntaxNodeSP& node )
             {
                if( state == State::EXPRESSION )
                {

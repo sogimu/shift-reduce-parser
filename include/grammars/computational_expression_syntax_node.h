@@ -3,24 +3,29 @@
 #include "base/f_syntax_node.h"
 #include "base/name_syntax_node.h"
 #include "conditional_expression_syntax_node.h"
-#include "e/e_syntax_node.h"
+#include "multiply/multiply_syntax_node.h"
+#include "sum/sum_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 
 class ISyntaxNodeVisitor;
 
-class ComputationalExpressionSyntaxNode : public ISyntaxNode,
-                                          public std::enable_shared_from_this< ComputationalExpressionSyntaxNode >
+class ComputationalExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< ComputationalExpressionSyntaxNode >
 
 {
 public:
    ComputationalExpressionSyntaxNode() = default;
-   ComputationalExpressionSyntaxNode( const ESyntaxNodeSP& e )
+   ComputationalExpressionSyntaxNode( const SumSyntaxNodeSP& e )
       : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
    {
       Add( e );
    }
 
+   ComputationalExpressionSyntaxNode( const MultiplySyntaxNodeSP& e )
+      : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
+   {
+      Add( e );
+   }
    ComputationalExpressionSyntaxNode( const FSyntaxNodeSP& e )
       : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
    {

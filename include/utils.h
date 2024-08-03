@@ -104,6 +104,8 @@ static void iterate_over_last_n_nodes( const Stack& stack, size_t n, const Synta
    const auto& nodes = last_n_syntax_nodes( stack, n );
    for( const auto& node : nodes )
    {
+      if( !node )
+         throw std::runtime_error( "Node is not exist" );
       node->accept( visitor );
    }
 }
@@ -126,8 +128,7 @@ public:
    public:
       using iterator_category = std::input_iterator_tag;
       using difference_type = std::ptrdiff_t;
-      using value_type = std::pair< std::optional< typename Range::Iterator::value_type >,
-                                    std::optional< typename Range::Iterator::value_type > >;
+      using value_type = std::pair< std::optional< typename Range::Iterator::value_type >, std::optional< typename Range::Iterator::value_type > >;
       using reference = value_type&;
       using pointer = value_type*;
 

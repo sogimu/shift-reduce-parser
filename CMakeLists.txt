@@ -19,6 +19,7 @@ set(HEADERS
     include/grammars/base/eol_syntax_node.h
     include/grammars/base/plus_syntax_node.h
     include/grammars/base/minus_syntax_node.h
+    include/grammars/base/asterisk_syntax_node.h
     include/grammars/base/number_syntax_node.h
     include/grammars/base/f_syntax_node.h
     include/grammars/base/semicolon_syntax_node.h
@@ -32,15 +33,11 @@ set(HEADERS
     include/grammars/base/close_circle_bracket_syntax_node.h
     include/grammars/base/if_syntax_node.h
     include/grammars/base/name_syntax_node.h
-    include/grammars/e/sum/sum_syntax_node.h
-    include/grammars/e/diff/diff_syntax_node.h
-    include/grammars/e/e_syntax_node.h
+    include/grammars/sum/sum_syntax_node.h
+    include/grammars/diff/diff_syntax_node.h
     include/grammars/expression_syntax_node.h
     include/grammars/scope_syntax_node.h
     include/grammars/f_grammar.h
-    include/grammars/e/sum/sum_grammar.h
-    include/grammars/e/diff/diff_grammar.h
-    include/grammars/e/e_grammar.h
     include/grammars/conditional_expression_syntax_node.h
     include/grammars/conditional_expression_grammar.h
     include/grammars/print_expression_syntax_node.h
@@ -70,6 +67,7 @@ set(SOURCES
     src/lexical_tokens.cpp
     src/grammars/base/plus_syntax_node.cpp
     src/grammars/base/minus_syntax_node.cpp
+    src/grammars/base/asterisk_syntax_node.cpp
     src/grammars/base/bol_syntax_node.cpp
     src/grammars/base/eol_syntax_node.cpp
     src/grammars/base/number_syntax_node.cpp
@@ -85,9 +83,9 @@ set(SOURCES
     src/grammars/base/close_circle_bracket_syntax_node.cpp
     src/grammars/base/if_syntax_node.cpp
     src/grammars/base/name_syntax_node.cpp
-    src/grammars/e_syntax_node.cpp
-    src/grammars/sum_syntax_node.cpp
-    src/grammars/diff_syntax_node.cpp
+    src/grammars/sum/sum_syntax_node.cpp
+    src/grammars/multiply/multiply_syntax_node.cpp
+    src/grammars/diff/diff_syntax_node.cpp
     src/grammars/computational_expression_syntax_node.cpp
     src/grammars/expression_syntax_node.cpp
     src/grammars/print_expression_syntax_node.cpp

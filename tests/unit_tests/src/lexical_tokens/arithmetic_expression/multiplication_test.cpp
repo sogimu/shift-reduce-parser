@@ -15,7 +15,7 @@ TEST( MULTIPLICATION, ONE_MULTIPLY )
    // ASSERT
    LexicalTokens expected_lexical_tokens{ { { "", Token_Type::BOL },
                                             { "1", Token_Type::INT },
-                                            { "*", Token_Type::MULTIPLY },
+                                            { "*", Token_Type::ASTERISK },
                                             { "2", Token_Type::INT },
                                             { ";", Token_Type::SEMICOLON },
                                             { "", Token_Type::EOL } } };
@@ -33,9 +33,9 @@ TEST( MULTIPLICATION, MANY_MULTIPLYs )
    // ASSERT
    LexicalTokens expected_lexical_tokens{ { { "", Token_Type::BOL },
                                             { "1", Token_Type::INT },
-                                            { "*", Token_Type::MULTIPLY },
+                                            { "*", Token_Type::ASTERISK },
                                             { "2", Token_Type::INT },
-                                            { "*", Token_Type::MULTIPLY },
+                                            { "*", Token_Type::ASTERISK },
                                             { "3", Token_Type::INT },
                                             { ";", Token_Type::SEMICOLON },
                                             { "", Token_Type::EOL } } };

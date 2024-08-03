@@ -39,7 +39,7 @@ TEST( EXPRESSIONS_IN_CIRCLE_BRACKETS, ADVANCE_EXPRESSION )
                                             { "/", Token_Type::DIVIDE },
                                             { "2", Token_Type::INT },
                                             { ")", Token_Type::CLOSE_CIRCLE_BRACKET },
-                                            { "*", Token_Type::MULTIPLY },
+                                            { "*", Token_Type::ASTERISK },
                                             { "2", Token_Type::INT },
                                             { ";", Token_Type::SEMICOLON },
                                             { "", Token_Type::EOL } } };

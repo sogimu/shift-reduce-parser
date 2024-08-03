@@ -1,12 +1,76 @@
 #pragma once
 
+#include "base/plus_syntax_node.h"
+#include "base/semicolon_syntax_node.h"
 #include "computational_expression_syntax_node.h"
-#include "e/e_syntax_node.h"
 #include "i_grammar.h"
+#include "i_syntax_node.h"
+// #include "multiply/multiply_grammar.h"
+#include "print_expression_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 
+#include <iterator>
+#include <memory>
 #include <vector>
+
+inline bool is_argument_or_operation( const ISyntaxNodeSP& node )
+{
+   bool result = false;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.default_handler = [ &result ]( const ISyntaxNodeSP& ) { result = false; };
+   handlers.f_syntax_node = [ &result ]( const FSyntaxNodeSP& node ) { result = true; };
+   handlers.computational_expression_syntax_node = [ &result ]( const ComputationalExpressionSyntaxNodeSP& node ) { result = true; };
+   handlers.plus_syntax_node = [ &result ]( const PlusSyntaxNodeSP& node ) { result = true; };
+   handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = true; };
+   handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = true; };
+   handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = true; };
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   node->accept( visitor );
+   return result;
+}
+
+inline bool is_operation( const ISyntaxNodeSP& node )
+{
+   bool result = false;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.default_handler = [ &result ]( const ISyntaxNodeSP& ) { result = false; };
+   handlers.plus_syntax_node = [ &result ]( const PlusSyntaxNodeSP& node ) { result = true; };
+   handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = true; };
+   handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = true; };
+   handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = true; };
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   node->accept( visitor );
+   return result;
+}
+
+inline bool is_argument( const ISyntaxNodeSP& node )
+{
+   bool result = false;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.default_handler = [ &result ]( const ISyntaxNodeSP& ) { result = false; };
+   handlers.f_syntax_node = [ &result ]( const FSyntaxNodeSP& node ) { result = true; };
+   handlers.computational_expression_syntax_node = [ &result ]( const ComputationalExpressionSyntaxNodeSP& node ) { result = true; };
+   handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = false; };
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   node->accept( visitor );
+   return result;
+}
+
+inline int operation_weight( const ISyntaxNodeSP& node )
+{
+   int result = 0;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.default_handler = [ &result ]( const ISyntaxNodeSP& ) { result = -1; };
+   handlers.plus_syntax_node = [ &result ]( const PlusSyntaxNodeSP& node ) { result = 1; };
+   handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = 1; };
+   handlers.diff_syntax_node = [ &result ]( const DiffSyntaxNodeSP& node ) { result = 2; };
+   handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = 2; };
+   handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = -1; };
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   node->accept( visitor );
+   return result;
+}
 
 class ComputationalExpression : public IGrammar
 {
@@ -18,7 +82,9 @@ public:
          START,
          FINISH,
          ERROR,
-         E,
+         SUM,
+         DIFF,
+         MULTIPLY,
          F,
          OPEN_CIRCLE_BRACKET,
          NAME,
@@ -29,18 +95,205 @@ public:
       mProductions.emplace_back(
          [ this ]( const Stack& stack ) -> std::optional< Plan >
          {
-            ESyntaxNodeSP e;
+            SumSyntaxNodeSP sum;
+            DiffSyntaxNodeSP diff;
+            MultiplySyntaxNodeSP multiply;
+            SemicolonSyntaxNodeSP semicolon;
+
+            State state = State::START;
+
+            Plan plan;
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.sum_syntax_node = [ &sum, &state ]( const SumSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  sum = node;
+                  state = State::SUM;
+               }
+            };
+            handlers.diff_syntax_node = [ &diff, &state ]( const DiffSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  diff = node;
+                  state = State::DIFF;
+               }
+            };
+            handlers.multiply_syntax_node = [ &multiply, &state ]( const MultiplySyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  multiply = node;
+                  state = State::MULTIPLY;
+               }
+            };
+            handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
+            {
+               if( state == State::SUM || state == State::MULTIPLY || state == State::DIFF )
+               {
+                  semicolon = node;
+                  state = State::FINISH;
+               }
+            };
+            iterate_over_last_n_nodes( stack, 2, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            ISyntaxNodeSP expression;
+            if( sum )
+               expression = sum;
+            else if( diff )
+               expression = diff;
+            else if( multiply )
+               expression = multiply;
+            plan.to_remove.nodes.push_back( expression );
+            plan.to_remove.nodes.push_back( semicolon );
+
+            const auto& expression_node = std::make_shared< ComputationalExpressionSyntaxNode >();
+            expression_node->Add( expression );
+            plan.to_add.nodes.push_back( expression_node );
+            plan.to_add.nodes.push_back( semicolon );
+            return plan;
+         } );
+
+      State state;
+
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            auto start_it = stack.end();
+            for( auto it = stack.rbegin(); it != stack.rend(); ++it )
+            {
+               if( !is_argument_or_operation( *it ) )
+                  break;
+               start_it = it.base() - 1;
+            }
+
+            if( start_it != stack.end() )
+               auto d = *start_it;
+
+            std::stack< ISyntaxNodeSP > operations;
+            std::stack< ISyntaxNodeSP > arguments;
+
+            for( auto it = start_it; it != stack.end(); ++it )
+            {
+               const auto& node = *it;
+               if( is_operation( node ) )
+               {
+                  int current_op = operation_weight( node );
+                  int prev_op = -1;
+                  ISyntaxNodeSP prev_operation;
+                  if( !operations.empty() )
+                  {
+                     prev_operation = operations.top();
+                     prev_op = operation_weight( prev_operation );
+                  }
+
+                  if( current_op < prev_op )
+                  {
+                     std::optional< Plan > plan_opt;
+                     SyntaxNodeEmptyVisitor::Handlers handlers;
+                     handlers.plus_syntax_node = [ &node, &plan_opt, &arguments ]( const PlusSyntaxNodeSP& prev_operation )
+                     {
+                        const auto& f0 = arguments.top();
+                        arguments.pop();
+                        const auto& f1 = arguments.top();
+                        arguments.pop();
+
+                        Plan plan;
+                        plan.to_remove.nodes.push_back( f0 );
+                        plan.to_remove.nodes.push_back( prev_operation );
+                        plan.to_remove.nodes.push_back( f1 );
+                        plan.to_remove.nodes.push_back( node );
+
+                        const auto& sum_node = std::make_shared< SumSyntaxNode >();
+                        sum_node->Add( f0 );
+                        sum_node->Add( f1 );
+                        plan.to_add.nodes.push_back( sum_node );
+                        plan.to_add.nodes.push_back( node );
+                        plan_opt = plan;
+                     };
+                     handlers.minus_syntax_node = [ &node, &plan_opt, &arguments ]( const MinusSyntaxNodeSP& prev_operation )
+                     {
+                        const auto& f0 = arguments.top();
+                        arguments.pop();
+                        const auto& f1 = arguments.top();
+                        arguments.pop();
+
+                        Plan plan;
+                        plan.to_remove.nodes.push_back( f0 );
+                        plan.to_remove.nodes.push_back( prev_operation );
+                        plan.to_remove.nodes.push_back( f1 );
+                        plan.to_remove.nodes.push_back( node );
+
+                        const auto& diff_node = std::make_shared< DiffSyntaxNode >();
+                        diff_node->Add( f0 );
+                        diff_node->Add( f1 );
+                        plan.to_add.nodes.push_back( diff_node );
+                        plan.to_add.nodes.push_back( node );
+                        plan_opt = plan;
+                     };
+                     handlers.asterisk_syntax_node = [ &node, &plan_opt, &arguments ]( const AsteriskSyntaxNodeSP& prev_operation )
+                     {
+                        const auto& f0 = arguments.top();
+                        arguments.pop();
+                        const auto& f1 = arguments.top();
+                        arguments.pop();
+
+                        Plan plan;
+                        plan.to_remove.nodes.push_back( f0 );
+                        plan.to_remove.nodes.push_back( prev_operation );
+                        plan.to_remove.nodes.push_back( f1 );
+                        plan.to_remove.nodes.push_back( node );
+
+                        const auto& multiply_node = std::make_shared< MultiplySyntaxNode >();
+                        multiply_node->Add( f0 );
+                        multiply_node->Add( f1 );
+                        plan.to_add.nodes.push_back( multiply_node );
+                        plan.to_add.nodes.push_back( node );
+                        plan_opt = plan;
+                     };
+                     // handlers.minus_syntax_node = [ &new_node, f0, f1 ]( const MinusSyntaxNodeSP& node ) { new_node = std::make_shared< DiffSyntaxNode >( f0, f1 );
+                     // };
+                     const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+                     prev_operation->accept( visitor );
+                     return plan_opt;
+                  }
+                  else if( current_op >= prev_op )
+                  {
+                     operations.push( node );
+                  }
+               }
+               else if( is_argument( node ) )
+               {
+                  arguments.push( node );
+               }
+            }
+
+            return {};
+         } );
+
+      // F+F
+      // (F+F)
+      // F+(F+F)
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            FSyntaxNodeSP f;
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.e_syntax_node = [ &e, &state ]( const ESyntaxNodeSP& node )
+            handlers.f_syntax_node = [ &f, &state ]( const FSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  e = node;
-                  state = State::E;
+                  f = node;
+                  state = State::F;
                   state = State::FINISH;
                }
             };
@@ -50,9 +303,9 @@ public:
                return {};
 
             Plan plan;
-            plan.to_remove.nodes.push_back( e );
+            plan.to_remove.nodes.push_back( f );
 
-            const auto& expression_node = std::make_shared< ComputationalExpressionSyntaxNode >( e );
+            const auto& expression_node = std::make_shared< ComputationalExpressionSyntaxNode >( f );
             plan.to_add.nodes.push_back( expression_node );
             return plan;
          } );

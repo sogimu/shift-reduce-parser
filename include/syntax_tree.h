@@ -1,5 +1,6 @@
 #pragma once
 
+#include "base/asterisk_syntax_node.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -22,9 +23,6 @@
 #include "grammars/base/semicolon_syntax_node.h"
 #include "grammars/computational_expression_grammar.h"
 #include "grammars/conditional_expression_grammar.h"
-#include "grammars/e/diff/diff_grammar.h"
-#include "grammars/e/e_grammar.h"
-#include "grammars/e/sum/sum_grammar.h"
 #include "grammars/expression_grammar.h"
 #include "grammars/f_grammar.h"
 #include "grammars/if_expression_grammar.h"
@@ -49,16 +47,11 @@ public:
 
       std::vector< IGrammarSP > grammars{
          std::make_shared< F >(),
-         std::make_shared< Sum >(),
-         std::make_shared< Diff >(),
-         std::make_shared< E >(),
-         std::make_shared< ComputationalExpression >(),
-         std::make_shared< VaribleAssigment >(),
-         std::make_shared< Print >(),
-         std::make_shared< ConditionalExpression >(),
-         std::make_shared< Expression >(),
-         std::make_shared< Scope >(),
-         std::make_shared< If >(),
+         // std::make_shared< Sum >(),
+         // std::make_shared< Diff >(),
+         // std::make_shared< E >(),
+         std::make_shared< ComputationalExpression >(), std::make_shared< VaribleAssigment >(), std::make_shared< Print >(), std::make_shared< ConditionalExpression >(),
+         std::make_shared< Expression >(), std::make_shared< Scope >(), std::make_shared< If >(),
          //            std::make_shared<Mul>(),
          //            std::make_shared<Mul>(),
          //            std::make_shared<Div>(),
@@ -102,6 +95,12 @@ public:
          }
       }
 
+      if( stack.size() > 1 )
+         throw std::runtime_error( "Not all nodes reduced" );
+
+      if( stack.size() == 0 )
+         throw std::runtime_error( "No final reduced node" );
+
       mRoot = stack.front();
    }
 
@@ -140,6 +139,11 @@ public:
       case Token_Type::MINUS:
       {
          syntax_node = std::make_shared< MinusSyntaxNode >();
+      };
+      break;
+      case Token_Type::ASTERISK:
+      {
+         syntax_node = std::make_shared< AsteriskSyntaxNode >();
       };
       break;
       case Token_Type::INT:
@@ -289,38 +293,29 @@ public:
             handlers.bol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "BOL" << "}"; };
             handlers.plus_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PLUS" << "}"; };
             handlers.minus_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MINUS" << "}"; };
+            handlers.asterisk_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ASTERISK" << "}"; };
             handlers.number_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "NUMBER" << "}"; };
-            handlers.f_syntax_node = [ &s ]( const FSyntaxNodeSP& node )
-            { s << "{" << "F" << '(' << std::to_string( node->value() ) << ')' << "}"; };
+            handlers.f_syntax_node = [ &s ]( const FSyntaxNodeSP& node ) { s << "{" << "F" << '(' << std::to_string( node->value() ) << ')' << "}"; };
             handlers.sum_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SUM" << "}"; };
             handlers.diff_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "DIFF" << "}"; };
-            handlers.e_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "E" << "}"; };
+            handlers.multiply_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MULTIPLY" << "}"; };
             handlers.eol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EOL" << "}"; };
             handlers.semicolon_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SEMICOLON" << "}"; };
             handlers.expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EXPRESSION" << "}"; };
             handlers.scope_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SCOPE" << "}"; };
-            handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& )
-            { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
-            handlers.close_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& )
-            { s << "{" << "CLOSE_CURLY_BRACKET" << "}"; };
-            handlers.computational_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& )
-            { s << "{" << "COMPUTATIONAL_EXPRESSION" << "}"; };
-            handlers.conditional_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& )
-            { s << "{" << "CONDITIONAL_EXPRESSION" << "}"; };
-            handlers.print_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& )
-            { s << "{" << "PRINT_EXPRESSION" << "}"; };
+            handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
+            handlers.close_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CLOSE_CURLY_BRACKET" << "}"; };
+            handlers.computational_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "COMPUTATIONAL_EXPRESSION" << "}"; };
+            handlers.conditional_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CONDITIONAL_EXPRESSION" << "}"; };
+            handlers.print_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT_EXPRESSION" << "}"; };
             handlers.equal_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EQUAL" << "}"; };
             handlers.less_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "LESS" << "}"; };
             handlers.more_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MORE" << "}"; };
             handlers.if_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF" << "}"; };
             handlers.if_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_EXPRESSION" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
-
-            handlers.varible_assigment_syntax_node = [ &s ]( const ISyntaxNodeSP& )
-            { s << "{" << "VARIBLE ASSIGMENT" << "}"; };
-
-            handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node )
-            { s << "{" << "NAME" << '(' << node->value() << ')' << "}"; };
+            handlers.varible_assigment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "VARIBLE ASSIGMENT" << "}"; };
+            handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << '(' << node->value() << ')' << "}"; };
             for( int i = 0; i < n; ++i )
                s << "   ";
 

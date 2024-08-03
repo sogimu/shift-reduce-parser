@@ -14,11 +14,9 @@ void ComputationalExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visi
 
 bool ComputationalExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
 {
-
    bool is_equal = false;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.computational_expression_syntax_node =
-      [ this, &is_equal ]( const ComputationalExpressionSyntaxNodeSP& node )
+   handlers.computational_expression_syntax_node = [ this, &is_equal ]( const ComputationalExpressionSyntaxNodeSP& node )
    {
       if( node->Children().size() == this->Children().size() )
       {

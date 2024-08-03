@@ -16,13 +16,15 @@
 #include "base/open_circle_bracket_syntax_node.h"
 #include "base/open_curly_bracket_syntax_node.h"
 #include "base/plus_syntax_node.h"
+#include "base/minus_syntax_node.h"
+#include "base/asterisk_syntax_node.h"
 #include "base/print_syntax_node.h"
 #include "base/semicolon_syntax_node.h"
 #include "computational_expression_syntax_node.h"
 #include "conditional_expression_syntax_node.h"
-#include "e/diff/diff_syntax_node.h"
-#include "e/e_syntax_node.h"
-#include "e/sum/sum_syntax_node.h"
+#include "diff/diff_syntax_node.h"
+#include "sum/sum_syntax_node.h"
+#include "multiply/multiply_syntax_node.h"
 #include "expression_syntax_node.h"
 #include "i_syntax_node.h"
 #include "if_expression_syntax_node.h"
@@ -37,11 +39,12 @@ public:
    virtual void visit( const EolSyntaxNodeSP& ) = 0;
    virtual void visit( const PlusSyntaxNodeSP& ) = 0;
    virtual void visit( const MinusSyntaxNodeSP& ) = 0;
+   virtual void visit( const AsteriskSyntaxNodeSP& ) = 0;
    virtual void visit( const NumberSyntaxNodeSP& ) = 0;
    virtual void visit( const FSyntaxNodeSP& ) = 0;
    virtual void visit( const SumSyntaxNodeSP& ) = 0;
    virtual void visit( const DiffSyntaxNodeSP& ) = 0;
-   virtual void visit( const ESyntaxNodeSP& ) = 0;
+   virtual void visit( const MultiplySyntaxNodeSP& ) = 0;
    virtual void visit( const SemicolonSyntaxNodeSP& ) = 0;
    virtual void visit( const ExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const ScopeSyntaxNodeSP& ) = 0;

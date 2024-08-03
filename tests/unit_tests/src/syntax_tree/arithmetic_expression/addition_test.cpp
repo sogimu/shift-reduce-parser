@@ -23,25 +23,21 @@ TEST( SYNTAX_TREE_ADDITION, ONE_PLUS )
               {
                 "ComputationalExpressionSyntaxNode": [
                   {
-                    "ESyntaxNode": [
+                    "SumSyntaxNode": [
                       {
-                        "SumSyntaxNode": [
+                        "ComputationalExpressionSyntaxNode": [
                           {
-                            "ComputationalExpressionSyntaxNode": [
-                              {
-                                "FSyntaxNode": [
-                                   1 
-                                ]
-                              }
+                            "FSyntaxNode": [
+                              2 
                             ]
-                          },
+                          }
+                        ]
+                      },
+                      {
+                        "ComputationalExpressionSyntaxNode": [
                           {
-                            "ComputationalExpressionSyntaxNode": [
-                              {
-                                "FSyntaxNode": [
-                                   2 
-                                ]
-                              }
+                            "FSyntaxNode": [
+                              1
                             ]
                           }
                         ]
@@ -71,59 +67,36 @@ TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
+{
+  "ScopeSyntaxNode": [
     {
-      "ScopeSyntaxNode": [
+      "ExpressionSyntaxNode": [
         {
-          "ExpressionSyntaxNode": [
+          "ComputationalExpressionSyntaxNode": [
             {
-              "ComputationalExpressionSyntaxNode": [
+              "SumSyntaxNode": [
                 {
-                  "ESyntaxNode": [
+                  "ComputationalExpressionSyntaxNode": [
                     {
                       "SumSyntaxNode": [
                         {
                           "ComputationalExpressionSyntaxNode": [
                             {
-                              "ESyntaxNode": [
+                              "SumSyntaxNode": [
                                 {
-                                  "SumSyntaxNode": [
+                                  "ComputationalExpressionSyntaxNode": [
                                     {
-                                      "ComputationalExpressionSyntaxNode": [
-                                        {
-                                          "ESyntaxNode": [
-                                            {
-                                              "SumSyntaxNode": [
-                                                {
-                                                  "ComputationalExpressionSyntaxNode": [
-                                                    {
-                                                      "FSyntaxNode": [
-                                                        1
-                                                      ]
-                                                    }
-                                                  ]
-                                                },
-                                                {
-                                                  "ComputationalExpressionSyntaxNode": [
-                                                    {
-                                                      "FSyntaxNode": [
-                                                        2
-                                                      ]
-                                                    }
-                                                  ]
-                                                }
-                                              ]
-                                            }
-                                          ]
-                                        }
+                                      "FSyntaxNode": [
+                                        4 
                                       ]
-                                    },
+                                    }
+                                  ]
+                                },
+                                {
+                                  "ComputationalExpressionSyntaxNode": [
                                     {
-                                      "ComputationalExpressionSyntaxNode": [
-                                        {
-                                          "FSyntaxNode": [
-                                            3
-                                          ]
-                                        }
+                                      "FSyntaxNode": [
+                                        3
                                       ]
                                     }
                                   ]
@@ -136,11 +109,20 @@ TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
                           "ComputationalExpressionSyntaxNode": [
                             {
                               "FSyntaxNode": [
-                                4
+                                2
                               ]
                             }
                           ]
                         }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ComputationalExpressionSyntaxNode": [
+                    {
+                      "FSyntaxNode": [
+                        1
                       ]
                     }
                   ]
@@ -151,6 +133,76 @@ TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
         }
       ]
     }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ADDITION, ADVANCE_EXPRESSION )
+{
+   // ARRANGE
+   const auto& input = R"""(1+2*3;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+    {
+      "ScopeSyntaxNode": [
+        {
+          "ExpressionSyntaxNode": [
+            {
+              "ComputationalExpressionSyntaxNode": [
+                {
+                  "SumSyntaxNode": [
+                    {
+                      "ComputationalExpressionSyntaxNode": [
+                        {
+                          "MultipleSyntaxNode": [
+                            {
+                              "ComputationalExpressionSyntaxNode": [
+                                {
+                                  "FSyntaxNode": [
+                                    3 
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "ComputationalExpressionSyntaxNode": [
+                              {
+                                "FSyntaxNode": [
+                                  2
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "ComputationalExpressionSyntaxNode": [
+                      {
+                        "FSyntaxNode": [
+                          1
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );

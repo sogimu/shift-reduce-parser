@@ -116,14 +116,6 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      arguments.pop_back();
                      arguments.push_back( std::make_shared< FSyntaxNode >( argument0 ) );
                   }
-                  else if( key == "ESyntaxNode" )
-                  {
-                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
-                     arguments.pop_back();
-                     const auto& e_syntax_node = std::make_shared< ESyntaxNode >();
-                     e_syntax_node->Add( argument0 );
-                     arguments.push_back( e_syntax_node );
-                  }
                   else if( key == "PrintExpressionSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
@@ -174,6 +166,17 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      sum_syntax_node->Add( argument0 );
                      arguments.push_back( sum_syntax_node );
                   }
+                  else if( key == "MultipleSyntaxNode" )
+                  {
+                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& multiple_syntax_node = std::make_shared< MultiplySyntaxNode >();
+                     multiple_syntax_node->Add( argument1 );
+                     multiple_syntax_node->Add( argument0 );
+                     arguments.push_back( multiple_syntax_node );
+                  }
                   else if( key == "VaribleAssigmentSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
@@ -191,8 +194,7 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      arguments.pop_back();
                      ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
-                     const auto& conditinal_expression_syntax_node =
-                        std::make_shared< ConditionalExpressionSyntaxNode >();
+                     const auto& conditinal_expression_syntax_node = std::make_shared< ConditionalExpressionSyntaxNode >();
                      conditinal_expression_syntax_node->Add( argument1 );
                      conditinal_expression_syntax_node->Add( argument0 );
                      arguments.push_back( conditinal_expression_syntax_node );

@@ -1,19 +1,24 @@
-#include "e/e_syntax_node.h"
+#include "multiply/multiply_syntax_node.h"
 
+#include "base/f_syntax_node.h"
+#include "computational_expression_syntax_node.h"
+#include "enums.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
-void ESyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+#include <vector>
+
+MultiplySyntaxNode::MultiplySyntaxNode()
+   : ISyntaxNode{ Token_Type::MULTIPLY }
 {
-   visitor->visit( shared_from_this() );
 }
 
-bool ESyntaxNode::compare( const ISyntaxNode& node ) const
+bool MultiplySyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = false;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.e_syntax_node = [ this, &is_equal ]( const ESyntaxNodeSP& node )
+   handlers.multiply_syntax_node = [ this, &is_equal ]( const MultiplySyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
          return;
@@ -32,4 +37,9 @@ bool ESyntaxNode::compare( const ISyntaxNode& node ) const
    const_cast< ISyntaxNode& >( node ).accept( visitor );
 
    return is_equal;
+}
+
+void MultiplySyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+{
+   visitor->visit( shared_from_this() );
 }

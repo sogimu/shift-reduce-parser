@@ -16,44 +16,40 @@ TEST( SYNTAX_TREE_DIFF, ONE_MINUS )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-        "ScopeSyntaxNode": [
-          {
-            "ExpressionSyntaxNode": [
-              {
-                "ComputationalExpressionSyntaxNode": [
-                  {
-                    "ESyntaxNode": [
-                      {
-                        "DiffSyntaxNode": [
-                          {
-                            "ComputationalExpressionSyntaxNode": [
-                              {
-                                "FSyntaxNode": [
-                                   1 
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "ComputationalExpressionSyntaxNode": [
-                              {
-                                "FSyntaxNode": [
-                                   2 
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
+{
+  "ScopeSyntaxNode": [
+    {
+      "ExpressionSyntaxNode": [
+        {
+          "ComputationalExpressionSyntaxNode": [
+            {
+              "DiffSyntaxNode": [
+                {
+                  "ComputationalExpressionSyntaxNode": [
+                    {
+                      "FSyntaxNode": [
+                        2
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ComputationalExpressionSyntaxNode": [
+                    {
+                      "FSyntaxNode": [
+                        1
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
@@ -71,59 +67,36 @@ TEST( SYNTAX_TREE_DIFF, MANY_MINUS )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
+{
+  "ScopeSyntaxNode": [
     {
-      "ScopeSyntaxNode": [
+      "ExpressionSyntaxNode": [
         {
-          "ExpressionSyntaxNode": [
+          "ComputationalExpressionSyntaxNode": [
             {
-              "ComputationalExpressionSyntaxNode": [
+              "DiffSyntaxNode": [
                 {
-                  "ESyntaxNode": [
+                  "ComputationalExpressionSyntaxNode": [
                     {
                       "DiffSyntaxNode": [
                         {
                           "ComputationalExpressionSyntaxNode": [
                             {
-                              "ESyntaxNode": [
+                              "DiffSyntaxNode": [
                                 {
-                                  "DiffSyntaxNode": [
+                                  "ComputationalExpressionSyntaxNode": [
                                     {
-                                      "ComputationalExpressionSyntaxNode": [
-                                        {
-                                          "ESyntaxNode": [
-                                            {
-                                              "DiffSyntaxNode": [
-                                                {
-                                                  "ComputationalExpressionSyntaxNode": [
-                                                    {
-                                                      "FSyntaxNode": [
-                                                        1
-                                                      ]
-                                                    }
-                                                  ]
-                                                },
-                                                {
-                                                  "ComputationalExpressionSyntaxNode": [
-                                                    {
-                                                      "FSyntaxNode": [
-                                                        2
-                                                      ]
-                                                    }
-                                                  ]
-                                                }
-                                              ]
-                                            }
-                                          ]
-                                        }
+                                      "FSyntaxNode": [
+                                        4
                                       ]
-                                    },
+                                    }
+                                  ]
+                                },
+                                {
+                                  "ComputationalExpressionSyntaxNode": [
                                     {
-                                      "ComputationalExpressionSyntaxNode": [
-                                        {
-                                          "FSyntaxNode": [
-                                            3
-                                          ]
-                                        }
+                                      "FSyntaxNode": [
+                                        3
                                       ]
                                     }
                                   ]
@@ -136,11 +109,20 @@ TEST( SYNTAX_TREE_DIFF, MANY_MINUS )
                           "ComputationalExpressionSyntaxNode": [
                             {
                               "FSyntaxNode": [
-                                4
+                                2
                               ]
                             }
                           ]
                         }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ComputationalExpressionSyntaxNode": [
+                    {
+                      "FSyntaxNode": [
+                        1
                       ]
                     }
                   ]
@@ -151,6 +133,8 @@ TEST( SYNTAX_TREE_DIFF, MANY_MINUS )
         }
       ]
     }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
