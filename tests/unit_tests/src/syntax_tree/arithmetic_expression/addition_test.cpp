@@ -56,6 +56,57 @@ TEST( SYNTAX_TREE_ADDITION, ONE_PLUS )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
+TEST( SYNTAX_TREE_ADDITION, ONE_DIVISION )
+{
+   // ARRANGE
+   const auto& input = R"""(6/2;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+      {
+        "ScopeSyntaxNode": [
+          {
+            "ExpressionSyntaxNode": [
+              {
+                "ComputationalExpressionSyntaxNode": [
+                  {
+                    "DivisionSyntaxNode": [
+                      {
+                        "ComputationalExpressionSyntaxNode": [
+                          {
+                            "FSyntaxNode": [
+                              6 
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "ComputationalExpressionSyntaxNode": [
+                          {
+                            "FSyntaxNode": [
+                              2
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
 TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
 {
    // ARRANGE
@@ -168,7 +219,7 @@ TEST( SYNTAX_TREE_ADDITION, ADVANCE_EXPRESSION )
                               "ComputationalExpressionSyntaxNode": [
                                 {
                                   "FSyntaxNode": [
-                                    3 
+                                    2 
                                   ]
                                 }
                               ]
@@ -177,7 +228,7 @@ TEST( SYNTAX_TREE_ADDITION, ADVANCE_EXPRESSION )
                               "ComputationalExpressionSyntaxNode": [
                               {
                                 "FSyntaxNode": [
-                                  2
+                                  3
                                 ]
                               }
                             ]

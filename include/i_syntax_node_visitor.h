@@ -20,6 +20,7 @@
 #include "base/asterisk_syntax_node.h"
 #include "base/print_syntax_node.h"
 #include "base/semicolon_syntax_node.h"
+#include "base/slash_syntax_node.h"
 #include "computational_expression_syntax_node.h"
 #include "conditional_expression_syntax_node.h"
 #include "subtraction/subtraction_syntax_node.h"
@@ -41,6 +42,7 @@ public:
    virtual void visit( const PlusSyntaxNodeSP& ) = 0;
    virtual void visit( const MinusSyntaxNodeSP& ) = 0;
    virtual void visit( const AsteriskSyntaxNodeSP& ) = 0;
+   virtual void visit( const SlashSyntaxNodeSP& ) = 0;
    virtual void visit( const NumberSyntaxNodeSP& ) = 0;
    virtual void visit( const FSyntaxNodeSP& ) = 0;
    virtual void visit( const AdditionSyntaxNodeSP& ) = 0;

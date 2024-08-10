@@ -10,10 +10,7 @@ class ISyntaxNodeVisitor;
 class SlashSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< SlashSyntaxNode >
 {
 public:
-   SlashSyntaxNode()
-      : ISyntaxNode( Token_Type::SLASH )
-   {
-   }
+   SlashSyntaxNode();
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 };

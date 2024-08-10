@@ -1,6 +1,5 @@
 #pragma once
 
-#include "division/division_syntax_node.h"
 #include "subtraction/subtraction_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 
@@ -17,6 +16,7 @@ public:
       std::function< void( const PlusSyntaxNodeSP& ) > plus_syntax_node = [ this ]( const PlusSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const MinusSyntaxNodeSP& ) > minus_syntax_node = [ this ]( const MinusSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const AsteriskSyntaxNodeSP& ) > asterisk_syntax_node = [ this ]( const AsteriskSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const SlashSyntaxNodeSP& ) > slash_syntax_node = [ this ]( const SlashSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const NumberSyntaxNodeSP& ) > number_syntax_node = [ this ]( const NumberSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FSyntaxNodeSP& ) > f_syntax_node = [ this ]( const FSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const AdditionSyntaxNodeSP& ) > addition_syntax_node = [ this ]( const AdditionSyntaxNodeSP& node ) { default_handler( node ); };
@@ -82,6 +82,10 @@ public:
    void visit( const AsteriskSyntaxNodeSP& node ) override
    {
       mHandlers.asterisk_syntax_node( node );
+   }
+   void visit( const SlashSyntaxNodeSP& node ) override
+   {
+      mHandlers.slash_syntax_node( node );
    }
 
    void visit( const NumberSyntaxNodeSP& node ) override

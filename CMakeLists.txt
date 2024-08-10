@@ -63,6 +63,7 @@ set(SOURCES
     src/grammars/base/plus_syntax_node.cpp
     src/grammars/base/minus_syntax_node.cpp
     src/grammars/base/asterisk_syntax_node.cpp
+    src/grammars/base/slash_syntax_node.cpp
     src/grammars/base/bol_syntax_node.cpp
     src/grammars/base/eol_syntax_node.cpp
     src/grammars/base/number_syntax_node.cpp

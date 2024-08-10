@@ -177,6 +177,17 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      multiple_syntax_node->Add( argument0 );
                      arguments.push_back( multiple_syntax_node );
                   }
+                  else if( key == "DivisionSyntaxNode" )
+                  {
+                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& division_syntax_node = std::make_shared< DivisionSyntaxNode >();
+                     division_syntax_node->Add( argument1 );
+                     division_syntax_node->Add( argument0 );
+                     arguments.push_back( division_syntax_node );
+                  }
                   else if( key == "VaribleAssigmentSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );

@@ -24,6 +24,7 @@ inline bool is_argument_or_operation( const ISyntaxNodeSP& node )
    handlers.plus_syntax_node = [ &result ]( const PlusSyntaxNodeSP& node ) { result = true; };
    handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = true; };
    handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = true; };
+   handlers.slash_syntax_node = [ &result ]( const SlashSyntaxNodeSP& node ) { result = true; };
    handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = true; };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    node->accept( visitor );
@@ -38,6 +39,7 @@ inline bool is_operation( const ISyntaxNodeSP& node )
    handlers.plus_syntax_node = [ &result ]( const PlusSyntaxNodeSP& node ) { result = true; };
    handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = true; };
    handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = true; };
+   handlers.slash_syntax_node = [ &result ]( const SlashSyntaxNodeSP& node ) { result = true; };
    handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = true; };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    node->accept( visitor );
@@ -66,6 +68,7 @@ inline int operation_weight( const ISyntaxNodeSP& node )
    handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = 1; };
    handlers.subtraction_syntax_node = [ &result ]( const SubtractionSyntaxNodeSP& node ) { result = 2; };
    handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = 2; };
+   handlers.slash_syntax_node = [ &result ]( const SlashSyntaxNodeSP& node ) { result = 2; };
    handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = -1; };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    node->accept( visitor );
@@ -85,19 +88,24 @@ public:
          ADDITION,
          SUBTRACTION,
          MULTIPLY,
+         DIVISION,
          F,
          OPEN_CIRCLE_BRACKET,
          NAME,
          CLOSE_CIRCLE_BRACKET,
       };
 
-      // E
+      // AdditionSyntaxNodeSP SemicolonSyntaxNodeSP
+      // SubtractionSyntaxNodeSP SemicolonSyntaxNodeSP
+      // MultiplySyntaxNodeSP SemicolonSyntaxNodeSP
+      // SemicolonSyntaxNodeSP  SemicolonSyntaxNodeSP
       mProductions.emplace_back(
          [ this ]( const Stack& stack ) -> std::optional< Plan >
          {
             AdditionSyntaxNodeSP addition;
             SubtractionSyntaxNodeSP subtraction;
             MultiplySyntaxNodeSP multiply;
+            DivisionSyntaxNodeSP division;
             SemicolonSyntaxNodeSP semicolon;
 
             State state = State::START;
@@ -129,9 +137,17 @@ public:
                   state = State::MULTIPLY;
                }
             };
+            handlers.division_syntax_node = [ &division, &state ]( const DivisionSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  division = node;
+                  state = State::DIVISION;
+               }
+            };
             handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
             {
-               if( state == State::ADDITION || state == State::MULTIPLY || state == State::SUBTRACTION )
+               if( state == State::ADDITION || state == State::MULTIPLY || state == State::SUBTRACTION || state == State::DIVISION )
                {
                   semicolon = node;
                   state = State::FINISH;
@@ -149,6 +165,8 @@ public:
                expression = subtraction;
             else if( multiply )
                expression = multiply;
+            else if( division )
+               expression = division;
             plan.to_remove.nodes.push_back( expression );
             plan.to_remove.nodes.push_back( semicolon );
 
@@ -238,9 +256,9 @@ public:
                      };
                      handlers.asterisk_syntax_node = [ &node, &plan_opt, &arguments ]( const AsteriskSyntaxNodeSP& prev_operation )
                      {
-                        const auto& f0 = arguments.top();
-                        arguments.pop();
                         const auto& f1 = arguments.top();
+                        arguments.pop();
+                        const auto& f0 = arguments.top();
                         arguments.pop();
 
                         Plan plan;
@@ -253,6 +271,26 @@ public:
                         multiply_node->Add( f0 );
                         multiply_node->Add( f1 );
                         plan.to_add.nodes.push_back( multiply_node );
+                        plan.to_add.nodes.push_back( node );
+                        plan_opt = plan;
+                     };
+                     handlers.slash_syntax_node = [ &node, &plan_opt, &arguments ]( const SlashSyntaxNodeSP& prev_operation )
+                     {
+                        const auto& f1 = arguments.top();
+                        arguments.pop();
+                        const auto& f0 = arguments.top();
+                        arguments.pop();
+
+                        Plan plan;
+                        plan.to_remove.nodes.push_back( f0 );
+                        plan.to_remove.nodes.push_back( prev_operation );
+                        plan.to_remove.nodes.push_back( f1 );
+                        plan.to_remove.nodes.push_back( node );
+
+                        const auto& division_node = std::make_shared< DivisionSyntaxNode >();
+                        division_node->Add( f0 );
+                        division_node->Add( f1 );
+                        plan.to_add.nodes.push_back( division_node );
                         plan.to_add.nodes.push_back( node );
                         plan_opt = plan;
                      };

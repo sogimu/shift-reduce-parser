@@ -5,7 +5,7 @@
 
 using namespace std;
 
-TEST( SYNTAX_TREE_DIFF, ONE_MINUS )
+TEST( SYNTAX_TREE_SUBTRACTION, ONE_MINUS )
 {
    // ARRANGE
    const auto& input = R"""(1-2;)""";
@@ -56,7 +56,7 @@ TEST( SYNTAX_TREE_DIFF, ONE_MINUS )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
-TEST( SYNTAX_TREE_DIFF, MANY_MINUS )
+TEST( SYNTAX_TREE_SUBTRACTION, MANY_MINUS )
 {
    // ARRANGE
    const auto& input = R"""(1-2-3-4;)""";
