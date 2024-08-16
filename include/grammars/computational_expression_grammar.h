@@ -95,17 +95,10 @@ public:
          CLOSE_CIRCLE_BRACKET,
       };
 
-      // AdditionSyntaxNodeSP SemicolonSyntaxNodeSP
-      // SubtractionSyntaxNodeSP SemicolonSyntaxNodeSP
-      // MultiplySyntaxNodeSP SemicolonSyntaxNodeSP
-      // SemicolonSyntaxNodeSP  SemicolonSyntaxNodeSP
       mProductions.emplace_back(
          [ this ]( const Stack& stack ) -> std::optional< Plan >
          {
-            AdditionSyntaxNodeSP addition;
-            SubtractionSyntaxNodeSP subtraction;
-            MultiplySyntaxNodeSP multiply;
-            DivisionSyntaxNodeSP division;
+            ISyntaxNodeSP expression;
             SemicolonSyntaxNodeSP semicolon;
 
             State state = State::START;
@@ -113,35 +106,35 @@ public:
             Plan plan;
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.addition_syntax_node = [ &addition, &state ]( const AdditionSyntaxNodeSP& node )
+            handlers.addition_syntax_node = [ &expression, &state ]( const AdditionSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  addition = node;
+                  expression = node;
                   state = State::ADDITION;
                }
             };
-            handlers.subtraction_syntax_node = [ &subtraction, &state ]( const SubtractionSyntaxNodeSP& node )
+            handlers.subtraction_syntax_node = [ &expression, &state ]( const SubtractionSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  subtraction = node;
+                  expression = node;
                   state = State::SUBTRACTION;
                }
             };
-            handlers.multiply_syntax_node = [ &multiply, &state ]( const MultiplySyntaxNodeSP& node )
+            handlers.multiply_syntax_node = [ &expression, &state ]( const MultiplySyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  multiply = node;
+                  expression = node;
                   state = State::MULTIPLY;
                }
             };
-            handlers.division_syntax_node = [ &division, &state ]( const DivisionSyntaxNodeSP& node )
+            handlers.division_syntax_node = [ &expression, &state ]( const DivisionSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  division = node;
+                  expression = node;
                   state = State::DIVISION;
                }
             };
@@ -158,15 +151,6 @@ public:
             if( state != State::FINISH )
                return {};
 
-            ISyntaxNodeSP expression;
-            if( addition )
-               expression = addition;
-            else if( subtraction )
-               expression = subtraction;
-            else if( multiply )
-               expression = multiply;
-            else if( division )
-               expression = division;
             plan.to_remove.nodes.push_back( expression );
             plan.to_remove.nodes.push_back( semicolon );
 
@@ -294,9 +278,6 @@ public:
                         plan.to_add.nodes.push_back( node );
                         plan_opt = plan;
                      };
-                     // handlers.minus_syntax_node = [ &new_node, f0, f1 ]( const MinusSyntaxNodeSP& node ) { new_node = std::make_shared< SubtractionSyntaxNode >( f0, f1
-                     // );
-                     // };
                      const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
                      prev_operation->accept( visitor );
                      return plan_opt;
