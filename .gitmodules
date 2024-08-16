@@ -1,6 +1,3 @@
-[submodule "tests/unit_tests/libs/Catch2"]
-	path = tests/unit_tests/libs/Catch2
-	url = https://github.com/catchorg/Catch2
 [submodule "tests/unit_tests/libs/googletest"]
 	path = tests/unit_tests/libs/googletest
 	url = git@github.com:google/googletest.git
