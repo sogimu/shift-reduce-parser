@@ -166,7 +166,7 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      addition_syntax_node->Add( argument0 );
                      arguments.push_back( addition_syntax_node );
                   }
-                  else if( key == "MultipleSyntaxNode" )
+                  else if( key == "MultiplySyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();

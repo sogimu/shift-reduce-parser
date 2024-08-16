@@ -1,6 +1,5 @@
 #pragma once
 
-#include "enums.h"
 #include "i_syntax_node.h"
 
 #include <memory>

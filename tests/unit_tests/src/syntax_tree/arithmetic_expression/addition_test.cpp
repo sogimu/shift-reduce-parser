@@ -214,7 +214,7 @@ TEST( SYNTAX_TREE_ADDITION, ADVANCE_EXPRESSION )
                     {
                       "ComputationalExpressionSyntaxNode": [
                         {
-                          "MultipleSyntaxNode": [
+                          "MultiplySyntaxNode": [
                             {
                               "ComputationalExpressionSyntaxNode": [
                                 {
