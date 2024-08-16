@@ -25,6 +25,8 @@ inline bool is_argument_or_operation( const ISyntaxNodeSP& node )
    handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = true; };
    handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = true; };
    handlers.slash_syntax_node = [ &result ]( const SlashSyntaxNodeSP& node ) { result = true; };
+   handlers.open_circle_bracket_syntax_node = [ &result ]( const OpenCircleBracketSyntaxNodeSP& node ) { result = true; };
+   handlers.close_circle_bracket_syntax_node = [ &result ]( const CloseCircleBracketSyntaxNodeSP& node ) { result = true; };
    handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = true; };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    node->accept( visitor );
@@ -40,6 +42,7 @@ inline bool is_operation( const ISyntaxNodeSP& node )
    handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = true; };
    handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = true; };
    handlers.slash_syntax_node = [ &result ]( const SlashSyntaxNodeSP& node ) { result = true; };
+   handlers.close_circle_bracket_syntax_node = [ &result ]( const CloseCircleBracketSyntaxNodeSP& node ) { result = true; };
    handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = true; };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    node->accept( visitor );
@@ -69,6 +72,7 @@ inline int operation_weight( const ISyntaxNodeSP& node )
    handlers.subtraction_syntax_node = [ &result ]( const SubtractionSyntaxNodeSP& node ) { result = 2; };
    handlers.asterisk_syntax_node = [ &result ]( const AsteriskSyntaxNodeSP& node ) { result = 2; };
    handlers.slash_syntax_node = [ &result ]( const SlashSyntaxNodeSP& node ) { result = 2; };
+   handlers.close_circle_bracket_syntax_node = [ &result ]( const CloseCircleBracketSyntaxNodeSP& node ) { result = -1; };
    handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = -1; };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    node->accept( visitor );
@@ -158,6 +162,81 @@ public:
             expression_node->Add( expression );
             plan.to_add.nodes.push_back( expression_node );
             plan.to_add.nodes.push_back( semicolon );
+            return plan;
+         } );
+
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            OpenCircleBracketSyntaxNodeSP open_circle_bracket;
+            ISyntaxNodeSP expression;
+            CloseCircleBracketSyntaxNodeSP close_circle_bracket;
+
+            State state = State::START;
+
+            Plan plan;
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  open_circle_bracket = node;
+                  state = State::OPEN_CIRCLE_BRACKET;
+               }
+            };
+            handlers.addition_syntax_node = [ &expression, &state ]( const AdditionSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  expression = node;
+                  state = State::ADDITION;
+               }
+            };
+            handlers.subtraction_syntax_node = [ &expression, &state ]( const SubtractionSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  expression = node;
+                  state = State::SUBTRACTION;
+               }
+            };
+            handlers.multiply_syntax_node = [ &expression, &state ]( const MultiplySyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  expression = node;
+                  state = State::MULTIPLY;
+               }
+            };
+            handlers.division_syntax_node = [ &expression, &state ]( const DivisionSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  expression = node;
+                  state = State::DIVISION;
+               }
+            };
+            handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
+            {
+               if( state == State::ADDITION || state == State::MULTIPLY || state == State::SUBTRACTION || state == State::DIVISION )
+               {
+                  close_circle_bracket = node;
+                  state = State::FINISH;
+               }
+            };
+            iterate_over_last_n_nodes( stack, 3, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            plan.to_remove.nodes.push_back( open_circle_bracket );
+            plan.to_remove.nodes.push_back( expression );
+            plan.to_remove.nodes.push_back( close_circle_bracket );
+
+            const auto& expression_node = std::make_shared< ComputationalExpressionSyntaxNode >();
+            expression_node->Add( expression );
+            plan.to_add.nodes.push_back( expression_node );
             return plan;
          } );
 
