@@ -9,11 +9,11 @@ int main()
 {
    std::string e = R"(
     {
-      if(3 < 2)
+      if(2 < 3)
       {
           print(123);
 
-          3+5;
+          1+(3+5);
       }
       print(456);
     })";

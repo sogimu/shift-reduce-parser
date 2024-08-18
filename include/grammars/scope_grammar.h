@@ -137,7 +137,7 @@ public:
             if( state != State::FINISH )
                return {};
 
-            // std::reverse( expressions.begin(), expressions.end() );
+            std::reverse( expressions.begin(), expressions.end() );
 
             Plan plan;
             plan.to_remove.nodes.push_back( open_curly_bracket );
