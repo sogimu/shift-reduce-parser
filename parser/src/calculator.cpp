@@ -169,7 +169,7 @@ double Calculator::solve( const std::string& expression ) const
             if( HandleConditionExpression( varible_store, condition ) )
             {
                const auto& true_scope = if_expression->true_scope();
-               children = std::vector< ISyntaxNodeSP >{ if_expression, true_scope };
+               children = std::vector< ISyntaxNodeSP >{ true_scope };
             }
             // else
             // {
