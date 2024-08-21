@@ -16,6 +16,7 @@
 #include "grammars/base/close_curly_bracket_syntax_node.h"
 #include "grammars/base/eol_syntax_node.h"
 #include "grammars/base/if_syntax_node.h"
+#include "grammars/base/while_syntax_node.h"
 #include "grammars/base/minus_syntax_node.h"
 #include "grammars/base/name_syntax_node.h"
 #include "grammars/base/number_syntax_node.h"
@@ -27,6 +28,7 @@
 #include "grammars/expression_grammar.h"
 #include "grammars/f_grammar.h"
 #include "grammars/if_expression_grammar.h"
+#include "grammars/while_expression_grammar.h"
 #include "grammars/print_expression_grammar.h"
 #include "grammars/scope_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
@@ -52,7 +54,7 @@ public:
          // std::make_shared< Diff >(),
          // std::make_shared< E >(),
          std::make_shared< ComputationalExpression >(), std::make_shared< VaribleAssigment >(), std::make_shared< Print >(), std::make_shared< ConditionalExpression >(),
-         std::make_shared< Expression >(), std::make_shared< Scope >(), std::make_shared< If >(),
+         std::make_shared< Expression >(), std::make_shared< Scope >(), std::make_shared< If >(), std::make_shared< While >(),
          //            std::make_shared<Mul>(),
          //            std::make_shared<Mul>(),
          //            std::make_shared<Div>(),
@@ -207,6 +209,11 @@ public:
          syntax_node = std::make_shared< IfSyntaxNode >();
       };
       break;
+      case Token_Type::WHILE:
+      {
+         syntax_node = std::make_shared< WhileSyntaxNode >();
+      };
+      break;
       case Token_Type::NAME:
       {
          syntax_node = std::make_shared< NameSyntaxNode >( token.text );
@@ -321,6 +328,8 @@ public:
             handlers.more_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MORE" << "}"; };
             handlers.if_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF" << "}"; };
             handlers.if_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_EXPRESSION" << "}"; };
+            handlers.while_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE" << "}"; };
+            handlers.while_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_EXPRESSION" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
             handlers.varible_assigment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "VARIBLE ASSIGMENT" << "}"; };
             handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << '(' << node->value() << ')' << "}"; };

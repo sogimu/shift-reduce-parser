@@ -50,6 +50,9 @@ public:
       std::function< void( const MoreSyntaxNodeSP& ) > more_syntax_node = [ this ]( const MoreSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const IfSyntaxNodeSP& ) > if_syntax_node = [ this ]( const IfSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const IfExpressionSyntaxNodeSP& ) > if_expression_syntax_node = [ this ]( const IfExpressionSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const WhileSyntaxNodeSP& ) > while_syntax_node = [ this ]( const WhileSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const WhileExpressionSyntaxNodeSP& ) > while_expression_syntax_node = [ this ]( const WhileExpressionSyntaxNodeSP& node )
+      { default_handler( node ); };
    };
 
    SyntaxNodeEmptyVisitor( const Handlers& handlers )
@@ -204,6 +207,15 @@ public:
    void visit( const IfExpressionSyntaxNodeSP& node ) override
    {
       mHandlers.if_expression_syntax_node( node );
+   }
+   void visit( const WhileSyntaxNodeSP& node ) override
+   {
+      mHandlers.while_syntax_node( node );
+   }
+
+   void visit( const WhileExpressionSyntaxNodeSP& node ) override
+   {
+      mHandlers.while_expression_syntax_node( node );
    }
 
 private:

@@ -153,8 +153,7 @@ public:
          else if( alphabet.count( chars.current.value() ) )
          {
             std::string token;
-            for( ; alphabet.count( chars.current.value() ) || didgits.count( chars.current.value() );
-                 chars = next_chars() )
+            for( ; alphabet.count( chars.current.value() ) || didgits.count( chars.current.value() ); chars = next_chars() )
             {
                token += chars.current.value();
             }
@@ -199,12 +198,10 @@ private:
 
    const std::set< char > didgits{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 
-   const std::set< char > alphabet{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
-                                    'r', 's', 't', 'v', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
-                                    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'V', 'X', 'Y', 'Z' };
+   const std::set< char > alphabet{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z',
+                                    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z' };
 
    const std::set< char > terminals{ '+', '-', '/', '*', '(', ')', '=', '<', '>', ';', '{', '}' };
 
-   const std::unordered_map< std::string, Token_Type > token_by_text{ { "if", Token_Type::IF },
-                                                                      { "print", Token_Type::PRINT } };
+   const std::unordered_map< std::string, Token_Type > token_by_text{ { "if", Token_Type::IF }, { "while", Token_Type::WHILE }, { "print", Token_Type::PRINT } };
 };

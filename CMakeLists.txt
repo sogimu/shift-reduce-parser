@@ -46,6 +46,8 @@ set(HEADERS
     include/grammars/print_expression_grammar.h
     include/grammars/if_expression_syntax_node.h
     include/grammars/if_expression_grammar.h
+    include/grammars/while_expression_syntax_node.h
+    include/grammars/while_expression_grammar.h
     include/grammars/varible_assigment_syntax_node.h
     include/grammars/expression_grammar.h
     include/grammars/varible_assigment_grammar.h
@@ -78,6 +80,8 @@ set(SOURCES
     src/grammars/base/open_circle_bracket_syntax_node.cpp
     src/grammars/base/close_circle_bracket_syntax_node.cpp
     src/grammars/base/if_syntax_node.cpp
+    src/grammars/base/while_syntax_node.cpp
+    src/grammars/base/while_syntax_node.cpp
     src/grammars/base/name_syntax_node.cpp
     src/grammars/addition/addition_syntax_node.cpp
     src/grammars/subtraction/subtraction_syntax_node.cpp
@@ -87,13 +91,10 @@ set(SOURCES
     src/grammars/expression_syntax_node.cpp
     src/grammars/print_expression_syntax_node.cpp
     src/grammars/if_expression_syntax_node.cpp
+    src/grammars/while_expression_syntax_node.cpp
     src/grammars/varible_assigment_syntax_node.cpp
     src/grammars/conditional_expression_syntax_node.cpp
     src/grammars/scope_syntax_node.cpp
-#    src/grammars/f.cpp
-#    src/grammars/t.cpp
-#    src/grammars/p.cpp
-    # main.cpp
 )
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})

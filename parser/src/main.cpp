@@ -9,13 +9,13 @@ int main()
 {
    std::string e = R"(
     {
-      if(2 < 3)
+      a = 1;
+      while(a < 30)
       {
-          print(123);
-
-          1+(3+5);
+          a = a + 2;
+          print(a);
       }
-      print(456);
+      print(a);
     })";
 
    //        if(3 < 2)

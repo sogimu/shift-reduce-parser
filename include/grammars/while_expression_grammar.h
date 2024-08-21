@@ -2,7 +2,7 @@
 
 #include "conditional_expression_syntax_node.h"
 #include "i_grammar.h"
-#include "if_expression_syntax_node.h"
+#include "while_expression_syntax_node.h"
 #include "scope_syntax_node.h"
 #include "utils.h"
 
@@ -11,28 +11,28 @@
 
 class ISyntaxNodeVisitor;
 
-class If : public IGrammar
+class While : public IGrammar
 {
 public:
-   If()
+   While()
    {
       enum class State
       {
          START,
          FINISH,
          ERROR,
-         IF,
+         WHILE,
          OPEN_CIRCLE_BRACKET,
          CONDITION,
          CLOSE_CIRCLE_BRACKET,
          SCOPE,
       };
 
-      // IF CONDITION SCOPE
+      // WHILE CONDITION SCOPE
       mProductions.emplace_back(
          [ this ]( const Stack& stack ) -> std::optional< Plan >
          {
-            IfSyntaxNodeSP if_node;
+            WhileSyntaxNodeSP while_node;
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;
             ConditionalExpressionSyntaxNodeSP conditional_expression;
             CloseCircleBracketSyntaxNodeSP close_circle_bracket;
@@ -42,17 +42,17 @@ public:
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.if_syntax_node = [ &if_node, &state ]( const IfSyntaxNodeSP& node )
+            handlers.while_syntax_node = [ &while_node, &state ]( const WhileSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  if_node = node;
-                  state = State::IF;
+                  while_node = node;
+                  state = State::WHILE;
                }
             };
             handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
             {
-               if( state == State::IF )
+               if( state == State::WHILE )
                {
                   open_circle_bracket = node;
                   state = State::OPEN_CIRCLE_BRACKET;
@@ -91,14 +91,14 @@ public:
                return {};
 
             Plan plan;
-            plan.to_remove.nodes.push_back( if_node );
+            plan.to_remove.nodes.push_back( while_node );
             plan.to_remove.nodes.push_back( open_circle_bracket );
             plan.to_remove.nodes.push_back( conditional_expression );
             plan.to_remove.nodes.push_back( close_circle_bracket );
             plan.to_remove.nodes.push_back( scope_expression );
 
-            const auto& if_expression_node = std::make_shared< IfExpressionSyntaxNode >( conditional_expression, scope_expression );
-            plan.to_add.nodes.push_back( if_expression_node );
+            const auto& while_expression_node = std::make_shared< WhileExpressionSyntaxNode >( conditional_expression, scope_expression );
+            plan.to_add.nodes.push_back( while_expression_node );
             return plan;
          } );
    }

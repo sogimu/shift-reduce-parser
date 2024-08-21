@@ -1,5 +1,6 @@
 #pragma once
 
+#include "base/name_syntax_node.h"
 #include "conditional_expression_syntax_node.h"
 #include "i_grammar.h"
 
@@ -24,7 +25,8 @@ public:
          FIRST_COMPUTATIONAL_EXPRESSION,
          SECOND_COMPUTATIONAL_EXPRESSION,
          MORE,
-         LESS
+         LESS,
+         NAME
       };
 
       // COMPUTATIONAL_EXPRESSION EQUAL EQUAL COMPUTATIONAL_EXPRESSION
@@ -41,8 +43,7 @@ public:
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
             handlers.computational_expression_syntax_node =
-               [ &computational_expression0, &computational_expression1,
-                 &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+               [ &computational_expression0, &computational_expression1, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
@@ -81,8 +82,8 @@ public:
             plan.to_remove.nodes.push_back( equal1 );
             plan.to_remove.nodes.push_back( computational_expression1 );
 
-            const auto& conditional_expression_node = std::make_shared< ConditionalExpressionSyntaxNode >(
-               computational_expression0, computational_expression1, ConditionalExpressionSyntaxNode::Type::EQUAL );
+            const auto& conditional_expression_node =
+               std::make_shared< ConditionalExpressionSyntaxNode >( computational_expression0, computational_expression1, ConditionalExpressionSyntaxNode::Type::EQUAL );
             plan.to_add.nodes.push_back( conditional_expression_node );
             return plan;
          } );
@@ -100,8 +101,7 @@ public:
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
             handlers.computational_expression_syntax_node =
-               [ &computational_expression0, &computational_expression1,
-                 &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+               [ &computational_expression0, &computational_expression1, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
@@ -134,8 +134,62 @@ public:
             plan.to_remove.nodes.push_back( less );
             plan.to_remove.nodes.push_back( computational_expression1 );
 
-            const auto& conditional_expression_node = std::make_shared< ConditionalExpressionSyntaxNode >(
-               computational_expression0, computational_expression1, ConditionalExpressionSyntaxNode::Type::LESS );
+            const auto& conditional_expression_node =
+               std::make_shared< ConditionalExpressionSyntaxNode >( computational_expression0, computational_expression1, ConditionalExpressionSyntaxNode::Type::LESS );
+            plan.to_add.nodes.push_back( conditional_expression_node );
+            return plan;
+         } );
+
+      // NAME LESS COMPUTATIONAL_EXPRESSION
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            NameSyntaxNodeSP name;
+            LessSyntaxNodeSP less;
+            ComputationalExpressionSyntaxNodeSP computational_expression1;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.name_syntax_node = [ &name, &state ]( const NameSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  state = State::NAME;
+                  name = node;
+               }
+            };
+            handlers.less_syntax_node = [ &less, &state ]( const LessSyntaxNodeSP& node )
+            {
+               if( state == State::NAME )
+               {
+                  less = node;
+                  state = State::LESS;
+               }
+            };
+            handlers.computational_expression_syntax_node = [ &computational_expression1, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            {
+               if( state == State::LESS )
+               {
+                  state = State::SECOND_COMPUTATIONAL_EXPRESSION;
+                  computational_expression1 = node;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 3, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( name );
+            plan.to_remove.nodes.push_back( less );
+            plan.to_remove.nodes.push_back( computational_expression1 );
+
+            const auto& conditional_expression_node =
+               std::make_shared< ConditionalExpressionSyntaxNode >( name, computational_expression1, ConditionalExpressionSyntaxNode::Type::LESS );
             plan.to_add.nodes.push_back( conditional_expression_node );
             return plan;
          } );
@@ -153,8 +207,7 @@ public:
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
             handlers.computational_expression_syntax_node =
-               [ &computational_expression0, &computational_expression1,
-                 &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+               [ &computational_expression0, &computational_expression1, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
@@ -187,8 +240,8 @@ public:
             plan.to_remove.nodes.push_back( more );
             plan.to_remove.nodes.push_back( computational_expression1 );
 
-            const auto& conditional_expression_node = std::make_shared< ConditionalExpressionSyntaxNode >(
-               computational_expression0, computational_expression1, ConditionalExpressionSyntaxNode::Type::MORE );
+            const auto& conditional_expression_node =
+               std::make_shared< ConditionalExpressionSyntaxNode >( computational_expression0, computational_expression1, ConditionalExpressionSyntaxNode::Type::MORE );
             plan.to_add.nodes.push_back( conditional_expression_node );
             return plan;
          } );

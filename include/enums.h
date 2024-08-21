@@ -21,6 +21,7 @@ enum class Token_Type
    MULTIPLY,
    DIVISION,
    IF,
+   WHILE,
    E,
    F,
    T,
@@ -37,6 +38,7 @@ enum class Token_Type
    MORE_CONDITIONAL_EXPRESSION,
    PRINT_EXPRESSION,
    IF_EXPRESSION,
+   WHILE_EXPRESSION,
    VARIBLE,
    VARIBLE_ASSIGMENT,
    NO

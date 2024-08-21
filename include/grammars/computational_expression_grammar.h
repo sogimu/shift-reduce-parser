@@ -1,5 +1,6 @@
 #pragma once
 
+#include "base/name_syntax_node.h"
 #include "base/plus_syntax_node.h"
 #include "base/semicolon_syntax_node.h"
 #include "computational_expression_syntax_node.h"
@@ -20,6 +21,7 @@ inline bool is_argument_or_operation( const ISyntaxNodeSP& node )
    SyntaxNodeEmptyVisitor::Handlers handlers;
    handlers.default_handler = [ &result ]( const ISyntaxNodeSP& ) { result = false; };
    handlers.f_syntax_node = [ &result ]( const FSyntaxNodeSP& node ) { result = true; };
+   handlers.name_syntax_node = [ &result ]( const NameSyntaxNodeSP& node ) { result = true; };
    handlers.computational_expression_syntax_node = [ &result ]( const ComputationalExpressionSyntaxNodeSP& node ) { result = true; };
    handlers.plus_syntax_node = [ &result ]( const PlusSyntaxNodeSP& node ) { result = true; };
    handlers.minus_syntax_node = [ &result ]( const MinusSyntaxNodeSP& node ) { result = true; };
@@ -55,6 +57,7 @@ inline bool is_argument( const ISyntaxNodeSP& node )
    SyntaxNodeEmptyVisitor::Handlers handlers;
    handlers.default_handler = [ &result ]( const ISyntaxNodeSP& ) { result = false; };
    handlers.f_syntax_node = [ &result ]( const FSyntaxNodeSP& node ) { result = true; };
+   handlers.name_syntax_node = [ &result ]( const NameSyntaxNodeSP& node ) { result = true; };
    handlers.computational_expression_syntax_node = [ &result ]( const ComputationalExpressionSyntaxNodeSP& node ) { result = true; };
    handlers.semicolon_syntax_node = [ &result ]( const SemicolonSyntaxNodeSP& node ) { result = false; };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );

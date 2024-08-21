@@ -38,12 +38,25 @@ int HandleComputationalExpression( const VaribleStore& varible_store, const Comp
       [ &result, &syntax_node_value_by_syntax_node ]( const ISyntaxNodeSP& node )
       {
          SyntaxNodeEmptyVisitor::Handlers handlers;
+         handlers.computational_expression_syntax_node = [ &result, &syntax_node_value_by_syntax_node ]( const ComputationalExpressionSyntaxNodeSP& node )
+         {
+            const auto& children = node->Children();
+            auto it = children.begin();
+            int addition_result = syntax_node_value_by_syntax_node[ *it ];
+            syntax_node_value_by_syntax_node[ node ] = addition_result;
+         };
          handlers.addition_syntax_node = [ &result, &syntax_node_value_by_syntax_node ]( const AdditionSyntaxNodeSP& node )
          {
-            for( const auto& argument : node->Children() )
+            const auto& children = node->Children();
+            auto it = children.begin();
+            int addition_result = syntax_node_value_by_syntax_node[ *it ];
+            ++it;
+            for( ; it != children.end(); ++it )
             {
-               result += syntax_node_value_by_syntax_node[ argument ];
+
+               addition_result += syntax_node_value_by_syntax_node[ *it ];
             }
+            syntax_node_value_by_syntax_node[ node ] = addition_result;
          };
          handlers.subtraction_syntax_node = [ &result, &syntax_node_value_by_syntax_node ]( const SubtractionSyntaxNodeSP& node )
          {
@@ -152,21 +165,25 @@ double Calculator::solve( const std::string& expression ) const
 
          handlers.if_expression_syntax_node = [ &varible_store, &children, &node ]( const IfExpressionSyntaxNodeSP& if_expression )
          {
-            ISyntaxNodeSP next_scope;
             const auto& condition = if_expression->conditional_expression();
             if( HandleConditionExpression( varible_store, condition ) )
             {
-               next_scope = if_expression->true_scope();
+               const auto& true_scope = if_expression->true_scope();
+               children = std::vector< ISyntaxNodeSP >{ if_expression, true_scope };
             }
-            else
+            // else
+            // {
+            //    const auto& false_scope = if_expression->false_scope();
+            //    children = std::vector< ISyntaxNodeSP >{ false_scope };
+            // }
+         };
+         handlers.while_expression_syntax_node = [ &varible_store, &children, &node ]( const WhileExpressionSyntaxNodeSP& while_expression )
+         {
+            const auto& condition = while_expression->conditional_expression();
+            if( HandleConditionExpression( varible_store, condition ) )
             {
-               next_scope = if_expression->false_scope();
-            }
-            children = {};
-
-            if( next_scope )
-            {
-               children = std::vector< ISyntaxNodeSP >{ next_scope };
+               const auto& scope = while_expression->scope();
+               children = std::vector< ISyntaxNodeSP >{ while_expression, scope };
             }
          };
          handlers.varible_assigment_syntax_node = [ &varible_store, &node ]( const VaribleAssigmentSyntaxNodeSP& varible_assigment )

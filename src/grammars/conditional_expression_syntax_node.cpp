@@ -1,13 +1,21 @@
 #include "conditional_expression_syntax_node.h"
 
+#include "base/name_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
-ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& f0,
-                                                                  const ComputationalExpressionSyntaxNodeSP& f1,
+ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& f0, const ComputationalExpressionSyntaxNodeSP& f1,
                                                                   Type type )
+   : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
+   , mType{ type }
+{
+   Add( f0 );
+   Add( f1 );
+}
+
+ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& f0, const ComputationalExpressionSyntaxNodeSP& f1, Type type )
    : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
    , mType{ type }
 {
@@ -53,10 +61,9 @@ ComputationalExpressionSyntaxNodeSP ConditionalExpressionSyntaxNode::first_apper
 {
    ComputationalExpressionSyntaxNodeSP result;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.f_syntax_node = [ &result ]( const FSyntaxNodeSP& f )
-   { result = std::make_shared< ComputationalExpressionSyntaxNode >( f ); };
-   handlers.computational_expression_syntax_node =
-      [ &result ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
+   handlers.f_syntax_node = [ &result ]( const FSyntaxNodeSP& f ) { result = std::make_shared< ComputationalExpressionSyntaxNode >( f ); };
+   handlers.name_syntax_node = [ &result ]( const NameSyntaxNodeSP& f ) { result = std::make_shared< ComputationalExpressionSyntaxNode >( f ); };
+   handlers.computational_expression_syntax_node = [ &result ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
    { result = computational_expression; };
 
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
@@ -69,10 +76,9 @@ ComputationalExpressionSyntaxNodeSP ConditionalExpressionSyntaxNode::second_appe
 {
    ComputationalExpressionSyntaxNodeSP result;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.f_syntax_node = [ &result ]( const FSyntaxNodeSP& f )
-   { result = std::make_shared< ComputationalExpressionSyntaxNode >( f ); };
-   handlers.computational_expression_syntax_node =
-      [ &result ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
+   handlers.f_syntax_node = [ &result ]( const FSyntaxNodeSP& f ) { result = std::make_shared< ComputationalExpressionSyntaxNode >( f ); };
+   handlers.name_syntax_node = [ &result ]( const NameSyntaxNodeSP& f ) { result = std::make_shared< ComputationalExpressionSyntaxNode >( f ); };
+   handlers.computational_expression_syntax_node = [ &result ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
    { result = computational_expression; };
 
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );

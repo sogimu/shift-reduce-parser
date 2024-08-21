@@ -19,11 +19,31 @@ public:
 
    int& operator[]( const std::string& name )
    {
+      auto it = std::find_if( mScope.rbegin(), mScope.rend(),
+                              [ &name ]( const auto& layer ) -> bool
+                              {
+                                 const auto& it = layer.find( name );
+                                 return ( it != layer.end() );
+                              } );
+      if( it != mScope.rend() )
+      {
+         return ( *it )[ name ];
+      }
       return mScope.back()[ name ];
    }
 
    const int& operator[]( const std::string& name ) const
    {
+      auto it = std::find_if( mScope.rbegin(), mScope.rend(),
+                              [ &name ]( const auto& layer ) -> bool
+                              {
+                                 const auto& it = layer.find( name );
+                                 return ( it != layer.end() );
+                              } );
+      if( it != mScope.rend() )
+      {
+         return ( *it )[ name ];
+      }
       return mScope.back()[ name ];
    }
 

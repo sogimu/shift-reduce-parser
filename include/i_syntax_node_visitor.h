@@ -8,6 +8,7 @@
 #include "base/equal_syntax_node.h"
 #include "base/f_syntax_node.h"
 #include "base/if_syntax_node.h"
+#include "base/while_syntax_node.h"
 #include "base/less_syntax_node.h"
 #include "base/minus_syntax_node.h"
 #include "base/more_syntax_node.h"
@@ -30,6 +31,7 @@
 #include "expression_syntax_node.h"
 #include "i_syntax_node.h"
 #include "if_expression_syntax_node.h"
+#include "while_expression_syntax_node.h"
 #include "print_expression_syntax_node.h"
 #include "scope_syntax_node.h"
 #include "varible_assigment_syntax_node.h"
@@ -65,6 +67,8 @@ public:
    virtual void visit( const MoreSyntaxNodeSP& ) = 0;
    virtual void visit( const IfSyntaxNodeSP& ) = 0;
    virtual void visit( const IfExpressionSyntaxNodeSP& ) = 0;
+   virtual void visit( const WhileSyntaxNodeSP& ) = 0;
+   virtual void visit( const WhileExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const VaribleAssigmentSyntaxNodeSP& ) = 0;
    virtual void visit( const NameSyntaxNodeSP& ) = 0;
 };
