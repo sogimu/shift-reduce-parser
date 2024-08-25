@@ -2,6 +2,7 @@
 
 #include "base/asterisk_syntax_node.h"
 #include "base/slash_syntax_node.h"
+#include "conditional_expression_syntax_node.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -44,24 +45,16 @@ class SyntaxTree
 public:
    SyntaxTree( const LexicalTokens& lexical_tokens )
    {
-      // E -> T + E | T - E | T
-      // T -> F * T | F / T | F
-      // F -> (E)   | -N    | N
-
       std::vector< IGrammarSP > grammars{
          std::make_shared< F >(),
-         // std::make_shared< Sum >(),
-         // std::make_shared< Diff >(),
-         // std::make_shared< E >(),
-         std::make_shared< ComputationalExpression >(), std::make_shared< VaribleAssigment >(), std::make_shared< Print >(), std::make_shared< ConditionalExpression >(),
-         std::make_shared< Expression >(), std::make_shared< Scope >(), std::make_shared< If >(), std::make_shared< While >(),
-         //            std::make_shared<Mul>(),
-         //            std::make_shared<Mul>(),
-         //            std::make_shared<Div>(),
-         //            std::make_shared<T>(),
-         //            std::make_shared<E>(),
-         //            std::make_shared<P>(),
-         //            std::make_shared<Assigment>()
+         std::make_shared< ComputationalExpression >(),
+         std::make_shared< VaribleAssigment >(),
+         std::make_shared< Print >(),
+         std::make_shared< ConditionalExpression >(),
+         std::make_shared< Expression >(),
+         std::make_shared< Scope >(),
+         std::make_shared< If >(),
+         std::make_shared< While >(),
       };
 
       Stack stack;
@@ -321,7 +314,39 @@ public:
             handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
             handlers.close_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CLOSE_CURLY_BRACKET" << "}"; };
             handlers.computational_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "COMPUTATIONAL_EXPRESSION" << "}"; };
-            handlers.conditional_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CONDITIONAL_EXPRESSION" << "}"; };
+            handlers.conditional_expression_syntax_node = [ &s ]( const ConditionalExpressionSyntaxNodeSP& node )
+            {
+               std::string type;
+               switch( node->type() )
+               {
+               case ConditionalExpressionSyntaxNode::Type::LESS:
+               {
+                  type = "LESS";
+               };
+               break;
+               case ConditionalExpressionSyntaxNode::Type::MORE:
+               {
+                  type = "MORE";
+               };
+               break;
+               case ConditionalExpressionSyntaxNode::Type::EQUAL:
+               {
+                  type = "EQUAL";
+               };
+               break;
+               case ConditionalExpressionSyntaxNode::Type::LESS_OR_EQUAL:
+               {
+                  type = "LESS_OR_EQUAL";
+               };
+               break;
+               case ConditionalExpressionSyntaxNode::Type::MORE_OR_EQUAL:
+               {
+                  type = "MORE_OR_EQUAL";
+               };
+               break;
+               }
+               s << "{" << "CONDITIONAL_EXPRESSION" << " (" << type << ")" << "}";
+            };
             handlers.print_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT_EXPRESSION" << "}"; };
             handlers.equal_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EQUAL" << "}"; };
             handlers.less_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "LESS" << "}"; };
@@ -332,7 +357,7 @@ public:
             handlers.while_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_EXPRESSION" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
             handlers.varible_assigment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "VARIBLE ASSIGMENT" << "}"; };
-            handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << '(' << node->value() << ')' << "}"; };
+            handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << " (" << node->value() << ')' << "}"; };
             for( int i = 0; i < n; ++i )
                s << "   ";
 
