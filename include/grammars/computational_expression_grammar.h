@@ -498,22 +498,5 @@ public:
             plan.to_add.nodes.push_back( close );
             return plan;
          } );
-      //        mProductionByFeature.emplace_back(Features{ one(Token_Type::ASSIGMENT)}, [](const Stack& stack) ->
-      //        Production
-      //        {
-      //            auto it = stack.begin();
-      //            std::advance(it, stack.size() - 1);
-      //            const auto& assigment = *(it);
-
-      //            Production::Plan plan;
-      //            plan.to_remove.nodes.push_back(assigment);
-
-      //            const auto& d = std::make_shared<ISyntaxNode>();
-      //            d->token = {assigment->token.text, Token_Type::EXPRESSION };
-      //            d->first = assigment->first;
-      //            d->second = assigment->second;
-      //            plan.to_add.nodes.push_back(d);
-      //            return Production{plan};
-      //        });
    }
 };

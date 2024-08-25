@@ -54,10 +54,6 @@ set(HEADERS
     include/grammars/computational_expression_syntax_node.h
     include/grammars/computational_expression_grammar.h
     include/grammars/scope_grammar.h
-#    include/grammars/assignment.h
-#    include/grammars/expression.h
-#    include/i_feature.h
-#    include/features/many_of.h
 )
 
 set(SOURCES

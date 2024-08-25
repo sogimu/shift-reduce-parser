@@ -1,1 +1,1 @@
-{"cmake":{"target":"parser","args":{"configure":["-D","CMAKE_EXPORT_COMPILE_COMMANDS=1","-G","Ninja"]},"build_type":"Debug","cmd":"cmake","dap_name":"codelldb","build_dir":"{cwd}\/build\/{os}-{build_type}"},"cargo":{"dap_name":"lldb"}}
+{"cmake":{"target":"unit_tests","args":{"configure":["-D","CMAKE_EXPORT_COMPILE_COMMANDS=1","-G","Ninja"]},"build_type":"Debug","cmd":"cmake","dap_name":"codelldb","build_dir":"{cwd}\/build\/{os}-{build_type}"},"cargo":{"dap_name":"lldb"}}

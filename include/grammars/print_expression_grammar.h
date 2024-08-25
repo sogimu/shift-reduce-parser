@@ -59,8 +59,7 @@ public:
                   open = node;
                }
             };
-            handlers.computational_expression_syntax_node =
-               [ &computational_expression, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            handlers.computational_expression_syntax_node = [ &computational_expression, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
@@ -89,125 +88,9 @@ public:
             plan.to_remove.nodes.push_back( computational_expression );
             plan.to_remove.nodes.push_back( close );
 
-            const auto& print_expression_node =
-               std::make_shared< PrintExpressionSyntaxNode >( computational_expression );
+            const auto& print_expression_node = std::make_shared< PrintExpressionSyntaxNode >( computational_expression );
             plan.to_add.nodes.push_back( print_expression_node );
             return plan;
          } );
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::F), one(Token_Type::PLUS),
-      //        one(Token_Type::F)}, [this](const Stack& stack) -> Production
-      //        {
-      //            auto it = stack.begin();
-      //            std::advance(it, stack.size() - 3);
-      //            const auto& f0 = *(it);
-      //            const auto& plus = *(++it);
-      //            const auto& f1 = *(++it);
-
-      //            Production::Plan plan;
-      //            plan.to_remove.nodes.push_back(f0);
-      //            plan.to_remove.nodes.push_back(plus);
-      //            plan.to_remove.nodes.push_back(f1);
-
-      //            const auto& d = std::make_shared<SyntaxNodeSum>(f0, f1);
-      //            plan.to_add.nodes.push_back(d);
-      //            return Production{plan};
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::F), one(Token_Type::PLUS),
-      //        one(Token_Type::T)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::F), one(Token_Type::PLUS),
-      //        one(Token_Type::E)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::E), one(Token_Type::PLUS),
-      //        one(Token_Type::F)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::E), one(Token_Type::PLUS),
-      //        one(Token_Type::T)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::T), one(Token_Type::PLUS),
-      //        one(Token_Type::F)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::T), one(Token_Type::PLUS),
-      //        one(Token_Type::T)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::P), one(Token_Type::PLUS),
-      //        one(Token_Type::F)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::P), one(Token_Type::PLUS),
-      //        one(Token_Type::E)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::P), one(Token_Type::PLUS),
-      //        one(Token_Type::T)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::F), one(Token_Type::PLUS),
-      //        one(Token_Type::P)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::E), one(Token_Type::PLUS),
-      //        one(Token_Type::P)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::T), one(Token_Type::PLUS),
-      //        one(Token_Type::P)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
-
-      //        mProductionByFeature.emplace_back(Features{one(Token_Type::P), one(Token_Type::PLUS),
-      //        one(Token_Type::P)}, [this](const Stack& stack) -> Production
-      //        {
-      //            return planAOpB(stack);
-      //        });
    }
-   // private:
-   //     Production planAOpB(const Stack& stack)
-   //     {
-   //         auto it = stack.begin();
-   //         std::advance(it, stack.size() - 3);
-   //         const auto& f0 = *(it);
-   //         const auto& plus = *(++it);
-   //         const auto& f1 = *(++it);
-
-   //        Production::Plan plan;
-   //        plan.to_remove.nodes.push_back(f0);
-   //        plan.to_remove.nodes.push_back(plus);
-   //        plan.to_remove.nodes.push_back(f1);
-
-   //        const auto& d = std::make_shared<SyntaxNodeSum>(f0, f1);
-   //        plan.to_add.nodes.push_back(d);
-   //        return Production{plan};
-   //    }
 };
