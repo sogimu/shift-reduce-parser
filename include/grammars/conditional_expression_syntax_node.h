@@ -14,7 +14,9 @@ public:
    enum class Type
    {
       LESS,
+      LESS_OR_EQUAL,
       MORE,
+      MORE_OR_EQUAL,
       EQUAL
    };
 
@@ -31,7 +33,7 @@ public:
 
    ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& f0, const ComputationalExpressionSyntaxNodeSP& f1, Type type );
    ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& f0, const ComputationalExpressionSyntaxNodeSP& f1, Type type );
-
+   ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& f0, const NameSyntaxNodeSP& f1, Type type );
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
 

@@ -23,6 +23,14 @@ ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const NameSynt
    Add( f1 );
 }
 
+ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& f0, const NameSyntaxNodeSP& f1, Type type )
+   : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
+   , mType{ type }
+{
+   Add( f0 );
+   Add( f1 );
+}
+
 void ConditionalExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );

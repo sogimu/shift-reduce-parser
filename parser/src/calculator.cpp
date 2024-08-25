@@ -109,9 +109,19 @@ bool HandleConditionExpression( const VaribleStore& varible_store, const Conditi
       result = first_apperand_value < second_apperand_value;
    };
    break;
+   case ConditionalExpressionSyntaxNode::Type::LESS_OR_EQUAL:
+   {
+      result = first_apperand_value <= second_apperand_value;
+   };
+   break;
    case ConditionalExpressionSyntaxNode::Type::MORE:
    {
       result = first_apperand_value > second_apperand_value;
+   };
+   break;
+   case ConditionalExpressionSyntaxNode::Type::MORE_OR_EQUAL:
+   {
+      result = first_apperand_value >= second_apperand_value;
    };
    break;
    }
@@ -185,12 +195,24 @@ double Calculator::solve( const std::string& expression ) const
                const auto& scope = while_expression->scope();
                children = std::vector< ISyntaxNodeSP >{ while_expression, scope };
             }
+            else
+            {
+               children = {};
+            }
          };
          handlers.varible_assigment_syntax_node = [ &varible_store, &node ]( const VaribleAssigmentSyntaxNodeSP& varible_assigment )
          {
-            const auto& computational_expression = varible_assigment->computational_expression();
-            const auto& value = HandleComputationalExpression( varible_store, computational_expression );
-            varible_store[ varible_assigment->name() ] = value;
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.computational_expression_syntax_node = [ &varible_store, &varible_assigment ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
+            {
+               const auto& value = HandleComputationalExpression( varible_store, computational_expression );
+               varible_store[ varible_assigment->name() ] = value;
+            };
+            handlers.name_syntax_node = [ &varible_store, &varible_assigment ]( const NameSyntaxNodeSP& name )
+            { varible_store[ varible_assigment->name() ] = varible_store[ name->value() ]; };
+            const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+            const auto& value_node = varible_assigment->operator[]( 1 );
+            value_node->accept( visitor );
          };
 
          const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );

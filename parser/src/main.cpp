@@ -7,17 +7,23 @@ using namespace std;
 
 int main()
 {
+   // Fibonacci sequence
    std::string e = R"(
     {
-      a = 1;
-      while(a < 30)
+      n = 23; // Fibonacci number in sequence 
+      a = 0;
+      b = 1;
+      i = 2;
+      while( i < n )
       {
-          a = a + 2;
-          print(a);
+          c = a + b;
+          a = b;
+          b = c;
+          i = i + 1;
       }
-      print(a);
+      print(b); // 23's number shall be 17711
     })";
-
+   //
    //        if(3 < 2)
    //        {
    //            print(123);
