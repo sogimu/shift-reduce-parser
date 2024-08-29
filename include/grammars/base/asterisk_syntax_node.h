@@ -15,4 +15,3 @@ public:
 };
 
 using AsteriskSyntaxNodeSP = std::shared_ptr< AsteriskSyntaxNode >;
-using AsteriskSyntaxNodeCSP = std::shared_ptr< const AsteriskSyntaxNode >;

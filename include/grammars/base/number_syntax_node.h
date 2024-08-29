@@ -28,4 +28,3 @@ private:
 };
 
 using NumberSyntaxNodeSP = std::shared_ptr< NumberSyntaxNode >;
-using NumberSyntaxNodeCSP = std::shared_ptr< const NumberSyntaxNode >;

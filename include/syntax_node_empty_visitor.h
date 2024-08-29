@@ -44,6 +44,7 @@ public:
       std::function< void( const VaribleAssigmentSyntaxNodeSP& ) > varible_assigment_syntax_node = [ this ]( const VaribleAssigmentSyntaxNodeSP& node )
       { default_handler( node ); };
       std::function< void( const NameSyntaxNodeSP& ) > name_syntax_node = [ this ]( const NameSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const CommaSyntaxNodeSP& ) > comma_syntax_node = [ this ]( const CommaSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const PrintSyntaxNodeSP& ) > print_syntax_node = [ this ]( const PrintSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const EqualSyntaxNodeSP& ) > equal_syntax_node = [ this ]( const EqualSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const LessSyntaxNodeSP& ) > less_syntax_node = [ this ]( const LessSyntaxNodeSP& node ) { default_handler( node ); };
@@ -53,6 +54,7 @@ public:
       std::function< void( const WhileSyntaxNodeSP& ) > while_syntax_node = [ this ]( const WhileSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const WhileExpressionSyntaxNodeSP& ) > while_expression_syntax_node = [ this ]( const WhileExpressionSyntaxNodeSP& node )
       { default_handler( node ); };
+      std::function< void( const FunctionSyntaxNodeSP& ) > function_syntax_node = [ this ]( const FunctionSyntaxNodeSP& node ) { default_handler( node ); };
    };
 
    SyntaxNodeEmptyVisitor( const Handlers& handlers )
@@ -179,6 +181,11 @@ public:
       mHandlers.name_syntax_node( node );
    }
 
+   void visit( const CommaSyntaxNodeSP& node ) override
+   {
+      mHandlers.comma_syntax_node( node );
+   }
+
    void visit( const PrintSyntaxNodeSP& node ) override
    {
       mHandlers.print_syntax_node( node );
@@ -216,6 +223,10 @@ public:
    void visit( const WhileExpressionSyntaxNodeSP& node ) override
    {
       mHandlers.while_expression_syntax_node( node );
+   }
+   void visit( const FunctionSyntaxNodeSP& node ) override
+   {
+      mHandlers.function_syntax_node( node );
    }
 
 private:

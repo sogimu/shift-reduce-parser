@@ -19,4 +19,3 @@ public:
 };
 
 using OpenCurlyBracketSyntaxNodeSP = std::shared_ptr< OpenCurlyBracketSyntaxNode >;
-using OpenCurlyBracketSyntaxNodeCSP = std::shared_ptr< const OpenCurlyBracketSyntaxNode >;

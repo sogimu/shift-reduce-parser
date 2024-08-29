@@ -25,6 +25,7 @@ public:
          CONDITIONAL_EXPRESSION,
          IF_EXPRESSION,
          WHILE_EXPRESSION,
+         FUNCTION_EXPRESSION,
          PRINT_EXPRESSION,
          VARIBLE_ASSIGMENT,
          EQUAL,
@@ -93,6 +94,39 @@ public:
             plan.to_remove.nodes.push_back( while_expression_syntax_node );
 
             const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( while_expression_syntax_node );
+            plan.to_add.nodes.push_back( expression_syntax_node );
+            return plan;
+         } );
+
+      // FUNCTION_EXPRESSION
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            FunctionSyntaxNodeSP function_syntax_node;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.function_syntax_node = [ &function_syntax_node, &state ]( const FunctionSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  function_syntax_node = node;
+                  state = State::FUNCTION_EXPRESSION;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 1, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( function_syntax_node );
+
+            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( function_syntax_node );
             plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );

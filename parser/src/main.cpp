@@ -11,6 +11,10 @@ int main()
    // 23's number shall be 17711
    std::string e = R"(
     {
+      foo(a, b)
+      {
+        print(a);
+      }
       n = 23;  
       a = 0;
       b = 1;

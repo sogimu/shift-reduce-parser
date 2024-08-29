@@ -34,6 +34,7 @@ set(HEADERS
     include/grammars/base/close_circle_bracket_syntax_node.h
     include/grammars/base/if_syntax_node.h
     include/grammars/base/name_syntax_node.h
+    include/grammars/base/comma_syntax_node.h
     include/grammars/addition/addition_syntax_node.h
     include/grammars/subtraction/subtraction_syntax_node.h
     include/grammars/division/division_syntax_node.h
@@ -46,6 +47,7 @@ set(HEADERS
     include/grammars/print_expression_grammar.h
     include/grammars/if_expression_syntax_node.h
     include/grammars/if_expression_grammar.h
+    include/grammars/function_syntax_node.h
     include/grammars/while_expression_syntax_node.h
     include/grammars/while_expression_grammar.h
     include/grammars/varible_assigment_syntax_node.h
@@ -54,6 +56,7 @@ set(HEADERS
     include/grammars/computational_expression_syntax_node.h
     include/grammars/computational_expression_grammar.h
     include/grammars/scope_grammar.h
+    include/grammars/function_grammar.h
 )
 
 set(SOURCES
@@ -67,6 +70,7 @@ set(SOURCES
     src/grammars/base/number_syntax_node.cpp
     src/grammars/base/f_syntax_node.cpp
     src/grammars/base/semicolon_syntax_node.cpp
+    src/grammars/base/comma_syntax_node.cpp
     src/grammars/base/print_syntax_node.cpp
     src/grammars/base/equal_syntax_node.cpp
     src/grammars/base/less_syntax_node.cpp
@@ -87,6 +91,7 @@ set(SOURCES
     src/grammars/expression_syntax_node.cpp
     src/grammars/print_expression_syntax_node.cpp
     src/grammars/if_expression_syntax_node.cpp
+    src/grammars/function_syntax_node.cpp
     src/grammars/while_expression_syntax_node.cpp
     src/grammars/varible_assigment_syntax_node.cpp
     src/grammars/conditional_expression_syntax_node.cpp

@@ -19,4 +19,3 @@ public:
 };
 
 using MultiplySyntaxNodeSP = std::shared_ptr< MultiplySyntaxNode >;
-using MultiplySyntaxNodeCSP = std::shared_ptr< const MultiplySyntaxNode >;

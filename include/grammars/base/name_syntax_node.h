@@ -22,4 +22,3 @@ private:
 };
 
 using NameSyntaxNodeSP = std::shared_ptr< NameSyntaxNode >;
-using NameSyntaxNodeCSP = std::shared_ptr< const NameSyntaxNode >;

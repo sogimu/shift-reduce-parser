@@ -19,4 +19,3 @@ public:
 };
 
 using PlusSyntaxNodeSP = std::shared_ptr< PlusSyntaxNode >;
-using PlusSyntaxNodeCSP = std::shared_ptr< const PlusSyntaxNode >;

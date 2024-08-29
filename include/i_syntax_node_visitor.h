@@ -13,6 +13,7 @@
 #include "base/minus_syntax_node.h"
 #include "base/more_syntax_node.h"
 #include "base/name_syntax_node.h"
+#include "base/comma_syntax_node.h"
 #include "base/number_syntax_node.h"
 #include "base/open_circle_bracket_syntax_node.h"
 #include "base/open_curly_bracket_syntax_node.h"
@@ -32,6 +33,7 @@
 #include "i_syntax_node.h"
 #include "if_expression_syntax_node.h"
 #include "while_expression_syntax_node.h"
+#include "function_syntax_node.h"
 #include "print_expression_syntax_node.h"
 #include "scope_syntax_node.h"
 #include "varible_assigment_syntax_node.h"
@@ -69,7 +71,9 @@ public:
    virtual void visit( const IfExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileExpressionSyntaxNodeSP& ) = 0;
+   virtual void visit( const FunctionSyntaxNodeSP& ) = 0;
    virtual void visit( const VaribleAssigmentSyntaxNodeSP& ) = 0;
    virtual void visit( const NameSyntaxNodeSP& ) = 0;
+   virtual void visit( const CommaSyntaxNodeSP& ) = 0;
 };
 using ISyntaxNodeVisitorSP = std::shared_ptr< ISyntaxNodeVisitor >;

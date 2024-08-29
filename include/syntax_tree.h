@@ -20,6 +20,7 @@
 #include "grammars/base/while_syntax_node.h"
 #include "grammars/base/minus_syntax_node.h"
 #include "grammars/base/name_syntax_node.h"
+#include "grammars/base/comma_syntax_node.h"
 #include "grammars/base/number_syntax_node.h"
 #include "grammars/base/open_curly_bracket_syntax_node.h"
 #include "grammars/base/plus_syntax_node.h"
@@ -30,6 +31,7 @@
 #include "grammars/f_grammar.h"
 #include "grammars/if_expression_grammar.h"
 #include "grammars/while_expression_grammar.h"
+#include "grammars/function_grammar.h"
 #include "grammars/print_expression_grammar.h"
 #include "grammars/scope_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
@@ -55,6 +57,7 @@ public:
          std::make_shared< Scope >(),
          std::make_shared< If >(),
          std::make_shared< While >(),
+         std::make_shared< Function >(),
       };
 
       Stack stack;
@@ -212,6 +215,11 @@ public:
          syntax_node = std::make_shared< NameSyntaxNode >( token.text );
       };
       break;
+      case Token_Type::COMMA:
+      {
+         syntax_node = std::make_shared< CommaSyntaxNode >();
+      };
+      break;
       }
       return syntax_node;
    }
@@ -309,6 +317,7 @@ public:
             handlers.division_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "DIVISION" << "}"; };
             handlers.eol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EOL" << "}"; };
             handlers.semicolon_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SEMICOLON" << "}"; };
+            handlers.comma_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "COMMA" << "}"; };
             handlers.expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EXPRESSION" << "}"; };
             handlers.scope_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SCOPE" << "}"; };
             handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
@@ -355,6 +364,7 @@ public:
             handlers.if_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_EXPRESSION" << "}"; };
             handlers.while_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE" << "}"; };
             handlers.while_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_EXPRESSION" << "}"; };
+            handlers.function_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
             handlers.varible_assigment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "VARIBLE ASSIGMENT" << "}"; };
             handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << " (" << node->value() << ')' << "}"; };

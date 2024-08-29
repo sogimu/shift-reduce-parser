@@ -6,6 +6,7 @@
 #include "i_syntax_node.h"
 #include "if_expression_syntax_node.h"
 #include "while_expression_syntax_node.h"
+#include "function_syntax_node.h"
 #include "print_expression_syntax_node.h"
 #include "varible_assigment_syntax_node.h"
 
@@ -32,10 +33,17 @@ public:
    {
       Add( if_expression_syntax_node );
    }
+
    ExpressionSyntaxNode( const WhileExpressionSyntaxNodeSP& while_expression_syntax_node )
       : ISyntaxNode{ Token_Type::EXPRESSION }
    {
       Add( while_expression_syntax_node );
+   }
+
+   ExpressionSyntaxNode( const FunctionSyntaxNodeSP& function_syntax_node )
+      : ISyntaxNode{ Token_Type::EXPRESSION }
+   {
+      Add( function_syntax_node );
    }
 
    ExpressionSyntaxNode( const PrintExpressionSyntaxNodeSP& print_expression_syntax_node )

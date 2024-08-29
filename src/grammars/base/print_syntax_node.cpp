@@ -2,6 +2,10 @@
 
 #include "syntax_node_empty_visitor.h"
 
+PrintSyntaxNode::PrintSyntaxNode()
+   : ISyntaxNode( Token_Type::PRINT )
+{
+}
 void PrintSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
