@@ -55,6 +55,7 @@ public:
       std::function< void( const WhileExpressionSyntaxNodeSP& ) > while_expression_syntax_node = [ this ]( const WhileExpressionSyntaxNodeSP& node )
       { default_handler( node ); };
       std::function< void( const FunctionSyntaxNodeSP& ) > function_syntax_node = [ this ]( const FunctionSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const FunctionCallSyntaxNodeSP& ) > function_call_syntax_node = [ this ]( const FunctionCallSyntaxNodeSP& node ) { default_handler( node ); };
    };
 
    SyntaxNodeEmptyVisitor( const Handlers& handlers )
@@ -224,9 +225,15 @@ public:
    {
       mHandlers.while_expression_syntax_node( node );
    }
+
    void visit( const FunctionSyntaxNodeSP& node ) override
    {
       mHandlers.function_syntax_node( node );
+   }
+
+   void visit( const FunctionCallSyntaxNodeSP& node ) override
+   {
+      mHandlers.function_call_syntax_node( node );
    }
 
 private:

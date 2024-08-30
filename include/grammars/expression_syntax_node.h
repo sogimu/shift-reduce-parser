@@ -7,6 +7,7 @@
 #include "if_expression_syntax_node.h"
 #include "while_expression_syntax_node.h"
 #include "function_syntax_node.h"
+#include "function_call_syntax_node.h"
 #include "print_expression_syntax_node.h"
 #include "varible_assigment_syntax_node.h"
 
@@ -46,6 +47,12 @@ public:
       Add( function_syntax_node );
    }
 
+   ExpressionSyntaxNode( const FunctionCallSyntaxNodeSP& function_call_syntax_node )
+      : ISyntaxNode{ Token_Type::EXPRESSION }
+   {
+      Add( function_call_syntax_node );
+   }
+
    ExpressionSyntaxNode( const PrintExpressionSyntaxNodeSP& print_expression_syntax_node )
       : ISyntaxNode{ Token_Type::EXPRESSION }
    {
@@ -64,4 +71,3 @@ public:
 };
 
 using ExpressionSyntaxNodeSP = std::shared_ptr< ExpressionSyntaxNode >;
-using ExpressionSyntaxNodeCSP = std::shared_ptr< const ExpressionSyntaxNode >;

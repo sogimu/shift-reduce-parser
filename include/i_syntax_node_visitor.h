@@ -34,6 +34,7 @@
 #include "if_expression_syntax_node.h"
 #include "while_expression_syntax_node.h"
 #include "function_syntax_node.h"
+#include "function_call_syntax_node.h"
 #include "print_expression_syntax_node.h"
 #include "scope_syntax_node.h"
 #include "varible_assigment_syntax_node.h"
@@ -72,6 +73,7 @@ public:
    virtual void visit( const WhileSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionSyntaxNodeSP& ) = 0;
+   virtual void visit( const FunctionCallSyntaxNodeSP& ) = 0;
    virtual void visit( const VaribleAssigmentSyntaxNodeSP& ) = 0;
    virtual void visit( const NameSyntaxNodeSP& ) = 0;
    virtual void visit( const CommaSyntaxNodeSP& ) = 0;

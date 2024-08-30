@@ -32,6 +32,7 @@
 #include "grammars/if_expression_grammar.h"
 #include "grammars/while_expression_grammar.h"
 #include "grammars/function_grammar.h"
+#include "grammars/function_call_grammar.h"
 #include "grammars/print_expression_grammar.h"
 #include "grammars/scope_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
@@ -58,6 +59,7 @@ public:
          std::make_shared< If >(),
          std::make_shared< While >(),
          std::make_shared< Function >(),
+         std::make_shared< FunctionCall >(),
       };
 
       Stack stack;
@@ -365,6 +367,7 @@ public:
             handlers.while_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE" << "}"; };
             handlers.while_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_EXPRESSION" << "}"; };
             handlers.function_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION" << "}"; };
+            handlers.function_call_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION_CALL" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
             handlers.varible_assigment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "VARIBLE ASSIGMENT" << "}"; };
             handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << " (" << node->value() << ')' << "}"; };

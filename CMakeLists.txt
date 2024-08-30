@@ -48,6 +48,7 @@ set(HEADERS
     include/grammars/if_expression_syntax_node.h
     include/grammars/if_expression_grammar.h
     include/grammars/function_syntax_node.h
+    include/grammars/function_call_syntax_node.h
     include/grammars/while_expression_syntax_node.h
     include/grammars/while_expression_grammar.h
     include/grammars/varible_assigment_syntax_node.h
@@ -57,6 +58,7 @@ set(HEADERS
     include/grammars/computational_expression_grammar.h
     include/grammars/scope_grammar.h
     include/grammars/function_grammar.h
+    include/grammars/function_call_grammar.h
 )
 
 set(SOURCES
@@ -92,6 +94,7 @@ set(SOURCES
     src/grammars/print_expression_syntax_node.cpp
     src/grammars/if_expression_syntax_node.cpp
     src/grammars/function_syntax_node.cpp
+    src/grammars/function_call_syntax_node.cpp
     src/grammars/while_expression_syntax_node.cpp
     src/grammars/varible_assigment_syntax_node.cpp
     src/grammars/conditional_expression_syntax_node.cpp

@@ -15,6 +15,7 @@ int main()
       {
         print(a);
       }
+      foo(a,b);
       n = 23;  
       a = 0;
       b = 1;

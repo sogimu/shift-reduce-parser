@@ -26,6 +26,7 @@ public:
          IF_EXPRESSION,
          WHILE_EXPRESSION,
          FUNCTION_EXPRESSION,
+         FUNCTION_CALL_EXPRESSION,
          PRINT_EXPRESSION,
          VARIBLE_ASSIGMENT,
          EQUAL,
@@ -131,6 +132,38 @@ public:
             return plan;
          } );
 
+      // FUNCTION_CALL_EXPRESSION
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            FunctionCallSyntaxNodeSP function_call_syntax_node;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.function_call_syntax_node = [ &function_call_syntax_node, &state ]( const FunctionCallSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  function_call_syntax_node = node;
+                  state = State::FUNCTION_CALL_EXPRESSION;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 1, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( function_call_syntax_node );
+
+            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( function_call_syntax_node );
+            plan.to_add.nodes.push_back( expression_syntax_node );
+            return plan;
+         } );
       // PRINT_EXPRESSION
       mProductions.emplace_back(
          [ this ]( const Stack& stack ) -> std::optional< Plan >
