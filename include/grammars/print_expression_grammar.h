@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base/close_circle_bracket_syntax_node.h"
+#include "base/name_syntax_node.h"
 #include "base/open_circle_bracket_syntax_node.h"
 #include "base/print_syntax_node.h"
 #include "base/semicolon_syntax_node.h"
@@ -25,7 +26,7 @@ public:
          ERROR,
          PRINT,
          OPEN_CIRCLE_BRACKET,
-         COMPUTATIONAL_EXPRESSION,
+         ARGUMENT,
          CLOSE_CIRCLE_BRACKET,
       };
 
@@ -35,7 +36,7 @@ public:
          {
             PrintSyntaxNodeSP print;
             OpenCircleBracketSyntaxNodeSP open;
-            ComputationalExpressionSyntaxNodeSP computational_expression;
+            ISyntaxNodeSP argument;
             CloseCircleBracketSyntaxNodeSP close;
             SemicolonSyntaxNodeSP semiclon;
 
@@ -59,17 +60,25 @@ public:
                   open = node;
                }
             };
-            handlers.computational_expression_syntax_node = [ &computational_expression, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            handlers.name_syntax_node = [ &argument, &state ]( const NameSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
-                  state = State::COMPUTATIONAL_EXPRESSION;
-                  computational_expression = node;
+                  state = State::ARGUMENT;
+                  argument = node;
+               }
+            };
+            handlers.computational_expression_syntax_node = [ &argument, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  state = State::ARGUMENT;
+                  argument = node;
                }
             };
             handlers.close_circle_bracket_syntax_node = [ &close, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
             {
-               if( state == State::COMPUTATIONAL_EXPRESSION )
+               if( state == State::ARGUMENT )
                {
                   state = State::CLOSE_CIRCLE_BRACKET;
                   state = State::FINISH;
@@ -85,10 +94,10 @@ public:
             Plan plan;
             plan.to_remove.nodes.push_back( print );
             plan.to_remove.nodes.push_back( open );
-            plan.to_remove.nodes.push_back( computational_expression );
+            plan.to_remove.nodes.push_back( argument );
             plan.to_remove.nodes.push_back( close );
 
-            const auto& print_expression_node = std::make_shared< PrintExpressionSyntaxNode >( computational_expression );
+            const auto& print_expression_node = std::make_shared< PrintExpressionSyntaxNode >( argument );
             plan.to_add.nodes.push_back( print_expression_node );
             return plan;
          } );

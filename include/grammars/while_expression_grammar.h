@@ -40,52 +40,56 @@ public:
 
             State state = State::START;
 
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.while_syntax_node = [ &while_node, &state ]( const WhileSyntaxNodeSP& node )
-            {
-               if( state == State::START )
-               {
-                  while_node = node;
-                  state = State::WHILE;
-               }
-            };
-            handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
-            {
-               if( state == State::WHILE )
-               {
-                  open_circle_bracket = node;
-                  state = State::OPEN_CIRCLE_BRACKET;
-               }
-            };
-            handlers.conditional_expression_syntax_node = [ &conditional_expression, &state ]( const ConditionalExpressionSyntaxNodeSP& node )
-            {
-               if( state == State::OPEN_CIRCLE_BRACKET )
-               {
-                  conditional_expression = node;
-                  state = State::CONDITION;
-               }
-            };
-            handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
-            {
-               if( state == State::CONDITION )
-               {
-                  close_circle_bracket = node;
-                  state = State::CLOSE_CIRCLE_BRACKET;
-               }
-            };
-
-            handlers.scope_syntax_node = [ &scope_expression, &state ]( const ScopeSyntaxNodeSP& node )
-            {
-               if( state == State::CLOSE_CIRCLE_BRACKET )
-               {
-                  scope_expression = node;
-                  state = State::SCOPE;
-                  state = State::FINISH;
-               }
-            };
-
-            iterate_over_last_n_nodes( stack, 5, handlers );
+            iterate_over_last_n_nodes( stack, 5,
+                                       {
+                                          .default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; },
+                                          .scope_syntax_node =
+                                             [ &scope_expression, &state ]( const ScopeSyntaxNodeSP& node )
+                                          {
+                                             if( state == State::CLOSE_CIRCLE_BRACKET )
+                                             {
+                                                scope_expression = node;
+                                                state = State::SCOPE;
+                                                state = State::FINISH;
+                                             }
+                                          },
+                                          .open_circle_bracket_syntax_node =
+                                             [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
+                                          {
+                                             if( state == State::WHILE )
+                                             {
+                                                open_circle_bracket = node;
+                                                state = State::OPEN_CIRCLE_BRACKET;
+                                             }
+                                          },
+                                          .close_circle_bracket_syntax_node =
+                                             [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
+                                          {
+                                             if( state == State::CONDITION )
+                                             {
+                                                close_circle_bracket = node;
+                                                state = State::CLOSE_CIRCLE_BRACKET;
+                                             }
+                                          },
+                                          .conditional_expression_syntax_node =
+                                             [ &conditional_expression, &state ]( const ConditionalExpressionSyntaxNodeSP& node )
+                                          {
+                                             if( state == State::OPEN_CIRCLE_BRACKET )
+                                             {
+                                                conditional_expression = node;
+                                                state = State::CONDITION;
+                                             }
+                                          },
+                                          .while_syntax_node =
+                                             [ &while_node, &state ]( const WhileSyntaxNodeSP& node )
+                                          {
+                                             if( state == State::START )
+                                             {
+                                                while_node = node;
+                                                state = State::WHILE;
+                                             }
+                                          },
+                                       } );
 
             if( state != State::FINISH )
                return {};

@@ -3,6 +3,23 @@
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
+ScopeSyntaxNode::ScopeSyntaxNode()
+   : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
+{
+}
+
+ScopeSyntaxNode::ScopeSyntaxNode( const ISyntaxNodeSP& expression )
+   : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
+{
+   Add( expression );
+}
+
+ScopeSyntaxNode::ScopeSyntaxNode( const std::vector< ISyntaxNodeSP >& expressions )
+   : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
+{
+   for( const auto& expression : expressions )
+      Add( expression );
+}
 void ScopeSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );

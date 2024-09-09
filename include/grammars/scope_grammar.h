@@ -255,55 +255,5 @@ public:
             plan.to_add.nodes.push_back( scope_node );
             return plan;
          } );
-      //        mProductionByFeature.emplace_back(Features{ one(Token_Type::OPEN_CURLY_BRACKET),
-      //        manyOf(Token_Type::EXPRESSION), one(Token_Type::CLOSE_CURLY_BRACKET) },
-      //                                          [](const Stack& stack) -> Production
-      //                                          {
-      //                                              auto it = stack.begin();
-      //                                              std::advance(it, stack.size() - 4);
-      //                                              const auto& open_bracket = *(it);
-      //                                              const auto& expression0 = *(it++);
-      //                                              const auto& expression1 = *(it++);
-      //                                              const auto& close_bracket = *(it++);
-
-      //                                              Production::Plan plan;
-      //                                              plan.to_remove.nodes.push_back(open_bracket);
-      //                                              plan.to_remove.nodes.push_back(expression0);
-      //                                              plan.to_remove.nodes.push_back(expression1);
-      //                                              plan.to_remove.nodes.push_back(close_bracket);
-
-      //                                              const auto& scope = std::make_shared<ISyntaxNode>();
-      //                                              scope->token = {"scope", Token_Type::SCOPE};
-      //                                              scope->Add(expression0);
-      //                                              scope->Add(expression1);
-      //                                              plan.to_add.nodes.push_back(scope);
-      //                                              return Production{plan};
-      //                                          });
-
-      ////        mProductionByFeature.emplace_back(Features{Token_Type::SCOPE, Token_Type::EXPRESSION}, [](const
-      /// Stack& stack) -> Production /        { /            auto it = stack.begin(); /            std::advance(it,
-      /// stack.size() - 2); /            const auto& scope = *(it); /            const auto& expression = *(++it);
-
-      ////            Production::Plan plan;
-      ////            plan.to_remove.nodes.push_back(expression);
-
-      ////            scope->Add(expression);
-      ////            return Production{plan};
-      ////        });
-
-      ////        mProductionByFeature.emplace_back(Features{Token_Type::BOL, Token_Type::SCOPE, Token_Type::EOL},
-      ///[](const Stack& stack) -> Production /        { /            auto it = stack.begin(); / std::advance(it,
-      /// stack.size() - 3); /            const auto& bol = *it; /            const auto& scope = *(++it); / const
-      /// auto& eol = *(++it);
-
-      ////            Production::Plan plan;
-      ////            plan.to_remove.nodes.push_back(bol);
-      ////            plan.to_remove.nodes.push_back(scope);
-      ////            plan.to_remove.nodes.push_back(eol);
-
-      ////            plan.to_add.nodes.push_back(scope);
-
-      ////            return Production{plan};
-      ////        });
    }
 };

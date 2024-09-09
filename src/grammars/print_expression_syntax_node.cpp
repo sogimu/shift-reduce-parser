@@ -1,20 +1,34 @@
 #include "print_expression_syntax_node.h"
 
+#include "base/name_syntax_node.h"
+#include "computational_expression_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
+#include "utils.h"
 
 PrintExpressionSyntaxNode::PrintExpressionSyntaxNode()
    : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
 {
 }
 
-PrintExpressionSyntaxNode::PrintExpressionSyntaxNode(
-   const ComputationalExpressionSyntaxNodeSP& computational_expression )
+PrintExpressionSyntaxNode::PrintExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression )
    : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
 {
    Add( computational_expression );
+}
+
+PrintExpressionSyntaxNode::PrintExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
+   : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
+{
+   Add( name_syntax_node );
+}
+
+PrintExpressionSyntaxNode::PrintExpressionSyntaxNode( const ISyntaxNodeSP& argument )
+   : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
+{
+   Add( argument );
 }
 
 void PrintExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
@@ -44,10 +58,16 @@ bool PrintExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    const_cast< ISyntaxNode& >( node ).accept( visitor );
 
-   // node.accept( visitor );
    return is_equal;
 }
+
 ComputationalExpressionSyntaxNodeSP PrintExpressionSyntaxNode::computational_expression() const
 {
-   return std::dynamic_pointer_cast< ComputationalExpressionSyntaxNode >( this->operator[]( 0 ) );
+   ComputationalExpressionSyntaxNodeSP argument;
+   const auto& value_node = this->operator[]( 0 );
+   match( value_node,
+          { .computational_expression_syntax_node = [ &argument ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
+            { argument = computational_expression; },
+            .name_syntax_node = [ &argument ]( const NameSyntaxNodeSP& name ) { argument = std::make_shared< ComputationalExpressionSyntaxNode >( name ); } } );
+   return argument;
 }

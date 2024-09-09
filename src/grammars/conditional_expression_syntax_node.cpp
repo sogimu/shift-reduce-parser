@@ -1,11 +1,16 @@
 #include "conditional_expression_syntax_node.h"
 
 #include "base/name_syntax_node.h"
+#include "grammars/computational_expression_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
+ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode()
+   : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
+{
+}
 ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& f0, const ComputationalExpressionSyntaxNodeSP& f1,
                                                                   Type type )
    : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }

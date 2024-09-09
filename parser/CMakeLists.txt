@@ -6,6 +6,7 @@ project(parser VERSION 0.0.1 LANGUAGES CXX)
 
 add_executable(parser
     src/varible_store.h
+    src/function_store.h
     src/calculator.h
     src/calculator.cpp
     src/main.cpp

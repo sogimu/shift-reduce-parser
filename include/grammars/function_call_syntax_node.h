@@ -1,12 +1,12 @@
 #pragma once
 
-#include "base/name_syntax_node.h"
-#include "conditional_expression_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
-#include "scope_syntax_node.h"
 
 class ISyntaxNodeVisitor;
+
+class NameSyntaxNode;
+using NameSyntaxNodeSP = std::shared_ptr< NameSyntaxNode >;
 
 class FunctionCallSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< FunctionCallSyntaxNode >
 {

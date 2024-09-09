@@ -10,8 +10,11 @@
 #include <string>
 #include <vector>
 
-VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name,
-                                                        const ComputationalExpressionSyntaxNodeSP& node )
+VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode()
+   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT }
+{
+}
+VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node )
    : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT }
 {
    Add( name );

@@ -2,7 +2,19 @@
 
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
+#include "scope_syntax_node.h"
+#include "conditional_expression_syntax_node.h"
 
+IfExpressionSyntaxNode::IfExpressionSyntaxNode()
+   : ISyntaxNode{ Token_Type::IF_EXPRESSION }
+{
+}
+IfExpressionSyntaxNode::IfExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
+   : ISyntaxNode{ Token_Type::IF_EXPRESSION }
+{
+   Add( conditional_expression );
+   Add( scope );
+}
 void IfExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );

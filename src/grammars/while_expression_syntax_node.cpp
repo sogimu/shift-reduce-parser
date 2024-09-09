@@ -3,6 +3,16 @@
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
+WhileExpressionSyntaxNode::WhileExpressionSyntaxNode()
+   : ISyntaxNode{ Token_Type::WHILE_EXPRESSION }
+{
+}
+WhileExpressionSyntaxNode::WhileExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
+   : ISyntaxNode{ Token_Type::WHILE_EXPRESSION }
+{
+   Add( conditional_expression );
+   Add( scope );
+}
 void WhileExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );

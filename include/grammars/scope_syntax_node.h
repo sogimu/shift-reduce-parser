@@ -11,22 +11,11 @@ class ScopeSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this<
 
 {
 public:
-   ScopeSyntaxNode() = default;
-   ScopeSyntaxNode( const ISyntaxNodeSP& expression )
-      : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
-   {
-      Add( expression );
-   }
-
-   ScopeSyntaxNode( const std::vector< ISyntaxNodeSP >& expressions )
-      : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
-   {
-      for( const auto& expression : expressions )
-         Add( expression );
-   }
+   ScopeSyntaxNode();
+   ScopeSyntaxNode( const ISyntaxNodeSP& expression );
+   ScopeSyntaxNode( const std::vector< ISyntaxNodeSP >& expressions );
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
 };
 
 using ScopeSyntaxNodeSP = std::shared_ptr< ScopeSyntaxNode >;
-using ScopeSyntaxNodeCSP = std::shared_ptr< const ScopeSyntaxNode >;

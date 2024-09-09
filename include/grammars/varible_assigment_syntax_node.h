@@ -15,7 +15,7 @@ using ComputationalExpressionSyntaxNodeSP = std::shared_ptr< ComputationalExpres
 class VaribleAssigmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< VaribleAssigmentSyntaxNode >
 {
 public:
-   VaribleAssigmentSyntaxNode() = default;
+   VaribleAssigmentSyntaxNode();
    VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node );
 
    std::string name() const;
@@ -26,4 +26,3 @@ public:
 };
 
 using VaribleAssigmentSyntaxNodeSP = std::shared_ptr< VaribleAssigmentSyntaxNode >;
-using VaribleAssigmentSyntaxNodeCSP = std::shared_ptr< const VaribleAssigmentSyntaxNode >;

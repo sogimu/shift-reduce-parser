@@ -1,11 +1,53 @@
 #include "computational_expression_syntax_node.h"
 
-#include "conditional_expression_syntax_node.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
+#include "base/f_syntax_node.h"
+#include "base/name_syntax_node.h"
+#include "conditional_expression_syntax_node.h"
+#include "multiply/multiply_syntax_node.h"
+#include "addition/addition_syntax_node.h"
 
 #include <vector>
+
+ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode()
+   : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
+{
+}
+ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const AdditionSyntaxNodeSP& e )
+   : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
+{
+   Add( e );
+}
+ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const MultiplySyntaxNodeSP& e )
+   : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
+{
+   Add( e );
+}
+ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const FSyntaxNodeSP& e )
+   : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
+{
+   Add( e );
+}
+
+ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression_syntax_node )
+   : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
+{
+   Add( conditional_expression_syntax_node );
+}
+
+ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
+   : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
+{
+   Add( name_syntax_node );
+}
+
+ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const ISyntaxNodeSP& node )
+   : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
+{
+   Add( node );
+}
 
 void ComputationalExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {

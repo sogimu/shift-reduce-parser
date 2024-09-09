@@ -4,14 +4,20 @@
 #include "i_syntax_node.h"
 
 class ISyntaxNodeVisitor;
+
 class ComputationalExpressionSyntaxNode;
 using ComputationalExpressionSyntaxNodeSP = std::shared_ptr< ComputationalExpressionSyntaxNode >;
+
+class NameSyntaxNode;
+using NameSyntaxNodeSP = std::shared_ptr< NameSyntaxNode >;
 
 class PrintExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< PrintExpressionSyntaxNode >
 {
 public:
    PrintExpressionSyntaxNode();
    PrintExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression );
+   PrintExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node );
+   PrintExpressionSyntaxNode( const ISyntaxNodeSP& argument );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 
@@ -20,4 +26,3 @@ public:
 };
 
 using PrintExpressionSyntaxNodeSP = std::shared_ptr< PrintExpressionSyntaxNode >;
-using PrintExpressionSyntaxNodeCSP = std::shared_ptr< const PrintExpressionSyntaxNode >;

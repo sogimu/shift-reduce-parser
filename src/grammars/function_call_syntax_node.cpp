@@ -1,8 +1,8 @@
 #include "function_call_syntax_node.h"
 
-#include "base/name_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
+#include "base/name_syntax_node.h"
 
 FunctionCallSyntaxNode::FunctionCallSyntaxNode()
    : ISyntaxNode{ Token_Type::FUNCTION_CALL_EXPRESSION }

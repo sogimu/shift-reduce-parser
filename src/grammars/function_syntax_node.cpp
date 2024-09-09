@@ -1,8 +1,9 @@
 #include "function_syntax_node.h"
 
-#include "base/name_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
+#include "scope_syntax_node.h"
+#include "base/name_syntax_node.h"
 
 FunctionSyntaxNode::FunctionSyntaxNode()
    : ISyntaxNode{ Token_Type::FUNCTION_EXPRESSION }
