@@ -3,8 +3,11 @@
 #include "i_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 
+#include <functional>
+#include <memory>
 #include <stack>
 #include <vector>
+#include <optional>
 
 template< typename Node, typename PreFunc, typename PostFunc >
 void iterative_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
@@ -14,7 +17,7 @@ void iterative_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
 
    while( !stack.empty() )
    {
-      const auto& [ node, is_pre_order ] = stack.top();
+      auto [ node, is_pre_order ] = stack.top();
       stack.pop();
 
       if( is_pre_order )
@@ -49,7 +52,7 @@ void iterative_managed_dfs( const Node& start, PreFunc pre_func, PostFunc post_f
 
    while( !stack.empty() )
    {
-      const auto& [ node, is_pre_order ] = stack.top();
+      auto [ node, is_pre_order ] = stack.top();
       stack.pop();
 
       if( is_pre_order )
@@ -186,3 +189,9 @@ zip_container< C1 > zip( C1& c1, C1& c2 )
 {
    return zip_container< C1 >( c1, c2 );
 }
+
+static void match( const ISyntaxNodeSP& node, const SyntaxNodeEmptyVisitor::Handlers& handlers )
+{
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   node->accept( visitor );
+};
