@@ -1,11 +1,11 @@
 #include "nonterminals/conditional_expression_syntax_node.h"
 
-#include "terminals/name_syntax_node.h"
-#include "grammars/nonterminals/computational_expression_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
+#include "terminals/name_syntax_node.h"
+#include "nonterminals/computational_expression_syntax_node.h"
 
 ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode()
    : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }

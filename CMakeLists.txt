@@ -15,39 +15,39 @@ set(HEADERS
     include/i_syntax_node_visitor.h
     include/syntax_node_empty_visitor.h
     include/syntax_node_state_machine_visitor.h
-    include/grammars/terminals/bol_syntax_node.h
-    include/grammars/terminals/eol_syntax_node.h
-    include/grammars/terminals/plus_syntax_node.h
-    include/grammars/terminals/minus_syntax_node.h
-    include/grammars/terminals/asterisk_syntax_node.h
-    include/grammars/terminals/slash_syntax_node.h
-    include/grammars/terminals/number_syntax_node.h
-    include/grammars/terminals/f_syntax_node.h
-    include/grammars/terminals/semicolon_syntax_node.h
-    include/grammars/terminals/print_syntax_node.h
-    include/grammars/terminals/equal_syntax_node.h
-    include/grammars/terminals/less_syntax_node.h
-    include/grammars/terminals/more_syntax_node.h
-    include/grammars/terminals/open_curly_bracket_syntax_node.h
-    include/grammars/terminals/close_curly_bracket_syntax_node.h
-    include/grammars/terminals/open_circle_bracket_syntax_node.h
-    include/grammars/terminals/close_circle_bracket_syntax_node.h
-    include/grammars/terminals/if_syntax_node.h
-    include/grammars/terminals/name_syntax_node.h
-    include/grammars/terminals/comma_syntax_node.h
-    include/grammars/nonterminals/addition/addition_syntax_node.h
-    include/grammars/nonterminals/subtraction/subtraction_syntax_node.h
-    include/grammars/nonterminals/division/division_syntax_node.h
-    include/grammars/nonterminals/expression_syntax_node.h
-    include/grammars/nonterminals/scope_syntax_node.h
-    include/grammars/nonterminals/conditional_expression_syntax_node.h
-    include/grammars/nonterminals/print_expression_syntax_node.h
-    include/grammars/nonterminals/if_expression_syntax_node.h
-    include/grammars/nonterminals/function_syntax_node.h
-    include/grammars/nonterminals/function_call_syntax_node.h
-    include/grammars/nonterminals/while_expression_syntax_node.h
-    include/grammars/nonterminals/varible_assigment_syntax_node.h
-    include/grammars/nonterminals/computational_expression_syntax_node.h
+    include/syntax_nodes/terminals/bol_syntax_node.h
+    include/syntax_nodes/terminals/eol_syntax_node.h
+    include/syntax_nodes/terminals/plus_syntax_node.h
+    include/syntax_nodes/terminals/minus_syntax_node.h
+    include/syntax_nodes/terminals/asterisk_syntax_node.h
+    include/syntax_nodes/terminals/slash_syntax_node.h
+    include/syntax_nodes/terminals/number_syntax_node.h
+    include/syntax_nodes/terminals/f_syntax_node.h
+    include/syntax_nodes/terminals/semicolon_syntax_node.h
+    include/syntax_nodes/terminals/print_syntax_node.h
+    include/syntax_nodes/terminals/equal_syntax_node.h
+    include/syntax_nodes/terminals/less_syntax_node.h
+    include/syntax_nodes/terminals/more_syntax_node.h
+    include/syntax_nodes/terminals/open_curly_bracket_syntax_node.h
+    include/syntax_nodes/terminals/close_curly_bracket_syntax_node.h
+    include/syntax_nodes/terminals/open_circle_bracket_syntax_node.h
+    include/syntax_nodes/terminals/close_circle_bracket_syntax_node.h
+    include/syntax_nodes/terminals/if_syntax_node.h
+    include/syntax_nodes/terminals/name_syntax_node.h
+    include/syntax_nodes/terminals/comma_syntax_node.h
+    include/syntax_nodes/nonterminals/addition/addition_syntax_node.h
+    include/syntax_nodes/nonterminals/subtraction/subtraction_syntax_node.h
+    include/syntax_nodes/nonterminals/division/division_syntax_node.h
+    include/syntax_nodes/nonterminals/expression_syntax_node.h
+    include/syntax_nodes/nonterminals/scope_syntax_node.h
+    include/syntax_nodes/nonterminals/conditional_expression_syntax_node.h
+    include/syntax_nodes/nonterminals/print_expression_syntax_node.h
+    include/syntax_nodes/nonterminals/if_expression_syntax_node.h
+    include/syntax_nodes/nonterminals/function_syntax_node.h
+    include/syntax_nodes/nonterminals/function_call_syntax_node.h
+    include/syntax_nodes/nonterminals/while_expression_syntax_node.h
+    include/syntax_nodes/nonterminals/varible_assigment_syntax_node.h
+    include/syntax_nodes/nonterminals/computational_expression_syntax_node.h
     include/grammars/f_grammar.h
     include/grammars/conditional_expression_grammar.h
     include/grammars/print_expression_grammar.h
@@ -63,42 +63,42 @@ set(HEADERS
 
 set(SOURCES
     src/lexical_tokens.cpp
-    src/grammars/terminals/plus_syntax_node.cpp
-    src/grammars/terminals/minus_syntax_node.cpp
-    src/grammars/terminals/asterisk_syntax_node.cpp
-    src/grammars/terminals/slash_syntax_node.cpp
-    src/grammars/terminals/bol_syntax_node.cpp
-    src/grammars/terminals/eol_syntax_node.cpp
-    src/grammars/terminals/number_syntax_node.cpp
-    src/grammars/terminals/f_syntax_node.cpp
-    src/grammars/terminals/semicolon_syntax_node.cpp
-    src/grammars/terminals/comma_syntax_node.cpp
-    src/grammars/terminals/print_syntax_node.cpp
-    src/grammars/terminals/equal_syntax_node.cpp
-    src/grammars/terminals/less_syntax_node.cpp
-    src/grammars/terminals/more_syntax_node.cpp
-    src/grammars/terminals/open_curly_bracket_syntax_node.cpp
-    src/grammars/terminals/close_curly_bracket_syntax_node.cpp
-    src/grammars/terminals/open_circle_bracket_syntax_node.cpp
-    src/grammars/terminals/close_circle_bracket_syntax_node.cpp
-    src/grammars/terminals/if_syntax_node.cpp
-    src/grammars/terminals/while_syntax_node.cpp
-    src/grammars/terminals/while_syntax_node.cpp
-    src/grammars/terminals/name_syntax_node.cpp
-    src/grammars/nonterminals/addition/addition_syntax_node.cpp
-    src/grammars/nonterminals/subtraction/subtraction_syntax_node.cpp
-    src/grammars/nonterminals/multiply/multiply_syntax_node.cpp
-    src/grammars/nonterminals/division/division_syntax_node.cpp
-    src/grammars/nonterminals/computational_expression_syntax_node.cpp
-    src/grammars/nonterminals/expression_syntax_node.cpp
-    src/grammars/nonterminals/print_expression_syntax_node.cpp
-    src/grammars/nonterminals/if_expression_syntax_node.cpp
-    src/grammars/nonterminals/function_syntax_node.cpp
-    src/grammars/nonterminals/function_call_syntax_node.cpp
-    src/grammars/nonterminals/while_expression_syntax_node.cpp
-    src/grammars/nonterminals/varible_assigment_syntax_node.cpp
-    src/grammars/nonterminals/conditional_expression_syntax_node.cpp
-    src/grammars/nonterminals/scope_syntax_node.cpp
+    src/syntax_nodes/terminals/plus_syntax_node.cpp
+    src/syntax_nodes/terminals/minus_syntax_node.cpp
+    src/syntax_nodes/terminals/asterisk_syntax_node.cpp
+    src/syntax_nodes/terminals/slash_syntax_node.cpp
+    src/syntax_nodes/terminals/bol_syntax_node.cpp
+    src/syntax_nodes/terminals/eol_syntax_node.cpp
+    src/syntax_nodes/terminals/number_syntax_node.cpp
+    src/syntax_nodes/terminals/f_syntax_node.cpp
+    src/syntax_nodes/terminals/semicolon_syntax_node.cpp
+    src/syntax_nodes/terminals/comma_syntax_node.cpp
+    src/syntax_nodes/terminals/print_syntax_node.cpp
+    src/syntax_nodes/terminals/equal_syntax_node.cpp
+    src/syntax_nodes/terminals/less_syntax_node.cpp
+    src/syntax_nodes/terminals/more_syntax_node.cpp
+    src/syntax_nodes/terminals/open_curly_bracket_syntax_node.cpp
+    src/syntax_nodes/terminals/close_curly_bracket_syntax_node.cpp
+    src/syntax_nodes/terminals/open_circle_bracket_syntax_node.cpp
+    src/syntax_nodes/terminals/close_circle_bracket_syntax_node.cpp
+    src/syntax_nodes/terminals/if_syntax_node.cpp
+    src/syntax_nodes/terminals/while_syntax_node.cpp
+    src/syntax_nodes/terminals/while_syntax_node.cpp
+    src/syntax_nodes/terminals/name_syntax_node.cpp
+    src/syntax_nodes/nonterminals/addition/addition_syntax_node.cpp
+    src/syntax_nodes/nonterminals/subtraction/subtraction_syntax_node.cpp
+    src/syntax_nodes/nonterminals/multiply/multiply_syntax_node.cpp
+    src/syntax_nodes/nonterminals/division/division_syntax_node.cpp
+    src/syntax_nodes/nonterminals/computational_expression_syntax_node.cpp
+    src/syntax_nodes/nonterminals/expression_syntax_node.cpp
+    src/syntax_nodes/nonterminals/print_expression_syntax_node.cpp
+    src/syntax_nodes/nonterminals/if_expression_syntax_node.cpp
+    src/syntax_nodes/nonterminals/function_syntax_node.cpp
+    src/syntax_nodes/nonterminals/function_call_syntax_node.cpp
+    src/syntax_nodes/nonterminals/while_expression_syntax_node.cpp
+    src/syntax_nodes/nonterminals/varible_assigment_syntax_node.cpp
+    src/syntax_nodes/nonterminals/conditional_expression_syntax_node.cpp
+    src/syntax_nodes/nonterminals/scope_syntax_node.cpp
 )
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
@@ -106,4 +106,8 @@ add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 add_subdirectory ("parser")
 add_subdirectory ("tests/unit_tests")
 
-target_include_directories(${PROJECT_NAME} PUBLIC "include" "include/grammars")
+target_include_directories(${PROJECT_NAME} PUBLIC 
+  "include" 
+  "include/grammars" 
+  "include/syntax_nodes"
+)
