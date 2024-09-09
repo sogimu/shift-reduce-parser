@@ -1,10 +1,10 @@
 #pragma once
 
-#include "base/name_syntax_node.h"
-#include "computational_expression_syntax_node.h"
+#include "terminals/name_syntax_node.h"
+#include "nonterminals/computational_expression_syntax_node.h"
 #include "i_grammar.h"
 #include "i_syntax_node.h"
-#include "print_expression_syntax_node.h"
+#include "nonterminals/print_expression_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 

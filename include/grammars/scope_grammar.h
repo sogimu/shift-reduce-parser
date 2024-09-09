@@ -1,6 +1,6 @@
 #pragma once
 
-#include "expression_syntax_node.h"
+#include "nonterminals/expression_syntax_node.h"
 #include "i_grammar.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"

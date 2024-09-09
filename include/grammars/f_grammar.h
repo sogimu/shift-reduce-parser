@@ -1,8 +1,8 @@
 #pragma once
 
-#include "base/f_syntax_node.h"
-#include "base/minus_syntax_node.h"
-#include "base/number_syntax_node.h"
+#include "terminals/f_syntax_node.h"
+#include "terminals/minus_syntax_node.h"
+#include "terminals/number_syntax_node.h"
 #include "i_grammar.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
@@ -85,20 +85,18 @@ public:
 
             State state = State::START;
 
-            iterate_over_last_n_nodes(
-               stack, 1,
-               SyntaxNodeEmptyVisitor::Handlers{ .default_handler = [ &state ]( const ISyntaxNodeSP& )
-                                                 { state = State::ERROR; },
-                                                 .number_syntax_node =
-                                                    [ &number, &state ]( const NumberSyntaxNodeSP& node )
-                                                 {
-                                                    if( state == State::START )
-                                                    {
-                                                       state = State::NUMBER;
-                                                       number = node;
-                                                       state = State::FINISH;
-                                                    }
-                                                 } } );
+            iterate_over_last_n_nodes( stack, 1,
+                                       SyntaxNodeEmptyVisitor::Handlers{ .default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; },
+                                                                         .number_syntax_node =
+                                                                            [ &number, &state ]( const NumberSyntaxNodeSP& node )
+                                                                         {
+                                                                            if( state == State::START )
+                                                                            {
+                                                                               state = State::NUMBER;
+                                                                               number = node;
+                                                                               state = State::FINISH;
+                                                                            }
+                                                                         } } );
 
             if( state != State::FINISH )
                return {};
@@ -121,36 +119,34 @@ public:
 
             State state = State::START;
 
-            iterate_over_last_n_nodes(
-               stack, 3,
-               SyntaxNodeEmptyVisitor::Handlers{
-                  .default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; },
-                  .minus_syntax_node =
-                     [ &first_minus, &second_minus, &number, &state ]( const MinusSyntaxNodeSP& node )
-                  {
-                     if( state == State::START )
-                     {
-                        state = State::FIRST_MINUS;
-                        first_minus = node;
-                     }
-                     else if( state == State::FIRST_MINUS )
-                     {
-                        state = State::SECOND_MINUS;
-                        second_minus = node;
-                     }
-                  },
-                  .number_syntax_node =
-                     [ &number, &state ]( const NumberSyntaxNodeSP& node )
-                  {
-                     if( state == State::SECOND_MINUS )
-                     {
-                        state = State::NUMBER;
-                        number = node;
-                        state = State::FINISH;
-                     }
-                  }
+            iterate_over_last_n_nodes( stack, 3,
+                                       SyntaxNodeEmptyVisitor::Handlers{ .default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; },
+                                                                         .minus_syntax_node =
+                                                                            [ &first_minus, &second_minus, &number, &state ]( const MinusSyntaxNodeSP& node )
+                                                                         {
+                                                                            if( state == State::START )
+                                                                            {
+                                                                               state = State::FIRST_MINUS;
+                                                                               first_minus = node;
+                                                                            }
+                                                                            else if( state == State::FIRST_MINUS )
+                                                                            {
+                                                                               state = State::SECOND_MINUS;
+                                                                               second_minus = node;
+                                                                            }
+                                                                         },
+                                                                         .number_syntax_node =
+                                                                            [ &number, &state ]( const NumberSyntaxNodeSP& node )
+                                                                         {
+                                                                            if( state == State::SECOND_MINUS )
+                                                                            {
+                                                                               state = State::NUMBER;
+                                                                               number = node;
+                                                                               state = State::FINISH;
+                                                                            }
+                                                                         }
 
-               } );
+                                       } );
 
             if( state != State::FINISH )
                return {};

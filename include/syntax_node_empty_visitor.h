@@ -1,6 +1,6 @@
 #pragma once
 
-#include "subtraction/subtraction_syntax_node.h"
+#include "nonterminals/subtraction/subtraction_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 
 #include <functional>

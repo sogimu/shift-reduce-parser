@@ -1,6 +1,6 @@
 #pragma once
 
-#include "function_syntax_node.h"
+#include "nonterminals/function_syntax_node.h"
 #include <cstddef>
 #include <string>
 #include <cstdio>

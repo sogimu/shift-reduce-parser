@@ -1,12 +1,12 @@
 #pragma once
 
-#include "base/close_circle_bracket_syntax_node.h"
-#include "base/name_syntax_node.h"
-#include "base/open_circle_bracket_syntax_node.h"
-#include "base/print_syntax_node.h"
-#include "base/semicolon_syntax_node.h"
+#include "terminals/close_circle_bracket_syntax_node.h"
+#include "terminals/name_syntax_node.h"
+#include "terminals/open_circle_bracket_syntax_node.h"
+#include "terminals/print_syntax_node.h"
+#include "terminals/semicolon_syntax_node.h"
 #include "i_grammar.h"
-#include "print_expression_syntax_node.h"
+#include "nonterminals/print_expression_syntax_node.h"
 #include "utils.h"
 
 #include <memory>

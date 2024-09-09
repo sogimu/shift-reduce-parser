@@ -1,7 +1,7 @@
 #pragma once
 
-#include "base/name_syntax_node.h"
-#include "conditional_expression_syntax_node.h"
+#include "terminals/name_syntax_node.h"
+#include "nonterminals/conditional_expression_syntax_node.h"
 #include "i_grammar.h"
 
 #include <memory>

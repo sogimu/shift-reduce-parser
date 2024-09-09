@@ -1,7 +1,7 @@
 #include "calculator.h"
 
-#include "division/division_syntax_node.h"
-#include "multiply/multiply_syntax_node.h"
+#include "nonterminals/division/division_syntax_node.h"
+#include "nonterminals/multiply/multiply_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 #include "lexical_tokens.h"
 #include "syntax_tree.h"

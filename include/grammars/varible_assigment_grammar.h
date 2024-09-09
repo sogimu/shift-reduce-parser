@@ -1,12 +1,12 @@
 #pragma once
 
-#include "base/name_syntax_node.h"
-#include "base/semicolon_syntax_node.h"
-#include "computational_expression_syntax_node.h"
+#include "terminals/name_syntax_node.h"
+#include "terminals/semicolon_syntax_node.h"
+#include "nonterminals/computational_expression_syntax_node.h"
 #include "i_grammar.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
-#include "varible_assigment_syntax_node.h"
+#include "nonterminals/varible_assigment_syntax_node.h"
 
 #include <vector>
 

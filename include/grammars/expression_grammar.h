@@ -1,11 +1,11 @@
 #pragma once
 
-#include "computational_expression_syntax_node.h"
-#include "conditional_expression_syntax_node.h"
-#include "expression_syntax_node.h"
+#include "nonterminals/computational_expression_syntax_node.h"
+#include "nonterminals/conditional_expression_syntax_node.h"
+#include "nonterminals/expression_syntax_node.h"
 #include "i_grammar.h"
-#include "if_expression_syntax_node.h"
-#include "print_expression_syntax_node.h"
+#include "nonterminals/if_expression_syntax_node.h"
+#include "nonterminals/print_expression_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 

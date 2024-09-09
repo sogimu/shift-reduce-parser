@@ -1,10 +1,10 @@
 #pragma once
 
-#include "function_call_syntax_node.h"
+#include "nonterminals/function_call_syntax_node.h"
 #include "i_grammar.h"
-#include "base/name_syntax_node.h"
-#include "base/comma_syntax_node.h"
-#include "base/semicolon_syntax_node.h"
+#include "terminals/name_syntax_node.h"
+#include "terminals/comma_syntax_node.h"
+#include "terminals/semicolon_syntax_node.h"
 #include "utils.h"
 
 #include <memory>

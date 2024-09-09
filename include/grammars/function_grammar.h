@@ -1,9 +1,9 @@
 #pragma once
 
 #include "i_grammar.h"
-#include "base/name_syntax_node.h"
-#include "base/comma_syntax_node.h"
-#include "scope_syntax_node.h"
+#include "terminals/name_syntax_node.h"
+#include "terminals/comma_syntax_node.h"
+#include "nonterminals/scope_syntax_node.h"
 #include "utils.h"
 
 #include <memory>

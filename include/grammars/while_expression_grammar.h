@@ -1,9 +1,9 @@
 #pragma once
 
-#include "conditional_expression_syntax_node.h"
+#include "nonterminals/conditional_expression_syntax_node.h"
 #include "i_grammar.h"
-#include "while_expression_syntax_node.h"
-#include "scope_syntax_node.h"
+#include "nonterminals/while_expression_syntax_node.h"
+#include "nonterminals/scope_syntax_node.h"
 #include "utils.h"
 
 #include <memory>
