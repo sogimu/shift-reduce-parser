@@ -62,9 +62,24 @@ public:
 
       auto next_chars = create_expression_generator( text );
       auto chars = next_chars();
+
+      bool is_comment_state = false;
       while( chars.current.has_value() )
       {
-         if( terminals.count( chars.current.value() ) )
+         if( chars.current.value() == '/' && chars.next.value() == '/' )
+         {
+            is_comment_state = true;
+         }
+
+         if( is_comment_state )
+         {
+            if( chars.current.value() == '\n' )
+            {
+               is_comment_state = false;
+            }
+            chars = next_chars();
+         }
+         else if( terminals.count( chars.current.value() ) )
          {
             Token_Type terminal_token_type = Token_Type::NO;
 
