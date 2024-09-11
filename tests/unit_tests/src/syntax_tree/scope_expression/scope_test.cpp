@@ -29,7 +29,7 @@ TEST( SYNTAX_TREE_SCOPE, TEST0 )
               "ComputationalExpressionSyntaxNode": [
                 {
                   "FSyntaxNode": [
-                    2
+                    1
                   ]
                 }
               ]
@@ -42,7 +42,7 @@ TEST( SYNTAX_TREE_SCOPE, TEST0 )
               "ComputationalExpressionSyntaxNode": [
                 {
                   "FSyntaxNode": [
-                    1
+                    2
                   ]
                 }
               ]

@@ -142,8 +142,6 @@ public:
             if( state != State::FINISH )
                return {};
 
-            std::reverse( arguments.begin(), arguments.end() );
-
             Plan plan;
             plan.to_remove.nodes.push_back( name );
             plan.to_remove.nodes.push_back( open_circle_bracket );

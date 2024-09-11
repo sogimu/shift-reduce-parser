@@ -233,7 +233,7 @@ double Calculator::solve( const std::string& expression ) const
                            if( HandleConditionExpression( varible_store, condition ) )
                            {
                               const auto& scope = while_expression->scope();
-                              children = std::vector< ISyntaxNodeSP >{ while_expression, scope };
+                              children = std::vector< ISyntaxNodeSP >{ scope, while_expression };
                            }
                            else
                            {
@@ -257,10 +257,11 @@ double Calculator::solve( const std::string& expression ) const
                            const auto& arguments_number = function_call->Children().size() - 1;
                            const auto& name = function_name->value();
                            const auto& function = function_store[ { name, arguments_number } ];
-
+                           if( !function )
+                           {
+                              throw std::runtime_error( "Can't call function '" + name + "'. There is no function definition!" );
+                           }
                            std::vector< ISyntaxNodeSP > expressions;
-                           const auto& function_scope = function->scope();
-                           expressions.push_back( function_scope );
                            for( int i = 0; i < arguments_number; ++i )
                            {
                               const auto& argument_name = function->operator[]( i + 2 );

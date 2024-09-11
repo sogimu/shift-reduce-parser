@@ -13,27 +13,31 @@ template< typename Node, typename PreFunc, typename PostFunc >
 void iterative_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
 {
    std::stack< std::pair< Node, bool > > stack;
-   stack.push( { start, true } );
+   stack.emplace( start, true );
 
    while( !stack.empty() )
    {
-      auto [ node, is_pre_order ] = stack.top();
-      stack.pop();
+      auto& [ node, is_pre_order ] = stack.top();
 
       if( is_pre_order )
       {
          bool is_found = pre_func( node );
-         stack.push( { node, false } );
+         is_pre_order = false;
 
          if( !is_found )
          {
-            for( const auto& child : node->Children() )
+            const auto& childern = node->Children();
+            for( auto it = childern.rbegin(); it != childern.rend(); ++it )
+            {
+               const auto& child = *it;
                stack.emplace( child, true );
+            }
          }
       }
       else
       {
          post_func( node );
+         stack.pop();
       }
    }
 }
@@ -48,27 +52,31 @@ template< typename Node, typename PreFunc, typename PostFunc >
 void iterative_managed_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
 {
    std::stack< std::pair< Node, bool > > stack;
-   stack.push( { start, true } );
+   stack.emplace( start, true );
 
    while( !stack.empty() )
    {
-      auto [ node, is_pre_order ] = stack.top();
-      stack.pop();
+      auto& [ node, is_pre_order ] = stack.top();
 
       if( is_pre_order )
       {
          const auto& children = pre_func( node );
-         stack.push( { node, false } );
+         // stack.emplace( node, false );
+         is_pre_order = false;
 
          if( !children )
             continue;
-
-         for( const auto& child : children.value() )
+         const auto& childern_value = children.value();
+         for( auto it = childern_value.rbegin(); it != childern_value.rend(); ++it )
+         {
+            const auto& child = *it;
             stack.emplace( child, true );
+         }
       }
       else
       {
          post_func( node );
+         stack.pop();
       }
    }
 }
