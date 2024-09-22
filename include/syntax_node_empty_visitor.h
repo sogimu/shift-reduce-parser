@@ -1,6 +1,5 @@
 #pragma once
 
-#include "nonterminals/subtraction/subtraction_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 
 #include <functional>
@@ -56,6 +55,9 @@ public:
       { default_handler( node ); };
       std::function< void( const FunctionSyntaxNodeSP& ) > function_syntax_node = [ this ]( const FunctionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FunctionCallSyntaxNodeSP& ) > function_call_syntax_node = [ this ]( const FunctionCallSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const ReturnSyntaxNodeSP& ) > return_syntax_node = [ this ]( const ReturnSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const ReturnExpressionSyntaxNodeSP& ) > return_expression_syntax_node = [ this ]( const ReturnExpressionSyntaxNodeSP& node )
+      { default_handler( node ); };
    };
 
    SyntaxNodeEmptyVisitor( const Handlers& handlers )
@@ -234,6 +236,16 @@ public:
    void visit( const FunctionCallSyntaxNodeSP& node ) override
    {
       mHandlers.function_call_syntax_node( node );
+   }
+
+   void visit( const ReturnSyntaxNodeSP& node ) override
+   {
+      mHandlers.return_syntax_node( node );
+   }
+
+   void visit( const ReturnExpressionSyntaxNodeSP& node ) override
+   {
+      mHandlers.return_expression_syntax_node( node );
    }
 
 private:

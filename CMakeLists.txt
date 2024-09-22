@@ -11,7 +11,7 @@ set(HEADERS
     include/syntax_tree.h
     include/utils.h
     include/i_grammar.h
-    include/i_syntax_node.h
+    include/i_syntax_node.hpp
     include/i_syntax_node_visitor.h
     include/syntax_node_empty_visitor.h
     include/syntax_node_state_machine_visitor.h
@@ -24,6 +24,7 @@ set(HEADERS
     include/syntax_nodes/terminals/number_syntax_node.h
     include/syntax_nodes/terminals/f_syntax_node.h
     include/syntax_nodes/terminals/semicolon_syntax_node.h
+    include/syntax_nodes/terminals/return_syntax_node.h
     include/syntax_nodes/terminals/print_syntax_node.h
     include/syntax_nodes/terminals/equal_syntax_node.h
     include/syntax_nodes/terminals/less_syntax_node.h
@@ -48,6 +49,7 @@ set(HEADERS
     include/syntax_nodes/nonterminals/while_expression_syntax_node.h
     include/syntax_nodes/nonterminals/varible_assigment_syntax_node.h
     include/syntax_nodes/nonterminals/computational_expression_syntax_node.h
+    include/syntax_nodes/nonterminals/return_expression_syntax_node.h
     include/grammars/f_grammar.h
     include/grammars/conditional_expression_grammar.h
     include/grammars/print_expression_grammar.h
@@ -59,6 +61,7 @@ set(HEADERS
     include/grammars/scope_grammar.h
     include/grammars/function_grammar.h
     include/grammars/function_call_grammar.h
+    include/grammars/return_expression_grammar.h
 )
 
 set(SOURCES
@@ -72,6 +75,7 @@ set(SOURCES
     src/syntax_nodes/terminals/number_syntax_node.cpp
     src/syntax_nodes/terminals/f_syntax_node.cpp
     src/syntax_nodes/terminals/semicolon_syntax_node.cpp
+    src/syntax_nodes/terminals/return_syntax_node.cpp
     src/syntax_nodes/terminals/comma_syntax_node.cpp
     src/syntax_nodes/terminals/print_syntax_node.cpp
     src/syntax_nodes/terminals/equal_syntax_node.cpp
@@ -99,6 +103,7 @@ set(SOURCES
     src/syntax_nodes/nonterminals/varible_assigment_syntax_node.cpp
     src/syntax_nodes/nonterminals/conditional_expression_syntax_node.cpp
     src/syntax_nodes/nonterminals/scope_syntax_node.cpp
+    src/syntax_nodes/nonterminals/return_expression_syntax_node.cpp
 )
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})

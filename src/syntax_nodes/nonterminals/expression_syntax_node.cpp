@@ -11,6 +11,7 @@
 #include "nonterminals/function_call_syntax_node.h"
 #include "nonterminals/print_expression_syntax_node.h"
 #include "nonterminals/varible_assigment_syntax_node.h"
+#include "nonterminals/return_expression_syntax_node.h"
 
 #include <vector>
 
@@ -57,6 +58,11 @@ ExpressionSyntaxNode::ExpressionSyntaxNode( const VaribleAssigmentSyntaxNodeSP& 
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
    Add( varible_assigment_syntax_node );
+}
+ExpressionSyntaxNode::ExpressionSyntaxNode( const ReturnExpressionSyntaxNodeSP& return_expression_syntax_node )
+   : ISyntaxNode{ Token_Type::EXPRESSION }
+{
+   Add( return_expression_syntax_node );
 }
 
 void ExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )

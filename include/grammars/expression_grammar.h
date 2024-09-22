@@ -30,7 +30,8 @@ public:
          PRINT_EXPRESSION,
          VARIBLE_ASSIGMENT,
          EQUAL,
-         SEMICOLON
+         SEMICOLON,
+         RETURN_EXPRESSION
       };
 
       // IF_EXPRESSION
@@ -204,6 +205,39 @@ public:
             plan.to_remove.nodes.push_back( semicolon );
 
             const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( print_expression_syntax_node );
+            plan.to_add.nodes.push_back( expression_syntax_node );
+            return plan;
+         } );
+
+      // RETURN_EXPRESSION
+      mProductions.emplace_back(
+         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            ReturnExpressionSyntaxNodeSP return_expression_syntax_node;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.return_expression_syntax_node = [ &return_expression_syntax_node, &state ]( const ReturnExpressionSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  return_expression_syntax_node = node;
+                  state = State::RETURN_EXPRESSION;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 1, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( return_expression_syntax_node );
+
+            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( return_expression_syntax_node );
             plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );

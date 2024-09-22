@@ -1,6 +1,7 @@
 #pragma once
 
 #include "terminals/asterisk_syntax_node.h"
+#include "terminals/return_syntax_node.h"
 #include "terminals/slash_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
 #include <iostream>
@@ -36,6 +37,7 @@
 #include "grammars/print_expression_grammar.h"
 #include "grammars/scope_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
+#include "grammars/return_expression_grammar.h"
 #include "i_grammar.h"
 #include "i_syntax_node.h"
 #include "lexical_tokens.h"
@@ -60,6 +62,7 @@ public:
          std::make_shared< While >(),
          std::make_shared< Function >(),
          std::make_shared< FunctionCall >(),
+         std::make_shared< Return >(),
       };
 
       Stack stack;
@@ -221,7 +224,14 @@ public:
       {
          syntax_node = std::make_shared< CommaSyntaxNode >();
       };
+      case Token_Type::RETURN:
+      {
+         syntax_node = std::make_shared< ReturnSyntaxNode >();
+      };
       break;
+      default:
+      {
+      }
       }
       return syntax_node;
    }
@@ -319,6 +329,8 @@ public:
             handlers.division_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "DIVISION" << "}"; };
             handlers.eol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EOL" << "}"; };
             handlers.semicolon_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SEMICOLON" << "}"; };
+            handlers.return_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN" << "}"; };
+            handlers.return_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN_EXPRESSION" << "}"; };
             handlers.comma_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "COMMA" << "}"; };
             handlers.expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EXPRESSION" << "}"; };
             handlers.scope_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SCOPE" << "}"; };

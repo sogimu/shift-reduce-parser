@@ -193,7 +193,7 @@ public:
          }
       }
 
-      result.emplace_back( "", Token_Type::EOL );
+      result.emplace_back( LexicalToken{ "", Token_Type::EOL } );
 
       tokens = result;
    }
@@ -223,5 +223,7 @@ private:
 
    const std::set< char > terminals{ '+', '-', '/', '*', '(', ')', '=', '<', '>', ';', '{', '}', ',' };
 
-   const std::unordered_map< std::string, Token_Type > token_by_text{ { "if", Token_Type::IF }, { "while", Token_Type::WHILE }, { "print", Token_Type::PRINT } };
+   const std::unordered_map< std::string, Token_Type > token_by_text{
+      { "if", Token_Type::IF }, { "while", Token_Type::WHILE }, { "print", Token_Type::PRINT }, { "return", Token_Type::RETURN }
+   };
 };

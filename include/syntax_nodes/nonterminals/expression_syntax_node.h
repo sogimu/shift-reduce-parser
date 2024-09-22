@@ -26,6 +26,9 @@ using FunctionCallSyntaxNodeSP = std::shared_ptr< FunctionCallSyntaxNode >;
 class PrintExpressionSyntaxNode;
 using PrintExpressionSyntaxNodeSP = std::shared_ptr< PrintExpressionSyntaxNode >;
 
+class ReturnExpressionSyntaxNode;
+using ReturnExpressionSyntaxNodeSP = std::shared_ptr< ReturnExpressionSyntaxNode >;
+
 class VaribleAssigmentSyntaxNode;
 using VaribleAssigmentSyntaxNodeSP = std::shared_ptr< VaribleAssigmentSyntaxNode >;
 
@@ -41,6 +44,7 @@ public:
    ExpressionSyntaxNode( const FunctionCallSyntaxNodeSP& function_call_syntax_node );
    ExpressionSyntaxNode( const PrintExpressionSyntaxNodeSP& print_expression_syntax_node );
    ExpressionSyntaxNode( const VaribleAssigmentSyntaxNodeSP& varible_assigment_syntax_node );
+   ExpressionSyntaxNode( const ReturnExpressionSyntaxNodeSP& return_expression_syntax_node );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 
