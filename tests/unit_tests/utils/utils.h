@@ -33,7 +33,7 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
       using Func = const std::function< void( const SearchPath& ) >&;
       void handle( const json& json, Func pre_func, Func post_func )
       {
-         mSearchPath.emplace_back( Item::NoKeyOrIndex{}, json );
+         mSearchPath.emplace_back( Item{ Item::NoKeyOrIndex{}, json } );
          pre_func( mSearchPath );
          if( json.is_array() )
             handle_array( json, pre_func, post_func );
@@ -49,7 +49,7 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
          ptrdiff_t index = 0;
          for( const auto& element : array )
          {
-            mSearchPath.emplace_back( index, element );
+            mSearchPath.emplace_back( Item{ index, element } );
             pre_func( mSearchPath );
             if( element.is_array() )
                handle_array( element, pre_func, post_func );
@@ -64,7 +64,7 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
       {
          for( const auto& [ key, element ] : object.items() )
          {
-            mSearchPath.emplace_back( key, element );
+            mSearchPath.emplace_back( Item{ key, element } );
             pre_func( mSearchPath );
             if( element.is_array() )
                handle_array( element, pre_func, post_func );

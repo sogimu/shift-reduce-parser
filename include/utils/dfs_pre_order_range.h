@@ -76,14 +76,14 @@ struct DfsRange
    private:
       struct Tier
       {
-         std::vector< Node >::const_iterator current;
-         const std::vector< Node >::const_iterator end;
+         typename std::vector< Node >::const_iterator current;
+         const typename std::vector< Node >::const_iterator end;
       };
 
    private:
       std::stack< Tier > mTiers;
    };
-   const std::vector< Node >& roots;
+   const typename std::vector< Node >& roots;
 
    Iterator begin() const noexcept
    {
