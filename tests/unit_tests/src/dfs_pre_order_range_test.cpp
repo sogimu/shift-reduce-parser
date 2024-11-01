@@ -91,8 +91,8 @@ TEST_CASE( "DFS pre-order range", "[wef]" )
       // std::cout << std::endl;
    }
 
-   const auto& r = std::mismatch( range0.begin(), range0.end(), range1.begin(), range1.end(),
-                                  []( const auto& a, const auto& b ) -> bool { return a->Name() == b->Name(); } );
+   const auto& r =
+      std::mismatch( range0.begin(), range0.end(), range1.begin(), range1.end(), []( const auto& a, const auto& b ) -> bool { return a->Name() == b->Name(); } );
    //    std::cout << *r.first << *r.second << std::endl;
    REQUIRE( 1 == 1 );
 }
