@@ -26,8 +26,8 @@ public:
       std::vector< LexicalToken > result;
       result.emplace_back( LexicalToken{ "", Token_Type::BOL } );
 
-      Token_Type current_token_type = Token_Type::NO;
-      Token_Type next_token_type = Token_Type::NO;
+      // Token_Type current_token_type = Token_Type::NO;
+      // Token_Type next_token_type = Token_Type::NO;
 
       auto create_expression_generator = []( const auto& text )
       {
@@ -157,7 +157,7 @@ public:
             }
 
             result.emplace_back( LexicalToken{ std::string{ chars.current.value() }, terminal_token_type } );
-            current_token_type = terminal_token_type;
+            // current_token_type = terminal_token_type;
             chars = next_chars();
          }
          else if( didgits.count( chars.current.value() ) )
@@ -167,7 +167,7 @@ public:
             {
                token += chars.current.value();
             }
-            current_token_type = Token_Type::INT;
+            // current_token_type = Token_Type::INT;
             result.emplace_back( LexicalToken{ token, Token_Type::INT } );
          }
          else if( alphabet.count( chars.current.value() ) )
@@ -183,7 +183,7 @@ public:
             }
             else
             {
-               current_token_type = Token_Type::NAME;
+               // current_token_type = Token_Type::NAME;
                result.emplace_back( LexicalToken{ token, Token_Type::NAME } );
             }
          }

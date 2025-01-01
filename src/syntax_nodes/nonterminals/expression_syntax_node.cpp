@@ -22,47 +22,47 @@ ExpressionSyntaxNode::ExpressionSyntaxNode()
 ExpressionSyntaxNode::ExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression_syntax_node )
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
-   Add( computational_expression_syntax_node );
+   add_back( computational_expression_syntax_node );
 }
 ExpressionSyntaxNode::ExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression_syntax_node )
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
-   Add( conditional_expression_syntax_node );
+   add_back( conditional_expression_syntax_node );
 }
 ExpressionSyntaxNode::ExpressionSyntaxNode( const IfExpressionSyntaxNodeSP& if_expression_syntax_node )
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
-   Add( if_expression_syntax_node );
+   add_back( if_expression_syntax_node );
 }
 ExpressionSyntaxNode::ExpressionSyntaxNode( const WhileExpressionSyntaxNodeSP& while_expression_syntax_node )
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
-   Add( while_expression_syntax_node );
+   add_back( while_expression_syntax_node );
 }
 ExpressionSyntaxNode::ExpressionSyntaxNode( const FunctionSyntaxNodeSP& function_syntax_node )
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
-   Add( function_syntax_node );
+   add_back( function_syntax_node );
 }
 ExpressionSyntaxNode::ExpressionSyntaxNode( const FunctionCallSyntaxNodeSP& function_call_syntax_node )
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
-   Add( function_call_syntax_node );
+   add_back( function_call_syntax_node );
 }
 ExpressionSyntaxNode::ExpressionSyntaxNode( const PrintExpressionSyntaxNodeSP& print_expression_syntax_node )
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
-   Add( print_expression_syntax_node );
+   add_back( print_expression_syntax_node );
 }
 ExpressionSyntaxNode::ExpressionSyntaxNode( const VaribleAssigmentSyntaxNodeSP& varible_assigment_syntax_node )
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
-   Add( varible_assigment_syntax_node );
+   add_back( varible_assigment_syntax_node );
 }
 ExpressionSyntaxNode::ExpressionSyntaxNode( const ReturnExpressionSyntaxNodeSP& return_expression_syntax_node )
    : ISyntaxNode{ Token_Type::EXPRESSION }
 {
-   Add( return_expression_syntax_node );
+   add_back( return_expression_syntax_node );
 }
 
 void ExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
@@ -78,7 +78,7 @@ bool ExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];

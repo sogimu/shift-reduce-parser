@@ -25,6 +25,7 @@
 #include "terminals/slash_syntax_node.h"
 #include "terminals/return_syntax_node.h"
 #include "nonterminals/computational_expression_syntax_node.h"
+#include "nonterminals/varible_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
 #include "nonterminals/subtraction/subtraction_syntax_node.h"
 #include "nonterminals/addition/addition_syntax_node.h"
@@ -44,6 +45,7 @@
 class ISyntaxNodeVisitor
 {
 public:
+   virtual ~ISyntaxNodeVisitor() = default;
    virtual void visit( const BolSyntaxNodeSP& ) = 0;
    virtual void visit( const EolSyntaxNodeSP& ) = 0;
    virtual void visit( const PlusSyntaxNodeSP& ) = 0;
@@ -64,6 +66,7 @@ public:
    virtual void visit( const OpenCircleBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const CloseCircleBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const ComputationalExpressionSyntaxNodeSP& ) = 0;
+   virtual void visit( const VaribleSyntaxNodeSP& ) = 0;
    virtual void visit( const ConditionalExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const PrintExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const PrintSyntaxNodeSP& ) = 0;

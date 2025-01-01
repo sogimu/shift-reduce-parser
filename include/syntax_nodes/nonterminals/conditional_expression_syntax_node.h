@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "i_syntax_node.h"
 
 class ISyntaxNodeVisitor;
@@ -22,8 +23,10 @@ public:
    };
 
    ConditionalExpressionSyntaxNode();
+   ConditionalExpressionSyntaxNode( Type type );
    ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& f0, const ComputationalExpressionSyntaxNodeSP& f1, Type type );
    ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& f0, const ComputationalExpressionSyntaxNodeSP& f1, Type type );
+   ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& expression, const NameSyntaxNodeSP& name, Type type );
    ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& f0, const NameSyntaxNodeSP& f1, Type type );
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;

@@ -2,6 +2,7 @@
 
 #include <stack>
 #include <vector>
+#include <list>
 
 template< typename Node >
 struct DfsRange
@@ -15,7 +16,7 @@ struct DfsRange
       using reference = value_type&;
       using pointer = value_type*;
 
-      Iterator( const std::vector< Node >& roots )
+      Iterator( const std::list< Node >& roots )
       {
          mTiers.emplace( Tier{ roots.begin(), roots.end() } );
       }
@@ -76,14 +77,14 @@ struct DfsRange
    private:
       struct Tier
       {
-         typename std::vector< Node >::const_iterator current;
-         const typename std::vector< Node >::const_iterator end;
+         typename std::list< Node >::const_iterator current;
+         const typename std::list< Node >::const_iterator end;
       };
 
    private:
       std::stack< Tier > mTiers;
    };
-   const typename std::vector< Node >& roots;
+   const typename std::list< Node >& roots;
 
    Iterator begin() const noexcept
    {
@@ -91,6 +92,6 @@ struct DfsRange
    }
    Iterator end() const noexcept
    {
-      return Iterator{ std::vector< Node >{} };
+      return Iterator{ std::list< Node >{} };
    }
 };

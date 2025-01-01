@@ -1,6 +1,5 @@
 #include "nonterminals/multiply/multiply_syntax_node.h"
 
-#include "terminals/f_syntax_node.h"
 #include "nonterminals/computational_expression_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
@@ -14,6 +13,17 @@ MultiplySyntaxNode::MultiplySyntaxNode()
 {
 }
 
+ISyntaxNodeSP& MultiplySyntaxNode::add_back( const ISyntaxNodeSP& child )
+{
+   ISyntaxNodeSP node = child;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.name_syntax_node = [ &node ]( const NameSyntaxNodeSP& name ) { node = std::make_shared< VaribleSyntaxNode >( name ); };
+
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   child->accept( visitor );
+
+   return ISyntaxNode::add_back( node );
+}
 bool MultiplySyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = false;
@@ -22,7 +32,7 @@ bool MultiplySyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];

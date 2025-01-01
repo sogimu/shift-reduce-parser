@@ -2,6 +2,7 @@
 
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
+#include <cstddef>
 
 WhileExpressionSyntaxNode::WhileExpressionSyntaxNode()
    : ISyntaxNode{ Token_Type::WHILE_EXPRESSION }
@@ -10,8 +11,8 @@ WhileExpressionSyntaxNode::WhileExpressionSyntaxNode()
 WhileExpressionSyntaxNode::WhileExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
    : ISyntaxNode{ Token_Type::WHILE_EXPRESSION }
 {
-   Add( conditional_expression );
-   Add( scope );
+   add_back( conditional_expression );
+   add_back( scope );
 }
 void WhileExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
@@ -26,7 +27,7 @@ bool WhileExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];

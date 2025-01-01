@@ -11,14 +11,14 @@ ScopeSyntaxNode::ScopeSyntaxNode()
 ScopeSyntaxNode::ScopeSyntaxNode( const ISyntaxNodeSP& expression )
    : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
 {
-   Add( expression );
+   add_back( expression );
 }
 
 ScopeSyntaxNode::ScopeSyntaxNode( const std::vector< ISyntaxNodeSP >& expressions )
    : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
 {
    for( const auto& expression : expressions )
-      Add( expression );
+      add_back( expression );
 }
 void ScopeSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {

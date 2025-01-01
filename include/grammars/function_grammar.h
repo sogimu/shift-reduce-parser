@@ -31,7 +31,7 @@ public:
 
       // NAME OPEN_CIRCLE_BRACKET (NAME COMMA?)+ CLOSE_CIRCLE_BRACKET SCOPE
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;
@@ -50,9 +50,8 @@ public:
             SyntaxNodeEmptyVisitor::Handlers close_circle_bracket_handler;
             for( ; it != stack.rend(); ++it )
             {
-               close_circle_bracket_handler.close_circle_bracket_syntax_node =
-                  [ &is_close_circle_bracket_found, &is_open_circle_bracket_found, &distance_between_open_close_circle_bracket,
-                    &stack ]( const CloseCircleBracketSyntaxNodeSP& node ) { is_close_circle_bracket_found = true; };
+               close_circle_bracket_handler.close_circle_bracket_syntax_node = [ &is_close_circle_bracket_found ]( const CloseCircleBracketSyntaxNodeSP& /* node  */ )
+               { is_close_circle_bracket_found = true; };
                const auto& close_circle_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( close_circle_bracket_handler );
                ( *it )->accept( close_circle_bracket_visitor );
                if( is_close_circle_bracket_found )
@@ -67,7 +66,7 @@ public:
             SyntaxNodeEmptyVisitor::Handlers open_circle_bracket_handler;
             for( ; it != stack.rend(); ++it )
             {
-               open_circle_bracket_handler.open_circle_bracket_syntax_node = [ &is_open_circle_bracket_found ]( const OpenCircleBracketSyntaxNodeSP& node )
+               open_circle_bracket_handler.open_circle_bracket_syntax_node = [ &is_open_circle_bracket_found ]( const OpenCircleBracketSyntaxNodeSP& /* node */ )
                { is_open_circle_bracket_found = true; };
                const auto& open_circle_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( open_circle_bracket_handler );
                ( *it )->accept( open_circle_bracket_visitor );
@@ -85,7 +84,6 @@ public:
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
             handlers.name_syntax_node = [ &name, &arguments, &state ]( const NameSyntaxNodeSP& node )
             {
-               auto a = state;
                if( state == State::START )
                {
                   name = node;
@@ -99,7 +97,6 @@ public:
             };
             handlers.comma_syntax_node = [ &commas, &state ]( const CommaSyntaxNodeSP& node )
             {
-               auto a = state;
                if( state == State::ARGUMENT )
                {
                   commas.emplace_back( node );
@@ -108,7 +105,6 @@ public:
             };
             handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
             {
-               auto a = state;
                if( state == State::NAME )
                {
                   open_circle_bracket = node;
@@ -117,7 +113,6 @@ public:
             };
             handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
             {
-               auto a = state;
                if( state == State::ARGUMENT )
                {
                   close_circle_bracket = node;
@@ -127,7 +122,6 @@ public:
 
             handlers.scope_syntax_node = [ &scope_expression, &state ]( const ScopeSyntaxNodeSP& node )
             {
-               auto a = state;
                if( state == State::CLOSE_CIRCLE_BRACKET )
                {
                   scope_expression = node;
@@ -151,9 +145,10 @@ public:
             plan.to_remove.nodes.push_back( close_circle_bracket );
             plan.to_remove.nodes.push_back( scope_expression );
 
-            const auto& function_node = std::make_shared< FunctionSyntaxNode >( name, scope_expression );
+            const auto& function_node = std::make_shared< FunctionSyntaxNode >( name->value() );
             for( const auto& argument : arguments )
-               function_node->Add( argument );
+               function_node->add_back( argument );
+            function_node->add_back( scope_expression );
             plan.to_add.nodes.push_back( function_node );
             return plan;
          } );

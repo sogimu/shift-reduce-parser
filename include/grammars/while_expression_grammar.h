@@ -30,7 +30,7 @@ public:
 
       // WHILE CONDITION SCOPE
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             WhileSyntaxNodeSP while_node;
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;

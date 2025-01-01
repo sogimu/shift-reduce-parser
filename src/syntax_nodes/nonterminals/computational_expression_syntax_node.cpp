@@ -18,35 +18,35 @@ ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode()
 ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const AdditionSyntaxNodeSP& e )
    : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
 {
-   Add( e );
+   add_back( e );
 }
 ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const MultiplySyntaxNodeSP& e )
    : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
 {
-   Add( e );
+   add_back( e );
 }
 ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const FSyntaxNodeSP& e )
    : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
 {
-   Add( e );
+   add_back( e );
 }
 
 ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression_syntax_node )
    : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
 {
-   Add( conditional_expression_syntax_node );
+   add_back( conditional_expression_syntax_node );
 }
 
 ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
    : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
 {
-   Add( name_syntax_node );
+   add_back( name_syntax_node );
 }
 
 ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const ISyntaxNodeSP& node )
    : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
 {
-   Add( node );
+   add_back( node );
 }
 
 void ComputationalExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )

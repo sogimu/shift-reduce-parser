@@ -11,6 +11,7 @@ public:
    DivisionSyntaxNode();
    bool compare( const ISyntaxNode& node ) const override;
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
+   ISyntaxNodeSP& add_back( const ISyntaxNodeSP& child ) override;
 };
 using DivisionSyntaxNodeSP = std::shared_ptr< DivisionSyntaxNode >;
 using DivisionSyntaxNodeCSP = std::shared_ptr< const DivisionSyntaxNode >;

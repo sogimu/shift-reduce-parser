@@ -19,7 +19,7 @@ bool PrintSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];

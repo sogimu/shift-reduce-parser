@@ -7,8 +7,8 @@ set(CMAKE_C_STANDARD 11)  # Change to your desired C standard
 set(CMAKE_CXX_STANDARD 20) # Change to your desired C++ standard
 
 # Set additional compiler flags (optional)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -O2 -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O2 -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11")
 
 # Specify the sysroot if needed (optional)
 # set(CMAKE_SYSROOT "/path/to/sysroot")

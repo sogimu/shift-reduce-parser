@@ -11,6 +11,7 @@ public:
    MultiplySyntaxNode();
    bool compare( const ISyntaxNode& node ) const override;
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
+   ISyntaxNodeSP& add_back( const ISyntaxNodeSP& child ) override;
 };
 
 using MultiplySyntaxNodeSP = std::shared_ptr< MultiplySyntaxNode >;

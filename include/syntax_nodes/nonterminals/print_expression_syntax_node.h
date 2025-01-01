@@ -19,6 +19,7 @@ public:
    PrintExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node );
    PrintExpressionSyntaxNode( const ISyntaxNodeSP& argument );
 
+   ISyntaxNodeSP& add_back( const ISyntaxNodeSP& child ) override;
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 
    bool compare( const ISyntaxNode& node ) const override;

@@ -11,18 +11,29 @@ int main()
    // 23's number shall be 17711
    std::string e = R"(
     {
-      a = b;
-      b = 42;
-      foo(b)
+      a = 5;
+      b = 42+3;
+      // print(b);
+      // if( 1< 2 )
+      // {
+      //    a = b;
+      // }
+      foo(n)
       {
-        print(b);
-        c = b;
-        c = c + 1;
-        while( c < 100 )
+        a = 0;
+        b = 1;
+        i = 2;
+        while( i < n )
         {
-          print(c);
-          c = c + 1;
+            c = a + b;
+            a = b;
+            b = c;
+            i = i + 1;
         }
+        print(b);
+        print(b==17711);
+        return b;
+        print(123);
       }
       // n = 23;  
       // a = 0;
@@ -35,7 +46,9 @@ int main()
       //     b = c;
       //     i = i + 1;
       // }
-      foo(b);
+      // print(b);
+      // print(b==17711);
+      foo(23);
     })";
    //
    //        if(3 < 2)
@@ -71,7 +84,7 @@ int main()
    std::cout << e << std::endl;
 
    Calculator calculator;
-   auto result0 = calculator.solve( e );
+   auto result0 = calculator.solve1( e );
    cout << result0 << std::endl;
    return 0;
 }

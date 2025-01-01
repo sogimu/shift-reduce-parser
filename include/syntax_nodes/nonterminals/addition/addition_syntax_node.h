@@ -18,6 +18,7 @@ public:
    AdditionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression0, const ComputationalExpressionSyntaxNodeSP& computational_expression1 );
 
    std::vector< FSyntaxNodeSP > Arguments() const;
+   ISyntaxNodeSP& add_back( const ISyntaxNodeSP& child ) override;
 
    bool compare( const ISyntaxNode& node ) const override;
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;

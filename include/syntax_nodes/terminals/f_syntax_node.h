@@ -17,7 +17,7 @@ public:
       mValue = number;
    }
 
-   FSyntaxNode( const MinusSyntaxNodeSP& minus, const NumberSyntaxNodeSP& number )
+   FSyntaxNode( const MinusSyntaxNodeSP& /* minus */, const NumberSyntaxNodeSP& number )
       : ISyntaxNode{ Token_Type::F }
    {
       mValue = -1 * number->value();

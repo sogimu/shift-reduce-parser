@@ -4,6 +4,7 @@
 #include "syntax_node_empty_visitor.h"
 #include "nonterminals/scope_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
+#include <stdexcept>
 
 IfExpressionSyntaxNode::IfExpressionSyntaxNode()
    : ISyntaxNode{ Token_Type::IF_EXPRESSION }
@@ -12,8 +13,8 @@ IfExpressionSyntaxNode::IfExpressionSyntaxNode()
 IfExpressionSyntaxNode::IfExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
    : ISyntaxNode{ Token_Type::IF_EXPRESSION }
 {
-   Add( conditional_expression );
-   Add( scope );
+   add_back( conditional_expression );
+   add_back( scope );
 }
 void IfExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
@@ -28,7 +29,7 @@ bool IfExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];
@@ -52,10 +53,16 @@ ConditionalExpressionSyntaxNodeSP IfExpressionSyntaxNode::conditional_expression
 
 ScopeSyntaxNodeSP IfExpressionSyntaxNode::true_scope() const
 {
-   return std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 1 ) );
+   const auto& true_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 0 ) );
+   if( !true_scope )
+      throw std::runtime_error( "True scope not found in if expression" );
+   return true_scope;
 }
 
 ScopeSyntaxNodeSP IfExpressionSyntaxNode::false_scope() const
 {
-   return std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 2 ) );
+   const auto& false_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 1 ) );
+   if( !false_scope )
+      throw std::runtime_error( "False scope not found in if expression" );
+   return false_scope;
 }

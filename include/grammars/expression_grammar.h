@@ -36,7 +36,7 @@ public:
 
       // IF_EXPRESSION
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             IfExpressionSyntaxNodeSP if_expression_syntax_node;
 
@@ -69,7 +69,7 @@ public:
 
       // WHILE_EXPRESSION
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             WhileExpressionSyntaxNodeSP while_expression_syntax_node;
 
@@ -102,7 +102,7 @@ public:
 
       // FUNCTION_EXPRESSION
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             FunctionSyntaxNodeSP function_syntax_node;
 
@@ -135,7 +135,7 @@ public:
 
       // FUNCTION_CALL_EXPRESSION
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             FunctionCallSyntaxNodeSP function_call_syntax_node;
 
@@ -167,7 +167,7 @@ public:
          } );
       // PRINT_EXPRESSION
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             PrintExpressionSyntaxNodeSP print_expression_syntax_node;
             SemicolonSyntaxNodeSP semicolon;
@@ -211,7 +211,7 @@ public:
 
       // RETURN_EXPRESSION
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             ReturnExpressionSyntaxNodeSP return_expression_syntax_node;
 
@@ -244,7 +244,7 @@ public:
 
       // COMPUTATIONAL_EXPRESSION_NODE SEMICOLON
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             ComputationalExpressionSyntaxNodeSP computational_expression_syntax_node;
             SemicolonSyntaxNodeSP semicolon;
@@ -287,7 +287,7 @@ public:
 
       // CONDITIONAL_EXPRESSION SEMICOLON
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             ConditionalExpressionSyntaxNodeSP conditional_expression_syntax_node;
             SemicolonSyntaxNodeSP semicolon;
@@ -330,7 +330,7 @@ public:
 
       // VARIBLE_ASSIGMENT SEMICOLON
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             VaribleAssigmentSyntaxNodeSP varible_assigment_syntax_node;
             // SemicolonSyntaxNodeSP semicolon;

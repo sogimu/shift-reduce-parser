@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+#include <vector>
 #include "enums.h"
 #include "i_syntax_node.h"
 
@@ -15,14 +17,18 @@ class FunctionSyntaxNode : public ISyntaxNode, public std::enable_shared_from_th
 {
 public:
    FunctionSyntaxNode();
-   FunctionSyntaxNode( const NameSyntaxNodeSP& name, const ScopeSyntaxNodeSP& scope );
+   FunctionSyntaxNode( const std::string& name );
+   FunctionSyntaxNode( const std::string& name, const ScopeSyntaxNodeSP& scope );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
 
-   NameSyntaxNodeSP name() const;
+   std::string name() const;
    ScopeSyntaxNodeSP scope() const;
    std::vector< NameSyntaxNodeSP > arguments() const;
+
+private:
+   std::string mName;
 };
 
 using FunctionSyntaxNodeSP = std::shared_ptr< FunctionSyntaxNode >;

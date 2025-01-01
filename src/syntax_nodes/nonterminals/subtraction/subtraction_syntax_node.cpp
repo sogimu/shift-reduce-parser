@@ -1,5 +1,6 @@
 #include "nonterminals/subtraction/subtraction_syntax_node.h"
 
+#include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
@@ -12,18 +13,29 @@ SubtractionSyntaxNode::SubtractionSyntaxNode()
 SubtractionSyntaxNode::SubtractionSyntaxNode( const FSyntaxNodeSP& f0, const FSyntaxNodeSP& f1 )
    : ISyntaxNode{ Token_Type::SUBTRACTION }
 {
-   Add( f0 );
-   Add( f1 );
+   add_back( f0 );
+   add_back( f1 );
 }
 
 SubtractionSyntaxNode::SubtractionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression0,
                                               const ComputationalExpressionSyntaxNodeSP& computational_expression1 )
    : ISyntaxNode{ Token_Type::SUBTRACTION }
 {
-   Add( computational_expression0 );
-   Add( computational_expression1 );
+   add_back( computational_expression0 );
+   add_back( computational_expression1 );
 }
 
+ISyntaxNodeSP& SubtractionSyntaxNode::add_back( const ISyntaxNodeSP& child )
+{
+   ISyntaxNodeSP node = child;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.name_syntax_node = [ &node ]( const NameSyntaxNodeSP& name ) { node = std::make_shared< VaribleSyntaxNode >( name ); };
+
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   child->accept( visitor );
+
+   return ISyntaxNode::add_back( node );
+}
 std::vector< FSyntaxNodeSP > SubtractionSyntaxNode::Arguments() const
 {
    std::vector< FSyntaxNodeSP > result;
@@ -46,7 +58,7 @@ bool SubtractionSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];

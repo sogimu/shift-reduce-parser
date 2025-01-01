@@ -11,29 +11,46 @@ ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode()
    : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
 {
 }
-ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& f0, const ComputationalExpressionSyntaxNodeSP& f1,
-                                                                  Type type )
+ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( Type type )
    : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
    , mType{ type }
 {
-   Add( f0 );
-   Add( f1 );
+}
+ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& expression0,
+                                                                  const ComputationalExpressionSyntaxNodeSP& expression1, Type type )
+   : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
+   , mType{ type }
+{
+   add_back( expression0 );
+   add_back( expression1 );
 }
 
-ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& f0, const ComputationalExpressionSyntaxNodeSP& f1, Type type )
+ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& expression, Type type )
    : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
    , mType{ type }
 {
-   Add( f0 );
-   Add( f1 );
+   const auto& varible = std::make_shared< VaribleSyntaxNode >( name );
+   add_back( varible );
+   add_back( expression );
 }
 
-ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& f0, const NameSyntaxNodeSP& f1, Type type )
+ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& expression, const NameSyntaxNodeSP& name, Type type )
    : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
    , mType{ type }
 {
-   Add( f0 );
-   Add( f1 );
+   add_back( expression );
+   const auto& varible = std::make_shared< VaribleSyntaxNode >( name );
+   add_back( varible );
+}
+
+ConditionalExpressionSyntaxNode::ConditionalExpressionSyntaxNode( const NameSyntaxNodeSP& name0, const NameSyntaxNodeSP& name1, Type type )
+   : ISyntaxNode{ Token_Type::CONDITIONAL_EXPRESSION }
+   , mType{ type }
+{
+   const auto& varible0 = std::make_shared< VaribleSyntaxNode >( name0 );
+   const auto& varible1 = std::make_shared< VaribleSyntaxNode >( name1 );
+   add_back( varible0 );
+   add_back( varible1 );
 }
 
 void ConditionalExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
@@ -49,7 +66,7 @@ bool ConditionalExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];

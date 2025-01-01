@@ -32,7 +32,7 @@ public:
 
       // PRINT OPEN_CIRCLE_BRACKET COMPUTATIONAL_EXPRESSION CLOSE_CIRCLE_BRACKET SEMICOLON
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             PrintSyntaxNodeSP print;
             OpenCircleBracketSyntaxNodeSP open;
@@ -69,6 +69,14 @@ public:
                }
             };
             handlers.computational_expression_syntax_node = [ &argument, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  state = State::ARGUMENT;
+                  argument = node;
+               }
+            };
+            handlers.conditional_expression_syntax_node = [ &argument, &state ]( const ConditionalExpressionSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {

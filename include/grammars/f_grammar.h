@@ -79,7 +79,7 @@ public:
 
       // NUMBER
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         []( const Stack& stack ) -> std::optional< Plan >
          {
             NumberSyntaxNodeSP number;
 
@@ -111,7 +111,7 @@ public:
 
       // MINUS MINUS NUMBER
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         []( const Stack& stack ) -> std::optional< Plan >
          {
             MinusSyntaxNodeSP first_minus;
             MinusSyntaxNodeSP second_minus;
@@ -122,7 +122,7 @@ public:
             iterate_over_last_n_nodes( stack, 3,
                                        SyntaxNodeEmptyVisitor::Handlers{ .default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; },
                                                                          .minus_syntax_node =
-                                                                            [ &first_minus, &second_minus, &number, &state ]( const MinusSyntaxNodeSP& node )
+                                                                            [ &first_minus, &second_minus, /* &number,  */ &state ]( const MinusSyntaxNodeSP& node )
                                                                          {
                                                                             if( state == State::START )
                                                                             {
@@ -164,7 +164,7 @@ public:
 
       // BOL MINUS NUMBER EOL
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         []( const Stack& stack ) -> std::optional< Plan >
          {
             BolSyntaxNodeSP bol;
             MinusSyntaxNodeSP minus;
@@ -183,7 +183,7 @@ public:
                   bol = node;
                }
             };
-            handlers.minus_syntax_node = [ &minus, &number, &state ]( const MinusSyntaxNodeSP& node )
+            handlers.minus_syntax_node = [ &minus, /* &number,  */ &state ]( const MinusSyntaxNodeSP& node )
             {
                if( state == State::BOL )
                {

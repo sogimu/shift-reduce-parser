@@ -17,6 +17,7 @@ public:
    SubtractionSyntaxNode( const FSyntaxNodeSP& f0, const FSyntaxNodeSP& f1 );
    SubtractionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression0, const ComputationalExpressionSyntaxNodeSP& computational_expression1 );
 
+   ISyntaxNodeSP& add_back( const ISyntaxNodeSP& child ) override;
    std::vector< FSyntaxNodeSP > Arguments() const;
 
    bool compare( const ISyntaxNode& node ) const override;

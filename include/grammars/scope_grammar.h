@@ -27,7 +27,7 @@ public:
 
       // OPEN_CURLY_BRACKET EXPRESSION+ CLOSE_CURLY_BRACKET
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             OpenCurlyBracketSyntaxNodeSP open_curly_bracket;
             std::vector< ISyntaxNodeSP > expressions;
@@ -38,9 +38,8 @@ public:
             size_t distance_between_open_close_curly_bracket = 0;
 
             SyntaxNodeEmptyVisitor::Handlers close_curly_bracket_handler;
-            close_curly_bracket_handler.close_curly_bracket_syntax_node =
-               [ &is_close_curly_bracket_found, &is_open_curly_bracket_found, &distance_between_open_close_curly_bracket,
-                 &stack ]( const CloseCurlyBracketSyntaxNodeSP& node ) { is_close_curly_bracket_found = true; };
+            close_curly_bracket_handler.close_curly_bracket_syntax_node = [ &is_close_curly_bracket_found ]( const CloseCurlyBracketSyntaxNodeSP& /* node */ )
+            { is_close_curly_bracket_found = true; };
             const auto& close_curly_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( close_curly_bracket_handler );
             ( *stack.rbegin() )->accept( close_curly_bracket_visitor );
 
@@ -50,7 +49,7 @@ public:
             SyntaxNodeEmptyVisitor::Handlers open_curly_bracket_handler;
             for( auto it = stack.rbegin(); it != stack.rend(); ++it )
             {
-               open_curly_bracket_handler.open_curly_bracket_syntax_node = [ &is_open_curly_bracket_found ]( const OpenCurlyBracketSyntaxNodeSP& node )
+               open_curly_bracket_handler.open_curly_bracket_syntax_node = [ &is_open_curly_bracket_found ]( const OpenCurlyBracketSyntaxNodeSP& /* node */ )
                { is_open_curly_bracket_found = true; };
                const auto& open_curly_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( open_curly_bracket_handler );
                ( *it )->accept( open_curly_bracket_visitor );
@@ -150,7 +149,7 @@ public:
 
       // BOL SCOPE EOL
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             BolSyntaxNodeSP bol;
             ScopeSyntaxNodeSP scope;
@@ -202,7 +201,7 @@ public:
 
       // BOL EXPRESSION EOL
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             BolSyntaxNodeSP bol;
             ExpressionSyntaxNodeSP expression;

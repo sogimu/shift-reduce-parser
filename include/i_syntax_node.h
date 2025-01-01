@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <list>
 #include <memory>
 
 #include "enums.h"
@@ -14,6 +14,8 @@ using ISyntaxNodeCSP = std::shared_ptr< const ISyntaxNode >;
 
 struct ISyntaxNode
 {
+   // using iterator = decltype( ISyntaxNode::mChildren )::iterator;
+   // using const_iterator = decltype( mChildren )::const_iterator;
    ISyntaxNode() = default;
 
    ISyntaxNode( const Token_Type& type )
@@ -21,7 +23,7 @@ struct ISyntaxNode
    {
    }
 
-   virtual ~ISyntaxNode(){};
+   virtual ~ISyntaxNode() {};
 
    virtual void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) = 0;
 
@@ -35,23 +37,37 @@ struct ISyntaxNode
       return mText;
    }
 
-   virtual void Add( const ISyntaxNodeSP& child )
+   virtual ISyntaxNodeSP& add_back( const ISyntaxNodeSP& child )
    {
-      mChildren.emplace_back( child );
+      return mChildren.emplace_back( child );
+   }
+
+   virtual ISyntaxNodeSP& add_front( const ISyntaxNodeSP& child )
+   {
+      return mChildren.emplace_front( child );
+   }
+
+   auto insert( const auto& pos, const ISyntaxNodeSP& value )
+   {
+      return mChildren.insert( pos, value );
    }
 
    virtual ISyntaxNodeSP operator[]( size_t index ) const
    {
       if( index >= mChildren.size() )
          return {};
-      return mChildren.at( index );
+      auto it = mChildren.begin();
+      std::advance( it, index );
+      return *it;
    }
 
    virtual ISyntaxNodeSP operator[]( size_t index )
    {
       if( index >= mChildren.size() )
          return {};
-      return mChildren.at( index );
+      auto it = mChildren.begin();
+      std::advance( it, index );
+      return *it;
    }
 
    auto Children() const
@@ -91,10 +107,28 @@ struct ISyntaxNode
       return mChildren.end();
    }
 
+   auto rbegin()
+   {
+      return mChildren.rbegin();
+   }
+
+   auto rbegin() const
+   {
+      return mChildren.rbegin();
+   }
+
+   auto rend()
+   {
+      return mChildren.rend();
+   }
+
+   auto rend() const
+   {
+      return mChildren.rend();
+   }
+
 private:
    Token_Type mType;
    std::string mText;
-   std::vector< ISyntaxNodeSP > mChildren;
+   std::list< ISyntaxNodeSP > mChildren;
 };
-
-// inline bool operator==( const ISyntaxNodeSP& a, const ISyntaxNodeSP& b ) { return !(

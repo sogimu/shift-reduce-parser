@@ -16,19 +16,19 @@ ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode()
 ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression )
    : ISyntaxNode{ Token_Type::RETURN_EXPRESSION }
 {
-   Add( computational_expression );
+   add_back( computational_expression );
 }
 
 ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
    : ISyntaxNode{ Token_Type::RETURN_EXPRESSION }
 {
-   Add( name_syntax_node );
+   add_back( name_syntax_node );
 }
 
 ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode( const ISyntaxNodeSP& argument )
    : ISyntaxNode{ Token_Type::RETURN_EXPRESSION }
 {
-   Add( argument );
+   add_back( argument );
 }
 
 void ReturnExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
@@ -44,7 +44,7 @@ bool ReturnExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];

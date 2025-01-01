@@ -11,10 +11,13 @@ set(HEADERS
     include/syntax_tree.h
     include/utils.h
     include/i_grammar.h
-    include/i_syntax_node.hpp
+    include/i_syntax_node.h
     include/i_syntax_node_visitor.h
     include/syntax_node_empty_visitor.h
+    include/make_deep_syntax_node_copy.h
+    include/make_shallow_syntax_node_copy.h
     include/syntax_node_state_machine_visitor.h
+    include/is_last_nodes.h
     include/syntax_nodes/terminals/bol_syntax_node.h
     include/syntax_nodes/terminals/eol_syntax_node.h
     include/syntax_nodes/terminals/plus_syntax_node.h
@@ -49,6 +52,7 @@ set(HEADERS
     include/syntax_nodes/nonterminals/while_expression_syntax_node.h
     include/syntax_nodes/nonterminals/varible_assigment_syntax_node.h
     include/syntax_nodes/nonterminals/computational_expression_syntax_node.h
+    include/syntax_nodes/nonterminals/varible_syntax_node.h
     include/syntax_nodes/nonterminals/return_expression_syntax_node.h
     include/grammars/f_grammar.h
     include/grammars/conditional_expression_grammar.h
@@ -94,6 +98,7 @@ set(SOURCES
     src/syntax_nodes/nonterminals/multiply/multiply_syntax_node.cpp
     src/syntax_nodes/nonterminals/division/division_syntax_node.cpp
     src/syntax_nodes/nonterminals/computational_expression_syntax_node.cpp
+    src/syntax_nodes/nonterminals/varible_syntax_node.cpp
     src/syntax_nodes/nonterminals/expression_syntax_node.cpp
     src/syntax_nodes/nonterminals/print_expression_syntax_node.cpp
     src/syntax_nodes/nonterminals/if_expression_syntax_node.cpp

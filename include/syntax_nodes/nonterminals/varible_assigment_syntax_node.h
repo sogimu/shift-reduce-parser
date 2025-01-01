@@ -17,9 +17,11 @@ class VaribleAssigmentSyntaxNode : public ISyntaxNode, public std::enable_shared
 public:
    VaribleAssigmentSyntaxNode();
    VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node );
+   VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name );
 
    std::string name() const;
-   ComputationalExpressionSyntaxNodeSP computational_expression() const;
+   ComputationalExpressionSyntaxNodeSP source() const;
+   NameSyntaxNodeSP target() const;
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;

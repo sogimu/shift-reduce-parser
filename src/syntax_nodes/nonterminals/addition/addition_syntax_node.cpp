@@ -1,5 +1,6 @@
 #include "nonterminals/addition/addition_syntax_node.h"
 
+#include "nonterminals/varible_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "nonterminals/computational_expression_syntax_node.h"
 #include "enums.h"
@@ -7,6 +8,7 @@
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
+#include <cstddef>
 #include <vector>
 
 AdditionSyntaxNode::AdditionSyntaxNode()
@@ -17,16 +19,16 @@ AdditionSyntaxNode::AdditionSyntaxNode()
 AdditionSyntaxNode::AdditionSyntaxNode( const FSyntaxNodeSP& f0, const FSyntaxNodeSP& f1 )
    : ISyntaxNode{ Token_Type::ADDITION }
 {
-   Add( f0 );
-   Add( f1 );
+   add_back( f0 );
+   add_back( f1 );
 }
 
 AdditionSyntaxNode::AdditionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression0,
                                         const ComputationalExpressionSyntaxNodeSP& computational_expression1 )
    : ISyntaxNode{ Token_Type::ADDITION }
 {
-   Add( computational_expression0 );
-   Add( computational_expression1 );
+   add_back( computational_expression0 );
+   add_back( computational_expression1 );
 }
 
 std::vector< FSyntaxNodeSP > AdditionSyntaxNode::Arguments() const
@@ -43,6 +45,18 @@ std::vector< FSyntaxNodeSP > AdditionSyntaxNode::Arguments() const
    return result;
 }
 
+ISyntaxNodeSP& AdditionSyntaxNode::add_back( const ISyntaxNodeSP& child )
+{
+   ISyntaxNodeSP node = child;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.name_syntax_node = [ &node ]( const NameSyntaxNodeSP& name ) { node = std::make_shared< VaribleSyntaxNode >( name ); };
+
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   child->accept( visitor );
+
+   return ISyntaxNode::add_back( node );
+}
+
 bool AdditionSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = false;
@@ -51,7 +65,7 @@ bool AdditionSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];

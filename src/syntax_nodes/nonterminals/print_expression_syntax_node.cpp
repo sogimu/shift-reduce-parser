@@ -7,6 +7,7 @@
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
+#include <iterator>
 
 PrintExpressionSyntaxNode::PrintExpressionSyntaxNode()
    : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
@@ -16,21 +17,32 @@ PrintExpressionSyntaxNode::PrintExpressionSyntaxNode()
 PrintExpressionSyntaxNode::PrintExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression )
    : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
 {
-   Add( computational_expression );
+   add_back( computational_expression );
 }
 
 PrintExpressionSyntaxNode::PrintExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
    : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
 {
-   Add( name_syntax_node );
+   add_back( name_syntax_node );
 }
 
 PrintExpressionSyntaxNode::PrintExpressionSyntaxNode( const ISyntaxNodeSP& argument )
    : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
 {
-   Add( argument );
+   add_back( argument );
 }
 
+ISyntaxNodeSP& PrintExpressionSyntaxNode::add_back( const ISyntaxNodeSP& child )
+{
+   ISyntaxNodeSP node = child;
+   SyntaxNodeEmptyVisitor::Handlers handlers;
+   handlers.name_syntax_node = [ &node ]( const NameSyntaxNodeSP& name ) { node = std::make_shared< VaribleSyntaxNode >( name ); };
+
+   const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   child->accept( visitor );
+
+   return ISyntaxNode::add_back( node );
+}
 void PrintExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
@@ -44,7 +56,7 @@ bool PrintExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
-      for( int i = 0; i < Children().size(); ++i )
+      for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
          const auto& rht_child = ( *node )[ i ];

@@ -1,14 +1,18 @@
 #pragma once
 
+#include "nonterminals/expression_syntax_node.h"
+#include "nonterminals/varible_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/return_syntax_node.h"
 #include "terminals/slash_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
+#include <cstddef>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
 #include <map>
+#include <unordered_set>
 #include <iostream>
 #include <sstream>
 #include <functional>
@@ -224,6 +228,7 @@ public:
       {
          syntax_node = std::make_shared< CommaSyntaxNode >();
       };
+      break;
       case Token_Type::RETURN:
       {
          syntax_node = std::make_shared< ReturnSyntaxNode >();
@@ -237,15 +242,15 @@ public:
    }
 
    template< typename Func >
-   double execute_ast( const ISyntaxNodeSP& root, Func func ) const
+   double execute_ast( const ISyntaxNodeSP& root, Func /* func */ ) const
    {
       double result = 0.0;
 
       std::map< ISyntaxNodeSP, double > valueByASTNode;
 
       iterative_dfs(
-         root, []( const ISyntaxNodeSP& node ) -> bool { return false; },
-         [ &result, &valueByASTNode, &func ]( const ISyntaxNodeSP& node )
+         root, []( const ISyntaxNodeSP& /* node */ ) -> bool { return false; },
+         [ /* &result, &valueByASTNode, &func */ ]( const ISyntaxNodeSP& /* node */ )
          {
             //            if( node->first && node->second )
             //            {
@@ -287,8 +292,8 @@ public:
    bool operator==( const SyntaxTree& syntax_tree ) const
    {
       bool result = true;
-      const auto& our_range = DfsRange< ISyntaxNodeSP >{ std::vector< ISyntaxNodeSP >{ root() } };
-      const auto& their_range = DfsRange< ISyntaxNodeSP >{ std::vector< ISyntaxNodeSP >{ syntax_tree.root() } };
+      const auto& our_range = DfsRange< ISyntaxNodeSP >{ std::list< ISyntaxNodeSP >{ root() } };
+      const auto& their_range = DfsRange< ISyntaxNodeSP >{ std::list< ISyntaxNodeSP >{ syntax_tree.root() } };
       for( const auto& [ a, b ] : zip( our_range, their_range ) )
       {
          if( !a || !b )
@@ -310,11 +315,18 @@ public:
       std::string result;
       std::stringstream s{ result };
 
+      std::unordered_set< ISyntaxNodeSP > visited;
+
       size_t n = 0;
       iterative_dfs(
          mRoot,
-         [ &n, &s ]( const ISyntaxNodeSP& node ) -> bool
+         [ &n, &s, &visited ]( const ISyntaxNodeSP& node ) -> bool
          {
+            bool visited_node = visited.contains( node );
+            if( !visited_node )
+            {
+               visited.insert( node );
+            }
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.bol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "BOL" << "}"; };
             handlers.plus_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PLUS" << "}"; };
@@ -337,6 +349,7 @@ public:
             handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
             handlers.close_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CLOSE_CURLY_BRACKET" << "}"; };
             handlers.computational_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "COMPUTATIONAL_EXPRESSION" << "}"; };
+            handlers.varible_syntax_node = [ &s ]( const VaribleSyntaxNodeSP& node ) { s << "{" << "VARIBLE" << '(' << node->name() << ')' << "}"; };
             handlers.conditional_expression_syntax_node = [ &s ]( const ConditionalExpressionSyntaxNodeSP& node )
             {
                std::string type;
@@ -378,12 +391,12 @@ public:
             handlers.if_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_EXPRESSION" << "}"; };
             handlers.while_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE" << "}"; };
             handlers.while_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_EXPRESSION" << "}"; };
-            handlers.function_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION" << "}"; };
-            handlers.function_call_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION_CALL" << "}"; };
+            handlers.function_syntax_node = [ &s ]( const FunctionSyntaxNodeSP& node ) { s << "{" << "FUNCTION" << " (" << node->name() << ")" << "}"; };
+            handlers.function_call_syntax_node = [ &s ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
             handlers.varible_assigment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "VARIBLE ASSIGMENT" << "}"; };
             handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << " (" << node->value() << ')' << "}"; };
-            for( int i = 0; i < n; ++i )
+            for( size_t i = 0; i < n; ++i )
                s << "   ";
 
             const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
@@ -391,9 +404,16 @@ public:
             s << '\n';
 
             ++n;
-            return false;
+            if( visited_node )
+            {
+               return true;
+            }
+            else
+            {
+               return false;
+            }
          },
-         [ &n ]( const ISyntaxNodeSP& node ) { --n; } );
+         [ &n ]( const ISyntaxNodeSP& /* node */ ) { --n; } );
       return s.str();
    }
 

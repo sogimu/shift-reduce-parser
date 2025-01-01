@@ -1,5 +1,8 @@
 #pragma once
 
+#include <iostream>
+#include <map>
+#include <ostream>
 #include <string>
 
 using namespace std;
@@ -45,6 +48,14 @@ public:
          return ( *it )[ name ];
       }
       return mScope.back()[ name ];
+   }
+
+   void print() const
+   {
+      for( const auto& [ key, value ] : mScope.back() )
+      {
+         std::cout << key << " equal " << std::to_string( value ) << std::endl;
+      }
    }
 
 private:
