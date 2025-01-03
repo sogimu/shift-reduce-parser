@@ -303,10 +303,10 @@ double Calculator::solve1( const std::string& expression ) const
          else if( IsLastNodesIs< FunctionCallSyntaxNode >( source_stack ) )
          {
             auto& function_call = target_node;
-            // new_parent_target_node = taget_node_parent->add_back( target_node );
+            new_parent_target_node = taget_node_parent->add_back( function_call );
             const auto& scope_expression = std::make_shared< ScopeSyntaxNode >();
-            // new_parent_target_node = function_call->add_back( scope_expression );
-            new_parent_target_node = taget_node_parent->add_back( scope_expression );
+            new_parent_target_node = function_call->add_back( scope_expression );
+            // new_parent_target_node = taget_node_parent->add_back( scope_expression );
             const auto& function_call_syntax_node = std::dynamic_pointer_cast< FunctionCallSyntaxNode >( function_call );
             if( const auto& function_info_it = function_by_name.find( function_call_syntax_node->name() ); function_info_it != function_by_name.end() )
             {
@@ -329,7 +329,8 @@ double Calculator::solve1( const std::string& expression ) const
                   auto function_argument_name_it = function->begin();
                   std::advance( function_argument_name_it, call_argument_index );
                   const auto& argument_name_node = std::dynamic_pointer_cast< NameSyntaxNode >( *function_argument_name_it );
-                  const auto& varible_assigment_syntax_node = std::make_shared< VaribleAssigmentSyntaxNode >();
+                  const auto& varible_assigment_syntax_node =
+                     std::make_shared< VaribleAssigmentSyntaxNode >( VaribleAssigmentSyntaxNode( VaribleAssigmentSyntaxNode::Context::LOCAL ) );
                   varible_assigment_syntax_node->add_back( argument_name_node );
                   auto scope_it = taget_node_parent->end();
                   std::advance( scope_it, 1 );
@@ -367,6 +368,8 @@ double Calculator::solve1( const std::string& expression ) const
       { return { node->rbegin(), node->rend() }; } /* } */ );
    SyntaxTree cfg{ transformed_tree };
    std::cout << cfg.to_string() << std::endl;
+
+   // return 0.0;
 
    int result = 0;
 
@@ -432,47 +435,23 @@ double Calculator::solve1( const std::string& expression ) const
             // function_store.insert( { function_name, arguments_number }, function );
             children = {};
          };
-         // handlers.function_call_syntax_node = [ /* &varible_store,  */ &function_store, &children, &function_call_stack ]( const FunctionCallSyntaxNodeSP&
-         // function_call )
-         // {
-         //    function_call_stack.emplace_back( function_call );
-         //    const auto& function_name = std::dynamic_pointer_cast< NameSyntaxNode >( function_call->operator[]( 0 ) );
-         //    const auto& arguments_number = function_call->Children().size() - 1;
-         //    const auto& name = function_name->value();
-         //    const auto& function = function_store[ { name, arguments_number } ];
-         //    if( !function )
-         //    {
-         //       throw std::runtime_error( "Can't call function '" + name + "'. There is no function definition!" );
-         //    }
-         //    std::vector< ISyntaxNodeSP > expressions;
-         //    for( size_t i = 0; i < arguments_number; ++i )
-         //    {
-         //       const auto& argument_name = function->operator[]( i + 2 );
-         //       const auto& argument_value = function_call->operator[]( i + 1 );
-         //       const auto& an = std::dynamic_pointer_cast< NameSyntaxNode >( argument_name );
-         //       const auto& av = std::dynamic_pointer_cast< NameSyntaxNode >( argument_value );
-         //       const auto& computational_expression = std::make_shared< ComputationalExpressionSyntaxNode >( av );
-         //       const auto& varible_assigment_syntax_node = std::make_shared< VaribleAssigmentSyntaxNode >( an, computational_expression );
-         //       expressions.push_back( varible_assigment_syntax_node );
-         //    }
-         //    const auto& function_scope = function->scope();
-         //    expressions.push_back( function_scope );
-         //    const auto& scope_for_arguments_assigments = std::make_shared< ScopeSyntaxNode >( expressions );
-         //    children = std::list< ISyntaxNodeSP >{ scope_for_arguments_assigments };
-         // };
-         // handlers.return_expression_syntax_node =
-         //    [ /* &varible_store, &node,  */ &function_call_stack, &stack_dfs ]( const ReturnExpressionSyntaxNodeSP& /* return_expression */ )
-         // {
-         //    // auto result = argument_stack.back();
-         //    // argument_stack.pop_back();
-         //    stack_dfs.popUntil( function_call_stack.back() );
-         // };
+         handlers.function_call_syntax_node = [ /* &varible_store,  */ &function_store, &children, &function_call_stack ]( const FunctionCallSyntaxNodeSP& function_call )
+         { function_call_stack.emplace_back( function_call ); };
+         handlers.return_expression_syntax_node = [ &stack_dfs, &argument_stack, &function_call_stack ]( const ReturnExpressionSyntaxNodeSP& return_expression )
+         {
+            const auto& d = argument_stack;
+            auto result = argument_stack.back();
+            // argument_stack.pop_back();
+            stack_dfs.popUntil( function_call_stack.back() );
+
+            // std::cout << "return: " << std::to_string( result ) << std::endl;
+         };
          const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
          node->accept( visitor );
          stack_dfs.push( children );
          return children;
       },
-      [ &varible_store, &function_store, &argument_stack /* , &function_call_stack */ ]( const ISyntaxNodeSP& node )
+      [ &varible_store, &function_store, &argument_stack, &function_call_stack ]( const ISyntaxNodeSP& node )
       {
          SyntaxNodeEmptyVisitor::Handlers handlers;
          handlers.f_syntax_node = [ &argument_stack ]( const FSyntaxNodeSP& node )
@@ -483,6 +462,7 @@ double Calculator::solve1( const std::string& expression ) const
          handlers.varible_syntax_node = [ &argument_stack, &varible_store ]( const VaribleSyntaxNodeSP& varible )
          {
             const auto& value = varible_store[ varible->name() ];
+            // std::cout << "Read " << varible->name() << " .Value is " << std::to_string( value ) << std::endl;
             // varible_store.print();
             // std::cout << "varible " + varible->name() + "(" << std::to_string( value ) << ")" << std::endl;
             argument_stack.push_back( value );
@@ -540,7 +520,8 @@ double Calculator::solve1( const std::string& expression ) const
             // delete scope in a VaribleStore
             varible_store.popScope();
             function_store.popScope();
-            argument_stack.clear();
+            // argument_stack.clear();
+            // std::cout << "Scope end" << std::endl;
          };
          handlers.print_expression_syntax_node = [ /* &varible_store, &node,  */ &argument_stack ]( const PrintExpressionSyntaxNodeSP& /* print_expression */ )
          {
@@ -598,18 +579,22 @@ double Calculator::solve1( const std::string& expression ) const
             const auto& value = argument_stack.back();
             if( !argument_stack.empty() )
                argument_stack.pop_back();
-            varible_store[ target_name ] = value;
+            std::string context;
+            if( varible_assigment->context() == VaribleAssigmentSyntaxNode::Context::GLOBAL )
+            {
+               varible_store[ target_name ] = value;
+               context = "Global";
+            }
+            else if( varible_assigment->context() == VaribleAssigmentSyntaxNode::Context::LOCAL )
+            {
+               varible_store.writeValueToLocalVarible( target_name, value );
+               context = "Local";
+            }
+            // std::cout << "Write " << target_name << " .Value is " << std::to_string( value ) << ". Context: " << context << std::endl;
             // varible_store.print();
             // std::cout << "varible " + target_name + " = " << std::to_string( value ) << std::endl;
          };
-         handlers.return_expression_syntax_node = [ &varible_store, &node, &argument_stack ]( const ReturnExpressionSyntaxNodeSP& return_expression )
-         {
-            const auto& d = argument_stack;
-            auto result = argument_stack.back();
-            // argument_stack.pop_back();
-            //    stack_dfs.popUntil( function_call_stack.back() );
-            std::cout << "return: " << std::to_string( result ) << std::endl;
-         };
+         handlers.function_call_syntax_node = [ &function_call_stack ]( const FunctionCallSyntaxNodeSP& function_call ) { function_call_stack.pop_back(); };
          const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
          node->accept( visitor );
       } );

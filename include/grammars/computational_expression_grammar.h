@@ -256,8 +256,8 @@ public:
                         plan.to_remove.nodes.push_back( node );
 
                         const auto& subtraction_node = std::make_shared< SubtractionSyntaxNode >();
-                        subtraction_node->add_back( f0 );
                         subtraction_node->add_back( f1 );
+                        subtraction_node->add_back( f0 );
                         const auto& expression_node = std::make_shared< ComputationalExpressionSyntaxNode >();
                         expression_node->add_back( subtraction_node );
                         plan.to_add.nodes.push_back( expression_node );
@@ -300,8 +300,8 @@ public:
                         plan.to_remove.nodes.push_back( node );
 
                         const auto& division_node = std::make_shared< DivisionSyntaxNode >();
-                        division_node->add_back( f0 );
                         division_node->add_back( f1 );
+                        division_node->add_back( f0 );
                         const auto& expression_node = std::make_shared< ComputationalExpressionSyntaxNode >();
                         expression_node->add_back( division_node );
                         plan.to_add.nodes.push_back( expression_node );

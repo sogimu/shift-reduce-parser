@@ -34,6 +34,7 @@
 #include "nonterminals/expression_syntax_node.h"
 #include "nonterminals/if_expression_syntax_node.h"
 #include "nonterminals/while_expression_syntax_node.h"
+#include "nonterminals/function_call_or_definition_syntax_node.h"
 #include "nonterminals/function_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
 #include "nonterminals/print_expression_syntax_node.h"
@@ -77,6 +78,7 @@ public:
    virtual void visit( const IfExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileExpressionSyntaxNodeSP& ) = 0;
+   virtual void visit( const FunctionCallOrDefinitionSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionCallSyntaxNodeSP& ) = 0;
    virtual void visit( const VaribleAssigmentSyntaxNodeSP& ) = 0;

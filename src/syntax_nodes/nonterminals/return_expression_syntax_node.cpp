@@ -1,5 +1,6 @@
 #include "nonterminals/return_expression_syntax_node.h"
 
+#include "is_last_nodes.h"
 #include "terminals/name_syntax_node.h"
 #include "nonterminals/computational_expression_syntax_node.h"
 #include "enums.h"
@@ -19,16 +20,18 @@ ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode( const ComputationalExpre
    add_back( computational_expression );
 }
 
-ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
-   : ISyntaxNode{ Token_Type::RETURN_EXPRESSION }
-{
-   add_back( name_syntax_node );
-}
-
 ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode( const ISyntaxNodeSP& argument )
    : ISyntaxNode{ Token_Type::RETURN_EXPRESSION }
 {
-   add_back( argument );
+   ISyntaxNodeSP child = argument;
+
+   if( IsNode< NameSyntaxNode >( argument ) )
+   {
+      const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
+      child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
+   }
+
+   add_back( child );
 }
 
 void ReturnExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )

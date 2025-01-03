@@ -8,20 +8,24 @@
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 
-VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode()
+VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( Context context )
    : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT }
+   , mContext{ context }
 {
 }
-VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node )
+VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node, Context context )
    : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT }
+   , mContext{ context }
 {
    const auto& varible = std::make_shared< VaribleSyntaxNode >( name );
    add_back( varible );
    add_back( node );
 }
 
-VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name )
+VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, Context context )
+
    : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT }
+   , mContext{ context }
 {
    add_back( target_name );
    const auto& varible = std::make_shared< VaribleSyntaxNode >( source_name );
@@ -41,6 +45,11 @@ ComputationalExpressionSyntaxNodeSP VaribleAssigmentSyntaxNode::source() const
             { argument = computational_expression; },
             .name_syntax_node = [ &argument ]( const NameSyntaxNodeSP& name ) { argument = std::make_shared< ComputationalExpressionSyntaxNode >( name ); } } );
    return argument;
+}
+
+VaribleAssigmentSyntaxNode::Context VaribleAssigmentSyntaxNode::context() const
+{
+   return mContext;
 }
 
 void VaribleAssigmentSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )

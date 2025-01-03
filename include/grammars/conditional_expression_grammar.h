@@ -495,6 +495,60 @@ public:
             return plan;
          } );
 
+      // NAME MORE COMPUTATIONAL_EXPRESSION
+      mProductions.emplace_back(
+         []( const Stack& stack ) -> std::optional< Plan >
+         {
+            NameSyntaxNodeSP name;
+            MoreSyntaxNodeSP more;
+            ComputationalExpressionSyntaxNodeSP computational_expression1;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.name_syntax_node = [ &name, &state ]( const NameSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  state = State::NAME;
+                  name = node;
+               }
+            };
+            handlers.more_syntax_node = [ &more, &state ]( const MoreSyntaxNodeSP& node )
+            {
+               if( state == State::NAME )
+               {
+                  more = node;
+                  state = State::MORE;
+               }
+            };
+            handlers.computational_expression_syntax_node = [ &computational_expression1, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            {
+               if( state == State::MORE )
+               {
+                  state = State::SECOND_COMPUTATIONAL_EXPRESSION;
+                  computational_expression1 = node;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 3, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( name );
+            plan.to_remove.nodes.push_back( more );
+            plan.to_remove.nodes.push_back( computational_expression1 );
+
+            const auto& conditional_expression_node =
+               std::make_shared< ConditionalExpressionSyntaxNode >( name, computational_expression1, ConditionalExpressionSyntaxNode::Type::MORE );
+            plan.to_add.nodes.push_back( conditional_expression_node );
+            return plan;
+         } );
+
       // COMPUTATIONAL_EXPRESSION MORE COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >

@@ -15,7 +15,6 @@ class ReturnExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared
 public:
    ReturnExpressionSyntaxNode();
    ReturnExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression );
-   ReturnExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node );
    ReturnExpressionSyntaxNode( const ISyntaxNodeSP& argument );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;

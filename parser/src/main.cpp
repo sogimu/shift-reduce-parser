@@ -11,30 +11,31 @@ int main()
    // 23's number shall be 17711
    std::string e = R"(
     {
-      a = 5;
-      b = 42+3;
+      // a = 5;
+      // b = 42+3;
       // print(b);
       // if( 1< 2 )
       // {
       //    a = b;
       // }
-      foo(n)
-      {
-        a = 0;
-        b = 1;
-        i = 2;
-        while( i < n )
-        {
-            c = a + b;
-            a = b;
-            b = c;
-            i = i + 1;
-        }
-        print(b);
-        print(b==17711);
-        return b;
-        print(123);
-      }
+      // foo(n)
+      // {
+      //   a = 0;
+      //   b = 1;
+      //   i = 2;
+      //   while( i < n )
+      //   {
+      //       c = a + b;
+      //       a = b;
+      //       b = c;
+      //       i = i + 1;
+      //   }
+      //   print(b);
+      //   print(b==17711);
+      //   return b;
+      //   print(123);
+      //   print(11111);
+      // }
       // n = 23;  
       // a = 0;
       // b = 1;
@@ -48,7 +49,21 @@ int main()
       // }
       // print(b);
       // print(b==17711);
-      foo(23);
+      // foo(23);
+      bar(a)
+      {
+        print(a);
+        if(a > 0)
+        {
+          bar( a - 1 );
+        }
+        // print( a );
+        return a;
+      }
+
+      bar(3);
+
+      print( bar(2) );
     })";
    //
    //        if(3 < 2)

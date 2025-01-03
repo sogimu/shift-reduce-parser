@@ -1,9 +1,11 @@
 #pragma once
 
+#include "nonterminals/expression_syntax_node.h"
+#include "nonterminals/function_call_syntax_node.h"
 #include "i_grammar.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
-#include "nonterminals/scope_syntax_node.h"
+#include "terminals/semicolon_syntax_node.h"
 #include "utils.h"
 
 #include <memory>
@@ -11,10 +13,10 @@
 
 class ISyntaxNodeVisitor;
 
-class Function : public IGrammar
+class FunctionCallOrDefinition : public IGrammar
 {
 public:
-   Function()
+   FunctionCallOrDefinition()
    {
       enum class State
       {
@@ -26,19 +28,20 @@ public:
          OPEN_CIRCLE_BRACKET,
          CLOSE_CIRCLE_BRACKET,
          COMMA,
-         SCOPE,
+         FUNCTION_CALL,
+         SEMICOLON,
       };
 
-      // NAME OPEN_CIRCLE_BRACKET (NAME COMMA?)+ CLOSE_CIRCLE_BRACKET SCOPE
+      // NAME OPEN_CIRCLE_BRACKET (NAME COMMA?)+ CLOSE_CIRCLE_BRACKET
       mProductions.emplace_back(
-         [ this ]( const Stack& stack ) -> std::optional< Plan >
+         []( const Stack& stack ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;
             std::vector< ISyntaxNodeSP > arguments;
             std::vector< ISyntaxNodeSP > commas;
             CloseCircleBracketSyntaxNodeSP close_circle_bracket;
-            ScopeSyntaxNodeSP scope_expression;
+            // SemicolonSyntaxNodeSP semicolon;
 
             bool is_open_circle_bracket_found = false;
             bool is_close_circle_bracket_found = false;
@@ -50,9 +53,8 @@ public:
             SyntaxNodeEmptyVisitor::Handlers close_circle_bracket_handler;
             for( ; it != stack.rend(); ++it )
             {
-               close_circle_bracket_handler.close_circle_bracket_syntax_node =
-                  [ &is_close_circle_bracket_found, &is_open_circle_bracket_found, &distance_between_open_close_circle_bracket,
-                    &stack ]( const CloseCircleBracketSyntaxNodeSP& node ) { is_close_circle_bracket_found = true; };
+               close_circle_bracket_handler.close_circle_bracket_syntax_node = [ &is_close_circle_bracket_found ]( const CloseCircleBracketSyntaxNodeSP& /* node */ )
+               { is_close_circle_bracket_found = true; };
                const auto& close_circle_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( close_circle_bracket_handler );
                ( *it )->accept( close_circle_bracket_visitor );
                if( is_close_circle_bracket_found )
@@ -67,7 +69,7 @@ public:
             SyntaxNodeEmptyVisitor::Handlers open_circle_bracket_handler;
             for( ; it != stack.rend(); ++it )
             {
-               open_circle_bracket_handler.open_circle_bracket_syntax_node = [ &is_open_circle_bracket_found ]( const OpenCircleBracketSyntaxNodeSP& node )
+               open_circle_bracket_handler.open_circle_bracket_syntax_node = [ &is_open_circle_bracket_found ]( const OpenCircleBracketSyntaxNodeSP& /* node */ )
                { is_open_circle_bracket_found = true; };
                const auto& open_circle_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( open_circle_bracket_handler );
                ( *it )->accept( open_circle_bracket_visitor );
@@ -85,7 +87,6 @@ public:
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
             handlers.name_syntax_node = [ &name, &arguments, &state ]( const NameSyntaxNodeSP& node )
             {
-               auto a = state;
                if( state == State::START )
                {
                   name = node;
@@ -97,9 +98,16 @@ public:
                   state = State::ARGUMENT;
                }
             };
+            handlers.computational_expression_syntax_node = [ /*  &name, */ &arguments, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
+               {
+                  arguments.emplace_back( node );
+                  state = State::ARGUMENT;
+               }
+            };
             handlers.comma_syntax_node = [ &commas, &state ]( const CommaSyntaxNodeSP& node )
             {
-               auto a = state;
                if( state == State::ARGUMENT )
                {
                   commas.emplace_back( node );
@@ -108,7 +116,6 @@ public:
             };
             handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
             {
-               auto a = state;
                if( state == State::NAME )
                {
                   open_circle_bracket = node;
@@ -117,24 +124,16 @@ public:
             };
             handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
             {
-               auto a = state;
                if( state == State::ARGUMENT )
                {
                   close_circle_bracket = node;
                   state = State::CLOSE_CIRCLE_BRACKET;
-               }
-            };
-
-            handlers.scope_syntax_node = [ &scope_expression, &state ]( const ScopeSyntaxNodeSP& node )
-            {
-               auto a = state;
-               if( state == State::CLOSE_CIRCLE_BRACKET )
-               {
-                  scope_expression = node;
-                  state = State::SCOPE;
                   state = State::FINISH;
                }
             };
+
+            int s = distance_between_open_close_circle_bracket;
+            ( void )s;
 
             iterate_over_last_n_nodes( stack, distance_between_open_close_circle_bracket + 1, handlers );
 
@@ -149,12 +148,9 @@ public:
             for( const auto& comma : commas )
                plan.to_remove.nodes.push_back( comma );
             plan.to_remove.nodes.push_back( close_circle_bracket );
-            plan.to_remove.nodes.push_back( scope_expression );
 
-            const auto& function_node = std::make_shared< FunctionSyntaxNode >( name, scope_expression );
-            for( const auto& argument : arguments )
-               function_node->Add( argument );
-            plan.to_add.nodes.push_back( function_node );
+            const auto& function_call_or_definition_syntax_node = std::make_shared< FunctionCallOrDefinitionSyntaxNode >( name->value(), arguments );
+            plan.to_add.nodes.push_back( function_call_or_definition_syntax_node );
             return plan;
          } );
    }

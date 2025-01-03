@@ -3,6 +3,7 @@
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 
+#include "nonterminals/function_call_or_definition_syntax_node.h"
 #include <memory>
 
 namespace
@@ -176,6 +177,11 @@ public:
    void visit( const WhileExpressionSyntaxNodeSP& /* node */ ) override
    {
       mCopy = std::make_shared< WhileExpressionSyntaxNode >();
+   }
+
+   void visit( const FunctionCallOrDefinitionSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< FunctionCallOrDefinitionSyntaxNode >( node->name() );
    }
 
    void visit( const FunctionSyntaxNodeSP& node ) override

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "nonterminals/expression_syntax_node.h"
+#include "nonterminals/function_call_or_definition_syntax_node.h"
 #include "terminals/close_circle_bracket_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/open_circle_bracket_syntax_node.h"
@@ -30,7 +32,7 @@ public:
          CLOSE_CIRCLE_BRACKET,
       };
 
-      // PRINT OPEN_CIRCLE_BRACKET COMPUTATIONAL_EXPRESSION CLOSE_CIRCLE_BRACKET SEMICOLON
+      // PRINT OPEN_CIRCLE_BRACKET COMPUTATIONAL_EXPRESSION|CONDITIONAL_EXPRESSION|FUNCTION_CALL_OR_DEFINITION CLOSE_CIRCLE_BRACKET SEMICOLON
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
@@ -77,6 +79,14 @@ public:
                }
             };
             handlers.conditional_expression_syntax_node = [ &argument, &state ]( const ConditionalExpressionSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  state = State::ARGUMENT;
+                  argument = node;
+               }
+            };
+            handlers.function_call_syntax_node = [ &argument, &state ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {

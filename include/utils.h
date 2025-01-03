@@ -55,14 +55,14 @@ template< typename Node >
 class StackDFS
 {
 public:
-   StackDFS( std::stack< std::pair< Node, bool > >& stack )
+   StackDFS( std::vector< std::pair< Node, bool > >& stack )
       : mStack{ stack }
    {
    }
 
-   void push( const ISyntaxNodeSP& node )
+   void push( const ISyntaxNodeSP& node, bool is_pre_order )
    {
-      mStack.emplace( node, true );
+      mStack.emplace_back( node, is_pre_order );
    }
 
    void push( const std::list< ISyntaxNodeSP >& nodes )
@@ -70,41 +70,75 @@ public:
       for( auto it = nodes.rbegin(); it != nodes.rend(); ++it )
       {
          const auto& child = *it;
-         push( child );
+         push( child, true );
       }
    }
 
    void pushChildrenOf( const ISyntaxNodeSP& node )
    {
       const auto& childern_value = node->Children();
-      push( childern_value );
+      push( childern_value, true );
    }
 
-   void popUntil( const ISyntaxNodeSP& /* node */ )
+   void popUntil( const ISyntaxNodeSP& target_node )
    {
+      for( auto it = mStack.rbegin(); it != mStack.rend(); )
+      {
+         // auto& [ node, is_pre_order ] = stack.top();
+         auto& [ node, is_pre_order ] = *it;
+         if( node == target_node )
+            break;
+         if( is_pre_order )
+         {
+            it = decltype( it )( mStack.erase( std::next( it ).base() ) );
+         }
+         else
+         {
+            ++it;
+         }
+      }
+   }
+
+   bool empty() const
+   {
+      return mStack.empty();
+   }
+
+   auto top() const
+   {
+      return mStack.back();
+   }
+   void pop()
+   {
+      mStack.pop_back();
    }
 
 private:
-   std::stack< std::pair< Node, bool > >& mStack;
+   std::vector< std::pair< Node, bool > >& mStack;
 };
 
 template< typename Node, typename PreFunc, typename PostFunc >
 void iterative_managed_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
 {
-   std::stack< std::pair< Node, bool > > stack;
+   std::vector< std::pair< Node, bool > > stack;
 
    StackDFS< Node > stack_dfs{ stack };
-   stack.emplace( start, true );
+   stack_dfs.push( start, true );
+   // stack.emplace( start, true );
 
-   while( !stack.empty() )
+   // while( !stack.empty() )
+   while( !stack_dfs.empty() )
    {
-      auto& [ node, is_pre_order ] = stack.top();
+      // auto& [ node, is_pre_order ] = stack.top();
+      auto [ node, is_pre_order ] = stack_dfs.top();
+      stack_dfs.pop();
 
       if( is_pre_order )
       {
+         stack_dfs.push( node, false );
          /* const auto& children_opt =  */ pre_func( node, stack_dfs );
          // stack.emplace( node, false );
-         is_pre_order = false;
+         // is_pre_order = false;
 
          // if( !children_opt )
          //    continue;
@@ -119,7 +153,8 @@ void iterative_managed_dfs( const Node& start, PreFunc pre_func, PostFunc post_f
       else
       {
          post_func( node );
-         stack.pop();
+         // stack.pop();
+         // stack_dfs.pop();
       }
    }
 }

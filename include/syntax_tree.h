@@ -1,6 +1,9 @@
 #pragma once
 
+#include "function_call_or_definition_grammar.h"
 #include "nonterminals/expression_syntax_node.h"
+#include "nonterminals/function_call_or_definition_syntax_node.h"
+#include "nonterminals/varible_assigment_syntax_node.h"
 #include "nonterminals/varible_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/return_syntax_node.h"
@@ -36,6 +39,7 @@
 #include "grammars/f_grammar.h"
 #include "grammars/if_expression_grammar.h"
 #include "grammars/while_expression_grammar.h"
+#include "grammars/function_call_or_definition_grammar.h"
 #include "grammars/function_grammar.h"
 #include "grammars/function_call_grammar.h"
 #include "grammars/print_expression_grammar.h"
@@ -64,6 +68,7 @@ public:
          std::make_shared< Scope >(),
          std::make_shared< If >(),
          std::make_shared< While >(),
+         std::make_shared< FunctionCallOrDefinition >(),
          std::make_shared< Function >(),
          std::make_shared< FunctionCall >(),
          std::make_shared< Return >(),
@@ -393,8 +398,27 @@ public:
             handlers.while_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_EXPRESSION" << "}"; };
             handlers.function_syntax_node = [ &s ]( const FunctionSyntaxNodeSP& node ) { s << "{" << "FUNCTION" << " (" << node->name() << ")" << "}"; };
             handlers.function_call_syntax_node = [ &s ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << "}"; };
+            handlers.function_call_or_definition_syntax_node = [ &s ]( const FunctionCallOrDefinitionSyntaxNodeSP& node )
+            { s << "{" << "FUNCTION_CALL_OR_DEFINITION" << " (" << node->name() << ")" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
-            handlers.varible_assigment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "VARIBLE ASSIGMENT" << "}"; };
+            handlers.varible_assigment_syntax_node = [ &s ]( const VaribleAssigmentSyntaxNodeSP& node )
+            {
+               std::string context;
+               switch( node->context() )
+               {
+               case VaribleAssigmentSyntaxNode::Context::GLOBAL:
+               {
+                  context = "GLOBAL";
+               };
+               break;
+               case VaribleAssigmentSyntaxNode::Context::LOCAL:
+               {
+                  context = "LOCAL";
+               };
+               break;
+               }
+               s << "{" << "VARIBLE ASSIGMENT" << " (" << context << ")" << "}";
+            };
             handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << " (" << node->value() << ')' << "}"; };
             for( size_t i = 0; i < n; ++i )
                s << "   ";

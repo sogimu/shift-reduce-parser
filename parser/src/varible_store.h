@@ -50,12 +50,27 @@ public:
       return mScope.back()[ name ];
    }
 
+   void writeValueToLocalVarible( const std::string& name, int value )
+   {
+      mScope.back()[ name ] = value;
+   }
+
    void print() const
    {
-      for( const auto& [ key, value ] : mScope.back() )
+      std::cout << "*************" << std::endl;
+      int index = mScope.size();
+      for( auto it = mScope.rbegin(); it != mScope.rend(); ++it )
       {
-         std::cout << key << " equal " << std::to_string( value ) << std::endl;
+         const auto& layer = *it;
+         std::cout << "=LAYER (" << std::to_string( index ) << "): ";
+         for( const auto& [ key, value ] : layer )
+         {
+            std::cout << key << " == " << std::to_string( value ) << ", ";
+         }
+         --index;
+         std::cout << std::endl;
       }
+      std::cout << "*************" << std::endl;
    }
 
 private:

@@ -2,6 +2,7 @@
 
 #include "i_syntax_node_visitor.h"
 
+#include "nonterminals/function_call_or_definition_syntax_node.h"
 #include <functional>
 #include <memory>
 
@@ -54,6 +55,8 @@ public:
       std::function< void( const WhileSyntaxNodeSP& ) > while_syntax_node = [ this ]( const WhileSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const WhileExpressionSyntaxNodeSP& ) > while_expression_syntax_node = [ this ]( const WhileExpressionSyntaxNodeSP& node )
       { default_handler( node ); };
+      std::function< void( const FunctionCallOrDefinitionSyntaxNodeSP& ) > function_call_or_definition_syntax_node =
+         [ this ]( const FunctionCallOrDefinitionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FunctionSyntaxNodeSP& ) > function_syntax_node = [ this ]( const FunctionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FunctionCallSyntaxNodeSP& ) > function_call_syntax_node = [ this ]( const FunctionCallSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ReturnSyntaxNodeSP& ) > return_syntax_node = [ this ]( const ReturnSyntaxNodeSP& node ) { default_handler( node ); };
@@ -232,6 +235,11 @@ public:
    void visit( const WhileExpressionSyntaxNodeSP& node ) override
    {
       mHandlers.while_expression_syntax_node( node );
+   }
+
+   void visit( const FunctionCallOrDefinitionSyntaxNodeSP& node ) override
+   {
+      mHandlers.function_call_or_definition_syntax_node( node );
    }
 
    void visit( const FunctionSyntaxNodeSP& node ) override
