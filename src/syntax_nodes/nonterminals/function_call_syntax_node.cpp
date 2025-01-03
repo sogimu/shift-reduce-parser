@@ -25,7 +25,6 @@ FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name, const s
    {
       ISyntaxNodeSP child = argument;
 
-      const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
       if( IsNode< NameSyntaxNode >( argument ) )
       {
          const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
@@ -35,6 +34,7 @@ FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name, const s
       add_back( child );
    }
 }
+
 void FunctionCallSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );

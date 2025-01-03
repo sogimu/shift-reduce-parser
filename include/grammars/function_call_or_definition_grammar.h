@@ -27,12 +27,10 @@ public:
          ARGUMENT,
          OPEN_CIRCLE_BRACKET,
          CLOSE_CIRCLE_BRACKET,
-         COMMA,
-         FUNCTION_CALL,
-         SEMICOLON,
+         COMMA
       };
 
-      // NAME OPEN_CIRCLE_BRACKET (NAME COMMA?)+ CLOSE_CIRCLE_BRACKET
+      // NAME OPEN_CIRCLE_BRACKET (NAME|COMPUTATIONAL_EXPRESSION COMMA?)+ CLOSE_CIRCLE_BRACKET
       mProductions.emplace_back(
          []( const Stack& stack ) -> std::optional< Plan >
          {
@@ -41,7 +39,6 @@ public:
             std::vector< ISyntaxNodeSP > arguments;
             std::vector< ISyntaxNodeSP > commas;
             CloseCircleBracketSyntaxNodeSP close_circle_bracket;
-            // SemicolonSyntaxNodeSP semicolon;
 
             bool is_open_circle_bracket_found = false;
             bool is_close_circle_bracket_found = false;

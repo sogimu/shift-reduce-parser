@@ -52,18 +52,19 @@ int main()
       // foo(23);
       bar(a)
       {
-        print(a);
-        if(a > 0)
-        {
-          bar( a - 1 );
-        }
+        // print(a);
+        // if(a > 0)
+        // {
+        //   bar( a - 1 );
+        // }
         // print( a );
         return a;
       }
+      // print(bar(5));
+      b = bar(3);
+      print( b );
 
-      bar(3);
-
-      print( bar(2) );
+      // print( bar(2) );
     })";
    //
    //        if(3 < 2)
@@ -99,7 +100,7 @@ int main()
    std::cout << e << std::endl;
 
    Calculator calculator;
-   auto result0 = calculator.solve1( e );
+   auto result0 = calculator.solve( e );
    cout << result0 << std::endl;
    return 0;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "nonterminals/function_call_or_definition_syntax_node.h"
+#include "nonterminals/function_call_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
 #include "nonterminals/computational_expression_syntax_node.h"
@@ -21,30 +23,24 @@ public:
          FINISH,
          ERROR,
          EQUAL,
-         COMPUTATIONAL_EXPRESSION,
-         ADDITION,
-         SUBTRACTION,
-         MULTIPLY,
-         DIVISION,
          VALUE,
-         EXPRESSION,
          SEMICOLON,
          NAME
       };
 
-      // NAME EQUAL COMPUTATIONAL_EXPRESSION|ADDITION|SUBTRACTION|MULTIPLY|DIVISION SEMICOLON
+      // NAME EQUAL COMPUTATIONAL_EXPRESSION SEMICOLON
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             EqualSyntaxNodeSP equal;
-            ISyntaxNodeSP expression;
+            ISyntaxNodeSP value;
             SemicolonSyntaxNodeSP semicolon;
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& /* node */ ) { state = State::ERROR; };
             handlers.name_syntax_node = [ &name, &state ]( const NameSyntaxNodeSP& node )
             {
                if( state == State::START )
@@ -61,50 +57,28 @@ public:
                   equal = node;
                }
             };
-            handlers.computational_expression_syntax_node = [ &expression, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            handlers.computational_expression_syntax_node = [ &value, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
             {
                if( state == State::EQUAL )
                {
-                  expression = node;
-                  state = State::COMPUTATIONAL_EXPRESSION;
+                  value = node;
+                  state = State::VALUE;
                }
             };
-            // handlers.addition_syntax_node = [ &expression, &state ]( const add_backitionSyntaxNodeSP& node )
-            // {
-            //    if( state == State::EQUAL )
-            //    {
-            //       expression = node;
-            //       state = State::ADDITION;
-            //    }
-            // };
-            // handlers.subtraction_syntax_node = [ &expression, &state ]( const SubtractionSyntaxNodeSP& node )
-            // {
-            //    if( state == State::EQUAL )
-            //    {
-            //       expression = node;
-            //       state = State::SUBTRACTION;
-            //    }
-            // };
-            // handlers.multiply_syntax_node = [ &expression, &state ]( const MultiplySyntaxNodeSP& node )
-            // {
-            //    if( state == State::EQUAL )
-            //    {
-            //       expression = node;
-            //       state = State::MULTIPLY;
-            //    }
-            // };
-            // handlers.division_syntax_node = [ &expression, &state ]( const DivisionSyntaxNodeSP& node )
-            // {
-            //    if( state == State::EQUAL )
-            //    {
-            //       expression = node;
-            //       state = State::DIVISION;
-            //    }
-            // };
+            handlers.function_call_or_definition_syntax_node = [ &value, &state ]( const FunctionCallOrDefinitionSyntaxNodeSP& node )
+            {
+               if( state == State::EQUAL )
+               {
+                  const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( node->name() );
+                  for( const auto& argument : *node )
+                     function_call->add_back( argument );
+                  value = function_call;
+                  state = State::VALUE;
+               }
+            };
             handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
             {
-               if( state == State::COMPUTATIONAL_EXPRESSION || state == State::ADDITION || state == State::MULTIPLY || state == State::SUBTRACTION ||
-                   state == State::DIVISION )
+               if( state == State::VALUE )
                {
                   semicolon = node;
                   state = State::SEMICOLON;
@@ -120,7 +94,7 @@ public:
             Plan plan;
             plan.to_remove.nodes.push_back( name );
             plan.to_remove.nodes.push_back( equal );
-            plan.to_remove.nodes.push_back( expression );
+            plan.to_remove.nodes.push_back( value );
             plan.to_remove.nodes.push_back( semicolon );
 
             // const auto& computational_expression = std::make_shared< ComputationalExpressionSyntaxNode >();
@@ -128,7 +102,7 @@ public:
 
             const auto& varible_assigment_syntax_node = std::make_shared< VaribleAssigmentSyntaxNode >( /* name, expression */ );
             varible_assigment_syntax_node->add_back( name );
-            varible_assigment_syntax_node->add_back( expression );
+            varible_assigment_syntax_node->add_back( value );
             plan.to_add.nodes.push_back( varible_assigment_syntax_node );
             return plan;
          } );

@@ -215,7 +215,7 @@ private:
 using SyntaxNodeDeepCopyVisitorSP = std::shared_ptr< SyntaxNodeDeepCopyVisitor >;
 } // namespace
 
-static ISyntaxNodeSP make_deep_copy( const ISyntaxNodeSP& node )
+[[maybe_unused]] static ISyntaxNodeSP make_deep_copy( const ISyntaxNodeSP& node )
 {
    const auto& visitor = std::make_shared< SyntaxNodeDeepCopyVisitor >();
    node->accept( visitor );

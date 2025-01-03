@@ -225,7 +225,7 @@ static Stack last_n_syntax_nodes( const Stack& stack, size_t n )
    return Stack{ it, stack.end() };
 }
 
-static void iterate_over_last_n_nodes( const Stack& stack, size_t n, const SyntaxNodeEmptyVisitor::Handlers& handlers )
+[[maybe_unused]] static void iterate_over_last_n_nodes( const Stack& stack, size_t n, const SyntaxNodeEmptyVisitor::Handlers& handlers )
 {
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    const auto& nodes = last_n_syntax_nodes( stack, n );
@@ -314,7 +314,7 @@ zip_container< C1 > zip( C1& c1, C1& c2 )
    return zip_container< C1 >( c1, c2 );
 }
 
-static void match( const ISyntaxNodeSP& node, const SyntaxNodeEmptyVisitor::Handlers& handlers )
+[[maybe_unused]] static void match( const ISyntaxNodeSP& node, const SyntaxNodeEmptyVisitor::Handlers& handlers )
 {
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    node->accept( visitor );
@@ -402,7 +402,7 @@ TargetNode create_tree_from1( const SourceNode& source_root, const CreateRoot& c
             const auto& [ source, target ] = stack.back();
             if( !target )
             {
-               std::optional< std::reference_wrapper< TargetNode > > new_target_node_opt = create_node_on_post_func( source_stack, target_stack );
+               [[maybe_unused]] std::optional< std::reference_wrapper< TargetNode > > new_target_node_opt = create_node_on_post_func( source_stack, target_stack );
                // target = new_target_node_opt;
             }
             if( target )
