@@ -67,7 +67,6 @@ bool FunctionCallSyntaxNode::compare( const ISyntaxNode& node ) const
 
 std::string FunctionCallSyntaxNode::name() const
 {
-   // return std::dynamic_pointer_cast< NameSyntaxNode >( this->operator[]( 0 ) );
    return mName;
 }
 

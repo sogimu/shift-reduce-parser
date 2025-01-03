@@ -49,6 +49,7 @@ set(HEADERS
     include/syntax_nodes/nonterminals/if_expression_syntax_node.h
     include/syntax_nodes/nonterminals/function_syntax_node.h
     include/syntax_nodes/nonterminals/function_call_syntax_node.h
+    include/syntax_nodes/nonterminals/function_call_or_definition_syntax_node.h
     include/syntax_nodes/nonterminals/while_expression_syntax_node.h
     include/syntax_nodes/nonterminals/varible_assigment_syntax_node.h
     include/syntax_nodes/nonterminals/computational_expression_syntax_node.h
@@ -65,6 +66,7 @@ set(HEADERS
     include/grammars/scope_grammar.h
     include/grammars/function_grammar.h
     include/grammars/function_call_grammar.h
+    include/grammars/function_call_or_definition_grammar.h
     include/grammars/return_expression_grammar.h
 )
 
@@ -104,6 +106,7 @@ set(SOURCES
     src/syntax_nodes/nonterminals/if_expression_syntax_node.cpp
     src/syntax_nodes/nonterminals/function_syntax_node.cpp
     src/syntax_nodes/nonterminals/function_call_syntax_node.cpp
+    src/syntax_nodes/nonterminals/function_call_or_definition_syntax_node.cpp
     src/syntax_nodes/nonterminals/while_expression_syntax_node.cpp
     src/syntax_nodes/nonterminals/varible_assigment_syntax_node.cpp
     src/syntax_nodes/nonterminals/conditional_expression_syntax_node.cpp

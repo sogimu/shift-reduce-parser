@@ -50,6 +50,10 @@ int main()
       // print(b);
       // print(b==17711);
       // foo(23);
+      foo(x)
+    {
+      return x*x;
+    }
       bar(a)
       {
         // print(a);
@@ -58,11 +62,12 @@ int main()
         //   bar( a - 1 );
         // }
         // print( a );
-        return a;
+        // return a;
+        return foo(a);
       }
-      // print(bar(5));
-      b = bar(3);
-      print( b );
+      print(bar(5));
+      // b = bar(3);
+      // print( b );
 
       // print( bar(2) );
     })";

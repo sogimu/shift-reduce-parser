@@ -62,6 +62,7 @@ public:
          std::make_shared< F >(),
          std::make_shared< ComputationalExpression >(),
          std::make_shared< VaribleAssigment >(),
+         std::make_shared< Return >(),
          std::make_shared< Print >(),
          std::make_shared< ConditionalExpression >(),
          std::make_shared< Expression >(),
@@ -71,7 +72,6 @@ public:
          std::make_shared< FunctionCallOrDefinition >(),
          std::make_shared< Function >(),
          std::make_shared< FunctionCall >(),
-         std::make_shared< Return >(),
       };
 
       Stack stack;

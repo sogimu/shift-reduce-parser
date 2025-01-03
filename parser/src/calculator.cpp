@@ -161,7 +161,6 @@ double Calculator::solve( const std::string& expression ) const
             new_parent_target_node = taget_node_parent->add_back( function_call );
             const auto& scope_expression = std::make_shared< ScopeSyntaxNode >();
             new_parent_target_node = function_call->add_back( scope_expression );
-            // new_parent_target_node = taget_node_parent->add_back( scope_expression );
             const auto& function_call_syntax_node = std::dynamic_pointer_cast< FunctionCallSyntaxNode >( function_call );
             if( const auto& function_info_it = function_by_name.find( function_call_syntax_node->name() ); function_info_it != function_by_name.end() )
             {

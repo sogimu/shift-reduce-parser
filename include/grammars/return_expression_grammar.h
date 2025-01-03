@@ -63,6 +63,18 @@ public:
                   argument = node;
                }
             };
+            handlers.function_call_or_definition_syntax_node = [ &argument, &state ]( const FunctionCallOrDefinitionSyntaxNodeSP& node )
+            {
+               if( state == State::RETURN )
+               {
+                  std::vector< ISyntaxNodeSP > arguments;
+                  for( const auto& argument : *node )
+                     arguments.push_back( argument );
+                  const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( node->name(), arguments );
+                  argument = function_call;
+                  state = State::ARGUMENT;
+               }
+            };
             handlers.semicolon_syntax_node = [ &semiclon, &state ]( const SemicolonSyntaxNodeSP& node )
             {
                if( state == State::ARGUMENT )

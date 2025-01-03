@@ -69,14 +69,16 @@ public:
             plan.to_remove.nodes.push_back( function_call_or_definition_syntax_node );
             plan.to_remove.nodes.push_back( semicolon );
 
-            const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( function_call_or_definition_syntax_node->name() );
+            std::vector< ISyntaxNodeSP > arguments;
             for( const auto& argument : *function_call_or_definition_syntax_node )
-               function_call->add_back( argument );
+               arguments.push_back( argument );
+            const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( function_call_or_definition_syntax_node->name(), arguments );
 
             plan.to_add.nodes.push_back( function_call );
             return plan;
          } );
 
+      // FUNCTION_CALL_OR_DEFINITION CLOSE_CIRCLE_BRACKET
       mProductions.emplace_back(
          []( const Stack& stack ) -> std::optional< Plan >
          {
@@ -112,9 +114,10 @@ public:
             plan.to_remove.nodes.push_back( function_call_or_definition_syntax_node );
             plan.to_remove.nodes.push_back( close_circle_bracket );
 
-            const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( function_call_or_definition_syntax_node->name() );
+            std::vector< ISyntaxNodeSP > arguments;
             for( const auto& argument : *function_call_or_definition_syntax_node )
-               function_call->add_back( argument );
+               arguments.push_back( argument );
+            const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( function_call_or_definition_syntax_node->name(), arguments );
 
             plan.to_add.nodes.push_back( function_call );
             plan.to_add.nodes.push_back( close_circle_bracket );
