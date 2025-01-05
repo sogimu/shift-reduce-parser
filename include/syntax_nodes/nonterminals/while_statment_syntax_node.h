@@ -11,11 +11,11 @@ using ConditionalExpressionSyntaxNodeSP = std::shared_ptr< ConditionalExpression
 class ScopeSyntaxNode;
 using ScopeSyntaxNodeSP = std::shared_ptr< ScopeSyntaxNode >;
 
-class WhileExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< WhileExpressionSyntaxNode >
+class WhileStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< WhileStatmentSyntaxNode >
 {
 public:
-   WhileExpressionSyntaxNode();
-   WhileExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope );
+   WhileStatmentSyntaxNode();
+   WhileStatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
@@ -24,4 +24,4 @@ public:
    ScopeSyntaxNodeSP scope() const;
 };
 
-using WhileExpressionSyntaxNodeSP = std::shared_ptr< WhileExpressionSyntaxNode >;
+using WhileStatmentSyntaxNodeSP = std::shared_ptr< WhileStatmentSyntaxNode >;

@@ -19,7 +19,7 @@ TEST( SYNTAX_TREE_SUBTRACTION, ONE_MINUS )
 {
   "ScopeSyntaxNode": [
     {
-      "ExpressionSyntaxNode": [
+     "StatmentSyntaxNode": [
         {
           "ComputationalExpressionSyntaxNode": [
             {
@@ -70,7 +70,7 @@ TEST( SYNTAX_TREE_SUBTRACTION, MANY_MINUS )
 {
   "ScopeSyntaxNode": [
     {
-      "ExpressionSyntaxNode": [
+     "StatmentSyntaxNode": [
         {
           "ComputationalExpressionSyntaxNode": [
             {

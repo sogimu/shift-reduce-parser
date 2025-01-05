@@ -1,9 +1,9 @@
 #pragma once
 
 #include "function_call_or_definition_grammar.h"
-#include "nonterminals/expression_syntax_node.h"
+#include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/function_call_or_definition_syntax_node.h"
-#include "nonterminals/varible_assigment_syntax_node.h"
+#include "nonterminals/varible_assigment_statment_syntax_node.h"
 #include "nonterminals/varible_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/return_syntax_node.h"
@@ -35,17 +35,17 @@
 #include "syntax_nodes/terminals/semicolon_syntax_node.h"
 #include "grammars/computational_expression_grammar.h"
 #include "grammars/conditional_expression_grammar.h"
-#include "grammars/expression_grammar.h"
+#include "grammars/statment_grammar.h"
 #include "grammars/f_grammar.h"
-#include "grammars/if_expression_grammar.h"
-#include "grammars/while_expression_grammar.h"
+#include "grammars/if_statment_grammar.h"
+#include "grammars/while_statment_grammar.h"
 #include "grammars/function_call_or_definition_grammar.h"
 #include "grammars/function_grammar.h"
 #include "grammars/function_call_grammar.h"
-#include "grammars/print_expression_grammar.h"
+#include "grammars/print_statment_grammar.h"
 #include "grammars/scope_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
-#include "grammars/return_expression_grammar.h"
+#include "grammars/return_statment_grammar.h"
 #include "i_grammar.h"
 #include "i_syntax_node.h"
 #include "lexical_tokens.h"
@@ -65,7 +65,7 @@ public:
          std::make_shared< Return >(),
          std::make_shared< Print >(),
          std::make_shared< ConditionalExpression >(),
-         std::make_shared< Expression >(),
+         std::make_shared< Statment >(),
          std::make_shared< Scope >(),
          std::make_shared< If >(),
          std::make_shared< While >(),
@@ -347,10 +347,10 @@ public:
             handlers.eol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EOL" << "}"; };
             handlers.semicolon_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SEMICOLON" << "}"; };
             handlers.return_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN" << "}"; };
-            handlers.return_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN_EXPRESSION" << "}"; };
+            handlers.return_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN_STATMENT" << "}"; };
             handlers.comma_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "COMMA" << "}"; };
-            handlers.expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EXPRESSION" << "}"; };
-            handlers.scope_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SCOPE" << "}"; };
+            handlers.statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "STATMENT" << "}"; };
+            handlers.scope_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SCOPE" << "}"; };
             handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
             handlers.close_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CLOSE_CURLY_BRACKET" << "}"; };
             handlers.computational_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "COMPUTATIONAL_EXPRESSION" << "}"; };
@@ -388,30 +388,30 @@ public:
                }
                s << "{" << "CONDITIONAL_EXPRESSION" << " (" << type << ")" << "}";
             };
-            handlers.print_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT_EXPRESSION" << "}"; };
+            handlers.print_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT_STATMENT" << "}"; };
             handlers.equal_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EQUAL" << "}"; };
             handlers.less_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "LESS" << "}"; };
             handlers.more_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MORE" << "}"; };
             handlers.if_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF" << "}"; };
-            handlers.if_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_EXPRESSION" << "}"; };
+            handlers.if_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_STATMENT" << "}"; };
             handlers.while_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE" << "}"; };
-            handlers.while_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_EXPRESSION" << "}"; };
+            handlers.while_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_STATMENT" << "}"; };
             handlers.function_syntax_node = [ &s ]( const FunctionSyntaxNodeSP& node ) { s << "{" << "FUNCTION" << " (" << node->name() << ")" << "}"; };
             handlers.function_call_syntax_node = [ &s ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << "}"; };
             handlers.function_call_or_definition_syntax_node = [ &s ]( const FunctionCallOrDefinitionSyntaxNodeSP& node )
             { s << "{" << "FUNCTION_CALL_OR_DEFINITION" << " (" << node->name() << ")" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
-            handlers.varible_assigment_syntax_node = [ &s ]( const VaribleAssigmentSyntaxNodeSP& node )
+            handlers.varible_assigment_statment_syntax_node = [ &s ]( const VaribleAssigmentStatmentSyntaxNodeSP& node )
             {
                std::string context;
                switch( node->context() )
                {
-               case VaribleAssigmentSyntaxNode::Context::GLOBAL:
+               case VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL:
                {
                   context = "GLOBAL";
                };
                break;
-               case VaribleAssigmentSyntaxNode::Context::LOCAL:
+               case VaribleAssigmentStatmentSyntaxNode::Context::LOCAL:
                {
                   context = "LOCAL";
                };

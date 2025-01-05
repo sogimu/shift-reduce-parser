@@ -2,23 +2,23 @@
 
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
-#include "nonterminals/scope_syntax_node.h"
+#include "nonterminals/scope_statment_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include <string>
 
 FunctionSyntaxNode::FunctionSyntaxNode()
-   : ISyntaxNode{ Token_Type::FUNCTION_EXPRESSION }
+   : ISyntaxNode{ Token_Type::FUNCTION }
 {
 }
 
 FunctionSyntaxNode::FunctionSyntaxNode( const std::string& name )
-   : ISyntaxNode{ Token_Type::FUNCTION_EXPRESSION }
+   : ISyntaxNode{ Token_Type::FUNCTION }
    , mName{ name }
 {
 }
 
 FunctionSyntaxNode::FunctionSyntaxNode( const std::string& name, const ScopeSyntaxNodeSP& scope )
-   : ISyntaxNode{ Token_Type::FUNCTION_EXPRESSION }
+   : ISyntaxNode{ Token_Type::FUNCTION }
    , mName{ name }
 {
    add_back( scope );

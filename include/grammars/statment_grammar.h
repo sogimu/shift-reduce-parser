@@ -2,19 +2,18 @@
 
 #include "nonterminals/computational_expression_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
-#include "nonterminals/expression_syntax_node.h"
+#include "nonterminals/statment_syntax_node.h"
 #include "i_grammar.h"
-#include "nonterminals/if_expression_syntax_node.h"
-#include "nonterminals/print_expression_syntax_node.h"
+#include "nonterminals/if_statment_syntax_node.h"
+#include "nonterminals/print_statment_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
+#include "terminals/semicolon_syntax_node.h"
 #include "utils.h"
 
-#include <vector>
-
-class Expression : public IGrammar
+class Statment : public IGrammar
 {
 public:
-   Expression()
+   Statment()
    {
       enum class State
       {
@@ -23,33 +22,33 @@ public:
          ERROR,
          COMPUTATIONAL_EXPRESSION,
          CONDITIONAL_EXPRESSION,
-         IF_EXPRESSION,
-         WHILE_EXPRESSION,
-         FUNCTION_EXPRESSION,
-         FUNCTION_CALL_EXPRESSION,
-         PRINT_EXPRESSION,
-         VARIBLE_ASSIGMENT,
+         IF_STATMENT,
+         WHILE_STATMENT,
+         FUNCTION,
+         FUNCTION_CALL,
+         PRINT_STATMENT,
+         VARIBLE_ASSIGMENT_STATMENT,
          EQUAL,
          SEMICOLON,
-         RETURN_EXPRESSION
+         RETURN_STATMENT
       };
 
-      // IF_EXPRESSION
+      // IF_STATMENT
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
-            IfExpressionSyntaxNodeSP if_expression_syntax_node;
+            IfStatmentSyntaxNodeSP if_statment_syntax_node;
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.if_expression_syntax_node = [ &if_expression_syntax_node, &state ]( const IfExpressionSyntaxNodeSP& node )
+            handlers.if_statment_syntax_node = [ &if_statment_syntax_node, &state ]( const IfStatmentSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  if_expression_syntax_node = node;
-                  state = State::IF_EXPRESSION;
+                  if_statment_syntax_node = node;
+                  state = State::IF_STATMENT;
                   state = State::FINISH;
                }
             };
@@ -60,29 +59,29 @@ public:
                return {};
 
             Plan plan;
-            plan.to_remove.nodes.push_back( if_expression_syntax_node );
+            plan.to_remove.nodes.push_back( if_statment_syntax_node );
 
-            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( if_expression_syntax_node );
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( if_statment_syntax_node );
             plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );
 
-      // WHILE_EXPRESSION
+      // WHILE_STATMENT
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
-            WhileExpressionSyntaxNodeSP while_expression_syntax_node;
+            WhileStatmentSyntaxNodeSP while_statment_syntax_node;
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.while_expression_syntax_node = [ &while_expression_syntax_node, &state ]( const WhileExpressionSyntaxNodeSP& node )
+            handlers.while_statment_syntax_node = [ &while_statment_syntax_node, &state ]( const WhileStatmentSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  while_expression_syntax_node = node;
-                  state = State::WHILE_EXPRESSION;
+                  while_statment_syntax_node = node;
+                  state = State::WHILE_STATMENT;
                   state = State::FINISH;
                }
             };
@@ -93,14 +92,14 @@ public:
                return {};
 
             Plan plan;
-            plan.to_remove.nodes.push_back( while_expression_syntax_node );
+            plan.to_remove.nodes.push_back( while_statment_syntax_node );
 
-            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( while_expression_syntax_node );
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( while_statment_syntax_node );
             plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );
 
-      // FUNCTION_EXPRESSION
+      // FUNCTION
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
@@ -115,7 +114,7 @@ public:
                if( state == State::START )
                {
                   function_syntax_node = node;
-                  state = State::FUNCTION_EXPRESSION;
+                  state = State::FUNCTION;
                   state = State::FINISH;
                }
             };
@@ -128,16 +127,17 @@ public:
             Plan plan;
             plan.to_remove.nodes.push_back( function_syntax_node );
 
-            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( function_syntax_node );
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( function_syntax_node );
             plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );
 
-      // FUNCTION_CALL_EXPRESSION
+      // FUNCTION_CALL
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             FunctionCallSyntaxNodeSP function_call_syntax_node;
+            SemicolonSyntaxNodeSP semicolon;
 
             State state = State::START;
 
@@ -148,46 +148,12 @@ public:
                if( state == State::START )
                {
                   function_call_syntax_node = node;
-                  state = State::FUNCTION_CALL_EXPRESSION;
-                  state = State::FINISH;
-               }
-            };
-
-            iterate_over_last_n_nodes( stack, 1, handlers );
-
-            if( state != State::FINISH )
-               return {};
-
-            Plan plan;
-            plan.to_remove.nodes.push_back( function_call_syntax_node );
-
-            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( function_call_syntax_node );
-            plan.to_add.nodes.push_back( expression_syntax_node );
-            return plan;
-         } );
-      // PRINT_EXPRESSION
-      mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
-         {
-            PrintExpressionSyntaxNodeSP print_expression_syntax_node;
-            SemicolonSyntaxNodeSP semicolon;
-
-            State state = State::START;
-
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.print_expression_syntax_node = [ &print_expression_syntax_node, &state ]( const PrintExpressionSyntaxNodeSP& node )
-            {
-               if( state == State::START )
-               {
-                  print_expression_syntax_node = node;
-                  state = State::PRINT_EXPRESSION;
-                  state = State::FINISH;
+                  state = State::FUNCTION_CALL;
                }
             };
             handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
             {
-               if( state == State::PRINT_EXPRESSION )
+               if( state == State::FUNCTION_CALL )
                {
                   semicolon = node;
                   state = State::SEMICOLON;
@@ -201,30 +167,73 @@ public:
                return {};
 
             Plan plan;
-            plan.to_remove.nodes.push_back( print_expression_syntax_node );
+            plan.to_remove.nodes.push_back( function_call_syntax_node );
             plan.to_remove.nodes.push_back( semicolon );
 
-            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( print_expression_syntax_node );
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( function_call_syntax_node );
             plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );
-
-      // RETURN_EXPRESSION
+      // PRINT_STATMENT
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
-            ReturnExpressionSyntaxNodeSP return_expression_syntax_node;
+            PrintStatmentSyntaxNodeSP print_statment_syntax_node;
+            SemicolonSyntaxNodeSP semicolon;
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.return_expression_syntax_node = [ &return_expression_syntax_node, &state ]( const ReturnExpressionSyntaxNodeSP& node )
+            handlers.print_statment_syntax_node = [ &print_statment_syntax_node, &state ]( const PrintStatmentSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  return_expression_syntax_node = node;
-                  state = State::RETURN_EXPRESSION;
+                  print_statment_syntax_node = node;
+                  state = State::PRINT_STATMENT;
+                  state = State::FINISH;
+               }
+            };
+            handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
+            {
+               if( state == State::PRINT_STATMENT )
+               {
+                  semicolon = node;
+                  state = State::SEMICOLON;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 2, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( print_statment_syntax_node );
+            plan.to_remove.nodes.push_back( semicolon );
+
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( print_statment_syntax_node );
+            plan.to_add.nodes.push_back( expression_syntax_node );
+            return plan;
+         } );
+
+      // RETURN_STATMENT
+      mProductions.emplace_back(
+         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         {
+            ReturnStatmentSyntaxNodeSP return_statment_syntax_node;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.return_statment_syntax_node = [ &return_statment_syntax_node, &state ]( const ReturnStatmentSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  return_statment_syntax_node = node;
+                  state = State::RETURN_STATMENT;
                   state = State::FINISH;
                }
             };
@@ -235,9 +244,9 @@ public:
                return {};
 
             Plan plan;
-            plan.to_remove.nodes.push_back( return_expression_syntax_node );
+            plan.to_remove.nodes.push_back( return_statment_syntax_node );
 
-            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( return_expression_syntax_node );
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( return_statment_syntax_node );
             plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );
@@ -280,7 +289,7 @@ public:
             plan.to_remove.nodes.push_back( computational_expression_syntax_node );
             plan.to_remove.nodes.push_back( semicolon );
 
-            const auto& expression_node = std::make_shared< ExpressionSyntaxNode >( computational_expression_syntax_node );
+            const auto& expression_node = std::make_shared< StatmentSyntaxNode >( computational_expression_syntax_node );
             plan.to_add.nodes.push_back( expression_node );
             return plan;
          } );
@@ -323,34 +332,34 @@ public:
             plan.to_remove.nodes.push_back( conditional_expression_syntax_node );
             plan.to_remove.nodes.push_back( semicolon );
 
-            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( conditional_expression_syntax_node );
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( conditional_expression_syntax_node );
             plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );
 
-      // VARIBLE_ASSIGMENT SEMICOLON
+      // VARIBLE_ASSIGMENT_STATMENT SEMICOLON
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
-            VaribleAssigmentSyntaxNodeSP varible_assigment_syntax_node;
+            VaribleAssigmentStatmentSyntaxNodeSP varible_assigment_statment_syntax_node;
             // SemicolonSyntaxNodeSP semicolon;
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.varible_assigment_syntax_node = [ &varible_assigment_syntax_node, &state ]( const VaribleAssigmentSyntaxNodeSP& node )
+            handlers.varible_assigment_statment_syntax_node = [ &varible_assigment_statment_syntax_node, &state ]( const VaribleAssigmentStatmentSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  varible_assigment_syntax_node = node;
-                  state = State::VARIBLE_ASSIGMENT;
+                  varible_assigment_statment_syntax_node = node;
+                  state = State::VARIBLE_ASSIGMENT_STATMENT;
                   state = State::FINISH;
                }
             };
             // handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
             // {
-            //    if( state == State::VARIBLE_ASSIGMENT )
+            //    if( state == State::VARIBLE_ASSIGMENT_STATMENT )
             //    {
             //       semicolon = node;
             //       // state = State::SEMICOLON;
@@ -364,10 +373,10 @@ public:
                return {};
 
             Plan plan;
-            plan.to_remove.nodes.push_back( varible_assigment_syntax_node );
+            plan.to_remove.nodes.push_back( varible_assigment_statment_syntax_node );
             // plan.to_remove.nodes.push_back( semicolon );
 
-            const auto& expression_syntax_node = std::make_shared< ExpressionSyntaxNode >( varible_assigment_syntax_node );
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( varible_assigment_statment_syntax_node );
             plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );

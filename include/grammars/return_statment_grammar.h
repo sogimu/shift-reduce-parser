@@ -4,7 +4,7 @@
 #include "terminals/name_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
 #include "i_grammar.h"
-#include "nonterminals/return_expression_syntax_node.h"
+#include "nonterminals/return_statment_syntax_node.h"
 #include "utils.h"
 
 #include <memory>
@@ -27,7 +27,7 @@ public:
          SEMICOLON,
       };
 
-      // RETURN COMPUTATIONAL_EXPRESSION SEMICOLON
+      // RETURN computational_expression SEMICOLON
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
@@ -95,8 +95,8 @@ public:
             plan.to_remove.nodes.push_back( argument );
             plan.to_remove.nodes.push_back( semiclon );
 
-            const auto& return_expression_node = std::make_shared< ReturnExpressionSyntaxNode >( argument );
-            plan.to_add.nodes.push_back( return_expression_node );
+            const auto& return_statment_node = std::make_shared< ReturnStatmentSyntaxNode >( argument );
+            plan.to_add.nodes.push_back( return_statment_node );
             return plan;
          } );
    }

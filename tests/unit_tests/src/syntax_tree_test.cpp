@@ -11,15 +11,13 @@
 
 using namespace std;
 
-TEST( SyntaxTree, VaribleAssigmentSyntaxNode )
+TEST( SyntaxTree, VaribleAssigmentStatmentSyntaxNode )
 {
    // {m=42;}
-   std::vector< LexicalTokens::LexicalToken > tokens{ { "{", Token_Type::OPEN_CURLY_BRACKET },
-                                                      { "m", Token_Type::NAME },
-                                                      { "=", Token_Type::EQUAL },
-                                                      { "42", Token_Type::INT },
-                                                      { ";", Token_Type::SEMICOLON },
-                                                      { "}", Token_Type::CLOSE_CURLY_BRACKET } };
+   std::vector< LexicalTokens::LexicalToken > tokens{
+      { "{", Token_Type::OPEN_CURLY_BRACKET }, { "m", Token_Type::NAME }, { "=", Token_Type::EQUAL }, { "42", Token_Type::INT }, { ";", Token_Type::SEMICOLON },
+      { "}", Token_Type::CLOSE_CURLY_BRACKET }
+   };
 
    LexicalTokens lexical_tokens{ tokens };
    SyntaxTree syntax_tree( lexical_tokens );
@@ -28,9 +26,9 @@ TEST( SyntaxTree, VaribleAssigmentSyntaxNode )
                 {
                   "ScopeSyntaxNode": [
                     {
-                      "ExpressionSyntaxNode": [
+                     "StatmentSyntaxNode": [
                         {
-                          "VaribleAssigmentSyntaxNode": [
+                          "VaribleAssigmentStatmentSyntaxNode": [
                             {
                               "NameSyntaxNode": [
                                 "m"
@@ -56,7 +54,7 @@ TEST( SyntaxTree, VaribleAssigmentSyntaxNode )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
-TEST( SyntaxTree, IfExpressionSyntaxNode )
+TEST( SyntaxTree, IfStatmentSyntaxNode )
 {
    // if(1==2){}
    // std::vector<LexicalTokens::LexicalToken> tokens{
@@ -69,9 +67,9 @@ TEST( SyntaxTree, IfExpressionSyntaxNode )
                 {
                   "ScopeSyntaxNode": [
                     {
-                      "ExpressionSyntaxNode": [
+                     "StatmentSyntaxNode": [
                         {
-                          "VaribleAssigmentSyntaxNode": [
+                          "VaribleAssigmentStatmentSyntaxNode": [
                             {
                               "NameSyntaxNode": [
                                 "m"

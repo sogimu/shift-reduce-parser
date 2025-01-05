@@ -2,8 +2,8 @@
 
 #include "nonterminals/conditional_expression_syntax_node.h"
 #include "i_grammar.h"
-#include "nonterminals/while_expression_syntax_node.h"
-#include "nonterminals/scope_syntax_node.h"
+#include "nonterminals/while_statment_syntax_node.h"
+#include "nonterminals/scope_statment_syntax_node.h"
 #include "utils.h"
 
 #include <memory>
@@ -25,7 +25,7 @@ public:
          OPEN_CIRCLE_BRACKET,
          CONDITION,
          CLOSE_CIRCLE_BRACKET,
-         SCOPE,
+         SCOPE_STATMENT,
       };
 
       // WHILE CONDITION SCOPE
@@ -36,20 +36,20 @@ public:
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;
             ConditionalExpressionSyntaxNodeSP conditional_expression;
             CloseCircleBracketSyntaxNodeSP close_circle_bracket;
-            ScopeSyntaxNodeSP scope_expression;
+            ScopeSyntaxNodeSP scope_statment;
 
             State state = State::START;
 
             iterate_over_last_n_nodes( stack, 5,
                                        {
                                           .default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; },
-                                          .scope_syntax_node =
-                                             [ &scope_expression, &state ]( const ScopeSyntaxNodeSP& node )
+                                          .scope_statment_syntax_node =
+                                             [ &scope_statment, &state ]( const ScopeSyntaxNodeSP& node )
                                           {
                                              if( state == State::CLOSE_CIRCLE_BRACKET )
                                              {
-                                                scope_expression = node;
-                                                state = State::SCOPE;
+                                                scope_statment = node;
+                                                state = State::SCOPE_STATMENT;
                                                 state = State::FINISH;
                                              }
                                           },
@@ -99,9 +99,9 @@ public:
             plan.to_remove.nodes.push_back( open_circle_bracket );
             plan.to_remove.nodes.push_back( conditional_expression );
             plan.to_remove.nodes.push_back( close_circle_bracket );
-            plan.to_remove.nodes.push_back( scope_expression );
+            plan.to_remove.nodes.push_back( scope_statment );
 
-            const auto& while_expression_node = std::make_shared< WhileExpressionSyntaxNode >( conditional_expression, scope_expression );
+            const auto& while_expression_node = std::make_shared< WhileStatmentSyntaxNode >( conditional_expression, scope_statment );
             plan.to_add.nodes.push_back( while_expression_node );
             return plan;
          } );

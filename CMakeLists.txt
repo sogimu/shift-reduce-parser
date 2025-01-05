@@ -42,32 +42,32 @@ set(HEADERS
     include/syntax_nodes/nonterminals/addition/addition_syntax_node.h
     include/syntax_nodes/nonterminals/subtraction/subtraction_syntax_node.h
     include/syntax_nodes/nonterminals/division/division_syntax_node.h
-    include/syntax_nodes/nonterminals/expression_syntax_node.h
-    include/syntax_nodes/nonterminals/scope_syntax_node.h
+    include/syntax_nodes/nonterminals/statment_syntax_node.h
+    include/syntax_nodes/nonterminals/scope_statment_syntax_node.h
     include/syntax_nodes/nonterminals/conditional_expression_syntax_node.h
-    include/syntax_nodes/nonterminals/print_expression_syntax_node.h
-    include/syntax_nodes/nonterminals/if_expression_syntax_node.h
+    include/syntax_nodes/nonterminals/print_statment_syntax_node.h
+    include/syntax_nodes/nonterminals/if_statment_syntax_node.h
     include/syntax_nodes/nonterminals/function_syntax_node.h
     include/syntax_nodes/nonterminals/function_call_syntax_node.h
     include/syntax_nodes/nonterminals/function_call_or_definition_syntax_node.h
-    include/syntax_nodes/nonterminals/while_expression_syntax_node.h
-    include/syntax_nodes/nonterminals/varible_assigment_syntax_node.h
+    include/syntax_nodes/nonterminals/while_statment_syntax_node.h
+    include/syntax_nodes/nonterminals/varible_assigment_statment_syntax_node.h
     include/syntax_nodes/nonterminals/computational_expression_syntax_node.h
     include/syntax_nodes/nonterminals/varible_syntax_node.h
-    include/syntax_nodes/nonterminals/return_expression_syntax_node.h
+    include/syntax_nodes/nonterminals/return_statment_syntax_node.h
     include/grammars/f_grammar.h
     include/grammars/conditional_expression_grammar.h
-    include/grammars/print_expression_grammar.h
-    include/grammars/if_expression_grammar.h
-    include/grammars/while_expression_grammar.h
-    include/grammars/expression_grammar.h
+    include/grammars/print_statment_grammar.h
+    include/grammars/if_statment_grammar.h
+    include/grammars/while_statment_grammar.h
+    include/grammars/statment_grammar.h
     include/grammars/varible_assigment_grammar.h
     include/grammars/computational_expression_grammar.h
     include/grammars/scope_grammar.h
     include/grammars/function_grammar.h
     include/grammars/function_call_grammar.h
     include/grammars/function_call_or_definition_grammar.h
-    include/grammars/return_expression_grammar.h
+    include/grammars/return_statment_grammar.h
 )
 
 set(SOURCES
@@ -101,17 +101,17 @@ set(SOURCES
     src/syntax_nodes/nonterminals/division/division_syntax_node.cpp
     src/syntax_nodes/nonterminals/computational_expression_syntax_node.cpp
     src/syntax_nodes/nonterminals/varible_syntax_node.cpp
-    src/syntax_nodes/nonterminals/expression_syntax_node.cpp
-    src/syntax_nodes/nonterminals/print_expression_syntax_node.cpp
-    src/syntax_nodes/nonterminals/if_expression_syntax_node.cpp
+    src/syntax_nodes/nonterminals/statment_syntax_node.cpp
+    src/syntax_nodes/nonterminals/print_statment_syntax_node.cpp
+    src/syntax_nodes/nonterminals/if_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/function_syntax_node.cpp
     src/syntax_nodes/nonterminals/function_call_syntax_node.cpp
     src/syntax_nodes/nonterminals/function_call_or_definition_syntax_node.cpp
-    src/syntax_nodes/nonterminals/while_expression_syntax_node.cpp
-    src/syntax_nodes/nonterminals/varible_assigment_syntax_node.cpp
+    src/syntax_nodes/nonterminals/while_statment_syntax_node.cpp
+    src/syntax_nodes/nonterminals/varible_assigment_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/conditional_expression_syntax_node.cpp
-    src/syntax_nodes/nonterminals/scope_syntax_node.cpp
-    src/syntax_nodes/nonterminals/return_expression_syntax_node.cpp
+    src/syntax_nodes/nonterminals/scope_statment_syntax_node.cpp
+    src/syntax_nodes/nonterminals/return_statment_syntax_node.cpp
 )
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})

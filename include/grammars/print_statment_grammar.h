@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nonterminals/expression_syntax_node.h"
+#include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/function_call_or_definition_syntax_node.h"
 #include "terminals/close_circle_bracket_syntax_node.h"
 #include "terminals/name_syntax_node.h"
@@ -8,7 +8,7 @@
 #include "terminals/print_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
 #include "i_grammar.h"
-#include "nonterminals/print_expression_syntax_node.h"
+#include "nonterminals/print_statment_syntax_node.h"
 #include "utils.h"
 
 #include <memory>
@@ -115,8 +115,8 @@ public:
             plan.to_remove.nodes.push_back( argument );
             plan.to_remove.nodes.push_back( close );
 
-            const auto& print_expression_node = std::make_shared< PrintExpressionSyntaxNode >( argument );
-            plan.to_add.nodes.push_back( print_expression_node );
+            const auto& print_statment_node = std::make_shared< PrintStatmentSyntaxNode >( argument );
+            plan.to_add.nodes.push_back( print_statment_node );
             return plan;
          } );
    }

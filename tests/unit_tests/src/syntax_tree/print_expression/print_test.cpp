@@ -23,9 +23,9 @@ TEST( SYNTAX_TREE_PRINT, TEST0 )
       {
         "ScopeSyntaxNode": [
           {
-            "ExpressionSyntaxNode": [
+           "StatmentSyntaxNode": [
               {
-                "PrintExpressionSyntaxNode": [
+                "PrintStatmentSyntaxNode": [
                   {
                     "ComputationalExpressionSyntaxNode": [
                       {

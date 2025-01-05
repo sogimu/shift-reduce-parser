@@ -4,7 +4,7 @@
 #include "nonterminals/function_call_or_definition_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
-#include "nonterminals/scope_syntax_node.h"
+#include "nonterminals/scope_statment_syntax_node.h"
 #include "utils.h"
 
 #include <memory>
@@ -27,7 +27,7 @@ public:
          OPEN_CIRCLE_BRACKET,
          CLOSE_CIRCLE_BRACKET,
          COMMA,
-         SCOPE,
+         SCOPE_STATMENT,
          FUNCTION_CALL_OR_DEFINITION
       };
 
@@ -36,7 +36,7 @@ public:
          []( const Stack& stack ) -> std::optional< Plan >
          {
             FunctionCallOrDefinitionSyntaxNodeSP function_call_or_definition_syntax_node;
-            ScopeSyntaxNodeSP scope_expression;
+            ScopeSyntaxNodeSP scope_statment;
             State state = State::START;
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
@@ -48,12 +48,12 @@ public:
                   state = State::FUNCTION_CALL_OR_DEFINITION;
                }
             };
-            handlers.scope_syntax_node = [ &scope_expression, &state ]( const ScopeSyntaxNodeSP& node )
+            handlers.scope_statment_syntax_node = [ &scope_statment, &state ]( const ScopeSyntaxNodeSP& node )
             {
                if( state == State::FUNCTION_CALL_OR_DEFINITION )
                {
-                  scope_expression = node;
-                  state = State::SCOPE;
+                  scope_statment = node;
+                  state = State::SCOPE_STATMENT;
                   state = State::FINISH;
                }
             };
@@ -65,12 +65,12 @@ public:
 
             Plan plan;
             plan.to_remove.nodes.push_back( function_call_or_definition_syntax_node );
-            plan.to_remove.nodes.push_back( scope_expression );
+            plan.to_remove.nodes.push_back( scope_statment );
 
             const auto& function_node = std::make_shared< FunctionSyntaxNode >( function_call_or_definition_syntax_node->name() );
             for( const auto& argument : *function_call_or_definition_syntax_node )
                function_node->add_back( argument );
-            function_node->add_back( scope_expression );
+            function_node->add_back( scope_statment );
             plan.to_add.nodes.push_back( function_node );
             return plan;
          } );

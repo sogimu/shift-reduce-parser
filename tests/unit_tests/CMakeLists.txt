@@ -15,8 +15,8 @@ add_executable(unit_tests
     src/syntax_tree/arithmetic_expression/addition_test.cpp
     src/syntax_tree/arithmetic_expression/subtraction_test.cpp
     src/syntax_tree/arithmetic_expression/circle_brackets_test.cpp
-    src/syntax_tree/if_expression/if_test.cpp
-    src/syntax_tree/scope_expression/scope_test.cpp
+    src/syntax_tree/if_statment/if_test.cpp
+    src/syntax_tree/scope_statment/scope_test.cpp
     src/syntax_tree/varible_assign_expression/varible_assign_expression_test.cpp
     src/syntax_tree/print_expression/print_test.cpp
     src/syntax_tree_test.cpp

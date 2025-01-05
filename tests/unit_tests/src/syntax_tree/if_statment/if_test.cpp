@@ -24,9 +24,9 @@ TEST( SYNTAX_TREE_IF, WITHOUT_ELSE )
         {
           "ScopeSyntaxNode": [
             {
-              "ExpressionSyntaxNode": [
+             "StatmentSyntaxNode": [
                 {
-                  "IfExpressionSyntaxNode": [
+                  "IfStatmentSyntaxNode": [
                     {
                       "ConditionalExpressionSyntaxNode": [
                         {

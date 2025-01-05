@@ -116,33 +116,33 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      arguments.pop_back();
                      arguments.push_back( std::make_shared< FSyntaxNode >( argument0 ) );
                   }
-                  else if( key == "PrintExpressionSyntaxNode" )
+                  else if( key == "PrintStatmentSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
-                     const auto& print_expression_syntax_node = std::make_shared< PrintExpressionSyntaxNode >();
+                     const auto& print_expression_syntax_node = std::make_shared< PrintStatmentSyntaxNode >();
                      print_expression_syntax_node->add_back( argument0 );
                      arguments.push_back( print_expression_syntax_node );
                   }
-                  else if( key == "IfExpressionSyntaxNode" )
+                  else if( key == "IfStatmentSyntaxNode" )
                   {
-                     const auto& if_expression_syntax_node = std::make_shared< IfExpressionSyntaxNode >();
+                     const auto& if_statment_syntax_node = std::make_shared< IfStatmentSyntaxNode >();
                      auto it = arguments.begin();
                      std::advance( it, arguments.size() - 2 );
                      if( !arguments.empty() )
                      {
                         ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( *it );
-                        if_expression_syntax_node->add_back( argument0 );
+                        if_statment_syntax_node->add_back( argument0 );
                      }
                      if( !arguments.empty() )
                      {
                         ++it;
                         ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( *it );
-                        if_expression_syntax_node->add_back( argument1 );
+                        if_statment_syntax_node->add_back( argument1 );
                      }
                      arguments.pop_back();
                      arguments.pop_back();
-                     arguments.push_back( if_expression_syntax_node );
+                     arguments.push_back( if_statment_syntax_node );
                   }
                   else if( key == "AdditionSyntaxNode" )
                   {
@@ -188,13 +188,13 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      division_syntax_node->add_back( argument0 );
                      arguments.push_back( division_syntax_node );
                   }
-                  else if( key == "VaribleAssigmentSyntaxNode" )
+                  else if( key == "VaribleAssigmentStatmentSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
                      ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
-                     const auto& varible_assignment_syntax_node = std::make_shared< VaribleAssigmentSyntaxNode >();
+                     const auto& varible_assignment_syntax_node = std::make_shared< VaribleAssigmentStatmentSyntaxNode >();
                      varible_assignment_syntax_node->add_back( argument1 );
                      varible_assignment_syntax_node->add_back( argument0 );
                      arguments.push_back( varible_assignment_syntax_node );
@@ -218,20 +218,20 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      e->add_back( argument0 );
                      arguments.push_back( e );
                   }
-                  else if( key == "VaribleAssigmentSyntaxNode" )
+                  else if( key == "VaribleAssigmentStatmentSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
                      ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
-                     const auto& e = std::make_shared< VaribleAssigmentSyntaxNode >();
+                     const auto& e = std::make_shared< VaribleAssigmentStatmentSyntaxNode >();
                      e->add_back( argument1 );
                      e->add_back( argument0 );
                      arguments.push_back( e );
                   }
-                  else if( key == "ExpressionSyntaxNode" )
+                  else if( key == "StatmentSyntaxNode" )
                   {
-                     const auto& e = std::make_shared< ExpressionSyntaxNode >();
+                     const auto& e = std::make_shared< StatmentSyntaxNode >();
                      if( !arguments.empty() )
                      {
                         ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
@@ -242,21 +242,21 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                   }
                   else if( key == "ScopeSyntaxNode" )
                   {
-                     const auto& scope_syntax_node = std::make_shared< ScopeSyntaxNode >();
+                     const auto& scope_statment_syntax_node = std::make_shared< ScopeSyntaxNode >();
                      const auto& value = search_path.back().value;
                      if( arguments.size() >= value.size() )
                      {
                         for( size_t i = arguments.size() - value.size(); i < arguments.size(); ++i )
                         {
                            ISyntaxNodeSP argument = std::get< ISyntaxNodeSP >( arguments[ i ] );
-                           scope_syntax_node->add_back( argument );
+                           scope_statment_syntax_node->add_back( argument );
                         }
                         for( size_t i = 0; i < value.size(); ++i )
                         {
                            arguments.pop_back();
                         }
                      }
-                     arguments.push_back( scope_syntax_node );
+                     arguments.push_back( scope_statment_syntax_node );
                   }
                }
             },

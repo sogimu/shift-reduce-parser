@@ -1,21 +1,21 @@
-#include "nonterminals/scope_syntax_node.h"
+#include "nonterminals/scope_statment_syntax_node.h"
 
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
 ScopeSyntaxNode::ScopeSyntaxNode()
-   : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
+   : ISyntaxNode{ Token_Type::SCOPE_STATMENT }
 {
 }
 
 ScopeSyntaxNode::ScopeSyntaxNode( const ISyntaxNodeSP& expression )
-   : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
+   : ISyntaxNode{ Token_Type::SCOPE_STATMENT }
 {
    add_back( expression );
 }
 
 ScopeSyntaxNode::ScopeSyntaxNode( const std::vector< ISyntaxNodeSP >& expressions )
-   : ISyntaxNode{ Token_Type::SCOPE_EXPRESSION }
+   : ISyntaxNode{ Token_Type::SCOPE_STATMENT }
 {
    for( const auto& expression : expressions )
       add_back( expression );
@@ -29,7 +29,7 @@ bool ScopeSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = true;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.scope_syntax_node = [ this, &is_equal ]( const ScopeSyntaxNodeSP& node )
+   handlers.scope_statment_syntax_node = [ this, &is_equal ]( const ScopeSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
       {
@@ -40,6 +40,5 @@ bool ScopeSyntaxNode::compare( const ISyntaxNode& node ) const
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    const_cast< ISyntaxNode& >( node ).accept( visitor );
 
-   // node.accept( visitor );
    return is_equal;
 }

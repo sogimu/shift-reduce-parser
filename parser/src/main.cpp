@@ -28,6 +28,36 @@ int main()
       number = fibonacci(23);
       print(number);
       print(number==17711);
+
+      // rfibonacci(n)
+      // {
+      //   // print(n*10);
+      //   // print( n );
+      //   if( n == 0 )
+      //   {
+      //     // print( 0 );
+      //     return 0;
+      //   }
+      //   if( n == 1 )
+      //   {
+      //     // print( 1 );
+      //     return 1;
+      //   }
+      //   a = rfibonacci(n-2);
+      //   print(a);
+      //   b = rfibonacci(n-1);
+      //   print(b);
+      //   // print( a + b);
+      //   return a + b;
+      // }
+      // number = rfibonacci(3);
+      // print(number);
+      // print(number==17711);
+      // print( rfibonacci(0) );
+      // print( rfibonacci(1) );
+      // print( rfibonacci(2) );
+     // rfibonacci(3);
+      // print( rfibonacci(3) );
     })";
    //
    //        if(3 < 2)

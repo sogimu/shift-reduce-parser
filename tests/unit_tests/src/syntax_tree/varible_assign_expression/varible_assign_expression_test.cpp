@@ -23,9 +23,9 @@ TEST( SYNTAX_TREE_VARIBLE_ASSIGN, TEST0 )
     {
       "ScopeSyntaxNode": [
         {
-          "ExpressionSyntaxNode": [
+         "StatmentSyntaxNode": [
             {
-              "VaribleAssigmentSyntaxNode": [
+              "VaribleAssigmentStatmentSyntaxNode": [
               {
                 "NameSyntaxNode": [
                   "a" 

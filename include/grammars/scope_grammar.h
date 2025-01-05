@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nonterminals/expression_syntax_node.h"
+#include "nonterminals/statment_syntax_node.h"
 #include "i_grammar.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
@@ -20,12 +20,12 @@ public:
          BOL,
          EOL,
          OPEN_CURLY_BRACKET,
-         EXPRESSION,
+         STATMENT,
          CLOSE_CURLY_BRACKET,
-         SCOPE
+         SCOPE_STATMENT
       };
 
-      // OPEN_CURLY_BRACKET EXPRESSION+ CLOSE_CURLY_BRACKET
+      // OPEN_CURLY_BRACKET STATMENT+ CLOSE_CURLY_BRACKET
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
@@ -75,51 +75,51 @@ public:
                   state = State::OPEN_CURLY_BRACKET;
                }
             };
-            handlers.expression_syntax_node = [ &expressions, &state ]( const ExpressionSyntaxNodeSP& node )
+            handlers.statment_syntax_node = [ &expressions, &state ]( const StatmentSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CURLY_BRACKET )
                {
                   expressions.emplace_back( node );
-                  state = State::EXPRESSION;
+                  state = State::STATMENT;
                }
-               else if( state == State::EXPRESSION )
+               else if( state == State::STATMENT )
                {
                   expressions.emplace_back( node );
-                  state = State::EXPRESSION;
+                  state = State::STATMENT;
                }
-               else if( state == State::SCOPE )
+               else if( state == State::SCOPE_STATMENT )
                {
                   expressions.emplace_back( node );
-                  state = State::EXPRESSION;
+                  state = State::STATMENT;
                }
             };
-            handlers.scope_syntax_node = [ &expressions, &state ]( const ScopeSyntaxNodeSP& node )
+            handlers.scope_statment_syntax_node = [ &expressions, &state ]( const ScopeSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CURLY_BRACKET )
                {
                   expressions.emplace_back( node );
-                  state = State::EXPRESSION;
+                  state = State::STATMENT;
                }
-               else if( state == State::EXPRESSION )
+               else if( state == State::STATMENT )
                {
                   expressions.emplace_back( node );
-                  state = State::SCOPE;
+                  state = State::SCOPE_STATMENT;
                }
-               else if( state == State::SCOPE )
+               else if( state == State::SCOPE_STATMENT )
                {
                   expressions.emplace_back( node );
-                  state = State::SCOPE;
+                  state = State::SCOPE_STATMENT;
                }
             };
 
             handlers.close_curly_bracket_syntax_node = [ &close_curly_bracket, &state ]( const CloseCurlyBracketSyntaxNodeSP& node )
             {
-               if( state == State::EXPRESSION )
+               if( state == State::STATMENT )
                {
                   close_curly_bracket = node;
                   state = State::FINISH;
                }
-               else if( state == State::SCOPE )
+               else if( state == State::SCOPE_STATMENT )
                {
                   close_curly_bracket = node;
                   state = State::FINISH;
@@ -167,17 +167,17 @@ public:
                   state = State::BOL;
                }
             };
-            handlers.scope_syntax_node = [ &scope, &state ]( const ScopeSyntaxNodeSP& node )
+            handlers.scope_statment_syntax_node = [ &scope, &state ]( const ScopeSyntaxNodeSP& node )
             {
                if( state == State::BOL )
                {
                   scope = node;
-                  state = State::SCOPE;
+                  state = State::SCOPE_STATMENT;
                }
             };
             handlers.eol_syntax_node = [ &eol, &state ]( const EolSyntaxNodeSP& node )
             {
-               if( state == State::SCOPE )
+               if( state == State::SCOPE_STATMENT )
                {
                   eol = node;
                   state = State::EOL;
@@ -204,7 +204,7 @@ public:
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
             BolSyntaxNodeSP bol;
-            ExpressionSyntaxNodeSP expression;
+            StatmentSyntaxNodeSP expression;
             EolSyntaxNodeSP eol;
 
             State state = State::START;
@@ -219,17 +219,17 @@ public:
                   state = State::BOL;
                }
             };
-            handlers.expression_syntax_node = [ &expression, &state ]( const ExpressionSyntaxNodeSP& node )
+            handlers.statment_syntax_node = [ &expression, &state ]( const StatmentSyntaxNodeSP& node )
             {
                if( state == State::BOL )
                {
                   expression = node;
-                  state = State::EXPRESSION;
+                  state = State::STATMENT;
                }
             };
             handlers.eol_syntax_node = [ &eol, &state ]( const EolSyntaxNodeSP& node )
             {
-               if( state == State::EXPRESSION )
+               if( state == State::STATMENT )
                {
                   eol = node;
                   state = State::EOL;

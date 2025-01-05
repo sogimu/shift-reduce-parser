@@ -8,7 +8,7 @@
 #include "i_grammar.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
-#include "nonterminals/varible_assigment_syntax_node.h"
+#include "nonterminals/varible_assigment_statment_syntax_node.h"
 
 #include <vector>
 
@@ -100,10 +100,10 @@ public:
             // const auto& computational_expression = std::make_shared< ComputationalExpressionSyntaxNode >();
             // computational_expression->add_back( expression );
 
-            const auto& varible_assigment_syntax_node = std::make_shared< VaribleAssigmentSyntaxNode >( /* name, expression */ );
-            varible_assigment_syntax_node->add_back( name );
-            varible_assigment_syntax_node->add_back( value );
-            plan.to_add.nodes.push_back( varible_assigment_syntax_node );
+            const auto& varible_assigment_statment_syntax_node = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( /* name, expression */ );
+            varible_assigment_statment_syntax_node->add_back( name );
+            varible_assigment_statment_syntax_node->add_back( value );
+            plan.to_add.nodes.push_back( varible_assigment_statment_syntax_node );
             return plan;
          } );
 
@@ -162,10 +162,10 @@ public:
             plan.to_remove.nodes.push_back( source_name );
             plan.to_remove.nodes.push_back( semicolon );
 
-            const auto& varible_assigment_syntax_node = std::make_shared< VaribleAssigmentSyntaxNode >( target_name, source_name );
-            // varible_assigment_syntax_node->add_back( name );
-            // varible_assigment_syntax_node->add_back( value );
-            plan.to_add.nodes.push_back( varible_assigment_syntax_node );
+            const auto& varible_assigment_statment_syntax_node = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( target_name, source_name );
+            // varible_assigment_statment_syntax_node->add_back( name );
+            // varible_assigment_statment_syntax_node->add_back( value );
+            plan.to_add.nodes.push_back( varible_assigment_statment_syntax_node );
             return plan;
          } );
    }

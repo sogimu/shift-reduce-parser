@@ -20,7 +20,7 @@
 //       {
 //         "ScopeSyntaxNode": [
 //           {
-//             "ExpressionSyntaxNode": [
+//            "StatmentSyntaxNode": [
 //               {
 //                 "ComputationalExpressionSyntaxNode": [
 //                   {
@@ -77,7 +77,7 @@
 //     {
 //       "ScopeSyntaxNode": [
 //         {
-//           "ExpressionSyntaxNode": [
+//          "StatmentSyntaxNode": [
 //             {
 //               "ComputationalExpressionSyntaxNode": [
 //                 {

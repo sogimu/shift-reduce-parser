@@ -19,7 +19,7 @@ TEST( SYNTAX_TREE_ADDITION, ONE_PLUS )
       {
         "ScopeSyntaxNode": [
           {
-            "ExpressionSyntaxNode": [
+           "StatmentSyntaxNode": [
               {
                 "ComputationalExpressionSyntaxNode": [
                   {
@@ -70,7 +70,7 @@ TEST( SYNTAX_TREE_ADDITION, ONE_DIVISION )
       {
         "ScopeSyntaxNode": [
           {
-            "ExpressionSyntaxNode": [
+           "StatmentSyntaxNode": [
               {
                 "ComputationalExpressionSyntaxNode": [
                   {
@@ -121,7 +121,7 @@ TEST( SYNTAX_TREE_ADDITION, MANY_PLUSs )
 {
   "ScopeSyntaxNode": [
     {
-      "ExpressionSyntaxNode": [
+     "StatmentSyntaxNode": [
         {
           "ComputationalExpressionSyntaxNode": [
             {
@@ -206,7 +206,7 @@ TEST( SYNTAX_TREE_ADDITION, ADVANCE_EXPRESSION )
     {
       "ScopeSyntaxNode": [
         {
-          "ExpressionSyntaxNode": [
+         "StatmentSyntaxNode": [
             {
               "ComputationalExpressionSyntaxNode": [
                 {

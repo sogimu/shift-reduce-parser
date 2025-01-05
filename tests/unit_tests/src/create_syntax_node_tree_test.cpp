@@ -12,9 +12,9 @@ TEST( CreateSyntaxNodeTree, Test0 )
       {
         "ScopeSyntaxNode": [
           {
-            "ExpressionSyntaxNode": [
+           "StatmentSyntaxNode": [
               {
-                "VaribleAssigmentSyntaxNode": [
+                "VaribleAssigmentStatmentSyntaxNode": [
                   {
                     "NameSyntaxNode": [
                       "m"
@@ -44,8 +44,8 @@ TEST( CreateSyntaxNodeTree, Test0 )
    const auto& f = std::make_shared< FSyntaxNode >( 42 );
    const auto& computational_expression = std::make_shared< ComputationalExpressionSyntaxNode >( f );
    const auto& name = std::make_shared< NameSyntaxNode >( "m" );
-   const auto& varible_assigment = std::make_shared< VaribleAssigmentSyntaxNode >( name, computational_expression );
-   const auto& expression = std::make_shared< ExpressionSyntaxNode >( varible_assigment );
+   const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name, computational_expression );
+   const auto& expression = std::make_shared< StatmentSyntaxNode >( varible_assigment );
    const auto& root = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP >{ expression } );
    SyntaxTree expected_syntax_tree( root );
 

@@ -500,9 +500,9 @@ public:
          mResult = true;
    }
 
-   void visit( const ExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const StatmentSyntaxNodeSP& /* node */ ) override
    {
-      if constexpr( std::is_same_v< T, ExpressionSyntaxNode > )
+      if constexpr( std::is_same_v< T, StatmentSyntaxNode > )
          mResult = true;
    }
 
@@ -554,15 +554,15 @@ public:
          mResult = true;
    }
 
-   void visit( const PrintExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const PrintStatmentSyntaxNodeSP& /* node */ ) override
    {
-      if constexpr( std::is_same_v< T, PrintExpressionSyntaxNode > )
+      if constexpr( std::is_same_v< T, PrintStatmentSyntaxNode > )
          mResult = true;
    }
 
-   void visit( const VaribleAssigmentSyntaxNodeSP& /* node */ ) override
+   void visit( const VaribleAssigmentStatmentSyntaxNodeSP& /* node */ ) override
    {
-      if constexpr( std::is_same_v< T, VaribleAssigmentSyntaxNode > )
+      if constexpr( std::is_same_v< T, VaribleAssigmentStatmentSyntaxNode > )
          mResult = true;
    }
 
@@ -608,9 +608,9 @@ public:
          mResult = true;
    }
 
-   void visit( const IfExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const IfStatmentSyntaxNodeSP& /* node */ ) override
    {
-      if constexpr( std::is_same_v< T, IfExpressionSyntaxNode > )
+      if constexpr( std::is_same_v< T, IfStatmentSyntaxNode > )
          mResult = true;
    }
    void visit( const WhileSyntaxNodeSP& /* node */ ) override
@@ -619,9 +619,9 @@ public:
          mResult = true;
    }
 
-   void visit( const WhileExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const WhileStatmentSyntaxNodeSP& /* node */ ) override
    {
-      if constexpr( std::is_same_v< T, WhileExpressionSyntaxNode > )
+      if constexpr( std::is_same_v< T, WhileStatmentSyntaxNode > )
          mResult = true;
    }
 
@@ -643,9 +643,9 @@ public:
          mResult = true;
    }
 
-   void visit( const ReturnExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const ReturnStatmentSyntaxNodeSP& /* node */ ) override
    {
-      if constexpr( std::is_same_v< T, ReturnExpressionSyntaxNode > )
+      if constexpr( std::is_same_v< T, ReturnStatmentSyntaxNode > )
       {
 
          mResult = true;

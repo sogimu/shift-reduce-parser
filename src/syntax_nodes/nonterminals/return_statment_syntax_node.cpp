@@ -1,4 +1,4 @@
-#include "nonterminals/return_expression_syntax_node.h"
+#include "nonterminals/return_statment_syntax_node.h"
 
 #include "is_last_nodes.h"
 #include "terminals/name_syntax_node.h"
@@ -9,19 +9,19 @@
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 
-ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode()
-   : ISyntaxNode{ Token_Type::RETURN_EXPRESSION }
+ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode()
+   : ISyntaxNode{ Token_Type::RETURN_STATMENT }
 {
 }
 
-ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression )
-   : ISyntaxNode{ Token_Type::RETURN_EXPRESSION }
+ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression )
+   : ISyntaxNode{ Token_Type::RETURN_STATMENT }
 {
    add_back( computational_expression );
 }
 
-ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode( const ISyntaxNodeSP& argument )
-   : ISyntaxNode{ Token_Type::RETURN_EXPRESSION }
+ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode( const ISyntaxNodeSP& argument )
+   : ISyntaxNode{ Token_Type::RETURN_STATMENT }
 {
    ISyntaxNodeSP child = argument;
 
@@ -34,16 +34,16 @@ ReturnExpressionSyntaxNode::ReturnExpressionSyntaxNode( const ISyntaxNodeSP& arg
    add_back( child );
 }
 
-void ReturnExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+void ReturnStatmentSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
 }
 
-bool ReturnExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
+bool ReturnStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = true;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.return_expression_syntax_node = [ this, &is_equal ]( const ReturnExpressionSyntaxNodeSP& node )
+   handlers.return_statment_syntax_node = [ this, &is_equal ]( const ReturnStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
          return;
@@ -64,7 +64,7 @@ bool ReturnExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-ComputationalExpressionSyntaxNodeSP ReturnExpressionSyntaxNode::computational_expression() const
+ComputationalExpressionSyntaxNodeSP ReturnStatmentSyntaxNode::computational_expression() const
 {
    ComputationalExpressionSyntaxNodeSP argument;
    const auto& value_node = this->operator[]( 0 );

@@ -11,11 +11,11 @@ using ScopeSyntaxNodeSP = std::shared_ptr< ScopeSyntaxNode >;
 class ConditionalExpressionSyntaxNode;
 using ConditionalExpressionSyntaxNodeSP = std::shared_ptr< ConditionalExpressionSyntaxNode >;
 
-class IfExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< IfExpressionSyntaxNode >
+class IfStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< IfStatmentSyntaxNode >
 {
 public:
-   IfExpressionSyntaxNode();
-   IfExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope );
+   IfStatmentSyntaxNode();
+   IfStatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
@@ -25,4 +25,4 @@ public:
    ScopeSyntaxNodeSP false_scope() const;
 };
 
-using IfExpressionSyntaxNodeSP = std::shared_ptr< IfExpressionSyntaxNode >;
+using IfStatmentSyntaxNodeSP = std::shared_ptr< IfStatmentSyntaxNode >;

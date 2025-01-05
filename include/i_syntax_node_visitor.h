@@ -31,16 +31,16 @@
 #include "nonterminals/addition/addition_syntax_node.h"
 #include "nonterminals/multiply/multiply_syntax_node.h"
 #include "nonterminals/division/division_syntax_node.h"
-#include "nonterminals/expression_syntax_node.h"
-#include "nonterminals/if_expression_syntax_node.h"
-#include "nonterminals/while_expression_syntax_node.h"
+#include "nonterminals/statment_syntax_node.h"
+#include "nonterminals/if_statment_syntax_node.h"
+#include "nonterminals/while_statment_syntax_node.h"
 #include "nonterminals/function_call_or_definition_syntax_node.h"
 #include "nonterminals/function_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
-#include "nonterminals/print_expression_syntax_node.h"
-#include "nonterminals/scope_syntax_node.h"
-#include "nonterminals/varible_assigment_syntax_node.h"
-#include "nonterminals/return_expression_syntax_node.h"
+#include "nonterminals/print_statment_syntax_node.h"
+#include "nonterminals/scope_statment_syntax_node.h"
+#include "nonterminals/varible_assigment_statment_syntax_node.h"
+#include "nonterminals/return_statment_syntax_node.h"
 #include "i_syntax_node.h"
 
 class ISyntaxNodeVisitor
@@ -60,7 +60,7 @@ public:
    virtual void visit( const MultiplySyntaxNodeSP& ) = 0;
    virtual void visit( const DivisionSyntaxNodeSP& ) = 0;
    virtual void visit( const SemicolonSyntaxNodeSP& ) = 0;
-   virtual void visit( const ExpressionSyntaxNodeSP& ) = 0;
+   virtual void visit( const StatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const ScopeSyntaxNodeSP& ) = 0;
    virtual void visit( const OpenCurlyBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const CloseCurlyBracketSyntaxNodeSP& ) = 0;
@@ -69,22 +69,22 @@ public:
    virtual void visit( const ComputationalExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const VaribleSyntaxNodeSP& ) = 0;
    virtual void visit( const ConditionalExpressionSyntaxNodeSP& ) = 0;
-   virtual void visit( const PrintExpressionSyntaxNodeSP& ) = 0;
+   virtual void visit( const PrintStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const PrintSyntaxNodeSP& ) = 0;
    virtual void visit( const EqualSyntaxNodeSP& ) = 0;
    virtual void visit( const LessSyntaxNodeSP& ) = 0;
    virtual void visit( const MoreSyntaxNodeSP& ) = 0;
    virtual void visit( const IfSyntaxNodeSP& ) = 0;
-   virtual void visit( const IfExpressionSyntaxNodeSP& ) = 0;
+   virtual void visit( const IfStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileSyntaxNodeSP& ) = 0;
-   virtual void visit( const WhileExpressionSyntaxNodeSP& ) = 0;
+   virtual void visit( const WhileStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionCallOrDefinitionSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionCallSyntaxNodeSP& ) = 0;
-   virtual void visit( const VaribleAssigmentSyntaxNodeSP& ) = 0;
+   virtual void visit( const VaribleAssigmentStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const NameSyntaxNodeSP& ) = 0;
    virtual void visit( const CommaSyntaxNodeSP& ) = 0;
    virtual void visit( const ReturnSyntaxNodeSP& ) = 0;
-   virtual void visit( const ReturnExpressionSyntaxNodeSP& ) = 0;
+   virtual void visit( const ReturnStatmentSyntaxNodeSP& ) = 0;
 };
 using ISyntaxNodeVisitorSP = std::shared_ptr< ISyntaxNodeVisitor >;

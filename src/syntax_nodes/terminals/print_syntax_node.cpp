@@ -15,7 +15,7 @@ bool PrintSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = false;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.print_expression_syntax_node = [ this, &is_equal ]( const PrintExpressionSyntaxNodeSP& node )
+   handlers.print_statment_syntax_node = [ this, &is_equal ]( const PrintStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
          return;

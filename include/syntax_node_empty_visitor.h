@@ -25,8 +25,8 @@ public:
       std::function< void( const DivisionSyntaxNodeSP& ) > division_syntax_node = [ this ]( const DivisionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const EolSyntaxNodeSP& ) > eol_syntax_node = [ this ]( const EolSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const SemicolonSyntaxNodeSP& ) > semicolon_syntax_node = [ this ]( const SemicolonSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const ExpressionSyntaxNodeSP& ) > expression_syntax_node = [ this ]( const ExpressionSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const ScopeSyntaxNodeSP& ) > scope_syntax_node = [ this ]( const ScopeSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const StatmentSyntaxNodeSP& ) > statment_syntax_node = [ this ]( const StatmentSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const ScopeSyntaxNodeSP& ) > scope_statment_syntax_node = [ this ]( const ScopeSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const OpenCurlyBracketSyntaxNodeSP& ) > open_curly_bracket_syntax_node = [ this ]( const OpenCurlyBracketSyntaxNodeSP& node )
       { default_handler( node ); };
       std::function< void( const CloseCurlyBracketSyntaxNodeSP& ) > close_curly_bracket_syntax_node = [ this ]( const CloseCurlyBracketSyntaxNodeSP& node )
@@ -40,10 +40,10 @@ public:
       std::function< void( const VaribleSyntaxNodeSP& ) > varible_syntax_node = [ this ]( const VaribleSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ConditionalExpressionSyntaxNodeSP& ) > conditional_expression_syntax_node = [ this ]( const ConditionalExpressionSyntaxNodeSP& node )
       { default_handler( node ); };
-      std::function< void( const PrintExpressionSyntaxNodeSP& ) > print_expression_syntax_node = [ this ]( const PrintExpressionSyntaxNodeSP& node )
+      std::function< void( const PrintStatmentSyntaxNodeSP& ) > print_statment_syntax_node = [ this ]( const PrintStatmentSyntaxNodeSP& node )
       { default_handler( node ); };
-      std::function< void( const VaribleAssigmentSyntaxNodeSP& ) > varible_assigment_syntax_node = [ this ]( const VaribleAssigmentSyntaxNodeSP& node )
-      { default_handler( node ); };
+      std::function< void( const VaribleAssigmentStatmentSyntaxNodeSP& ) > varible_assigment_statment_syntax_node =
+         [ this ]( const VaribleAssigmentStatmentSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const NameSyntaxNodeSP& ) > name_syntax_node = [ this ]( const NameSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const CommaSyntaxNodeSP& ) > comma_syntax_node = [ this ]( const CommaSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const PrintSyntaxNodeSP& ) > print_syntax_node = [ this ]( const PrintSyntaxNodeSP& node ) { default_handler( node ); };
@@ -51,16 +51,16 @@ public:
       std::function< void( const LessSyntaxNodeSP& ) > less_syntax_node = [ this ]( const LessSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const MoreSyntaxNodeSP& ) > more_syntax_node = [ this ]( const MoreSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const IfSyntaxNodeSP& ) > if_syntax_node = [ this ]( const IfSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const IfExpressionSyntaxNodeSP& ) > if_expression_syntax_node = [ this ]( const IfExpressionSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const IfStatmentSyntaxNodeSP& ) > if_statment_syntax_node = [ this ]( const IfStatmentSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const WhileSyntaxNodeSP& ) > while_syntax_node = [ this ]( const WhileSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const WhileExpressionSyntaxNodeSP& ) > while_expression_syntax_node = [ this ]( const WhileExpressionSyntaxNodeSP& node )
+      std::function< void( const WhileStatmentSyntaxNodeSP& ) > while_statment_syntax_node = [ this ]( const WhileStatmentSyntaxNodeSP& node )
       { default_handler( node ); };
       std::function< void( const FunctionCallOrDefinitionSyntaxNodeSP& ) > function_call_or_definition_syntax_node =
          [ this ]( const FunctionCallOrDefinitionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FunctionSyntaxNodeSP& ) > function_syntax_node = [ this ]( const FunctionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FunctionCallSyntaxNodeSP& ) > function_call_syntax_node = [ this ]( const FunctionCallSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ReturnSyntaxNodeSP& ) > return_syntax_node = [ this ]( const ReturnSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const ReturnExpressionSyntaxNodeSP& ) > return_expression_syntax_node = [ this ]( const ReturnExpressionSyntaxNodeSP& node )
+      std::function< void( const ReturnStatmentSyntaxNodeSP& ) > return_statment_syntax_node = [ this ]( const ReturnStatmentSyntaxNodeSP& node )
       { default_handler( node ); };
    };
 
@@ -133,14 +133,14 @@ public:
       mHandlers.semicolon_syntax_node( node );
    }
 
-   void visit( const ExpressionSyntaxNodeSP& node ) override
+   void visit( const StatmentSyntaxNodeSP& node ) override
    {
-      mHandlers.expression_syntax_node( node );
+      mHandlers.statment_syntax_node( node );
    }
 
    void visit( const ScopeSyntaxNodeSP& node ) override
    {
-      mHandlers.scope_syntax_node( node );
+      mHandlers.scope_statment_syntax_node( node );
    }
 
    void visit( const OpenCurlyBracketSyntaxNodeSP& node ) override
@@ -178,14 +178,14 @@ public:
       mHandlers.conditional_expression_syntax_node( node );
    }
 
-   void visit( const PrintExpressionSyntaxNodeSP& node ) override
+   void visit( const PrintStatmentSyntaxNodeSP& node ) override
    {
-      mHandlers.print_expression_syntax_node( node );
+      mHandlers.print_statment_syntax_node( node );
    }
 
-   void visit( const VaribleAssigmentSyntaxNodeSP& node ) override
+   void visit( const VaribleAssigmentStatmentSyntaxNodeSP& node ) override
    {
-      mHandlers.varible_assigment_syntax_node( node );
+      mHandlers.varible_assigment_statment_syntax_node( node );
    }
 
    void visit( const NameSyntaxNodeSP& node ) override
@@ -223,18 +223,18 @@ public:
       mHandlers.if_syntax_node( node );
    }
 
-   void visit( const IfExpressionSyntaxNodeSP& node ) override
+   void visit( const IfStatmentSyntaxNodeSP& node ) override
    {
-      mHandlers.if_expression_syntax_node( node );
+      mHandlers.if_statment_syntax_node( node );
    }
    void visit( const WhileSyntaxNodeSP& node ) override
    {
       mHandlers.while_syntax_node( node );
    }
 
-   void visit( const WhileExpressionSyntaxNodeSP& node ) override
+   void visit( const WhileStatmentSyntaxNodeSP& node ) override
    {
-      mHandlers.while_expression_syntax_node( node );
+      mHandlers.while_statment_syntax_node( node );
    }
 
    void visit( const FunctionCallOrDefinitionSyntaxNodeSP& node ) override
@@ -257,9 +257,9 @@ public:
       mHandlers.return_syntax_node( node );
    }
 
-   void visit( const ReturnExpressionSyntaxNodeSP& node ) override
+   void visit( const ReturnStatmentSyntaxNodeSP& node ) override
    {
-      mHandlers.return_expression_syntax_node( node );
+      mHandlers.return_statment_syntax_node( node );
    }
 
 private:

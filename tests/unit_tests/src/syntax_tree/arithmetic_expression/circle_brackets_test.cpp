@@ -19,7 +19,7 @@ TEST( SYNTAX_TREE_CIRCLE_BRACETS, SIMPLE )
       {
         "ScopeSyntaxNode": [
           {
-            "ExpressionSyntaxNode": [
+           "StatmentSyntaxNode": [
               {
                 "ComputationalExpressionSyntaxNode": [
                   {

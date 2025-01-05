@@ -12,7 +12,7 @@ using NameSyntaxNodeSP = std::shared_ptr< NameSyntaxNode >;
 class ComputationalExpressionSyntaxNode;
 using ComputationalExpressionSyntaxNodeSP = std::shared_ptr< ComputationalExpressionSyntaxNode >;
 
-class VaribleAssigmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< VaribleAssigmentSyntaxNode >
+class VaribleAssigmentStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< VaribleAssigmentStatmentSyntaxNode >
 {
 public:
    enum class Context
@@ -20,9 +20,9 @@ public:
       GLOBAL,
       LOCAL
    };
-   VaribleAssigmentSyntaxNode( Context context = Context::GLOBAL );
-   VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node, Context context = Context::GLOBAL );
-   VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, Context context = Context::GLOBAL );
+   VaribleAssigmentStatmentSyntaxNode( Context context = Context::GLOBAL );
+   VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node, Context context = Context::GLOBAL );
+   VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, Context context = Context::GLOBAL );
 
    std::string name() const;
    ComputationalExpressionSyntaxNodeSP source() const;
@@ -36,4 +36,4 @@ private:
    Context mContext = Context::GLOBAL;
 };
 
-using VaribleAssigmentSyntaxNodeSP = std::shared_ptr< VaribleAssigmentSyntaxNode >;
+using VaribleAssigmentStatmentSyntaxNodeSP = std::shared_ptr< VaribleAssigmentStatmentSyntaxNode >;

@@ -11,13 +11,13 @@ using ComputationalExpressionSyntaxNodeSP = std::shared_ptr< ComputationalExpres
 class NameSyntaxNode;
 using NameSyntaxNodeSP = std::shared_ptr< NameSyntaxNode >;
 
-class PrintExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< PrintExpressionSyntaxNode >
+class PrintStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< PrintStatmentSyntaxNode >
 {
 public:
-   PrintExpressionSyntaxNode();
-   PrintExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression );
-   PrintExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node );
-   PrintExpressionSyntaxNode( const ISyntaxNodeSP& argument );
+   PrintStatmentSyntaxNode();
+   PrintStatmentSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression );
+   PrintStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node );
+   PrintStatmentSyntaxNode( const ISyntaxNodeSP& argument );
 
    ISyntaxNodeSP& add_back( const ISyntaxNodeSP& child ) override;
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
@@ -26,4 +26,4 @@ public:
    ComputationalExpressionSyntaxNodeSP computational_expression() const;
 };
 
-using PrintExpressionSyntaxNodeSP = std::shared_ptr< PrintExpressionSyntaxNode >;
+using PrintStatmentSyntaxNodeSP = std::shared_ptr< PrintStatmentSyntaxNode >;

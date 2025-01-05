@@ -5,14 +5,14 @@
 #include "nonterminals/computational_expression_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
 #include "nonterminals/division/division_syntax_node.h"
-#include "nonterminals/expression_syntax_node.h"
+#include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
 #include "nonterminals/multiply/multiply_syntax_node.h"
-#include "nonterminals/return_expression_syntax_node.h"
-#include "nonterminals/scope_syntax_node.h"
-#include "nonterminals/varible_assigment_syntax_node.h"
+#include "nonterminals/return_statment_syntax_node.h"
+#include "nonterminals/scope_statment_syntax_node.h"
+#include "nonterminals/varible_assigment_statment_syntax_node.h"
 #include "nonterminals/varible_syntax_node.h"
-#include "nonterminals/while_expression_syntax_node.h"
+#include "nonterminals/while_statment_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 #include "lexical_tokens.h"
@@ -61,13 +61,13 @@ double Calculator::solve( const std::string& expression ) const
          auto& taget_node_parent = target_stack.rbegin()->get();
          const auto& target_node = make_shallow_copy( source_node );
 
-         if( IsLastNodesIs< VaribleAssigmentSyntaxNode >( source_stack ) )
+         if( IsLastNodesIs< VaribleAssigmentStatmentSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
             // std::advance( it, 1 );
             new_parent_target_node = it->get()->add_back( target_node );
          }
-         else if( IsLastNodesIs< VaribleAssigmentSyntaxNode, VaribleSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< VaribleAssigmentStatmentSyntaxNode, VaribleSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
             const auto& varible_assigment = it->get();
@@ -83,7 +83,7 @@ double Calculator::solve( const std::string& expression ) const
                }
             }
          }
-         else if( IsLastNodesIs< VaribleAssigmentSyntaxNode, ComputationalExpressionSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< VaribleAssigmentStatmentSyntaxNode, ComputationalExpressionSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
             const auto& varible_assigment = it->get();
@@ -99,13 +99,13 @@ double Calculator::solve( const std::string& expression ) const
                }
             }
          }
-         else if( IsLastNodesIs< IfExpressionSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< IfStatmentSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
             // std::advance( it, 1 );
             new_parent_target_node = it->get()->add_back( target_node );
          }
-         else if( IsLastNodesIs< IfExpressionSyntaxNode, ConditionalExpressionSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< IfStatmentSyntaxNode, ConditionalExpressionSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
             const auto& if_node = it->get();
@@ -117,21 +117,21 @@ double Calculator::solve( const std::string& expression ) const
                new_parent_target_node = *it;
             }
          }
-         else if( IsLastNodesIs< WhileExpressionSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< WhileStatmentSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
             // std::advance( it, 1 );
             new_parent_target_node = it->get()->add_back( target_node );
          }
-         else if( IsLastNodesIs< WhileExpressionSyntaxNode, ScopeSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< WhileStatmentSyntaxNode, ScopeSyntaxNode >( source_stack ) )
          {
-            const auto& if_expression = std::make_shared< IfExpressionSyntaxNode >();
-            const auto& new_if_expression = taget_node_parent->add_back( if_expression );
-            const auto& scope_expression = std::make_shared< ScopeSyntaxNode >();
-            const auto& new_scope_expression = new_if_expression->add_back( scope_expression );
-            new_parent_target_node = new_scope_expression->add_back( target_node );
+            const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >();
+            const auto& new_if_statment = taget_node_parent->add_back( if_statment );
+            const auto& scope_statment = std::make_shared< ScopeSyntaxNode >();
+            const auto& new_scope_statment = new_if_statment->add_back( scope_statment );
+            new_parent_target_node = new_scope_statment->add_back( target_node );
             const auto& while_expression = taget_node_parent;
-            scope_expression->add_back( while_expression );
+            scope_statment->add_back( while_expression );
          }
          else if( IsLastNodesIs< ScopeSyntaxNode >( source_stack ) )
          {
@@ -159,14 +159,14 @@ double Calculator::solve( const std::string& expression ) const
          {
             auto& function_call = target_node;
             new_parent_target_node = taget_node_parent->add_back( function_call );
-            const auto& scope_expression = std::make_shared< ScopeSyntaxNode >();
-            new_parent_target_node = function_call->add_back( scope_expression );
-            // new_parent_target_node = taget_node_parent->add_back( scope_expression );
+            const auto& scope_statment = std::make_shared< ScopeSyntaxNode >();
+            new_parent_target_node = function_call->add_back( scope_statment );
+            // new_parent_target_node = taget_node_parent->add_back( scope_statment );
             const auto& function_call_syntax_node = std::dynamic_pointer_cast< FunctionCallSyntaxNode >( function_call );
             if( const auto& function_info_it = function_by_name.find( function_call_syntax_node->name() ); function_info_it != function_by_name.end() )
             {
                const auto& function = std::dynamic_pointer_cast< FunctionSyntaxNode >( function_info_it->second.function );
-               scope_expression->add_back( function->scope() );
+               scope_statment->add_back( function->scope() );
             }
          }
          else if( IsLastNodesIs< FunctionCallSyntaxNode, VaribleSyntaxNode >( source_stack ) ||
@@ -184,13 +184,13 @@ double Calculator::solve( const std::string& expression ) const
                   auto function_argument_name_it = function->begin();
                   std::advance( function_argument_name_it, call_argument_index );
                   const auto& argument_name_node = std::dynamic_pointer_cast< NameSyntaxNode >( *function_argument_name_it );
-                  const auto& varible_assigment_syntax_node =
-                     std::make_shared< VaribleAssigmentSyntaxNode >( VaribleAssigmentSyntaxNode( VaribleAssigmentSyntaxNode::Context::LOCAL ) );
-                  varible_assigment_syntax_node->add_back( argument_name_node );
+                  const auto& varible_assigment_statment_syntax_node =
+                     std::make_shared< VaribleAssigmentStatmentSyntaxNode >( VaribleAssigmentStatmentSyntaxNode( VaribleAssigmentStatmentSyntaxNode::Context::LOCAL ) );
+                  varible_assigment_statment_syntax_node->add_back( argument_name_node );
                   auto scope_it = taget_node_parent->end();
                   std::advance( scope_it, 1 );
                   new_parent_target_node = *taget_node_parent->insert( scope_it, target_node );
-                  taget_node_parent->insert( scope_it, varible_assigment_syntax_node );
+                  taget_node_parent->insert( scope_it, varible_assigment_statment_syntax_node );
                   *scope_it;
                }
             }
@@ -206,7 +206,7 @@ double Calculator::solve( const std::string& expression ) const
          const auto& taget_node_parent = target_stack.rbegin()->get();
          const auto& target_node = make_shallow_copy( source_node );
 
-         if( IsLastNodesIs< ExpressionSyntaxNode >( source_stack ) )
+         if( IsLastNodesIs< StatmentSyntaxNode >( source_stack ) )
          {
             return new_parent_target_node;
          }
@@ -237,7 +237,7 @@ double Calculator::solve( const std::string& expression ) const
       {
          auto children = node->Children();
          SyntaxNodeEmptyVisitor::Handlers handlers;
-         handlers.scope_syntax_node =
+         handlers.scope_statment_syntax_node =
             [ &varible_store, &function_store ]( const ScopeSyntaxNodeSP& /* scope */ )
          {
             // create scope in a VaribleStore
@@ -245,15 +245,15 @@ double Calculator::solve( const std::string& expression ) const
             function_store.pushScope();
             // std::cout << "Scope begin" << std::endl;
          },
-         handlers.if_expression_syntax_node = [ &children, &argument_stack ]( const IfExpressionSyntaxNodeSP& if_expression )
+         handlers.if_statment_syntax_node = [ &children, &argument_stack ]( const IfStatmentSyntaxNodeSP& if_statment )
          {
-            // const auto& condition = if_expression->conditional_expression();
+            // const auto& condition = if_statment->conditional_expression();
             auto condition_result = argument_stack.back();
             if( !argument_stack.empty() )
                argument_stack.pop_back();
             if( condition_result )
             {
-               const auto& true_scope = if_expression->true_scope();
+               const auto& true_scope = if_statment->true_scope();
                children = std::list< ISyntaxNodeSP >{ true_scope };
             }
             else
@@ -262,11 +262,11 @@ double Calculator::solve( const std::string& expression ) const
             }
             // else
             // {
-            //    const auto& false_scope = if_expression->false_scope();
+            //    const auto& false_scope = if_statment->false_scope();
             //    children = std::vector< ISyntaxNodeSP >{ false_scope };
             // }
          };
-         handlers.while_expression_syntax_node = []( const WhileExpressionSyntaxNodeSP& /* while_expression */ )
+         handlers.while_statment_syntax_node = []( const WhileStatmentSyntaxNodeSP& /* while_expression */ )
          {
             // varible_store.print();
             // const auto& condition = while_expression->conditional_expression();
@@ -289,13 +289,13 @@ double Calculator::solve( const std::string& expression ) const
          };
          handlers.function_call_syntax_node = [ &function_call_stack ]( const FunctionCallSyntaxNodeSP& function_call )
          { function_call_stack.emplace_back( function_call ); };
-         handlers.return_expression_syntax_node = [ &stack_dfs, &function_call_stack ]( const ReturnExpressionSyntaxNodeSP& /* return_expression */ )
+         handlers.return_statment_syntax_node = [ &stack_dfs, &function_call_stack, &argument_stack ]( const ReturnStatmentSyntaxNodeSP& /* return_statment */ )
          {
-            // auto result = argument_stack.back();
+            auto result = argument_stack.back();
             // argument_stack.pop_back();
             stack_dfs.popUntil( function_call_stack.back() );
 
-            // std::cout << "return: " << std::to_string( result ) << std::endl;
+            std::cout << "return: " << std::to_string( result ) << std::endl;
          };
          const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
          node->accept( visitor );
@@ -313,8 +313,8 @@ double Calculator::solve( const std::string& expression ) const
          handlers.varible_syntax_node = [ &argument_stack, &varible_store ]( const VaribleSyntaxNodeSP& varible )
          {
             const auto& value = varible_store[ varible->name() ];
-            // std::cout << "Read " << varible->name() << " .Value is " << std::to_string( value ) << std::endl;
-            // varible_store.print();
+            std::cout << "Read " << varible->name() << " .Value is " << std::to_string( value ) << std::endl;
+            varible_store.print();
             // std::cout << "varible " + varible->name() + "(" << std::to_string( value ) << ")" << std::endl;
             argument_stack.push_back( value );
          };
@@ -327,7 +327,7 @@ double Calculator::solve( const std::string& expression ) const
             if( !argument_stack.empty() )
                argument_stack.pop_back();
             auto result = lhs + rhs;
-            // std::cout << std::to_string( lhs ) << " + " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+            std::cout << std::to_string( lhs ) << " + " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
             argument_stack.push_back( result );
          };
          handlers.subtraction_syntax_node = [ &argument_stack ]( const SubtractionSyntaxNodeSP& /* node */ )
@@ -366,7 +366,7 @@ double Calculator::solve( const std::string& expression ) const
             // std::cout << std::to_string( lhs ) << " / " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
             argument_stack.push_back( result );
          };
-         handlers.scope_syntax_node = [ &varible_store, &function_store ]( const ScopeSyntaxNodeSP& /*  scope */ )
+         handlers.scope_statment_syntax_node = [ &varible_store, &function_store ]( const ScopeSyntaxNodeSP& /*  scope */ )
          {
             // delete scope in a VaribleStore
             varible_store.popScope();
@@ -374,7 +374,7 @@ double Calculator::solve( const std::string& expression ) const
             // argument_stack.clear();
             // std::cout << "Scope end" << std::endl;
          };
-         handlers.print_expression_syntax_node = [ &argument_stack ]( const PrintExpressionSyntaxNodeSP& /* print_expression */ )
+         handlers.print_statment_syntax_node = [ &argument_stack ]( const PrintStatmentSyntaxNodeSP& /* print_statment */ )
          {
             auto result = argument_stack.back();
             if( !argument_stack.empty() )
@@ -420,7 +420,7 @@ double Calculator::solve( const std::string& expression ) const
             break;
             }
          };
-         handlers.varible_assigment_syntax_node = [ &varible_store, &argument_stack ]( const VaribleAssigmentSyntaxNodeSP& varible_assigment )
+         handlers.varible_assigment_statment_syntax_node = [ &varible_store, &argument_stack ]( const VaribleAssigmentStatmentSyntaxNodeSP& varible_assigment )
          {
             // const auto& source = varible_assigment->source();
             const auto& target = varible_assigment->target();
@@ -429,19 +429,18 @@ double Calculator::solve( const std::string& expression ) const
             if( !argument_stack.empty() )
                argument_stack.pop_back();
             std::string context;
-            if( varible_assigment->context() == VaribleAssigmentSyntaxNode::Context::GLOBAL )
+            if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL )
             {
                varible_store[ target_name ] = value;
                context = "Global";
             }
-            else if( varible_assigment->context() == VaribleAssigmentSyntaxNode::Context::LOCAL )
+            else if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::LOCAL )
             {
                varible_store.writeValueToLocalVarible( target_name, value );
                context = "Local";
             }
-            // std::cout << "Write " << target_name << " .Value is " << std::to_string( value ) << ". Context: " << context << std::endl;
-            // varible_store.print();
-            // std::cout << "varible " + target_name + " = " << std::to_string( value ) << std::endl;
+            std::cout << "Write " << target_name << " .Value is " << std::to_string( value ) << ". Context: " << context << std::endl;
+            varible_store.print();
          };
          handlers.function_call_syntax_node = [ &function_call_stack ]( const FunctionCallSyntaxNodeSP& /* function_call */ ) { function_call_stack.pop_back(); };
          const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );

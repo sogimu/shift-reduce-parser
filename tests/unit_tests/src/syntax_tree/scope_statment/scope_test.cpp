@@ -24,7 +24,7 @@ TEST( SYNTAX_TREE_SCOPE, TEST0 )
     {
       "ScopeSyntaxNode": [
         {
-          "ExpressionSyntaxNode": [
+         "StatmentSyntaxNode": [
             {
               "ComputationalExpressionSyntaxNode": [
                 {
@@ -37,7 +37,7 @@ TEST( SYNTAX_TREE_SCOPE, TEST0 )
           ]
         },
         {
-          "ExpressionSyntaxNode": [
+         "StatmentSyntaxNode": [
             {
               "ComputationalExpressionSyntaxNode": [
                 {

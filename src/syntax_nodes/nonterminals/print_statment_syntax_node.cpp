@@ -1,4 +1,4 @@
-#include "nonterminals/print_expression_syntax_node.h"
+#include "nonterminals/print_statment_syntax_node.h"
 
 #include "terminals/name_syntax_node.h"
 #include "nonterminals/computational_expression_syntax_node.h"
@@ -9,30 +9,30 @@
 #include "utils.h"
 #include <iterator>
 
-PrintExpressionSyntaxNode::PrintExpressionSyntaxNode()
-   : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
+PrintStatmentSyntaxNode::PrintStatmentSyntaxNode()
+   : ISyntaxNode{ Token_Type::PRINT_STATMENT }
 {
 }
 
-PrintExpressionSyntaxNode::PrintExpressionSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression )
-   : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
+PrintStatmentSyntaxNode::PrintStatmentSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression )
+   : ISyntaxNode{ Token_Type::PRINT_STATMENT }
 {
    add_back( computational_expression );
 }
 
-PrintExpressionSyntaxNode::PrintExpressionSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
-   : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
+PrintStatmentSyntaxNode::PrintStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
+   : ISyntaxNode{ Token_Type::PRINT_STATMENT }
 {
    add_back( name_syntax_node );
 }
 
-PrintExpressionSyntaxNode::PrintExpressionSyntaxNode( const ISyntaxNodeSP& argument )
-   : ISyntaxNode{ Token_Type::PRINT_EXPRESSION }
+PrintStatmentSyntaxNode::PrintStatmentSyntaxNode( const ISyntaxNodeSP& argument )
+   : ISyntaxNode{ Token_Type::PRINT_STATMENT }
 {
    add_back( argument );
 }
 
-ISyntaxNodeSP& PrintExpressionSyntaxNode::add_back( const ISyntaxNodeSP& child )
+ISyntaxNodeSP& PrintStatmentSyntaxNode::add_back( const ISyntaxNodeSP& child )
 {
    ISyntaxNodeSP node = child;
    SyntaxNodeEmptyVisitor::Handlers handlers;
@@ -43,16 +43,16 @@ ISyntaxNodeSP& PrintExpressionSyntaxNode::add_back( const ISyntaxNodeSP& child )
 
    return ISyntaxNode::add_back( node );
 }
-void PrintExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+void PrintStatmentSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
 }
 
-bool PrintExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
+bool PrintStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = true;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.print_expression_syntax_node = [ this, &is_equal ]( const PrintExpressionSyntaxNodeSP& node )
+   handlers.print_statment_syntax_node = [ this, &is_equal ]( const PrintStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
          return;
@@ -73,7 +73,7 @@ bool PrintExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-ComputationalExpressionSyntaxNodeSP PrintExpressionSyntaxNode::computational_expression() const
+ComputationalExpressionSyntaxNodeSP PrintStatmentSyntaxNode::computational_expression() const
 {
    ComputationalExpressionSyntaxNodeSP argument;
    const auto& value_node = this->operator[]( 0 );

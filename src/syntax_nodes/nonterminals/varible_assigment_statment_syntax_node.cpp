@@ -1,4 +1,4 @@
-#include "nonterminals/varible_assigment_syntax_node.h"
+#include "nonterminals/varible_assigment_statment_syntax_node.h"
 
 #include "terminals/name_syntax_node.h"
 #include "nonterminals/computational_expression_syntax_node.h"
@@ -8,13 +8,13 @@
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 
-VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( Context context )
-   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT }
+VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( Context context )
+   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT_STATMENT }
    , mContext{ context }
 {
 }
-VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node, Context context )
-   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT }
+VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node, Context context )
+   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT_STATMENT }
    , mContext{ context }
 {
    const auto& varible = std::make_shared< VaribleSyntaxNode >( name );
@@ -22,21 +22,21 @@ VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& 
    add_back( node );
 }
 
-VaribleAssigmentSyntaxNode::VaribleAssigmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, Context context )
+VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, Context context )
 
-   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT }
+   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT_STATMENT }
    , mContext{ context }
 {
    add_back( target_name );
    const auto& varible = std::make_shared< VaribleSyntaxNode >( source_name );
    add_back( varible );
 }
-NameSyntaxNodeSP VaribleAssigmentSyntaxNode::target() const
+NameSyntaxNodeSP VaribleAssigmentStatmentSyntaxNode::target() const
 {
    return std::dynamic_pointer_cast< NameSyntaxNode >( this->operator[]( 0 ) );
 }
 
-ComputationalExpressionSyntaxNodeSP VaribleAssigmentSyntaxNode::source() const
+ComputationalExpressionSyntaxNodeSP VaribleAssigmentStatmentSyntaxNode::source() const
 {
    ComputationalExpressionSyntaxNodeSP argument;
    const auto& value_node = this->operator[]( 1 );
@@ -47,21 +47,21 @@ ComputationalExpressionSyntaxNodeSP VaribleAssigmentSyntaxNode::source() const
    return argument;
 }
 
-VaribleAssigmentSyntaxNode::Context VaribleAssigmentSyntaxNode::context() const
+VaribleAssigmentStatmentSyntaxNode::Context VaribleAssigmentStatmentSyntaxNode::context() const
 {
    return mContext;
 }
 
-void VaribleAssigmentSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+void VaribleAssigmentStatmentSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
 }
 
-bool VaribleAssigmentSyntaxNode::compare( const ISyntaxNode& node ) const
+bool VaribleAssigmentStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = true;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.varible_assigment_syntax_node = [ this, &is_equal ]( const VaribleAssigmentSyntaxNodeSP& node )
+   handlers.varible_assigment_statment_syntax_node = [ this, &is_equal ]( const VaribleAssigmentStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
       {

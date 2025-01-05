@@ -6,19 +6,19 @@
 #include "terminals/name_syntax_node.h"
 
 FunctionCallOrDefinitionSyntaxNode::FunctionCallOrDefinitionSyntaxNode()
-   : ISyntaxNode{ Token_Type::FUNCTION_CALL_EXPRESSION }
+   : ISyntaxNode{ Token_Type::FUNCTION_CALL }
 {
 }
 
 FunctionCallOrDefinitionSyntaxNode::FunctionCallOrDefinitionSyntaxNode( const std::string& name )
-   : ISyntaxNode{ Token_Type::FUNCTION_CALL_EXPRESSION }
+   : ISyntaxNode{ Token_Type::FUNCTION_CALL }
    , mName{ name }
 {
    // add_back( name );
 }
 
 FunctionCallOrDefinitionSyntaxNode::FunctionCallOrDefinitionSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments )
-   : ISyntaxNode{ Token_Type::FUNCTION_CALL_EXPRESSION }
+   : ISyntaxNode{ Token_Type::FUNCTION_CALL }
    , mName{ name }
 {
    for( const auto& argument : arguments )

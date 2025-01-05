@@ -1,29 +1,29 @@
-#include "nonterminals/while_expression_syntax_node.h"
+#include "nonterminals/while_statment_syntax_node.h"
 
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 #include <cstddef>
 
-WhileExpressionSyntaxNode::WhileExpressionSyntaxNode()
-   : ISyntaxNode{ Token_Type::WHILE_EXPRESSION }
+WhileStatmentSyntaxNode::WhileStatmentSyntaxNode()
+   : ISyntaxNode{ Token_Type::WHILE_STATMENT }
 {
 }
-WhileExpressionSyntaxNode::WhileExpressionSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
-   : ISyntaxNode{ Token_Type::WHILE_EXPRESSION }
+WhileStatmentSyntaxNode::WhileStatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
+   : ISyntaxNode{ Token_Type::WHILE_STATMENT }
 {
    add_back( conditional_expression );
    add_back( scope );
 }
-void WhileExpressionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+void WhileStatmentSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
 }
 
-bool WhileExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
+bool WhileStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = false;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.while_expression_syntax_node = [ this, &is_equal ]( const WhileExpressionSyntaxNodeSP& node )
+   handlers.while_statment_syntax_node = [ this, &is_equal ]( const WhileStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
          return;
@@ -44,12 +44,12 @@ bool WhileExpressionSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-ConditionalExpressionSyntaxNodeSP WhileExpressionSyntaxNode::conditional_expression() const
+ConditionalExpressionSyntaxNodeSP WhileStatmentSyntaxNode::conditional_expression() const
 {
    return std::dynamic_pointer_cast< ConditionalExpressionSyntaxNode >( this->operator[]( 0 ) );
 }
 
-ScopeSyntaxNodeSP WhileExpressionSyntaxNode::scope() const
+ScopeSyntaxNodeSP WhileStatmentSyntaxNode::scope() const
 {
    return std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 1 ) );
 }

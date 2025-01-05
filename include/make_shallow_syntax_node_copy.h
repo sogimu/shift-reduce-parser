@@ -75,9 +75,9 @@ public:
       mCopy = std::make_shared< SemicolonSyntaxNode >();
    }
 
-   void visit( const ExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const StatmentSyntaxNodeSP& /* node */ ) override
    {
-      mCopy = std::make_shared< ExpressionSyntaxNode >();
+      mCopy = std::make_shared< StatmentSyntaxNode >();
    }
 
    void visit( const ScopeSyntaxNodeSP& /* node */ ) override
@@ -120,14 +120,14 @@ public:
       mCopy = std::make_shared< ConditionalExpressionSyntaxNode >( node->type() );
    }
 
-   void visit( const PrintExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const PrintStatmentSyntaxNodeSP& /* node */ ) override
    {
-      mCopy = std::make_shared< PrintExpressionSyntaxNode >();
+      mCopy = std::make_shared< PrintStatmentSyntaxNode >();
    }
 
-   void visit( const VaribleAssigmentSyntaxNodeSP& /* node */ ) override
+   void visit( const VaribleAssigmentStatmentSyntaxNodeSP& /* node */ ) override
    {
-      mCopy = std::make_shared< VaribleAssigmentSyntaxNode >();
+      mCopy = std::make_shared< VaribleAssigmentStatmentSyntaxNode >();
    }
 
    void visit( const NameSyntaxNodeSP& node ) override
@@ -165,18 +165,18 @@ public:
       mCopy = std::make_shared< IfSyntaxNode >();
    }
 
-   void visit( const IfExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const IfStatmentSyntaxNodeSP& /* node */ ) override
    {
-      mCopy = std::make_shared< IfExpressionSyntaxNode >();
+      mCopy = std::make_shared< IfStatmentSyntaxNode >();
    }
    void visit( const WhileSyntaxNodeSP& /* node */ ) override
    {
       mCopy = std::make_shared< WhileSyntaxNode >();
    }
 
-   void visit( const WhileExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const WhileStatmentSyntaxNodeSP& /* node */ ) override
    {
-      mCopy = std::make_shared< WhileExpressionSyntaxNode >();
+      mCopy = std::make_shared< WhileStatmentSyntaxNode >();
    }
 
    void visit( const FunctionCallOrDefinitionSyntaxNodeSP& node ) override
@@ -199,9 +199,9 @@ public:
       mCopy = std::make_shared< ReturnSyntaxNode >();
    }
 
-   void visit( const ReturnExpressionSyntaxNodeSP& /* node */ ) override
+   void visit( const ReturnStatmentSyntaxNodeSP& /* node */ ) override
    {
-      mCopy = std::make_shared< ReturnExpressionSyntaxNode >();
+      mCopy = std::make_shared< ReturnStatmentSyntaxNode >();
    }
 
    ISyntaxNodeSP get_copy() const
