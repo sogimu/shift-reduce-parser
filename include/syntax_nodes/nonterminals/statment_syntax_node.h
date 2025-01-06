@@ -20,6 +20,9 @@ using WhileStatmentSyntaxNodeSP = std::shared_ptr< WhileStatmentSyntaxNode >;
 class FunctionSyntaxNode;
 using FunctionSyntaxNodeSP = std::shared_ptr< FunctionSyntaxNode >;
 
+class FunctionStatmentSyntaxNode;
+using FunctionStatmentSyntaxNodeSP = std::shared_ptr< FunctionStatmentSyntaxNode >;
+
 class FunctionCallSyntaxNode;
 using FunctionCallSyntaxNodeSP = std::shared_ptr< FunctionCallSyntaxNode >;
 
@@ -40,7 +43,7 @@ public:
    StatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression_syntax_node );
    StatmentSyntaxNode( const IfStatmentSyntaxNodeSP& if_statment_syntax_node );
    StatmentSyntaxNode( const WhileStatmentSyntaxNodeSP& while_statment_syntax_node );
-   StatmentSyntaxNode( const FunctionSyntaxNodeSP& function_syntax_node );
+   StatmentSyntaxNode( const FunctionStatmentSyntaxNodeSP& function_statment_syntax_node );
    StatmentSyntaxNode( const FunctionCallSyntaxNodeSP& function_call_syntax_node );
    StatmentSyntaxNode( const PrintStatmentSyntaxNodeSP& print_expression_syntax_node );
    StatmentSyntaxNode( const VaribleAssigmentStatmentSyntaxNodeSP& varible_assigment_statment_syntax_node );

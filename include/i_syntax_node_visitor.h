@@ -24,6 +24,7 @@
 #include "terminals/semicolon_syntax_node.h"
 #include "terminals/slash_syntax_node.h"
 #include "terminals/return_syntax_node.h"
+#include "terminals/function_syntax_node.h"
 #include "nonterminals/computational_expression_syntax_node.h"
 #include "nonterminals/varible_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
@@ -34,8 +35,7 @@
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/while_statment_syntax_node.h"
-#include "nonterminals/function_call_or_definition_syntax_node.h"
-#include "nonterminals/function_syntax_node.h"
+#include "nonterminals/function_statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
 #include "nonterminals/print_statment_syntax_node.h"
 #include "nonterminals/scope_statment_syntax_node.h"
@@ -78,7 +78,7 @@ public:
    virtual void visit( const IfStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileStatmentSyntaxNodeSP& ) = 0;
-   virtual void visit( const FunctionCallOrDefinitionSyntaxNodeSP& ) = 0;
+   virtual void visit( const FunctionStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionCallSyntaxNodeSP& ) = 0;
    virtual void visit( const VaribleAssigmentStatmentSyntaxNodeSP& ) = 0;

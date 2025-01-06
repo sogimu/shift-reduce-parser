@@ -39,6 +39,7 @@ set(HEADERS
     include/syntax_nodes/terminals/if_syntax_node.h
     include/syntax_nodes/terminals/name_syntax_node.h
     include/syntax_nodes/terminals/comma_syntax_node.h
+    include/syntax_nodes/terminals/function_syntax_node.h
     include/syntax_nodes/nonterminals/addition/addition_syntax_node.h
     include/syntax_nodes/nonterminals/subtraction/subtraction_syntax_node.h
     include/syntax_nodes/nonterminals/division/division_syntax_node.h
@@ -47,9 +48,8 @@ set(HEADERS
     include/syntax_nodes/nonterminals/conditional_expression_syntax_node.h
     include/syntax_nodes/nonterminals/print_statment_syntax_node.h
     include/syntax_nodes/nonterminals/if_statment_syntax_node.h
-    include/syntax_nodes/nonterminals/function_syntax_node.h
+    include/syntax_nodes/nonterminals/function_statment_syntax_node.h
     include/syntax_nodes/nonterminals/function_call_syntax_node.h
-    include/syntax_nodes/nonterminals/function_call_or_definition_syntax_node.h
     include/syntax_nodes/nonterminals/while_statment_syntax_node.h
     include/syntax_nodes/nonterminals/varible_assigment_statment_syntax_node.h
     include/syntax_nodes/nonterminals/computational_expression_syntax_node.h
@@ -66,7 +66,6 @@ set(HEADERS
     include/grammars/scope_grammar.h
     include/grammars/function_grammar.h
     include/grammars/function_call_grammar.h
-    include/grammars/function_call_or_definition_grammar.h
     include/grammars/return_statment_grammar.h
 )
 
@@ -95,6 +94,7 @@ set(SOURCES
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/name_syntax_node.cpp
+    src/syntax_nodes/terminals/function_syntax_node.cpp
     src/syntax_nodes/nonterminals/addition/addition_syntax_node.cpp
     src/syntax_nodes/nonterminals/subtraction/subtraction_syntax_node.cpp
     src/syntax_nodes/nonterminals/multiply/multiply_syntax_node.cpp
@@ -104,9 +104,8 @@ set(SOURCES
     src/syntax_nodes/nonterminals/statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/print_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/if_statment_syntax_node.cpp
-    src/syntax_nodes/nonterminals/function_syntax_node.cpp
+    src/syntax_nodes/nonterminals/function_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/function_call_syntax_node.cpp
-    src/syntax_nodes/nonterminals/function_call_or_definition_syntax_node.cpp
     src/syntax_nodes/nonterminals/while_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/varible_assigment_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/conditional_expression_syntax_node.cpp

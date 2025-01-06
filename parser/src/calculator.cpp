@@ -139,17 +139,17 @@ double Calculator::solve( const std::string& expression ) const
             // std::advance( it, 1 );
             new_parent_target_node = it->get()->add_back( target_node );
          }
-         else if( IsLastNodesIs< FunctionSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< FunctionStatmentSyntaxNode >( source_stack ) )
          {
-            const auto& function_syntax_node = std::dynamic_pointer_cast< FunctionSyntaxNode >( target_node );
+            const auto& function_syntax_node = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( target_node );
             function_by_name[ function_syntax_node->name() ] = FunctionCallMeta{ function_syntax_node, {} };
             new_parent_target_node = taget_node_parent->add_back( target_node );
          }
-         else if( IsLastNodesIs< FunctionSyntaxNode, NameSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< FunctionStatmentSyntaxNode, NameSyntaxNode >( source_stack ) )
          {
             const auto& name_syntax_node = std::dynamic_pointer_cast< NameSyntaxNode >( target_node );
             auto target_it = target_stack.rbegin();
-            const auto& function_node = std::dynamic_pointer_cast< FunctionSyntaxNode >( target_it->get() );
+            const auto& function_node = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( target_it->get() );
             auto& meta = function_by_name[ function_node->name() ];
             meta.arguments.push_back( name_syntax_node );
             new_parent_target_node = taget_node_parent->add_back( target_node );
@@ -165,7 +165,7 @@ double Calculator::solve( const std::string& expression ) const
             const auto& function_call_syntax_node = std::dynamic_pointer_cast< FunctionCallSyntaxNode >( function_call );
             if( const auto& function_info_it = function_by_name.find( function_call_syntax_node->name() ); function_info_it != function_by_name.end() )
             {
-               const auto& function = std::dynamic_pointer_cast< FunctionSyntaxNode >( function_info_it->second.function );
+               const auto& function = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( function_info_it->second.function );
                scope_statment->add_back( function->scope() );
             }
          }
@@ -180,10 +180,11 @@ double Calculator::solve( const std::string& expression ) const
                auto call_argument_index = std::distance( function_call_node->begin(), argument_it );
                if( auto function_info_it = function_by_name.find( function_call_node->name() ); function_info_it != function_by_name.end() )
                {
-                  const auto& function = std::dynamic_pointer_cast< FunctionSyntaxNode >( function_info_it->second.function );
+                  const auto& function = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( function_info_it->second.function );
                   auto function_argument_name_it = function->begin();
                   std::advance( function_argument_name_it, call_argument_index );
-                  const auto& argument_name_node = std::dynamic_pointer_cast< NameSyntaxNode >( *function_argument_name_it );
+                  const auto& argument_node = std::dynamic_pointer_cast< VaribleSyntaxNode >( *function_argument_name_it );
+                  const auto& argument_name_node = std::make_shared< NameSyntaxNode >( argument_node->name() );
                   const auto& varible_assigment_statment_syntax_node =
                      std::make_shared< VaribleAssigmentStatmentSyntaxNode >( VaribleAssigmentStatmentSyntaxNode( VaribleAssigmentStatmentSyntaxNode::Context::LOCAL ) );
                   varible_assigment_statment_syntax_node->add_back( argument_name_node );
@@ -280,7 +281,7 @@ double Calculator::solve( const std::string& expression ) const
             // children = {};
             //    }
          };
-         handlers.function_syntax_node = [ &children ]( const FunctionSyntaxNodeSP& /* function */ )
+         handlers.function_statment_syntax_node = [ &children ]( const FunctionStatmentSyntaxNodeSP& /* function */ )
          {
             // const auto& function_name = function->name();
             // const auto& arguments_number = function->Children().size() - 2;

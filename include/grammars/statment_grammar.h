@@ -24,7 +24,7 @@ public:
          CONDITIONAL_EXPRESSION,
          IF_STATMENT,
          WHILE_STATMENT,
-         FUNCTION,
+         FUNCTION_STATMENT,
          FUNCTION_CALL,
          PRINT_STATMENT,
          VARIBLE_ASSIGMENT_STATMENT,
@@ -99,22 +99,22 @@ public:
             return plan;
          } );
 
-      // FUNCTION
+      // FUNCTION_STATMENT
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
          {
-            FunctionSyntaxNodeSP function_syntax_node;
+            FunctionStatmentSyntaxNodeSP function_syntax_node;
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.function_syntax_node = [ &function_syntax_node, &state ]( const FunctionSyntaxNodeSP& node )
+            handlers.function_statment_syntax_node = [ &function_syntax_node, &state ]( const FunctionStatmentSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
                   function_syntax_node = node;
-                  state = State::FUNCTION;
+                  state = State::FUNCTION_STATMENT;
                   state = State::FINISH;
                }
             };

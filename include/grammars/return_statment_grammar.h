@@ -63,7 +63,7 @@ public:
                   argument = node;
                }
             };
-            handlers.function_call_or_definition_syntax_node = [ &argument, &state ]( const FunctionCallOrDefinitionSyntaxNodeSP& node )
+            handlers.function_call_syntax_node = [ &argument, &state ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::RETURN )
                {

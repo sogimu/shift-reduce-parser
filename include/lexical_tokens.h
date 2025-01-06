@@ -218,12 +218,12 @@ private:
 
    const std::set< char > didgits{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 
-   const std::set< char > alphabet{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+   const std::set< char > alphabet{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '_',
                                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
    const std::set< char > terminals{ '+', '-', '/', '*', '(', ')', '=', '<', '>', ';', '{', '}', ',' };
 
    const std::unordered_map< std::string, Token_Type > token_by_text{
-      { "if", Token_Type::IF }, { "while", Token_Type::WHILE }, { "print", Token_Type::PRINT }, { "return", Token_Type::RETURN }
+      { "if", Token_Type::IF }, { "while", Token_Type::WHILE }, { "print", Token_Type::PRINT }, { "return", Token_Type::RETURN }, { "function", Token_Type::FUNCTION }
    };
 };

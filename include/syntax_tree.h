@@ -1,8 +1,7 @@
 #pragma once
 
-#include "function_call_or_definition_grammar.h"
+#include "nonterminals/function_statment_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
-#include "nonterminals/function_call_or_definition_syntax_node.h"
 #include "nonterminals/varible_assigment_statment_syntax_node.h"
 #include "nonterminals/varible_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
@@ -39,7 +38,6 @@
 #include "grammars/f_grammar.h"
 #include "grammars/if_statment_grammar.h"
 #include "grammars/while_statment_grammar.h"
-#include "grammars/function_call_or_definition_grammar.h"
 #include "grammars/function_grammar.h"
 #include "grammars/function_call_grammar.h"
 #include "grammars/print_statment_grammar.h"
@@ -69,7 +67,6 @@ public:
          std::make_shared< Scope >(),
          std::make_shared< If >(),
          std::make_shared< While >(),
-         std::make_shared< FunctionCallOrDefinition >(),
          std::make_shared< Function >(),
          std::make_shared< FunctionCall >(),
       };
@@ -239,6 +236,11 @@ public:
          syntax_node = std::make_shared< ReturnSyntaxNode >();
       };
       break;
+      case Token_Type::FUNCTION:
+      {
+         syntax_node = std::make_shared< FunctionSyntaxNode >();
+      };
+      break;
       default:
       {
       }
@@ -398,8 +400,8 @@ public:
             handlers.while_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_STATMENT" << "}"; };
             handlers.function_syntax_node = [ &s ]( const FunctionSyntaxNodeSP& node ) { s << "{" << "FUNCTION" << " (" << node->name() << ")" << "}"; };
             handlers.function_call_syntax_node = [ &s ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << "}"; };
-            handlers.function_call_or_definition_syntax_node = [ &s ]( const FunctionCallOrDefinitionSyntaxNodeSP& node )
-            { s << "{" << "FUNCTION_CALL_OR_DEFINITION" << " (" << node->name() << ")" << "}"; };
+            handlers.function_statment_syntax_node = [ &s ]( const FunctionStatmentSyntaxNodeSP& node )
+            { s << "{" << "FUNCTION_STATMENT" << " (" << node->name() << ")" << "}"; };
             handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
             handlers.varible_assigment_statment_syntax_node = [ &s ]( const VaribleAssigmentStatmentSyntaxNodeSP& node )
             {

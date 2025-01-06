@@ -1,6 +1,5 @@
 #pragma once
 
-#include "nonterminals/function_call_or_definition_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
@@ -65,7 +64,7 @@ public:
                   state = State::VALUE;
                }
             };
-            handlers.function_call_or_definition_syntax_node = [ &value, &state ]( const FunctionCallOrDefinitionSyntaxNodeSP& node )
+            handlers.function_call_syntax_node = [ &value, &state ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::EQUAL )
                {

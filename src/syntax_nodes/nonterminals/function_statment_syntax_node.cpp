@@ -1,4 +1,4 @@
-#include "nonterminals/function_syntax_node.h"
+#include "nonterminals/function_statment_syntax_node.h"
 
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
@@ -6,34 +6,34 @@
 #include "terminals/name_syntax_node.h"
 #include <string>
 
-FunctionSyntaxNode::FunctionSyntaxNode()
-   : ISyntaxNode{ Token_Type::FUNCTION }
+FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode()
+   : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
 {
 }
 
-FunctionSyntaxNode::FunctionSyntaxNode( const std::string& name )
-   : ISyntaxNode{ Token_Type::FUNCTION }
+FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name )
+   : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
    , mName{ name }
 {
 }
 
-FunctionSyntaxNode::FunctionSyntaxNode( const std::string& name, const ScopeSyntaxNodeSP& scope )
-   : ISyntaxNode{ Token_Type::FUNCTION }
+FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name, const ScopeSyntaxNodeSP& scope )
+   : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
    , mName{ name }
 {
    add_back( scope );
 }
 
-void FunctionSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
+void FunctionStatmentSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
 }
 
-bool FunctionSyntaxNode::compare( const ISyntaxNode& node ) const
+bool FunctionStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = false;
    SyntaxNodeEmptyVisitor::Handlers handlers;
-   handlers.function_syntax_node = [ this, &is_equal ]( const FunctionSyntaxNodeSP& node )
+   handlers.function_statment_syntax_node = [ this, &is_equal ]( const FunctionStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
          return;
@@ -54,18 +54,18 @@ bool FunctionSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-std::string FunctionSyntaxNode::name() const
+std::string FunctionStatmentSyntaxNode::name() const
 {
    return mName;
    // return std::dynamic_pointer_cast< NameSyntaxNode >( this->operator[]( 0 ) );
 }
 
-ScopeSyntaxNodeSP FunctionSyntaxNode::scope() const
+ScopeSyntaxNodeSP FunctionStatmentSyntaxNode::scope() const
 {
    return std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( this->Children().size() - 1 ) );
 }
 
-std::vector< NameSyntaxNodeSP > FunctionSyntaxNode::arguments() const
+std::vector< NameSyntaxNodeSP > FunctionStatmentSyntaxNode::arguments() const
 {
    return {};
 }

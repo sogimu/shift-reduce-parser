@@ -7,7 +7,7 @@
 #include "nonterminals/conditional_expression_syntax_node.h"
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/while_statment_syntax_node.h"
-#include "nonterminals/function_syntax_node.h"
+#include "nonterminals/function_statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
 #include "nonterminals/print_statment_syntax_node.h"
 #include "nonterminals/varible_assigment_statment_syntax_node.h"
@@ -39,10 +39,10 @@ StatmentSyntaxNode::StatmentSyntaxNode( const WhileStatmentSyntaxNodeSP& while_s
 {
    add_back( while_statment_syntax_node );
 }
-StatmentSyntaxNode::StatmentSyntaxNode( const FunctionSyntaxNodeSP& function_syntax_node )
+StatmentSyntaxNode::StatmentSyntaxNode( const FunctionStatmentSyntaxNodeSP& function_statment_syntax_node )
    : ISyntaxNode{ Token_Type::STATMENT }
 {
-   add_back( function_syntax_node );
+   add_back( function_statment_syntax_node );
 }
 StatmentSyntaxNode::StatmentSyntaxNode( const FunctionCallSyntaxNodeSP& function_call_syntax_node )
    : ISyntaxNode{ Token_Type::STATMENT }

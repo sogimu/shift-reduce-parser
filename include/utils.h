@@ -20,12 +20,13 @@ void iterative_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
 
    while( !stack.empty() )
    {
-      auto& [ node, is_pre_order ] = stack.top();
+      auto [ node, is_pre_order ] = stack.top();
+      stack.pop();
 
       if( is_pre_order )
       {
+         stack.emplace( node, false );
          bool is_found = pre_func( node );
-         is_pre_order = false;
 
          if( !is_found )
          {
@@ -40,7 +41,6 @@ void iterative_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
       else
       {
          post_func( node );
-         stack.pop();
       }
    }
 }
@@ -173,12 +173,13 @@ void iterative_dfs2( const Node& start, const PreFunc& pre_func, const PostFunc&
 
    while( !stack.empty() )
    {
-      auto& [ node, is_pre_order ] = stack.top();
+      auto [ node, is_pre_order ] = stack.top();
+      stack.pop();
 
       if( is_pre_order )
       {
+         stack.emplace( node, false );
          bool is_found = pre_func( node );
-         is_pre_order = false;
 
          if( !is_found )
          {
@@ -193,7 +194,6 @@ void iterative_dfs2( const Node& start, const PreFunc& pre_func, const PostFunc&
       else
       {
          post_func( node );
-         stack.pop();
       }
    }
 }

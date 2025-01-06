@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nonterminals/function_syntax_node.h"
+#include "nonterminals/function_statment_syntax_node.h"
 #include <cstddef>
 #include <string>
 #include <cstdio>
@@ -13,7 +13,7 @@ class FunctionStore
 public:
    void pushScope()
    {
-      mScope.emplace_back( std::map< std::pair< std::string, size_t >, FunctionSyntaxNodeSP >{} );
+      mScope.emplace_back( std::map< std::pair< std::string, size_t >, FunctionStatmentSyntaxNodeSP >{} );
    }
 
    void popScope()
@@ -21,7 +21,7 @@ public:
       mScope.pop_back();
    }
 
-   FunctionSyntaxNodeSP operator[]( const std::pair< std::string, size_t >& function_key )
+   FunctionStatmentSyntaxNodeSP operator[]( const std::pair< std::string, size_t >& function_key )
    {
       auto it = std::find_if( mScope.rbegin(), mScope.rend(),
                               [ &function_key ]( const auto& layer ) -> bool
@@ -36,7 +36,7 @@ public:
       return mScope.back()[ function_key ];
    }
 
-   FunctionSyntaxNodeSP operator[]( const std::pair< std::string, size_t >& function_key ) const
+   FunctionStatmentSyntaxNodeSP operator[]( const std::pair< std::string, size_t >& function_key ) const
    {
       auto it = std::find_if( mScope.rbegin(), mScope.rend(),
                               [ &function_key ]( const auto& layer ) -> bool
@@ -51,11 +51,11 @@ public:
       return mScope.back()[ function_key ];
    }
 
-   void insert( const std::pair< std::string, size_t >& function_key, const FunctionSyntaxNodeSP& node )
+   void insert( const std::pair< std::string, size_t >& function_key, const FunctionStatmentSyntaxNodeSP& node )
    {
       mScope.back().insert( { function_key, node } );
    }
 
 private:
-   mutable std::deque< std::map< std::pair< std::string, size_t >, FunctionSyntaxNodeSP > > mScope;
+   mutable std::deque< std::map< std::pair< std::string, size_t >, FunctionStatmentSyntaxNodeSP > > mScope;
 };

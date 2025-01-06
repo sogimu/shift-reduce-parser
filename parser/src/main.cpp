@@ -11,7 +11,7 @@ int main()
    // 23's number shall be 17711
    std::string e = R"(
     {
-      fibonacci(n)
+      function fibonacci(n)
       {
         a = 0;
         b = 1;
@@ -29,7 +29,7 @@ int main()
       print(number);
       print(number==17711);
 
-      // rfibonacci(n)
+      // r_fibonacci(n)
       // {
       //   // print(n*10);
       //   // print( n );
@@ -43,21 +43,21 @@ int main()
       //     // print( 1 );
       //     return 1;
       //   }
-      //   a = rfibonacci(n-2);
+      //   a = r_fibonacci(n-2);
       //   print(a);
-      //   b = rfibonacci(n-1);
+      //   b = r_fibonacci(n-1);
       //   print(b);
       //   // print( a + b);
       //   return a + b;
       // }
-      // number = rfibonacci(3);
+      // number = r_fibonacci(3);
       // print(number);
       // print(number==17711);
-      // print( rfibonacci(0) );
-      // print( rfibonacci(1) );
-      // print( rfibonacci(2) );
-     // rfibonacci(3);
-      // print( rfibonacci(3) );
+      // print( r_fibonacci(0) );
+      // print( r_fibonacci(1) );
+      // print( r_fibonacci(2) );
+     // r_fibonacci(3);
+      // print( r_fibonacci(3) );
     })";
    //
    //        if(3 < 2)

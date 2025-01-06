@@ -3,7 +3,7 @@
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 
-#include "nonterminals/function_call_or_definition_syntax_node.h"
+#include "nonterminals/function_statment_syntax_node.h"
 #include <memory>
 
 namespace
@@ -179,9 +179,9 @@ public:
       mCopy = std::make_shared< WhileStatmentSyntaxNode >( *node );
    }
 
-   void visit( const FunctionCallOrDefinitionSyntaxNodeSP& node ) override
+   void visit( const FunctionStatmentSyntaxNodeSP& node ) override
    {
-      mCopy = std::make_shared< FunctionCallOrDefinitionSyntaxNode >( *node );
+      mCopy = std::make_shared< FunctionStatmentSyntaxNode >( *node );
    }
 
    void visit( const FunctionSyntaxNodeSP& node ) override
