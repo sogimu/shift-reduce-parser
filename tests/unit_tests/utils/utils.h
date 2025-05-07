@@ -110,6 +110,12 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      arguments.pop_back();
                      arguments.push_back( std::make_shared< NameSyntaxNode >( argument0 ) );
                   }
+                  else if( key == "VaribleSyntaxNode" )
+                  {
+                     std::string argument0 = std::get< json >( arguments.back() );
+                     arguments.pop_back();
+                     arguments.push_back( std::make_shared< VaribleSyntaxNode >( argument0 ) );
+                  }
                   else if( key == "FSyntaxNode" )
                   {
                      int argument0 = std::get< json >( arguments.back() );
