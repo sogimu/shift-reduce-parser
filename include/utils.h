@@ -472,25 +472,15 @@ public:
          mResult = true;
    }
 
-   void visit( const AdditionSyntaxNodeSP& /* node */ ) override
+   void visit( const UnExprSyntaxNodeSP& ) override
    {
-      if constexpr( std::is_same_v< T, AdditionSyntaxNode > )
+      if constexpr( std::is_same_v< T, UnExprSyntaxNode > )
          mResult = true;
    }
-
-   void visit( const SubtractionSyntaxNodeSP& /* node */ ) override
+  
+  void visit( const BinExprSyntaxNodeSP& ) override
    {
-      if constexpr( std::is_same_v< T, SubtractionSyntaxNode > )
-         mResult = true;
-   }
-   void visit( const MultiplySyntaxNodeSP& /* node */ ) override
-   {
-      if constexpr( std::is_same_v< T, MultiplySyntaxNode > )
-         mResult = true;
-   }
-   void visit( const DivisionSyntaxNodeSP& /* node */ ) override
-   {
-      if constexpr( std::is_same_v< T, DivisionSyntaxNode > )
+      if constexpr( std::is_same_v< T, BinExprSyntaxNode > )
          mResult = true;
    }
 
@@ -625,6 +615,11 @@ public:
          mResult = true;
    }
 
+   void visit( const FunctionStatmentSyntaxNodeSP& /*node*/ ) override
+   {
+      if constexpr( std::is_same_v< T, FunctionStatmentSyntaxNode > )
+         mResult = true;
+   }
    void visit( const FunctionSyntaxNodeSP& /* node */ ) override
    {
       if constexpr( std::is_same_v< T, FunctionSyntaxNode > )

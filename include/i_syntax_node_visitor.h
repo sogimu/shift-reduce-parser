@@ -28,10 +28,8 @@
 #include "nonterminals/computational_expression_syntax_node.h"
 #include "nonterminals/varible_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
-#include "nonterminals/subtraction/subtraction_syntax_node.h"
-#include "nonterminals/addition/addition_syntax_node.h"
-#include "nonterminals/multiply/multiply_syntax_node.h"
-#include "nonterminals/division/division_syntax_node.h"
+#include "nonterminals/un_expr_syntax_node.h"
+#include "nonterminals/bin_expr_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/while_statment_syntax_node.h"
@@ -55,10 +53,8 @@ public:
    virtual void visit( const SlashSyntaxNodeSP& ) = 0;
    virtual void visit( const NumberSyntaxNodeSP& ) = 0;
    virtual void visit( const FSyntaxNodeSP& ) = 0;
-   virtual void visit( const AdditionSyntaxNodeSP& ) = 0;
-   virtual void visit( const SubtractionSyntaxNodeSP& ) = 0;
-   virtual void visit( const MultiplySyntaxNodeSP& ) = 0;
-   virtual void visit( const DivisionSyntaxNodeSP& ) = 0;
+   virtual void visit( const UnExprSyntaxNodeSP& ) = 0;
+   virtual void visit( const BinExprSyntaxNodeSP& ) = 0;
    virtual void visit( const SemicolonSyntaxNodeSP& ) = 0;
    virtual void visit( const StatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const ScopeSyntaxNodeSP& ) = 0;

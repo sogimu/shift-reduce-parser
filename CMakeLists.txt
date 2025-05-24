@@ -40,9 +40,8 @@ set(HEADERS
     include/syntax_nodes/terminals/name_syntax_node.h
     include/syntax_nodes/terminals/comma_syntax_node.h
     include/syntax_nodes/terminals/function_syntax_node.h
-    include/syntax_nodes/nonterminals/addition/addition_syntax_node.h
-    include/syntax_nodes/nonterminals/subtraction/subtraction_syntax_node.h
-    include/syntax_nodes/nonterminals/division/division_syntax_node.h
+    include/syntax_nodes/nonterminals/un_expr_syntax_node.h
+    include/syntax_nodes/nonterminals/bin_expr_syntax_node.h
     include/syntax_nodes/nonterminals/statment_syntax_node.h
     include/syntax_nodes/nonterminals/scope_statment_syntax_node.h
     include/syntax_nodes/nonterminals/conditional_expression_syntax_node.h
@@ -56,17 +55,18 @@ set(HEADERS
     include/syntax_nodes/nonterminals/varible_syntax_node.h
     include/syntax_nodes/nonterminals/return_statment_syntax_node.h
     include/grammars/f_grammar.h
-    include/grammars/conditional_expression_grammar.h
-    include/grammars/print_statment_grammar.h
-    include/grammars/if_statment_grammar.h
-    include/grammars/while_statment_grammar.h
+    include/grammars/un_expr_grammar.h
+    # include/grammars/conditional_expression_grammar.h
+    # include/grammars/print_statment_grammar.h
+    # include/grammars/if_statment_grammar.h
+    # include/grammars/while_statment_grammar.h
     include/grammars/statment_grammar.h
-    include/grammars/varible_assigment_grammar.h
+    # include/grammars/varible_assigment_grammar.h
     include/grammars/computational_expression_grammar.h
-    include/grammars/scope_grammar.h
-    include/grammars/function_grammar.h
-    include/grammars/function_call_grammar.h
-    include/grammars/return_statment_grammar.h
+    # include/grammars/scope_grammar.h
+    # include/grammars/function_grammar.h
+    # include/grammars/function_call_grammar.h
+    # include/grammars/return_statment_grammar.h
 )
 
 set(SOURCES
@@ -95,10 +95,8 @@ set(SOURCES
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/name_syntax_node.cpp
     src/syntax_nodes/terminals/function_syntax_node.cpp
-    src/syntax_nodes/nonterminals/addition/addition_syntax_node.cpp
-    src/syntax_nodes/nonterminals/subtraction/subtraction_syntax_node.cpp
-    src/syntax_nodes/nonterminals/multiply/multiply_syntax_node.cpp
-    src/syntax_nodes/nonterminals/division/division_syntax_node.cpp
+    src/syntax_nodes/nonterminals/un_expr_syntax_node.cpp
+    src/syntax_nodes/nonterminals/bin_expr_syntax_node.cpp
     src/syntax_nodes/nonterminals/computational_expression_syntax_node.cpp
     src/syntax_nodes/nonterminals/varible_syntax_node.cpp
     src/syntax_nodes/nonterminals/statment_syntax_node.cpp

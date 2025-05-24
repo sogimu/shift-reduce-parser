@@ -28,11 +28,11 @@ public:
       AdditionPlan to_add;
    };
 
-   std::optional< Plan > TryReduce( const Stack& stack ) const
+   std::optional< Plan > TryReduce( const Stack& stack, const ISyntaxNodeSP& look_ahead ) const
    {
       for( const auto& production : mProductions )
       {
-         const auto& plan_opt = production( stack );
+         const auto& plan_opt = production( stack, look_ahead );
          if( !plan_opt )
             continue;
 
@@ -43,7 +43,6 @@ public:
    }
 
 protected:
-   //    std::vector<std::pair<Features, std::function<Production(const Stack&)>>> mProductionByFeature;
-   std::vector< std::function< std::optional< Plan >( const Stack& ) > > mProductions;
+   std::vector< std::function< std::optional< Plan >( const Stack&, const ISyntaxNodeSP& ) > > mProductions;
 };
 using IGrammarSP = std::shared_ptr< IGrammar >;

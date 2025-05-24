@@ -4,10 +4,10 @@
 #include "is_last_nodes.h"
 #include "nonterminals/computational_expression_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
-#include "nonterminals/division/division_syntax_node.h"
+// #include "nonterminals/division/division_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
-#include "nonterminals/multiply/multiply_syntax_node.h"
+// #include "nonterminals/multiply/multiply_syntax_node.h"
 #include "nonterminals/return_statment_syntax_node.h"
 #include "nonterminals/scope_statment_syntax_node.h"
 #include "nonterminals/varible_assigment_statment_syntax_node.h"
@@ -319,7 +319,7 @@ double Calculator::solve( const std::string& expression ) const
             // std::cout << "varible " + varible->name() + "(" << std::to_string( value ) << ")" << std::endl;
             argument_stack.push_back( value );
          };
-         handlers.addition_syntax_node = [ &argument_stack ]( const AdditionSyntaxNodeSP& /* node */ )
+         handlers.bin_expr_syntax_node = [ &argument_stack ]( const BinExprSyntaxNodeSP& /* node */ )
          {
             auto rhs = argument_stack.back();
             if( !argument_stack.empty() )
@@ -331,42 +331,54 @@ double Calculator::solve( const std::string& expression ) const
             std::cout << std::to_string( lhs ) << " + " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
             argument_stack.push_back( result );
          };
-         handlers.subtraction_syntax_node = [ &argument_stack ]( const SubtractionSyntaxNodeSP& /* node */ )
-         {
-            auto rhs = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
-            auto lhs = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
-            auto result = lhs - rhs;
-            // std::cout << std::to_string( lhs ) << " - " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
-            argument_stack.push_back( result );
-         };
-         handlers.multiply_syntax_node = [ &argument_stack ]( const MultiplySyntaxNodeSP& /* node */ )
-         {
-            auto rhs = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
-            auto lhs = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
-            auto result = lhs * rhs;
-            // std::cout << std::to_string( lhs ) << " * " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
-            argument_stack.push_back( result );
-         };
-         handlers.division_syntax_node = [ &argument_stack ]( const DivisionSyntaxNodeSP& /* node */ )
-         {
-            auto rhs = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
-            auto lhs = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
-            auto result = lhs / rhs;
-            // std::cout << std::to_string( lhs ) << " / " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
-            argument_stack.push_back( result );
-         };
+         // handlers.addition_syntax_node = [ &argument_stack ]( const AdditionSyntaxNodeSP& /* node */ )
+         // {
+         //    auto rhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    auto lhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    auto result = lhs + rhs;
+         //    std::cout << std::to_string( lhs ) << " + " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+         //    argument_stack.push_back( result );
+         // };
+         // handlers.subtraction_syntax_node = [ &argument_stack ]( const SubtractionSyntaxNodeSP& /* node */ )
+         // {
+         //    auto rhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    auto lhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    auto result = lhs - rhs;
+         //    // std::cout << std::to_string( lhs ) << " - " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+         //    argument_stack.push_back( result );
+         // };
+         // handlers.multiply_syntax_node = [ &argument_stack ]( const MultiplySyntaxNodeSP& /* node */ )
+         // {
+         //    auto rhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    auto lhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    auto result = lhs * rhs;
+         //    // std::cout << std::to_string( lhs ) << " * " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+         //    argument_stack.push_back( result );
+         // };
+         // handlers.division_syntax_node = [ &argument_stack ]( const DivisionSyntaxNodeSP& /* node */ )
+         // {
+         //    auto rhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    auto lhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    auto result = lhs / rhs;
+         //    // std::cout << std::to_string( lhs ) << " / " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+         //    argument_stack.push_back( result );
+         // };
          handlers.scope_statment_syntax_node = [ &varible_store, &function_store ]( const ScopeSyntaxNodeSP& /*  scope */ )
          {
             // delete scope in a VaribleStore

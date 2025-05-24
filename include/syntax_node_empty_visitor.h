@@ -19,10 +19,8 @@ public:
       std::function< void( const SlashSyntaxNodeSP& ) > slash_syntax_node = [ this ]( const SlashSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const NumberSyntaxNodeSP& ) > number_syntax_node = [ this ]( const NumberSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FSyntaxNodeSP& ) > f_syntax_node = [ this ]( const FSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const AdditionSyntaxNodeSP& ) > addition_syntax_node = [ this ]( const AdditionSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const SubtractionSyntaxNodeSP& ) > subtraction_syntax_node = [ this ]( const SubtractionSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const MultiplySyntaxNodeSP& ) > multiply_syntax_node = [ this ]( const MultiplySyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const DivisionSyntaxNodeSP& ) > division_syntax_node = [ this ]( const DivisionSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const UnExprSyntaxNodeSP& ) > un_expr_syntax_node = [ this ]( const UnExprSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const BinExprSyntaxNodeSP& ) > bin_expr_syntax_node = [ this ]( const BinExprSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const EolSyntaxNodeSP& ) > eol_syntax_node = [ this ]( const EolSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const SemicolonSyntaxNodeSP& ) > semicolon_syntax_node = [ this ]( const SemicolonSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const StatmentSyntaxNodeSP& ) > statment_syntax_node = [ this ]( const StatmentSyntaxNodeSP& node ) { default_handler( node ); };
@@ -110,24 +108,14 @@ public:
       mHandlers.f_syntax_node( node );
    }
 
-   void visit( const AdditionSyntaxNodeSP& node ) override
+   void visit( const UnExprSyntaxNodeSP& node ) override
    {
-      mHandlers.addition_syntax_node( node );
+      mHandlers.un_expr_syntax_node( node );
    }
-
-   void visit( const SubtractionSyntaxNodeSP& node ) override
+   void visit( const BinExprSyntaxNodeSP& node ) override
    {
-      mHandlers.subtraction_syntax_node( node );
+      mHandlers.bin_expr_syntax_node( node );
    }
-   void visit( const MultiplySyntaxNodeSP& node ) override
-   {
-      mHandlers.multiply_syntax_node( node );
-   }
-   void visit( const DivisionSyntaxNodeSP& node ) override
-   {
-      mHandlers.division_syntax_node( node );
-   }
-
    void visit( const SemicolonSyntaxNodeSP& node ) override
    {
       mHandlers.semicolon_syntax_node( node );

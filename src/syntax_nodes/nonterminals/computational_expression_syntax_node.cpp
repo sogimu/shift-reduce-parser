@@ -6,24 +6,10 @@
 #include "terminals/f_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
-#include "nonterminals/multiply/multiply_syntax_node.h"
-#include "nonterminals/addition/addition_syntax_node.h"
-
-#include <vector>
 
 ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode()
    : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
 {
-}
-ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const AdditionSyntaxNodeSP& e )
-   : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
-{
-   add_back( e );
-}
-ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const MultiplySyntaxNodeSP& e )
-   : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }
-{
-   add_back( e );
 }
 ComputationalExpressionSyntaxNode::ComputationalExpressionSyntaxNode( const FSyntaxNodeSP& e )
    : ISyntaxNode{ Token_Type::COMPUTATIONAL_EXPRESSION }

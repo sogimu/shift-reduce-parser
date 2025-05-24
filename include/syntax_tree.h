@@ -30,20 +30,23 @@
 #include "syntax_nodes/terminals/comma_syntax_node.h"
 #include "syntax_nodes/terminals/number_syntax_node.h"
 #include "syntax_nodes/terminals/open_curly_bracket_syntax_node.h"
+#include "syntax_nodes/nonterminals/bin_expr_syntax_node.h"
 #include "syntax_nodes/terminals/plus_syntax_node.h"
 #include "syntax_nodes/terminals/semicolon_syntax_node.h"
+#include "grammars/un_expr_grammar.h"
+#include "grammars/bin_expr_grammar.h"
 #include "grammars/computational_expression_grammar.h"
-#include "grammars/conditional_expression_grammar.h"
+// #include "grammars/conditional_expression_grammar.h"
 #include "grammars/statment_grammar.h"
 #include "grammars/f_grammar.h"
-#include "grammars/if_statment_grammar.h"
-#include "grammars/while_statment_grammar.h"
-#include "grammars/function_grammar.h"
-#include "grammars/function_call_grammar.h"
+// #include "grammars/if_statment_grammar.h"
+// #include "grammars/while_statment_grammar.h"
+// #include "grammars/function_grammar.h"
+// #include "grammars/function_call_grammar.h"
 #include "grammars/print_statment_grammar.h"
 #include "grammars/scope_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
-#include "grammars/return_statment_grammar.h"
+// #include "grammars/return_statment_grammar.h"
 #include "i_grammar.h"
 #include "i_syntax_node.h"
 #include "lexical_tokens.h"
@@ -58,25 +61,31 @@ public:
    {
       std::vector< IGrammarSP > grammars{
          std::make_shared< F >(),
+         std::make_shared< BinExpr >(),
+         std::make_shared< UnExpr >(),
          std::make_shared< ComputationalExpression >(),
          std::make_shared< VaribleAssigment >(),
-         std::make_shared< Return >(),
+         // std::make_shared< Return >(),
          std::make_shared< Print >(),
-         std::make_shared< ConditionalExpression >(),
+         // std::make_shared< ConditionalExpression >(),
          std::make_shared< Statment >(),
          std::make_shared< Scope >(),
-         std::make_shared< If >(),
-         std::make_shared< While >(),
-         std::make_shared< Function >(),
-         std::make_shared< FunctionCall >(),
+         // std::make_shared< If >(),
+         // std::make_shared< While >(),
+         // std::make_shared< Function >(),
+         // std::make_shared< FunctionCall >(),
       };
 
       Stack stack;
       const auto& tokens = lexical_tokens.list();
       for( auto it = tokens.begin(); it != tokens.end(); ++it )
       {
+         ISyntaxNodeSP lookahead_node;
+         if( auto next_it = std::next( it ); next_it != tokens.end() )
+         {
+           lookahead_node = createSyntaxNodeFromToken( *next_it );
+         }
          const auto& token = *it;
-         //            const auto& node = std::make_shared<ISyntaxNode>(token.type);
          const auto& node = createSyntaxNodeFromToken( token );
          stack.emplace_back( node );
 
@@ -86,21 +95,21 @@ public:
             is_production_can_be = false;
             for( const auto& grammar : grammars )
             {
-               auto plan_opt = grammar->TryReduce( stack );
-               while( plan_opt )
-               {
-                  is_production_can_be = true;
-                  auto plan = plan_opt.value();
-                  //                        const auto& plan = production->make_plan();
+              const auto& plan_opt = grammar->TryReduce( stack, lookahead_node );
+              if( !plan_opt )
+              {
+                continue;
+              }
+              is_production_can_be = true;
+              const auto& plan = plan_opt.value();
 
-                  for( size_t i = 0; i < plan.to_remove.nodes.size(); ++i )
-                     stack.pop_back();
+              for( size_t i = 0; i < plan.to_remove.nodes.size(); ++i )
+                stack.pop_back();
 
-                  for( const auto& d : plan.to_add.nodes )
-                     stack.push_back( d );
+              for( const auto& d : plan.to_add.nodes )
+                stack.push_back( d );
 
-                  plan_opt = grammar->TryReduce( stack );
-               }
+              break;
             }
          }
       }
@@ -342,10 +351,53 @@ public:
             handlers.slash_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SLASH" << "}"; };
             handlers.number_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "NUMBER" << "}"; };
             handlers.f_syntax_node = [ &s ]( const FSyntaxNodeSP& node ) { s << "{" << "F" << '(' << std::to_string( node->value() ) << ')' << "}"; };
-            handlers.addition_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ADDITION" << "}"; };
-            handlers.subtraction_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SUBTRACTION" << "}"; };
-            handlers.multiply_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MULTIPLY" << "}"; };
-            handlers.division_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "DIVISION" << "}"; };
+            // handlers.addition_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ADDITION" << "}"; };
+            // handlers.subtraction_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SUBTRACTION" << "}"; };
+            // handlers.multiply_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MULTIPLY" << "}"; };
+            // handlers.division_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "DIVISION" << "}"; };
+            handlers.bin_expr_syntax_node = [ &s ]( const BinExprSyntaxNodeSP& node )
+            { 
+               std::string type;
+               switch( node->type() )
+               {
+               case BinExprSyntaxNode::Type::Addition:
+               {
+                  type = "Addition";
+               };
+               break;
+               case BinExprSyntaxNode::Type::Substruction:
+               {
+                  type = "Substruction";
+               };
+               break;
+               case BinExprSyntaxNode::Type::Multiply:
+               {
+                  type = "Multiply";
+               };
+               break;
+               case BinExprSyntaxNode::Type::Division:
+               {
+                  type = "Division";
+               };
+               break;
+               }
+
+               s << "{" << "BIN_EXPR" << '(' << type << ')' << "}";
+            };
+            handlers.un_expr_syntax_node = [ &s ]( const UnExprSyntaxNodeSP& node )
+            { 
+               std::string type;
+               switch( node->type() )
+               {
+               case UnExprSyntaxNode::Type::Negation:
+               {
+                  type = "Negation";
+               };
+               break;
+               }
+
+               s << "{" << "UN_EXPR" << '(' << type << ')' << "}";
+            };
             handlers.eol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EOL" << "}"; };
             handlers.semicolon_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SEMICOLON" << "}"; };
             handlers.return_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN" << "}"; };

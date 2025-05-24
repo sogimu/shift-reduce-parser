@@ -27,7 +27,7 @@ public:
 
       // OPEN_CURLY_BRACKET STATMENT+ CLOSE_CURLY_BRACKET
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             OpenCurlyBracketSyntaxNodeSP open_curly_bracket;
             std::vector< ISyntaxNodeSP > expressions;
@@ -149,7 +149,7 @@ public:
 
       // BOL SCOPE EOL
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             BolSyntaxNodeSP bol;
             ScopeSyntaxNodeSP scope;
@@ -201,7 +201,7 @@ public:
 
       // BOL EXPRESSION EOL
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             BolSyntaxNodeSP bol;
             StatmentSyntaxNodeSP expression;

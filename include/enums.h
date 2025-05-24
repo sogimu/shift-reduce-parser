@@ -22,6 +22,8 @@ enum class Token_Type
    SUBTRACTION,
    MULTIPLY,
    DIVISION,
+   UnExpr,
+   BinExpr,
    IF,
    WHILE,
    F,

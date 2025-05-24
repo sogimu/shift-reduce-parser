@@ -29,7 +29,7 @@ public:
 
       // NAME EQUAL COMPUTATIONAL_EXPRESSION SEMICOLON
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             EqualSyntaxNodeSP equal;
@@ -56,36 +56,48 @@ public:
                   equal = node;
                }
             };
-            handlers.computational_expression_syntax_node = [ &value, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            handlers.computational_expression_syntax_node = [ &value, &state, &lookahead ]( const ComputationalExpressionSyntaxNodeSP& node )
             {
                if( state == State::EQUAL )
                {
-                  value = node;
-                  state = State::VALUE;
+                   if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) )
+                   {
+                        value = node;
+                        state = State::VALUE;
+                        state = State::FINISH;
+                    }
+                  // value = node;
+                  // state = State::VALUE;
                }
             };
-            handlers.function_call_syntax_node = [ &value, &state ]( const FunctionCallSyntaxNodeSP& node )
+            handlers.function_call_syntax_node = [ &value, &state, &lookahead ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::EQUAL )
                {
-                  const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( node->name() );
-                  for( const auto& argument : *node )
-                     function_call->add_back( argument );
-                  value = function_call;
-                  state = State::VALUE;
+                   if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) )
+                   {
+                        const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( node->name() );
+                        for( const auto& argument : *node )
+                           function_call->add_back( argument );
+                        value = function_call;
+                        state = State::VALUE;
+                        // expression = node;
+                        // semicolon = node;
+                        state = State::FINISH;
+                    }
                }
             };
-            handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
-            {
-               if( state == State::VALUE )
-               {
-                  semicolon = node;
-                  state = State::SEMICOLON;
-                  state = State::FINISH;
-               }
-            };
+            // handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
+            // {
+            //    if( state == State::VALUE )
+            //    {
+            //       semicolon = node;
+            //       state = State::SEMICOLON;
+            //       state = State::FINISH;
+            //    }
+            // };
 
-            iterate_over_last_n_nodes( stack, 4, handlers );
+            iterate_over_last_n_nodes( stack, 3, handlers );
 
             if( state != State::FINISH )
                return {};
@@ -94,7 +106,7 @@ public:
             plan.to_remove.nodes.push_back( name );
             plan.to_remove.nodes.push_back( equal );
             plan.to_remove.nodes.push_back( value );
-            plan.to_remove.nodes.push_back( semicolon );
+            // plan.to_remove.nodes.push_back( semicolon );
 
             // const auto& computational_expression = std::make_shared< ComputationalExpressionSyntaxNode >();
             // computational_expression->add_back( expression );
@@ -108,7 +120,7 @@ public:
 
       // NAME EQUAL NAME SEMICOLON
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP target_name;
             EqualSyntaxNodeSP equal;
