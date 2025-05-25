@@ -257,54 +257,6 @@ public:
       return syntax_node;
    }
 
-   template< typename Func >
-   double execute_ast( const ISyntaxNodeSP& root, Func /* func */ ) const
-   {
-      double result = 0.0;
-
-      std::map< ISyntaxNodeSP, double > valueByASTNode;
-
-      iterative_dfs(
-         root, []( const ISyntaxNodeSP& /* node */ ) -> bool { return false; },
-         [ /* &result, &valueByASTNode, &func */ ]( const ISyntaxNodeSP& /* node */ )
-         {
-            //            if( node->first && node->second )
-            //            {
-            //                double first_operand;
-            //                if( valueByASTNode.count(node->first) )
-            //                {
-            //                    first_operand = valueByASTNode[node->first];
-            //                }
-            //                else
-            //                {
-            //                    first_operand = std::stod(node->first->token.text);
-            //                }
-
-            //                double second_operand;
-            //                if( valueByASTNode.count(node->second) )
-            //                {
-            //                    second_operand = valueByASTNode[node->second];
-            //                }
-            //                else
-            //                {
-            //                    second_operand = std::stod(node->second->token.text);
-            //                }
-
-            //                double result_operand = 0.0;
-            //                result_operand = func(first_operand, second_operand, node->token.text);
-
-            //                valueByASTNode[node] = result_operand;
-            //                result = result_operand;
-            //            }
-            //            else
-            //            {
-            //                result = std::stod(node->token.text);
-            //            }
-         } );
-
-      return result;
-   }
-
    bool operator==( const SyntaxTree& syntax_tree ) const
    {
       bool result = true;
