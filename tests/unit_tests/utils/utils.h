@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nlohmann_json/json.hpp"
+#include "nonterminals/conditional_expression_syntax_node.h"
 #include "syntax_tree.h"
 
 #include <cstddef>
@@ -150,6 +151,26 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      arguments.pop_back();
                      arguments.push_back( if_statment_syntax_node );
                   }
+                  else if( key == "WhileStatmentSyntaxNode" )
+                  {
+                     const auto& while_statment_syntax_node = std::make_shared< WhileStatmentSyntaxNode >();
+                     auto it = arguments.begin();
+                     std::advance( it, arguments.size() - 2 );
+                     if( !arguments.empty() )
+                     {
+                        ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( *it );
+                        while_statment_syntax_node->add_back( argument0 );
+                     }
+                     if( !arguments.empty() )
+                     {
+                        ++it;
+                        ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( *it );
+                        while_statment_syntax_node->add_back( argument1 );
+                     }
+                     arguments.pop_back();
+                     arguments.pop_back();
+                     arguments.push_back( while_statment_syntax_node );
+                  }
                   else if( key == "BinExprSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
@@ -231,7 +252,9 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      arguments.pop_back();
                      ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
                      arguments.pop_back();
-                     const auto& conditinal_expression_syntax_node = std::make_shared< ConditionalExpressionSyntaxNode >();
+                     ConditionalExpressionSyntaxNode::Type type = std::get< json >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& conditinal_expression_syntax_node = std::make_shared< ConditionalExpressionSyntaxNode >( type );
                      conditinal_expression_syntax_node->add_back( argument1 );
                      conditinal_expression_syntax_node->add_back( argument0 );
                      arguments.push_back( conditinal_expression_syntax_node );

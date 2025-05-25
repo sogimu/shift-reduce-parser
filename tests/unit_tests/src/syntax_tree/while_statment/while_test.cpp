@@ -5,11 +5,11 @@
 
 using namespace std;
 
-TEST( SYNTAX_TREE_IF, WITHOUT_ELSE )
+TEST( SYNTAX_TREE_WHILE, CASE0 )
 {
    // ARRANGE
    const auto& input = R"""(
-    if(1==1)
+    while(1==1)
     {
     
     }
@@ -24,7 +24,7 @@ TEST( SYNTAX_TREE_IF, WITHOUT_ELSE )
         {
              "StatmentSyntaxNode": [
                 {
-                  "IfStatmentSyntaxNode": [
+                  "WhileStatmentSyntaxNode": [
                     {
                       "ConditionalExpressionSyntaxNode": [
                         4,

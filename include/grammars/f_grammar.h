@@ -10,10 +10,6 @@
 
 #include <vector>
 
-class E;
-class T;
-class P;
-
 class F : public IGrammar
 {
 public:
@@ -32,7 +28,7 @@ public:
          F
       };
 
-      // NUMBER [PLUS,MINUS,MULTIPLY,DIVISION,SEMICOLON,CLOSE_CIRCLE_BRACKET]
+      // NUMBER [PLUS,MINUS,MULTIPLY,DIVISION,SEMICOLON,CLOSE_CIRCLE_BRACKET,EQUAL]
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -55,6 +51,7 @@ public:
                                                                                     check_type<PlusSyntaxNode>( lookahead ) || 
                                                                                     check_type<AsteriskSyntaxNode>( lookahead ) || 
                                                                                     check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
+                                                                                    check_type<EqualSyntaxNode>( lookahead ) || 
                                                                                     check_type<SlashSyntaxNode>( lookahead ) ) )
                                                                                {
                                                                                  number = node;

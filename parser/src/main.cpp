@@ -11,23 +11,30 @@ int main()
    // 23's number shall be 17711
    std::string e = R"(
     {
-      function fibonacci(n)
+      1+(2+3)+(4*5)/2;
+      
+      if( 2 == 2 )
       {
-        a = 0;
-        b = 1;
-        i = 2;
-        while( i < n )
-        {
-            c = a + b;
-            a = b;
-            b = c;
-            i = i + 1;
-        }
-        return b;
+        1+(2+3)+(4*5)/2;
+        a = 232 + 2;  
       }
-      number = fibonacci(23);
-      print(number);
-      print(number==17711);
+      // function fibonacci(n)
+      // {
+      //   a = 0;
+      //   b = 1;
+      //   i = 2;
+      //   while( i < n )
+      //   {
+      //       c = a + b;
+      //       a = b;
+      //       b = c;
+      //       i = i + 1;
+      //   }
+      //   return b;
+      // }
+      // number = fibonacci(23);
+      // print(number);
+      // print(number==17711);
 
       // r_fibonacci(n)
       // {
@@ -51,8 +58,8 @@ int main()
       //   return a + b;
       // }
       // number = r_fibonacci(3);
-      // print(number);
-      // print(number==17711);
+      print(number);
+      print(number==17711);
       // print( r_fibonacci(0) );
       // print( r_fibonacci(1) );
       // print( r_fibonacci(2) );

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "terminals/equal_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "nonterminals/computational_expression_syntax_node.h"
 #include "i_grammar.h"
@@ -172,7 +173,7 @@ public:
       //       return {};
       //    } );
    
-      // BinExpr|UnExpr|F [SEMICOLON] 
+      // BinExpr|UnExpr|F [SEMICOLON,EQUAL,CLOSE_CIRCLE_BRACKET] 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -188,7 +189,8 @@ public:
             {
                if( state == State::START )
                {
-                 if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) )
+                 if( lookahead && check_type<SemicolonSyntaxNode>( lookahead )  || 
+                                  check_type<EqualSyntaxNode>( lookahead ))
                  {
                       expression = node;
                       // semicolon = node;
@@ -201,7 +203,8 @@ public:
             {
                if( state == State::START )
                {
-                 if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) )
+                 if( lookahead && check_type<SemicolonSyntaxNode>( lookahead )  || 
+                                  check_type<EqualSyntaxNode>( lookahead ))
                  {
                       expression = node;
                       // semicolon = node;
@@ -215,6 +218,7 @@ public:
                if( state == State::START )
                {
                  if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
+                                  check_type<EqualSyntaxNode>( lookahead ) ||
                                   check_type<CloseCircleBracketSyntaxNode>( lookahead ) )
                  {
                       expression = node;

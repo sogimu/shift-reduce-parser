@@ -33,7 +33,7 @@ public:
 
       // COMPUTATIONAL_EXPRESSION EQUAL EQUAL COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             ComputationalExpressionSyntaxNodeSP computational_expression0;
             EqualSyntaxNodeSP equal0;
@@ -92,7 +92,7 @@ public:
 
       // NAME EQUAL EQUAL COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             EqualSyntaxNodeSP equal0;
@@ -153,7 +153,7 @@ public:
 
       // COMPUTATIONAL_EXPRESSION LESS COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             ComputationalExpressionSyntaxNodeSP computational_expression0;
             LessSyntaxNodeSP less;
@@ -205,7 +205,7 @@ public:
 
       // COMPUTATIONAL_EXPRESSION LESS EQUAL COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             ComputationalExpressionSyntaxNodeSP computational_expression0;
             LessSyntaxNodeSP less;
@@ -267,7 +267,7 @@ public:
 
       // COMPUTATIONAL_EXPRESSION MORE EQUAL COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             ComputationalExpressionSyntaxNodeSP computational_expression0;
             MoreSyntaxNodeSP more;
@@ -329,7 +329,7 @@ public:
 
       // NAME LESS COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             LessSyntaxNodeSP less;
@@ -383,7 +383,7 @@ public:
 
       // NAME LESS NAME
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             LessSyntaxNodeSP less;
@@ -433,7 +433,7 @@ public:
 
       // NAME LESS EQUAL COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             LessSyntaxNodeSP less;
@@ -497,7 +497,7 @@ public:
 
       // NAME MORE COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
-         []( const Stack& stack ) -> std::optional< Plan >
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             MoreSyntaxNodeSP more;
@@ -551,7 +551,7 @@ public:
 
       // COMPUTATIONAL_EXPRESSION MORE COMPUTATIONAL_EXPRESSION
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             ComputationalExpressionSyntaxNodeSP computational_expression0;
             MoreSyntaxNodeSP more;

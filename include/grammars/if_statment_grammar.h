@@ -30,7 +30,7 @@ public:
 
       // IF CONDITION SCOPE
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             IfSyntaxNodeSP if_node;
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;
