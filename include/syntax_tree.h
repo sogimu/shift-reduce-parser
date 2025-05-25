@@ -42,7 +42,7 @@
 #include "grammars/if_statment_grammar.h"
 #include "grammars/while_statment_grammar.h"
 #include "grammars/function_grammar.h"
-// #include "grammars/function_call_grammar.h"
+#include "grammars/function_call_grammar.h"
 #include "grammars/print_statment_grammar.h"
 #include "grammars/scope_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
@@ -73,7 +73,7 @@ public:
          std::make_shared< While >(),
          // std::make_shared< Return >(),
          std::make_shared< Function >(),
-         // std::make_shared< FunctionCall >(),
+         std::make_shared< FunctionCall >()
       };
 
       Stack stack;

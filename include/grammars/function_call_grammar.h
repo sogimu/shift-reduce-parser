@@ -35,7 +35,7 @@ public:
 
       // NAME OPEN_CIRCLE_BRACKET (NAME|COMPUTATIONAL_EXPRESSION COMMA?)+ CLOSE_CIRCLE_BRACKET
       mProductions.emplace_back(
-         []( const Stack& stack ) -> std::optional< Plan >
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             NameSyntaxNodeSP name;
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;
@@ -122,18 +122,18 @@ public:
                   state = State::OPEN_CIRCLE_BRACKET;
                }
             };
-            handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
+            handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state, &lookahead ]( const CloseCircleBracketSyntaxNodeSP& node )
             {
                if( state == State::ARGUMENT )
                {
-                  close_circle_bracket = node;
-                  state = State::CLOSE_CIRCLE_BRACKET;
-                  state = State::FINISH;
+                 if( lookahead && ( check_type<SemicolonSyntaxNode>( lookahead ) ) )
+                 {
+                    close_circle_bracket = node;
+                    state = State::CLOSE_CIRCLE_BRACKET;
+                    state = State::FINISH;
+                 }
                }
             };
-
-            int s = distance_between_open_close_circle_bracket;
-            ( void )s;
 
             iterate_over_last_n_nodes( stack, distance_between_open_close_circle_bracket + 1, handlers );
 

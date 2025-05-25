@@ -135,48 +135,49 @@ public:
             return plan;
          } );
 
-      // // FUNCTION_CALL
-      // mProductions.emplace_back(
-      //    [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
-      //    {
-      //       FunctionCallSyntaxNodeSP function_call_syntax_node;
-      //       SemicolonSyntaxNodeSP semicolon;
-      //
-      //       State state = State::START;
-      //
-      //       SyntaxNodeEmptyVisitor::Handlers handlers;
-      //       handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-      //       handlers.function_call_syntax_node = [ &function_call_syntax_node, &state ]( const FunctionCallSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::START )
-      //          {
-      //             function_call_syntax_node = node;
-      //             state = State::FUNCTION_CALL;
-      //          }
-      //       };
-      //       handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::FUNCTION_CALL )
-      //          {
-      //             semicolon = node;
-      //             state = State::SEMICOLON;
-      //             state = State::FINISH;
-      //          }
-      //       };
-      //
-      //       iterate_over_last_n_nodes( stack, 2, handlers );
-      //
-      //       if( state != State::FINISH )
-      //          return {};
-      //
-      //       Plan plan;
-      //       plan.to_remove.nodes.push_back( function_call_syntax_node );
-      //       plan.to_remove.nodes.push_back( semicolon );
-      //
-      //       const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( function_call_syntax_node );
-      //       plan.to_add.nodes.push_back( expression_syntax_node );
-      //       return plan;
-      //    } );
+      // FUNCTION_CALL
+      mProductions.emplace_back(
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         {
+            FunctionCallSyntaxNodeSP function_call_syntax_node;
+            SemicolonSyntaxNodeSP semicolon;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.function_call_syntax_node = [ &function_call_syntax_node, &state ]( const FunctionCallSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  function_call_syntax_node = node;
+                  state = State::FUNCTION_CALL;
+               }
+            };
+            handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
+            {
+               if( state == State::FUNCTION_CALL )
+               {
+                  semicolon = node;
+                  state = State::SEMICOLON;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 2, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( function_call_syntax_node );
+            plan.to_remove.nodes.push_back( semicolon );
+
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( function_call_syntax_node );
+            plan.to_add.nodes.push_back( expression_syntax_node );
+            return plan;
+         } );
+
       // PRINT_STATMENT
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >

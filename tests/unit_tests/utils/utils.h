@@ -195,6 +195,26 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      const auto& function_statment_syntax_node = std::make_shared< FunctionStatmentSyntaxNode >( function_name, function_arguments, scope );
                      arguments.push_back( function_statment_syntax_node );
                   }
+                  else if( key == "FunctionCallSyntaxNode" )
+                  {
+                     std::vector<ISyntaxNodeSP> function_arguments;
+                     if( arguments.size() > 1 )
+                     {
+                        for( size_t i = arguments.size() - 1; i < arguments.size(); ++i )
+                        {
+                           ISyntaxNodeSP argument = std::get< ISyntaxNodeSP >( arguments[ i ] );
+                           function_arguments.push_back( argument );
+                        }
+                        for( size_t i = arguments.size() - 1; i < arguments.size(); ++i )
+                        {
+                           arguments.pop_back();
+                        }
+                     }
+                     const std::string& function_name = std::get< json >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& function_call_syntax_node = std::make_shared< FunctionCallSyntaxNode >( function_name, function_arguments );
+                     arguments.push_back( function_call_syntax_node );
+                  }
                   else if( key == "BinExprSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );

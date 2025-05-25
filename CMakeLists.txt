@@ -39,7 +39,6 @@ set(HEADERS
     include/syntax_nodes/terminals/if_syntax_node.h
     include/syntax_nodes/terminals/name_syntax_node.h
     include/syntax_nodes/terminals/comma_syntax_node.h
-    include/syntax_nodes/terminals/function_syntax_node.h
     include/syntax_nodes/nonterminals/un_expr_syntax_node.h
     include/syntax_nodes/nonterminals/bin_expr_syntax_node.h
     include/syntax_nodes/nonterminals/statment_syntax_node.h
@@ -94,7 +93,6 @@ set(SOURCES
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/name_syntax_node.cpp
-    src/syntax_nodes/terminals/function_syntax_node.cpp
     src/syntax_nodes/nonterminals/un_expr_syntax_node.cpp
     src/syntax_nodes/nonterminals/bin_expr_syntax_node.cpp
     src/syntax_nodes/nonterminals/computational_expression_syntax_node.cpp
