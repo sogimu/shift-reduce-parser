@@ -46,7 +46,7 @@
 #include "grammars/print_statment_grammar.h"
 #include "grammars/scope_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
-// #include "grammars/return_statment_grammar.h"
+#include "grammars/return_statment_grammar.h"
 #include "i_grammar.h"
 #include "i_syntax_node.h"
 #include "lexical_tokens.h"
@@ -67,11 +67,11 @@ public:
          std::make_shared< VaribleAssigment >(),
          std::make_shared< Print >(),
          std::make_shared< ConditionalExpression >(),
+         std::make_shared< Return >(),
          std::make_shared< Statment >(),
          std::make_shared< Scope >(),
          std::make_shared< If >(),
          std::make_shared< While >(),
-         // std::make_shared< Return >(),
          std::make_shared< Function >(),
          std::make_shared< FunctionCall >()
       };
@@ -298,10 +298,6 @@ public:
             handlers.slash_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SLASH" << "}"; };
             handlers.number_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "NUMBER" << "}"; };
             handlers.f_syntax_node = [ &s ]( const FSyntaxNodeSP& node ) { s << "{" << "F" << '(' << std::to_string( node->value() ) << ')' << "}"; };
-            // handlers.addition_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ADDITION" << "}"; };
-            // handlers.subtraction_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SUBTRACTION" << "}"; };
-            // handlers.multiply_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MULTIPLY" << "}"; };
-            // handlers.division_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "DIVISION" << "}"; };
             handlers.bin_expr_syntax_node = [ &s ]( const BinExprSyntaxNodeSP& node )
             { 
                std::string type;

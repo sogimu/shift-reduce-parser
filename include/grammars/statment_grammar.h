@@ -222,39 +222,39 @@ public:
             return plan;
          } );
 
-      // // RETURN_STATMENT
-      // mProductions.emplace_back(
-      //    [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
-      //    {
-      //       ReturnStatmentSyntaxNodeSP return_statment_syntax_node;
-      //
-      //       State state = State::START;
-      //
-      //       SyntaxNodeEmptyVisitor::Handlers handlers;
-      //       handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-      //       handlers.return_statment_syntax_node = [ &return_statment_syntax_node, &state ]( const ReturnStatmentSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::START )
-      //          {
-      //             return_statment_syntax_node = node;
-      //             state = State::RETURN_STATMENT;
-      //             state = State::FINISH;
-      //          }
-      //       };
-      //
-      //       iterate_over_last_n_nodes( stack, 1, handlers );
-      //
-      //       if( state != State::FINISH )
-      //          return {};
-      //
-      //       Plan plan;
-      //       plan.to_remove.nodes.push_back( return_statment_syntax_node );
-      //
-      //       const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( return_statment_syntax_node );
-      //       plan.to_add.nodes.push_back( expression_syntax_node );
-      //       return plan;
-      //    } );
-      //
+      // RETURN_STATMENT
+      mProductions.emplace_back(
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         {
+            ReturnStatmentSyntaxNodeSP return_statment_syntax_node;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.return_statment_syntax_node = [ &return_statment_syntax_node, &state ]( const ReturnStatmentSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  return_statment_syntax_node = node;
+                  state = State::RETURN_STATMENT;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 1, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( return_statment_syntax_node );
+
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( return_statment_syntax_node );
+            plan.to_add.nodes.push_back( expression_syntax_node );
+            return plan;
+         } );
+
       // COMPUTATIONAL_EXPRESSION_NODE SEMICOLON
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >

@@ -27,9 +27,9 @@ public:
          SEMICOLON,
       };
 
-      // RETURN computational_expression SEMICOLON
+      // RETURN COMPUTATIONAL_EXPRESSION SEMICOLON
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             ReturnSyntaxNodeSP return_node;
             ISyntaxNodeSP argument;
