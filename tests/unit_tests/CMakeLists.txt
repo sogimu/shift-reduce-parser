@@ -16,6 +16,7 @@ add_executable(unit_tests
     src/syntax_tree/conditional_expression/conditional_expression_test.cpp
     src/syntax_tree/if_statment/if_test.cpp
     src/syntax_tree/while_statment/while_test.cpp
+    src/syntax_tree/function_statment/function_statment_test.cpp
     src/syntax_tree/scope_statment/scope_test.cpp
     src/syntax_tree/varible_assign_expression/varible_assign_expression_test.cpp
     src/syntax_tree/print_expression/print_test.cpp

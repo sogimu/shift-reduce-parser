@@ -18,7 +18,7 @@ class FunctionStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared
 public:
    FunctionStatmentSyntaxNode();
    FunctionStatmentSyntaxNode( const std::string& name );
-   FunctionStatmentSyntaxNode( const std::string& name, const ScopeSyntaxNodeSP& scope );
+   FunctionStatmentSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;

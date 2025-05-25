@@ -102,39 +102,39 @@ public:
             return plan;
          } );
 
-      // // FUNCTION_STATMENT
-      // mProductions.emplace_back(
-      //    [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >
-      //    {
-      //       FunctionStatmentSyntaxNodeSP function_syntax_node;
-      //
-      //       State state = State::START;
-      //
-      //       SyntaxNodeEmptyVisitor::Handlers handlers;
-      //       handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-      //       handlers.function_statment_syntax_node = [ &function_syntax_node, &state ]( const FunctionStatmentSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::START )
-      //          {
-      //             function_syntax_node = node;
-      //             state = State::FUNCTION_STATMENT;
-      //             state = State::FINISH;
-      //          }
-      //       };
-      //
-      //       iterate_over_last_n_nodes( stack, 1, handlers );
-      //
-      //       if( state != State::FINISH )
-      //          return {};
-      //
-      //       Plan plan;
-      //       plan.to_remove.nodes.push_back( function_syntax_node );
-      //
-      //       const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( function_syntax_node );
-      //       plan.to_add.nodes.push_back( expression_syntax_node );
-      //       return plan;
-      //    } );
-      //
+      // FUNCTION_STATMENT
+      mProductions.emplace_back(
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         {
+            FunctionStatmentSyntaxNodeSP function_syntax_node;
+
+            State state = State::START;
+
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.function_statment_syntax_node = [ &function_syntax_node, &state ]( const FunctionStatmentSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  function_syntax_node = node;
+                  state = State::FUNCTION_STATMENT;
+                  state = State::FINISH;
+               }
+            };
+
+            iterate_over_last_n_nodes( stack, 1, handlers );
+
+            if( state != State::FINISH )
+               return {};
+
+            Plan plan;
+            plan.to_remove.nodes.push_back( function_syntax_node );
+
+            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( function_syntax_node );
+            plan.to_add.nodes.push_back( expression_syntax_node );
+            return plan;
+         } );
+
       // // FUNCTION_CALL
       // mProductions.emplace_back(
       //    [ /* this */ ]( const Stack& stack ) -> std::optional< Plan >

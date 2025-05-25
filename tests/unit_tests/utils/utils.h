@@ -1,7 +1,9 @@
 #pragma once
 
+#include "i_syntax_node.h"
 #include "nlohmann_json/json.hpp"
 #include "nonterminals/conditional_expression_syntax_node.h"
+#include "nonterminals/function_statment_syntax_node.h"
 #include "syntax_tree.h"
 
 #include <cstddef>
@@ -171,6 +173,28 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      arguments.pop_back();
                      arguments.push_back( while_statment_syntax_node );
                   }
+                  else if( key == "FunctionStatmentSyntaxNode" )
+                  {
+                     ScopeSyntaxNodeSP scope = std::dynamic_pointer_cast<ScopeSyntaxNode>(std::get< ISyntaxNodeSP >( arguments.back() ));
+                     arguments.pop_back();
+                     std::vector<ISyntaxNodeSP> function_arguments;
+                     if( arguments.size() > 1 )
+                     {
+                        for( size_t i = arguments.size() - 1; i < arguments.size(); ++i )
+                        {
+                           ISyntaxNodeSP argument = std::get< ISyntaxNodeSP >( arguments[ i ] );
+                           function_arguments.push_back( argument );
+                        }
+                        for( size_t i = arguments.size() - 1; i < arguments.size(); ++i )
+                        {
+                           arguments.pop_back();
+                        }
+                     }
+                     const std::string& function_name = std::get< json >( arguments.back() );
+                     arguments.pop_back();
+                     const auto& function_statment_syntax_node = std::make_shared< FunctionStatmentSyntaxNode >( function_name, function_arguments, scope );
+                     arguments.push_back( function_statment_syntax_node );
+                  }
                   else if( key == "BinExprSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
@@ -191,50 +215,6 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      const auto& un_expr_syntax_node = std::make_shared< UnExprSyntaxNode >( type, argument0 );
                      arguments.push_back( un_expr_syntax_node );
                   }
-                  // else if( key == "AdditionSyntaxNode" )
-                  // {
-                  //    ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
-                  //    arguments.pop_back();
-                  //    ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
-                  //    arguments.pop_back();
-                  //    const auto& addition_syntax_node = std::make_shared< AdditionSyntaxNode >();
-                  //    addition_syntax_node->add_back( argument1 );
-                  //    addition_syntax_node->add_back( argument0 );
-                  //    arguments.push_back( addition_syntax_node );
-                  // }
-                  // else if( key == "SubtractionSyntaxNode" )
-                  // {
-                  //    ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
-                  //    arguments.pop_back();
-                  //    ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
-                  //    arguments.pop_back();
-                  //    const auto& addition_syntax_node = std::make_shared< SubtractionSyntaxNode >();
-                  //    addition_syntax_node->add_back( argument1 );
-                  //    addition_syntax_node->add_back( argument0 );
-                  //    arguments.push_back( addition_syntax_node );
-                  // }
-                  // else if( key == "MultiplySyntaxNode" )
-                  // {
-                  //    ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
-                  //    arguments.pop_back();
-                  //    ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
-                  //    arguments.pop_back();
-                  //    const auto& multiple_syntax_node = std::make_shared< MultiplySyntaxNode >();
-                  //    multiple_syntax_node->add_back( argument1 );
-                  //    multiple_syntax_node->add_back( argument0 );
-                  //    arguments.push_back( multiple_syntax_node );
-                  // }
-                  // else if( key == "DivisionSyntaxNode" )
-                  // {
-                  //    ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
-                  //    arguments.pop_back();
-                  //    ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
-                  //    arguments.pop_back();
-                  //    const auto& division_syntax_node = std::make_shared< DivisionSyntaxNode >();
-                  //    division_syntax_node->add_back( argument1 );
-                  //    division_syntax_node->add_back( argument0 );
-                  //    arguments.push_back( division_syntax_node );
-                  // }
                   else if( key == "VaribleAssigmentStatmentSyntaxNode" )
                   {
                      ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );

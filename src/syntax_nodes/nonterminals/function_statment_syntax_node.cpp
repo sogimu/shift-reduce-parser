@@ -1,10 +1,11 @@
 #include "nonterminals/function_statment_syntax_node.h"
 
+#include <string>
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 #include "nonterminals/scope_statment_syntax_node.h"
 #include "terminals/name_syntax_node.h"
-#include <string>
+#include "utils.h"
 
 FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode()
    : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
@@ -17,10 +18,22 @@ FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name 
 {
 }
 
-FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name, const ScopeSyntaxNodeSP& scope )
+FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope )
    : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
    , mName{ name }
 {
+   for( const auto& argument : arguments )
+   {
+      ISyntaxNodeSP child = argument;
+
+      if( check_type< NameSyntaxNode >( argument ) )
+      {
+         const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
+         child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
+      }
+
+      add_back( child );
+   }
    add_back( scope );
 }
 
