@@ -5,13 +5,12 @@
 
 using namespace std;
 
-TEST( SYNTAX_TREE_FUNCTION, CASE0 )
+TEST( SYNTAX_TREE_FUNCTION_STATMENT, CASE0 )
 {
    // ARRANGE
    const auto& input = R"""(
-    foo(a)
+    function foo(a)
     {
-    
     }
    )""";
 

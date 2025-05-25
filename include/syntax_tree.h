@@ -230,6 +230,11 @@ public:
          syntax_node = std::make_shared< WhileSyntaxNode >();
       };
       break;
+      case Token_Type::FUNCTION:
+      {
+         syntax_node = std::make_shared< FunctionSyntaxNode >();
+      };
+      break;
       case Token_Type::NAME:
       {
          syntax_node = std::make_shared< NameSyntaxNode >( token.text );
@@ -393,6 +398,7 @@ public:
             handlers.if_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_STATMENT" << "}"; };
             handlers.while_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE" << "}"; };
             handlers.while_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_STATMENT" << "}"; };
+            handlers.function_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION" << "}"; };
             handlers.function_call_syntax_node = [ &s ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << "}"; };
             handlers.function_statment_syntax_node = [ &s ]( const FunctionStatmentSyntaxNodeSP& node )
             { s << "{" << "FUNCTION_STATMENT" << " (" << node->name() << ")" << "}"; };

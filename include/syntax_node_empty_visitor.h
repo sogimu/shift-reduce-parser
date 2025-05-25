@@ -55,6 +55,7 @@ public:
       { default_handler( node ); };
       std::function< void( const FunctionStatmentSyntaxNodeSP& ) > function_statment_syntax_node = [ this ]( const FunctionStatmentSyntaxNodeSP& node )
       { default_handler( node ); };
+      std::function< void( const FunctionSyntaxNodeSP& ) > function_syntax_node = [ this ]( const FunctionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FunctionCallSyntaxNodeSP& ) > function_call_syntax_node = [ this ]( const FunctionCallSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ReturnSyntaxNodeSP& ) > return_syntax_node = [ this ]( const ReturnSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ReturnStatmentSyntaxNodeSP& ) > return_statment_syntax_node = [ this ]( const ReturnStatmentSyntaxNodeSP& node )
@@ -227,6 +228,11 @@ public:
    void visit( const FunctionStatmentSyntaxNodeSP& node ) override
    {
       mHandlers.function_statment_syntax_node( node );
+   }
+
+   void visit( const FunctionSyntaxNodeSP& node ) override
+   {
+      mHandlers.function_syntax_node( node );
    }
 
    void visit( const FunctionCallSyntaxNodeSP& node ) override

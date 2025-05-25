@@ -1,6 +1,7 @@
 #pragma once
 
 #include "i_grammar.h"
+#include "terminals/function_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
 #include "nonterminals/scope_statment_syntax_node.h"
@@ -34,10 +35,11 @@ public:
          FUNCTION_CALL
       };
 
-      // NAME OPEN_CIRCLE_BRACKET (NAME|COMPUTATIONAL_EXPRESSION COMMA?)+ CLOSE_CIRCLE_BRACKET SCOPE
+      // FUNCTION NAME OPEN_CIRCLE_BRACKET (NAME|COMPUTATIONAL_EXPRESSION COMMA?)+ CLOSE_CIRCLE_BRACKET SCOPE
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
+            FunctionSyntaxNodeSP function;
             NameSyntaxNodeSP name;
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;
             std::vector< ISyntaxNodeSP > arguments;
@@ -86,11 +88,19 @@ public:
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+            handlers.function_syntax_node = [ &function, &arguments, &state ]( const FunctionSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  function = node;
+                  state = State::FUNCTION;
+               }
+            };
             handlers.name_syntax_node = [ &name, &arguments, &state ]( const NameSyntaxNodeSP& node )
             {
                auto s = state;
                (void) s;
-               if( state == State::START )
+               if( state == State::FUNCTION )
                {
                   name = node;
                   state = State::NAME;
@@ -151,12 +161,13 @@ public:
                }
             };
 
-            iterate_over_last_n_nodes( stack, distance_between_open_close_circle_bracket + 1, handlers );
+            iterate_over_last_n_nodes( stack, distance_between_open_close_circle_bracket + 2, handlers );
 
             if( state != State::FINISH )
                return {};
 
             Plan plan;
+            plan.to_remove.nodes.push_back( function );
             plan.to_remove.nodes.push_back( name );
             plan.to_remove.nodes.push_back( open_circle_bracket );
             for( const auto& argument : arguments )

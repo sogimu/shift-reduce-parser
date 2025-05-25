@@ -175,6 +175,11 @@ public:
       mCopy = std::make_shared< FunctionStatmentSyntaxNode >( *node );
    }
 
+   void visit( const FunctionSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< FunctionSyntaxNode >( *node );
+   }
+
    void visit( const FunctionCallSyntaxNodeSP& node ) override
    {
       mCopy = std::make_shared< FunctionCallSyntaxNode >( *node );
