@@ -17,9 +17,6 @@ using IfStatmentSyntaxNodeSP = std::shared_ptr< IfStatmentSyntaxNode >;
 class WhileStatmentSyntaxNode;
 using WhileStatmentSyntaxNodeSP = std::shared_ptr< WhileStatmentSyntaxNode >;
 
-class FunctionSyntaxNode;
-using FunctionSyntaxNodeSP = std::shared_ptr< FunctionSyntaxNode >;
-
 class FunctionStatmentSyntaxNode;
 using FunctionStatmentSyntaxNodeSP = std::shared_ptr< FunctionStatmentSyntaxNode >;
 

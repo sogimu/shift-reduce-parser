@@ -620,11 +620,6 @@ public:
       if constexpr( std::is_same_v< T, FunctionStatmentSyntaxNode > )
          mResult = true;
    }
-   void visit( const FunctionSyntaxNodeSP& /* node */ ) override
-   {
-      if constexpr( std::is_same_v< T, FunctionSyntaxNode > )
-         mResult = true;
-   }
 
    void visit( const FunctionCallSyntaxNodeSP& /* node */ ) override
    {
