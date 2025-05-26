@@ -192,7 +192,6 @@ double Calculator::solve( const std::string& expression ) const
                   std::advance( scope_it, 1 );
                   new_parent_target_node = *taget_node_parent->insert( scope_it, target_node );
                   taget_node_parent->insert( scope_it, varible_assigment_statment_syntax_node );
-                  *scope_it;
                }
             }
          }
