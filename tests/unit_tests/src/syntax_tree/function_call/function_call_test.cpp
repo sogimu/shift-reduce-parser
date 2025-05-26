@@ -18,20 +18,20 @@ TEST( SYNTAX_TREE_FUNCTION_CALL, CASE0 )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "FunctionCallSyntaxNode": [
+        "foo",
         {
-             "StatmentSyntaxNode": [
-                {
-                  "FunctionCallSyntaxNode": [
-                    "foo",
-                    {
-                        "NameSyntaxNode": [
-                          "a"
-                        ]
-                    }
-                  ]
-                }
-              ]
+          "NameSyntaxNode": [
+            "a"
+          ]
         }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );

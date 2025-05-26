@@ -20,27 +20,27 @@ TEST( SYNTAX_TREE_PRINT, TEST0 )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-        "ScopeSyntaxNode": [
-          {
-           "StatmentSyntaxNode": [
-              {
-                "PrintStatmentSyntaxNode": [
-                  {
-                    "ComputationalExpressionSyntaxNode": [
-                      {
-                        "FSyntaxNode": [
-                           1 
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
+{
+  "ScopeSyntaxNode": [
+    {
+      "StatmentSyntaxNode": [
+        {
+          "PrintStatmentSyntaxNode": [
+            {
+              "ComputationalExpressionSyntaxNode": [
+                {
+                  "FSyntaxNode": [
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );

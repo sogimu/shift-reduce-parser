@@ -16,20 +16,20 @@ TEST( SYNTAX_TREE_ARITHMETIC, INT_SEMICOLON )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-       "StatmentSyntaxNode": [
-          {
+    {
+      "StatmentSyntaxNode": [
+        {
           "ComputationalExpressionSyntaxNode": [
             {
               "FSyntaxNode": [
-                1 
+                1
               ]
             }
           ]
-          }
-       ] 
-      }
-      )""";
+        }
+      ]
+    }
+    )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
@@ -46,24 +46,24 @@ TEST( SYNTAX_TREE_ARITHMETIC, MINUS_INT_SEMICOLON )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-       "StatmentSyntaxNode": [
-          {
-          "ComputationalExpressionSyntaxNode": [
+{
+  "StatmentSyntaxNode": [
+    {
+      "ComputationalExpressionSyntaxNode": [
+        {
+          "UnExprSyntaxNode": [
+            0,
             {
-            "UnExprSyntaxNode": [
-                0,
-              {
-                "FSyntaxNode": [
-                  1 
-                ]
-              }
-            ]
+              "FSyntaxNode": [
+                1
+              ]
             }
           ]
-          }
-       ] 
-      }
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );

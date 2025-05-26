@@ -21,36 +21,36 @@ TEST( SYNTAX_TREE_SCOPE, TEST0 )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
+{
+  "ScopeSyntaxNode": [
     {
-      "ScopeSyntaxNode": [
+      "StatmentSyntaxNode": [
         {
-         "StatmentSyntaxNode": [
+          "ComputationalExpressionSyntaxNode": [
             {
-              "ComputationalExpressionSyntaxNode": [
-                {
-                  "FSyntaxNode": [
-                    1
-                  ]
-                }
+              "FSyntaxNode": [
+                1
               ]
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "StatmentSyntaxNode": [
         {
-         "StatmentSyntaxNode": [
+          "ComputationalExpressionSyntaxNode": [
             {
-              "ComputationalExpressionSyntaxNode": [
-                {
-                  "FSyntaxNode": [
-                    2
-                  ]
-                }
+              "FSyntaxNode": [
+                2
               ]
             }
           ]
         }
       ]
     }
+  ]
+}
     )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );

@@ -20,24 +20,22 @@ TEST( SYNTAX_TREE_VARIBLE_ASSIGN, TEST0 )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
+{
+  "ScopeSyntaxNode": [
     {
-      "ScopeSyntaxNode": [
+      "StatmentSyntaxNode": [
         {
-         "StatmentSyntaxNode": [
+          "VaribleAssigmentStatmentSyntaxNode": [
             {
-              "VaribleAssigmentStatmentSyntaxNode": [
-              {
-                "NameSyntaxNode": [
-                  "a" 
-                ]
-              },
-              {
-                  "ComputationalExpressionSyntaxNode": [
-                    {
-                      "FSyntaxNode": [
-                        1
-                      ]
-                    }
+              "NameSyntaxNode": [
+                "a"
+              ]
+            },
+            {
+              "ComputationalExpressionSyntaxNode": [
+                {
+                  "FSyntaxNode": [
+                    1
                   ]
                 }
               ]
@@ -46,6 +44,8 @@ TEST( SYNTAX_TREE_VARIBLE_ASSIGN, TEST0 )
         }
       ]
     }
+  ]
+}
     )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );

@@ -18,23 +18,23 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, TEST0 )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-       "StatmentSyntaxNode": [
-          {
-            "ReturnStatmentSyntaxNode": [
-              {
-                "ComputationalExpressionSyntaxNode": [
-                  {
-                    "FSyntaxNode": [
-                       1 
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
+{
+  "StatmentSyntaxNode": [
+    {
+      "ReturnStatmentSyntaxNode": [
+        {
+          "ComputationalExpressionSyntaxNode": [
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );

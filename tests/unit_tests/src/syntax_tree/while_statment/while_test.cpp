@@ -21,40 +21,40 @@ TEST( SYNTAX_TREE_WHILE, CASE0 )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "WhileStatmentSyntaxNode": [
         {
-             "StatmentSyntaxNode": [
+          "ConditionalExpressionSyntaxNode": [
+            4,
+            {
+              "ComputationalExpressionSyntaxNode": [
                 {
-                  "WhileStatmentSyntaxNode": [
-                    {
-                      "ConditionalExpressionSyntaxNode": [
-                        4,
-                        {
-                          "ComputationalExpressionSyntaxNode": [
-                            {
-                              "FSyntaxNode": [
-                                1
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "ComputationalExpressionSyntaxNode": [
-                            {
-                              "FSyntaxNode": [
-                                1
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "ScopeSyntaxNode": []
-                    }
+                  "FSyntaxNode": [
+                    1
                   ]
                 }
               ]
+            },
+            {
+              "ComputationalExpressionSyntaxNode": [
+                {
+                  "FSyntaxNode": [
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ScopeSyntaxNode": []
         }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );

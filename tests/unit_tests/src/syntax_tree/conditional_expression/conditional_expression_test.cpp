@@ -18,33 +18,33 @@ TEST( SYNTAX_TREE_CONDITIONAL_EXPRESSION, CASE0 )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "ConditionalExpressionSyntaxNode": [
+        4,
         {
-           "StatmentSyntaxNode": [
-              {
-                "ConditionalExpressionSyntaxNode": [
-                  4,
-                  {
-                    "ComputationalExpressionSyntaxNode": [
-                      {
-                        "FSyntaxNode": [
-                          1
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "ComputationalExpressionSyntaxNode": [
-                      {
-                        "FSyntaxNode": [
-                          1
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-           ]
+          "ComputationalExpressionSyntaxNode": [
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "ComputationalExpressionSyntaxNode": [
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
         }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
