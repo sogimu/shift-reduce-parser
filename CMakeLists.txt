@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.6)
 project(shift-reduce-parser LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -56,17 +56,17 @@ set(HEADERS
     include/syntax_nodes/nonterminals/return_statment_syntax_node.h
     include/grammars/f_grammar.h
     include/grammars/un_expr_grammar.h
-    # include/grammars/conditional_expression_grammar.h
-    # include/grammars/print_statment_grammar.h
-    # include/grammars/if_statment_grammar.h
-    # include/grammars/while_statment_grammar.h
+    include/grammars/conditional_expression_grammar.h
+    include/grammars/print_statment_grammar.h
+    include/grammars/if_statment_grammar.h
+    include/grammars/while_statment_grammar.h
     include/grammars/statment_grammar.h
-    # include/grammars/varible_assigment_grammar.h
+    include/grammars/varible_assigment_grammar.h
     include/grammars/computational_expression_grammar.h
-    # include/grammars/scope_grammar.h
-    # include/grammars/function_grammar.h
-    # include/grammars/function_call_grammar.h
-    # include/grammars/return_statment_grammar.h
+    include/grammars/scope_grammar.h
+    include/grammars/function_statment_grammar.h
+    include/grammars/function_call_grammar.h
+    include/grammars/return_statment_grammar.h
 )
 
 set(SOURCES

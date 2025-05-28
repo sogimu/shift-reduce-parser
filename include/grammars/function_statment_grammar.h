@@ -14,10 +14,10 @@
 
 class ISyntaxNodeVisitor;
 
-class Function : public IGrammar
+class FunctionStatment : public IGrammar
 {
 public:
-   Function()
+   FunctionStatment()
    {
       enum class State
       {
