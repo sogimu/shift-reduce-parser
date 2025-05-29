@@ -28,13 +28,14 @@ public:
          PLUS,
          MINUS,
          F,
-         BIN_OP,
+         BIN_EXPR,
+         UN_EXPR,
          OPEN_CIRCLE_BRACKET,
          NAME,
          CLOSE_CIRCLE_BRACKET,
       };
       
-      // F|BIN_EXPR +|-|*|/ F|BIN_EXPR 
+      // F|BIN_EXPR|UN_EXPR +|-|*|/ F|BIN_EXPR|UN_EXPR 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -152,6 +153,62 @@ public:
                   }
                }
             };
+            handlers.un_expr_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const UnExprSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  a = node;
+                  state = State::F;
+               }
+               else if( state == State::PLUS )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Addition;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
+                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::MINUS )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Substruction;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
+                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::MULTIPLY )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Multiply;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
+                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::DIVISION )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Division;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
+                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+            };
             handlers.plus_syntax_node = [ &operation, &state, &operation_type ]( const PlusSyntaxNodeSP& node )
             {
                if( state == State::F )
@@ -225,12 +282,12 @@ public:
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
                   expression = node;
-                  state = State::BIN_OP;
+                  state = State::BIN_EXPR;
                }
             };
             handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
             {
-               if( state == State::BIN_OP )
+               if( state == State::BIN_EXPR )
                {
                   close_circle_bracket = node;
                   state = State::FINISH;
