@@ -16,6 +16,7 @@ class WhileStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_fr
 public:
    WhileStatmentSyntaxNode();
    WhileStatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope );
+   WhileStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;

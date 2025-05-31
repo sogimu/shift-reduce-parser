@@ -21,24 +21,16 @@ TEST( SYNTAX_TREE_CONDITIONAL_EXPRESSION, CASE0 )
 {
   "StatmentSyntaxNode": [
     {
-      "ConditionalExpressionSyntaxNode": [
+      "BinExprSyntaxNode": [
         4,
         {
-          "ComputationalExpressionSyntaxNode": [
-            {
-              "FSyntaxNode": [
-                1
-              ]
-            }
+          "FSyntaxNode": [
+            1
           ]
         },
         {
-          "ComputationalExpressionSyntaxNode": [
-            {
-              "FSyntaxNode": [
-                1
-              ]
-            }
+          "FSyntaxNode": [
+            1
           ]
         }
       ]

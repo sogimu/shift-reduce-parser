@@ -19,13 +19,9 @@ TEST( SYNTAX_TREE_ARITHMETIC, INT_SEMICOLON )
     {
       "StatmentSyntaxNode": [
         {
-          "ComputationalExpressionSyntaxNode": [
-            {
               "FSyntaxNode": [
                 1
               ]
-            }
-          ]
         }
       ]
     }
@@ -49,8 +45,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, MINUS_INT_SEMICOLON )
 {
   "StatmentSyntaxNode": [
     {
-      "ComputationalExpressionSyntaxNode": [
-        {
           "UnExprSyntaxNode": [
             0,
             {
@@ -59,8 +53,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, MINUS_INT_SEMICOLON )
               ]
             }
           ]
-        }
-      ]
     }
   ]
 }
@@ -83,8 +75,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, TWO_MINUSIES )
 {
   "StatmentSyntaxNode": [
     {
-      "ComputationalExpressionSyntaxNode": [
-        {
           "BinExprSyntaxNode": [
             1,
             {
@@ -103,8 +93,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, TWO_MINUSIES )
               ]
             }
           ]
-        }
-      ]
     }
   ]
 }
@@ -113,6 +101,114 @@ TEST( SYNTAX_TREE_ARITHMETIC, TWO_MINUSIES )
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
+
+TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_MINUS_NUMBER_DIVIDE_NUMBER_CLOSE_BRACKET )
+{
+   // ARRANGE
+   const auto& input = R"""((5-2/3);)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+      {
+           "StatmentSyntaxNode": [
+              {
+                    "BinExprSyntaxNode": [
+                      1,
+                      {
+                        "BinExprSyntaxNode": [
+                          3,
+                          {
+                                "FSyntaxNode": [
+                                  3 
+                                ]
+                          },
+                          {
+                                "FSyntaxNode": [
+                                  2
+                                ]
+                          }
+                        ]
+                      },
+                      {
+                            "FSyntaxNode": [
+                              5
+                            ]
+                      }
+                    ]
+              }
+            ]
+      }
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_MULTIPLY_OPEN_BRACKET_NUMBER_CLOSE_BRACKET_CLOSE_BRACKET )
+{
+   // ARRANGE
+   const auto& input = R"""((1*(8));)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+      {
+           "StatmentSyntaxNode": [
+              {
+                    "BinExprSyntaxNode": [
+                      2,
+                      {
+                            "FSyntaxNode": [
+                              8 
+                            ]
+                      },
+                      {
+                            "FSyntaxNode": [
+                              1
+                            ]
+                      }
+                    ]
+              }
+            ]
+      }
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_CLOSE_BRACKET )
+{
+   // ARRANGE
+   const auto& input = R"""((1);)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+          "FSyntaxNode": [
+            1
+          ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
 TEST( SYNTAX_TREE_ARITHMETIC, ONE_PLUS )
 {
    // ARRANGE
@@ -127,8 +223,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_PLUS )
       {
            "StatmentSyntaxNode": [
               {
-                "ComputationalExpressionSyntaxNode": [
-                  {
                     "BinExprSyntaxNode": [
                       0,
                       {
@@ -142,8 +236,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_PLUS )
                             ]
                       }
                     ]
-                  }
-                ]
               }
             ]
       }
@@ -167,8 +259,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_DIVISION )
       {
            "StatmentSyntaxNode": [
               {
-                "ComputationalExpressionSyntaxNode": [
-                  {
                     "BinExprSyntaxNode": [
                       3,
                       {
@@ -182,8 +272,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_DIVISION )
                             ]
                       }
                     ]
-                  }
-                ]
               }
             ]
       }
@@ -207,8 +295,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, MANY_PLUSs )
 {
      "StatmentSyntaxNode": [
         {
-          "ComputationalExpressionSyntaxNode": [
-            {
               "BinExprSyntaxNode": [
                 0,
                 {
@@ -232,8 +318,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, MANY_PLUSs )
                       ]
                 }
               ]
-            }
-          ]
         }
       ]
 }
@@ -257,8 +341,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION )
     {
          "StatmentSyntaxNode": [
             {
-              "ComputationalExpressionSyntaxNode": [
-                {
                   "BinExprSyntaxNode": [
                     0,
                     {
@@ -282,8 +364,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION )
                         ]
                   }
                 ]
-              }
-            ]
           }
         ]
   }
@@ -307,8 +387,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, CIRCLE_CASE0 )
       {
            "StatmentSyntaxNode": [
               {
-                "ComputationalExpressionSyntaxNode": [
-                  {
                     "BinExprSyntaxNode": [
                       0,
                       {
@@ -332,8 +410,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, CIRCLE_CASE0 )
                             ]
                       }
                     ]
-                  }
-                ]
               }
             ]
       }
@@ -357,8 +433,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, CIRCLE_CASE1 )
       {
            "StatmentSyntaxNode": [
               {
-                "ComputationalExpressionSyntaxNode": [
-                  {
                     "BinExprSyntaxNode": [
                       0,
                       {
@@ -382,8 +456,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, CIRCLE_CASE1 )
                             ]
                       }
                     ]
-                  }
-                ]
               }
             ]
       }
@@ -407,8 +479,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_MINUS )
 {
      "StatmentSyntaxNode": [
         {
-          "ComputationalExpressionSyntaxNode": [
-            {
               "BinExprSyntaxNode": [
                 1,
                 {
@@ -422,8 +492,6 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_MINUS )
                       ]
                 }
               ]
-            }
-          ]
         }
       ]
 }

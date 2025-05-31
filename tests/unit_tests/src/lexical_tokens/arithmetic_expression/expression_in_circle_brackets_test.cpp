@@ -1,6 +1,7 @@
 #include "utils/utils.h"
 
 #include <gtest/gtest.h>
+#include <lexical_tokens.h>
 
 using namespace std;
 

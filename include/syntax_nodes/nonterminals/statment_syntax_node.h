@@ -5,8 +5,8 @@
 
 class ISyntaxNodeVisitor;
 
-class ComputationalExpressionSyntaxNode;
-using ComputationalExpressionSyntaxNodeSP = std::shared_ptr< ComputationalExpressionSyntaxNode >;
+class FSyntaxNode;
+using FSyntaxNodeSP = std::shared_ptr< FSyntaxNode >;
 
 class ConditionalExpressionSyntaxNode;
 using ConditionalExpressionSyntaxNodeSP = std::shared_ptr< ConditionalExpressionSyntaxNode >;
@@ -36,7 +36,7 @@ class StatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_th
 {
 public:
    StatmentSyntaxNode();
-   StatmentSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression_syntax_node );
+   StatmentSyntaxNode( const FSyntaxNodeSP& f_syntax_node );
    StatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression_syntax_node );
    StatmentSyntaxNode( const IfStatmentSyntaxNodeSP& if_statment_syntax_node );
    StatmentSyntaxNode( const WhileStatmentSyntaxNodeSP& while_statment_syntax_node );

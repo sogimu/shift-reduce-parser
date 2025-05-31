@@ -16,6 +16,7 @@ class IfStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_
 public:
    IfStatmentSyntaxNode();
    IfStatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope );
+   IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;

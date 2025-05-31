@@ -26,25 +26,17 @@ TEST( SYNTAX_TREE_IF, WITHOUT_ELSE )
     {
       "IfStatmentSyntaxNode": [
         {
-          "ConditionalExpressionSyntaxNode": [
+          "BinExprSyntaxNode": [
             4,
             {
-              "ComputationalExpressionSyntaxNode": [
-                {
                   "FSyntaxNode": [
                     1
                   ]
-                }
-              ]
             },
             {
-              "ComputationalExpressionSyntaxNode": [
-                {
                   "FSyntaxNode": [
                     1
                   ]
-                }
-              ]
             }
           ]
         },

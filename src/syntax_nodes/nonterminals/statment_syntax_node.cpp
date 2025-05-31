@@ -19,10 +19,10 @@ StatmentSyntaxNode::StatmentSyntaxNode()
    : ISyntaxNode{ Token_Type::STATMENT }
 {
 }
-StatmentSyntaxNode::StatmentSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression_syntax_node )
+StatmentSyntaxNode::StatmentSyntaxNode( const FSyntaxNodeSP& f_syntax_node )
    : ISyntaxNode{ Token_Type::STATMENT }
 {
-   add_back( computational_expression_syntax_node );
+   add_back( f_syntax_node );
 }
 StatmentSyntaxNode::StatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression_syntax_node )
    : ISyntaxNode{ Token_Type::STATMENT }

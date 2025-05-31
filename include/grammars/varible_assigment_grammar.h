@@ -27,7 +27,7 @@ public:
          NAME
       };
 
-      // NAME EQUAL COMPUTATIONAL_EXPRESSION SEMICOLON
+      // NAME EQUAL F|BIN_EXPR|UN_EXPR|FUNCTION_CALL SEMICOLON
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -56,7 +56,7 @@ public:
                   equal = node;
                }
             };
-            handlers.computational_expression_syntax_node = [ &value, &state, &lookahead ]( const ComputationalExpressionSyntaxNodeSP& node )
+            handlers.f_syntax_node = [ &value, &state, &lookahead ]( const FSyntaxNodeSP& node )
             {
                if( state == State::EQUAL )
                {
@@ -66,8 +66,30 @@ public:
                         state = State::VALUE;
                         state = State::FINISH;
                     }
-                  // value = node;
-                  // state = State::VALUE;
+               }
+            };
+            handlers.bin_expr_syntax_node = [ &value, &state, &lookahead ]( const BinExprSyntaxNodeSP& node )
+            {
+               if( state == State::EQUAL )
+               {
+                   if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) )
+                   {
+                        value = node;
+                        state = State::VALUE;
+                        state = State::FINISH;
+                    }
+               }
+            };
+            handlers.un_expr_syntax_node = [ &value, &state, &lookahead ]( const UnExprSyntaxNodeSP& node )
+            {
+               if( state == State::EQUAL )
+               {
+                   if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) )
+                   {
+                        value = node;
+                        state = State::VALUE;
+                        state = State::FINISH;
+                    }
                }
             };
             handlers.function_call_syntax_node = [ &value, &state, &lookahead ]( const FunctionCallSyntaxNodeSP& node )

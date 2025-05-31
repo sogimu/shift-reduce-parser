@@ -26,25 +26,17 @@ TEST( SYNTAX_TREE_WHILE, CASE0 )
     {
       "WhileStatmentSyntaxNode": [
         {
-          "ConditionalExpressionSyntaxNode": [
+          "BinExprSyntaxNode": [
             4,
             {
-              "ComputationalExpressionSyntaxNode": [
-                {
                   "FSyntaxNode": [
                     1
                   ]
-                }
-              ]
             },
             {
-              "ComputationalExpressionSyntaxNode": [
-                {
                   "FSyntaxNode": [
                     1
                   ]
-                }
-              ]
             }
           ]
         },

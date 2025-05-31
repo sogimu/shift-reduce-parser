@@ -23,12 +23,8 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, TEST0 )
     {
       "ReturnStatmentSyntaxNode": [
         {
-          "ComputationalExpressionSyntaxNode": [
-            {
-              "FSyntaxNode": [
-                1
-              ]
-            }
+          "FSyntaxNode": [
+            1
           ]
         }
       ]

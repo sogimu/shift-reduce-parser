@@ -35,8 +35,7 @@
 #include "syntax_nodes/terminals/semicolon_syntax_node.h"
 #include "grammars/un_expr_grammar.h"
 #include "grammars/bin_expr_grammar.h"
-#include "grammars/computational_expression_grammar.h"
-#include "grammars/conditional_expression_grammar.h"
+#include "grammars/circle_brackets_grammar.h"
 #include "grammars/statment_grammar.h"
 #include "grammars/f_grammar.h"
 #include "grammars/if_statment_grammar.h"
@@ -63,10 +62,9 @@ public:
          std::make_shared< F >(),
          std::make_shared< BinExpr >(),
          std::make_shared< UnExpr >(),
-         std::make_shared< ComputationalExpression >(),
-         std::make_shared< VaribleAssigment >(),
          std::make_shared< Print >(),
-         std::make_shared< ConditionalExpression >(),
+         std::make_shared< CircleBrackets >(),
+         std::make_shared< VaribleAssigment >(),
          std::make_shared< Return >(),
          std::make_shared< Statment >(),
          std::make_shared< Scope >(),

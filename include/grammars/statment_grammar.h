@@ -20,7 +20,7 @@ public:
          START,
          FINISH,
          ERROR,
-         COMPUTATIONAL_EXPRESSION,
+         F,
          CONDITIONAL_EXPRESSION,
          IF_STATMENT,
          WHILE_STATMENT,
@@ -255,28 +255,44 @@ public:
             return plan;
          } );
 
-      // COMPUTATIONAL_EXPRESSION_NODE SEMICOLON
+      // F SEMICOLON
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
-            ComputationalExpressionSyntaxNodeSP computational_expression_syntax_node;
+            ISyntaxNodeSP f;
             SemicolonSyntaxNodeSP semicolon;
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.computational_expression_syntax_node = [ &computational_expression_syntax_node, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            handlers.f_syntax_node = [ &f, &state ]( const FSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
-                  computational_expression_syntax_node = node;
-                  state = State::COMPUTATIONAL_EXPRESSION;
+                  f = node;
+                  state = State::F;
+               }
+            };
+            handlers.bin_expr_syntax_node = [ &f, &state ]( const BinExprSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  f = node;
+                  state = State::F;
+               }
+            };
+            handlers.un_expr_syntax_node = [ &f, &state ]( const UnExprSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  f = node;
+                  state = State::F;
                }
             };
             handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
             {
-               if( state == State::COMPUTATIONAL_EXPRESSION )
+               if( state == State::F )
                {
                   semicolon = node;
                   state = State::SEMICOLON;
@@ -290,10 +306,11 @@ public:
                return {};
 
             Plan plan;
-            plan.to_remove.nodes.push_back( computational_expression_syntax_node );
+            plan.to_remove.nodes.push_back( f );
             plan.to_remove.nodes.push_back( semicolon );
 
-            const auto& expression_node = std::make_shared< StatmentSyntaxNode >( computational_expression_syntax_node );
+            const auto& expression_node = std::make_shared< StatmentSyntaxNode >();
+            expression_node->add_back(f);
             plan.to_add.nodes.push_back( expression_node );
             return plan;
          } );

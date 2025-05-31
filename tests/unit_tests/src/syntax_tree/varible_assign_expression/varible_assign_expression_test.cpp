@@ -32,12 +32,8 @@ TEST( SYNTAX_TREE_VARIBLE_ASSIGN, TEST0 )
               ]
             },
             {
-              "ComputationalExpressionSyntaxNode": [
-                {
-                  "FSyntaxNode": [
-                    1
-                  ]
-                }
+              "FSyntaxNode": [
+                1
               ]
             }
           ]

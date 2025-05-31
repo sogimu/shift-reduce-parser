@@ -26,12 +26,8 @@ TEST( SYNTAX_TREE_SCOPE, TEST0 )
     {
       "StatmentSyntaxNode": [
         {
-          "ComputationalExpressionSyntaxNode": [
-            {
-              "FSyntaxNode": [
-                1
-              ]
-            }
+          "FSyntaxNode": [
+            1
           ]
         }
       ]
@@ -39,12 +35,8 @@ TEST( SYNTAX_TREE_SCOPE, TEST0 )
     {
       "StatmentSyntaxNode": [
         {
-          "ComputationalExpressionSyntaxNode": [
-            {
-              "FSyntaxNode": [
-                2
-              ]
-            }
+          "FSyntaxNode": [
+            2
           ]
         }
       ]

@@ -25,7 +25,9 @@ public:
          FIRST_MINUS,
          SECOND_MINUS,
          NUMBER,
-         F
+         F,
+         OPEN_CIRCLE_BRACKET,
+         CLOSE_CIRCLE_BRACKET
       };
 
       // NUMBER [PLUS,MINUS,MULTIPLY,DIVISION,SEMICOLON,CLOSE_CIRCLE_BRACKET,EQUAL]

@@ -27,12 +27,8 @@ TEST( SYNTAX_TREE_PRINT, TEST0 )
         {
           "PrintStatmentSyntaxNode": [
             {
-              "ComputationalExpressionSyntaxNode": [
-                {
-                  "FSyntaxNode": [
-                    1
-                  ]
-                }
+              "FSyntaxNode": [
+                1
               ]
             }
           ]

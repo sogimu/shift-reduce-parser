@@ -1,5 +1,6 @@
 #include "nonterminals/while_statment_syntax_node.h"
 
+#include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 #include <cstddef>
@@ -9,6 +10,12 @@ WhileStatmentSyntaxNode::WhileStatmentSyntaxNode()
 {
 }
 WhileStatmentSyntaxNode::WhileStatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
+   : ISyntaxNode{ Token_Type::WHILE_STATMENT }
+{
+   add_back( conditional_expression );
+   add_back( scope );
+}
+WhileStatmentSyntaxNode::WhileStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
    : ISyntaxNode{ Token_Type::WHILE_STATMENT }
 {
    add_back( conditional_expression );

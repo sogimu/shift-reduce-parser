@@ -1,5 +1,6 @@
 #pragma once
 
+#include "i_syntax_node.h"
 #include "nonterminals/conditional_expression_syntax_node.h"
 #include "i_grammar.h"
 #include "nonterminals/if_statment_syntax_node.h"
@@ -28,13 +29,13 @@ public:
          SCOPE_STATMENT,
       };
 
-      // IF CONDITION SCOPE
+      // IF OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR|FUNCTION_CALL CLOSE_CIRCLE_BRACKET SCOPE
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             IfSyntaxNodeSP if_node;
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;
-            ConditionalExpressionSyntaxNodeSP conditional_expression;
+            ISyntaxNodeSP conditional_expression;
             CloseCircleBracketSyntaxNodeSP close_circle_bracket;
             ScopeSyntaxNodeSP scope_statment;
 
@@ -58,7 +59,23 @@ public:
                   state = State::OPEN_CIRCLE_BRACKET;
                }
             };
-            handlers.conditional_expression_syntax_node = [ &conditional_expression, &state ]( const ConditionalExpressionSyntaxNodeSP& node )
+            handlers.f_syntax_node = [ &conditional_expression, &state ]( const FSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  conditional_expression = node;
+                  state = State::CONDITION;
+               }
+            };
+            handlers.bin_expr_syntax_node = [ &conditional_expression, &state ]( const BinExprSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  conditional_expression = node;
+                  state = State::CONDITION;
+               }
+            };
+            handlers.un_expr_syntax_node = [ &conditional_expression, &state ]( const UnExprSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {

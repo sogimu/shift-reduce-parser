@@ -13,7 +13,8 @@ public:
     Addition,
     Substruction,
     Multiply,
-    Division
+    Division,
+    Equality
   };
    BinExprSyntaxNode();
    BinExprSyntaxNode( const Type& type, const ISyntaxNodeSP& f0, const ISyntaxNodeSP& f1 );

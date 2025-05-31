@@ -69,20 +69,28 @@ public:
                   argument = node;
                }
             };
-            handlers.computational_expression_syntax_node = [ &argument, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            handlers.f_syntax_node = [ &argument, &state ]( const FSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
-                  state = State::ARGUMENT;
                   argument = node;
+                  state = State::ARGUMENT;
                }
             };
-            handlers.conditional_expression_syntax_node = [ &argument, &state ]( const ConditionalExpressionSyntaxNodeSP& node )
+            handlers.bin_expr_syntax_node = [ &argument, &state ]( const BinExprSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
-                  state = State::ARGUMENT;
                   argument = node;
+                  state = State::ARGUMENT;
+               }
+            };
+            handlers.un_expr_syntax_node = [ &argument, &state ]( const UnExprSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  argument = node;
+                  state = State::ARGUMENT;
                }
             };
             handlers.function_call_syntax_node = [ &argument, &state ]( const FunctionCallSyntaxNodeSP& node )
