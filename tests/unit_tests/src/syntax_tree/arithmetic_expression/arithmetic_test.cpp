@@ -285,6 +285,82 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_PLUS )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
+TEST( SYNTAX_TREE_ARITHMETIC, F_PLUS_VARIBLE )
+{
+   // ARRANGE
+   const auto& input = R"""(1+a;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        0,
+        {
+          "NameSyntaxNode": [
+            "a"
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, F_PLUS_FUNCTION_CALL )
+{
+   // ARRANGE
+   const auto& input = R"""(1+foo(2);)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        0,
+        {
+          "FunctionCallSyntaxNode": [
+            "foo",
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
 TEST( SYNTAX_TREE_ARITHMETIC, ONE_DIVISION )
 {
    // ARRANGE

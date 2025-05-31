@@ -1,5 +1,6 @@
 #pragma once
 
+#include "nonterminals/function_call_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
 #include "terminals/minus_syntax_node.h"
@@ -175,6 +176,126 @@ public:
                }
             };
             handlers.un_expr_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const UnExprSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  a = node;
+                  state = State::F;
+               }
+               else if( state == State::PLUS )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Addition;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::MINUS )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Substruction;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::MULTIPLY )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Multiply;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< PlusSyntaxNode >( lookahead ) || 
+                                   check_type< MinusSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::DIVISION )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Division;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< PlusSyntaxNode >( lookahead ) || 
+                                   check_type< MinusSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+            };
+            handlers.name_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const NameSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  a = node;
+                  state = State::F;
+               }
+               else if( state == State::PLUS )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Addition;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::MINUS )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Substruction;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::MULTIPLY )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Multiply;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< PlusSyntaxNode >( lookahead ) || 
+                                   check_type< MinusSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::DIVISION )
+               {
+                  b = node;
+                  state = State::F;
+                  operation_type = BinExprSyntaxNode::Type::Division;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< PlusSyntaxNode >( lookahead ) || 
+                                   check_type< MinusSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
+                  {
+                    state = State::FINISH;
+                  }
+               }
+            };
+            handlers.function_call_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
