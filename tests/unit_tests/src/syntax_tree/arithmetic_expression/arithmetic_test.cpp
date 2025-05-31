@@ -61,7 +61,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, MINUS_INT_SEMICOLON )
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
-TEST( SYNTAX_TREE_ARITHMETIC, TWO_MINUSIES )
+TEST( SYNTAX_TREE_ARITHMETIC, UN_EXPR_LAST )
 {
    // ARRANGE
    const auto& input = R"""(1--2;)""";
@@ -102,6 +102,46 @@ TEST( SYNTAX_TREE_ARITHMETIC, TWO_MINUSIES )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
+TEST( SYNTAX_TREE_ARITHMETIC, UN_EXPR_NOT_LAST )
+{
+   // ARRANGE
+   const auto& input = R"""(-2-1;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        1,
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        },
+        {
+          "UnExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
 TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_MINUS_NUMBER_DIVIDE_NUMBER_CLOSE_BRACKET )
 {
    // ARRANGE
