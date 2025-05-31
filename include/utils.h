@@ -526,21 +526,9 @@ public:
          mResult = true;
    }
 
-   void visit( const ComputationalExpressionSyntaxNodeSP& /* node */ ) override
-   {
-      if constexpr( std::is_same_v< T, ComputationalExpressionSyntaxNode > )
-         mResult = true;
-   }
-
    void visit( const VaribleSyntaxNodeSP& /* node */ ) override
    {
       if constexpr( std::is_same_v< T, VaribleSyntaxNode > )
-         mResult = true;
-   }
-
-   void visit( const ConditionalExpressionSyntaxNodeSP& /* node */ ) override
-   {
-      if constexpr( std::is_same_v< T, ConditionalExpressionSyntaxNode > )
          mResult = true;
    }
 

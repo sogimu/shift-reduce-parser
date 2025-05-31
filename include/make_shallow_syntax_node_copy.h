@@ -96,19 +96,9 @@ public:
       mCopy = std::make_shared< CloseCircleBracketSyntaxNode >();
    }
 
-   void visit( const ComputationalExpressionSyntaxNodeSP& /* node */ ) override
-   {
-      mCopy = std::make_shared< ComputationalExpressionSyntaxNode >();
-   }
-
    void visit( const VaribleSyntaxNodeSP& node ) override
    {
       mCopy = std::make_shared< VaribleSyntaxNode >( node->name() );
-   }
-
-   void visit( const ConditionalExpressionSyntaxNodeSP& node ) override
-   {
-      mCopy = std::make_shared< ConditionalExpressionSyntaxNode >( node->type() );
    }
 
    void visit( const PrintStatmentSyntaxNodeSP& /* node */ ) override

@@ -1,7 +1,6 @@
 #include "nonterminals/print_statment_syntax_node.h"
 
 #include "terminals/name_syntax_node.h"
-#include "nonterminals/computational_expression_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
@@ -12,12 +11,6 @@
 PrintStatmentSyntaxNode::PrintStatmentSyntaxNode()
    : ISyntaxNode{ Token_Type::PRINT_STATMENT }
 {
-}
-
-PrintStatmentSyntaxNode::PrintStatmentSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression )
-   : ISyntaxNode{ Token_Type::PRINT_STATMENT }
-{
-   add_back( computational_expression );
 }
 
 PrintStatmentSyntaxNode::PrintStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
@@ -73,13 +66,13 @@ bool PrintStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-ComputationalExpressionSyntaxNodeSP PrintStatmentSyntaxNode::computational_expression() const
-{
-   ComputationalExpressionSyntaxNodeSP argument;
-   const auto& value_node = this->operator[]( 0 );
-   match( value_node,
-          { .computational_expression_syntax_node = [ &argument ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
-            { argument = computational_expression; },
-            .name_syntax_node = [ &argument ]( const NameSyntaxNodeSP& name ) { argument = std::make_shared< ComputationalExpressionSyntaxNode >( name ); } } );
-   return argument;
-}
+// ComputationalExpressionSyntaxNodeSP PrintStatmentSyntaxNode::computational_expression() const
+// {
+//    ComputationalExpressionSyntaxNodeSP argument;
+//    const auto& value_node = this->operator[]( 0 );
+//    match( value_node,
+//           { .computational_expression_syntax_node = [ &argument ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
+//             { argument = computational_expression; },
+//             .name_syntax_node = [ &argument ]( const NameSyntaxNodeSP& name ) { argument = std::make_shared< ComputationalExpressionSyntaxNode >( name ); } } );
+//    return argument;
+// }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "nonterminals/computational_expression_syntax_node.h"
-#include "nonterminals/conditional_expression_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "i_grammar.h"
 #include "nonterminals/if_statment_syntax_node.h"
@@ -312,49 +310,6 @@ public:
             const auto& expression_node = std::make_shared< StatmentSyntaxNode >();
             expression_node->add_back(f);
             plan.to_add.nodes.push_back( expression_node );
-            return plan;
-         } );
-
-      // CONDITIONAL_EXPRESSION SEMICOLON
-      mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
-         {
-            ConditionalExpressionSyntaxNodeSP conditional_expression_syntax_node;
-            SemicolonSyntaxNodeSP semicolon;
-
-            State state = State::START;
-
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.conditional_expression_syntax_node = [ &conditional_expression_syntax_node, &state ]( const ConditionalExpressionSyntaxNodeSP& node )
-            {
-               if( state == State::START )
-               {
-                  conditional_expression_syntax_node = node;
-                  state = State::CONDITIONAL_EXPRESSION;
-               }
-            };
-            handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
-            {
-               if( state == State::CONDITIONAL_EXPRESSION )
-               {
-                  semicolon = node;
-                  state = State::SEMICOLON;
-                  state = State::FINISH;
-               }
-            };
-
-            iterate_over_last_n_nodes( stack, 2, handlers );
-
-            if( state != State::FINISH )
-               return {};
-
-            Plan plan;
-            plan.to_remove.nodes.push_back( conditional_expression_syntax_node );
-            plan.to_remove.nodes.push_back( semicolon );
-
-            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( conditional_expression_syntax_node );
-            plan.to_add.nodes.push_back( expression_syntax_node );
             return plan;
          } );
 

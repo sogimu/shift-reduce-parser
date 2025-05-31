@@ -21,11 +21,11 @@ public:
       LOCAL
    };
    VaribleAssigmentStatmentSyntaxNode( Context context = Context::GLOBAL );
-   VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, const ComputationalExpressionSyntaxNodeSP& node, Context context = Context::GLOBAL );
+   VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, const ISyntaxNodeSP& node, Context context = Context::GLOBAL );
    VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, Context context = Context::GLOBAL );
 
    std::string name() const;
-   ComputationalExpressionSyntaxNodeSP source() const;
+   // ComputationalExpressionSyntaxNodeSP source() const;
    NameSyntaxNodeSP target() const;
    Context context() const;
 

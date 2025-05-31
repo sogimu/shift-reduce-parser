@@ -2,7 +2,6 @@
 
 #include "i_syntax_node.h"
 #include "nlohmann_json/json.hpp"
-#include "nonterminals/conditional_expression_syntax_node.h"
 #include "nonterminals/function_statment_syntax_node.h"
 #include "syntax_tree.h"
 
@@ -252,27 +251,6 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      varible_assignment_syntax_node->add_back( argument1 );
                      varible_assignment_syntax_node->add_back( argument0 );
                      arguments.push_back( varible_assignment_syntax_node );
-                  }
-                  else if( key == "ConditionalExpressionSyntaxNode" )
-                  {
-                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
-                     arguments.pop_back();
-                     ISyntaxNodeSP argument1 = std::get< ISyntaxNodeSP >( arguments.back() );
-                     arguments.pop_back();
-                     ConditionalExpressionSyntaxNode::Type type = std::get< json >( arguments.back() );
-                     arguments.pop_back();
-                     const auto& conditinal_expression_syntax_node = std::make_shared< ConditionalExpressionSyntaxNode >( type );
-                     conditinal_expression_syntax_node->add_back( argument1 );
-                     conditinal_expression_syntax_node->add_back( argument0 );
-                     arguments.push_back( conditinal_expression_syntax_node );
-                  }
-                  else if( key == "ComputationalExpressionSyntaxNode" )
-                  {
-                     ISyntaxNodeSP argument0 = std::get< ISyntaxNodeSP >( arguments.back() );
-                     arguments.pop_back();
-                     const auto& e = std::make_shared< ComputationalExpressionSyntaxNode >();
-                     e->add_back( argument0 );
-                     arguments.push_back( e );
                   }
                   else if( key == "VaribleAssigmentStatmentSyntaxNode" )
                   {

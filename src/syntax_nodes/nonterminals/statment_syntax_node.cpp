@@ -3,8 +3,6 @@
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
-#include "nonterminals/computational_expression_syntax_node.h"
-#include "nonterminals/conditional_expression_syntax_node.h"
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/while_statment_syntax_node.h"
 #include "nonterminals/function_statment_syntax_node.h"
@@ -23,11 +21,6 @@ StatmentSyntaxNode::StatmentSyntaxNode( const FSyntaxNodeSP& f_syntax_node )
    : ISyntaxNode{ Token_Type::STATMENT }
 {
    add_back( f_syntax_node );
-}
-StatmentSyntaxNode::StatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression_syntax_node )
-   : ISyntaxNode{ Token_Type::STATMENT }
-{
-   add_back( conditional_expression_syntax_node );
 }
 StatmentSyntaxNode::StatmentSyntaxNode( const IfStatmentSyntaxNodeSP& if_statment_syntax_node )
    : ISyntaxNode{ Token_Type::STATMENT }

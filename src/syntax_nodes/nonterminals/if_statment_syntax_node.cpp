@@ -4,18 +4,11 @@
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 #include "nonterminals/scope_statment_syntax_node.h"
-#include "nonterminals/conditional_expression_syntax_node.h"
 #include <stdexcept>
 
 IfStatmentSyntaxNode::IfStatmentSyntaxNode()
    : ISyntaxNode{ Token_Type::IF_STATMENT }
 {
-}
-IfStatmentSyntaxNode::IfStatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
-   : ISyntaxNode{ Token_Type::IF_STATMENT }
-{
-   add_back( conditional_expression );
-   add_back( scope );
 }
 IfStatmentSyntaxNode::IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
    : ISyntaxNode{ Token_Type::IF_STATMENT }
@@ -53,10 +46,10 @@ bool IfStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-ConditionalExpressionSyntaxNodeSP IfStatmentSyntaxNode::conditional_expression() const
-{
-   return std::dynamic_pointer_cast< ConditionalExpressionSyntaxNode >( this->operator[]( 0 ) );
-}
+// ConditionalExpressionSyntaxNodeSP IfStatmentSyntaxNode::conditional_expression() const
+// {
+//    return std::dynamic_pointer_cast< ConditionalExpressionSyntaxNode >( this->operator[]( 0 ) );
+// }
 
 ScopeSyntaxNodeSP IfStatmentSyntaxNode::true_scope() const
 {

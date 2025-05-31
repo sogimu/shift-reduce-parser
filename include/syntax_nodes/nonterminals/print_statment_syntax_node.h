@@ -5,9 +5,6 @@
 
 class ISyntaxNodeVisitor;
 
-class ComputationalExpressionSyntaxNode;
-using ComputationalExpressionSyntaxNodeSP = std::shared_ptr< ComputationalExpressionSyntaxNode >;
-
 class NameSyntaxNode;
 using NameSyntaxNodeSP = std::shared_ptr< NameSyntaxNode >;
 
@@ -15,7 +12,6 @@ class PrintStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_fr
 {
 public:
    PrintStatmentSyntaxNode();
-   PrintStatmentSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression );
    PrintStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node );
    PrintStatmentSyntaxNode( const ISyntaxNodeSP& argument );
 
@@ -23,7 +19,7 @@ public:
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 
    bool compare( const ISyntaxNode& node ) const override;
-   ComputationalExpressionSyntaxNodeSP computational_expression() const;
+   // ComputationalExpressionSyntaxNodeSP computational_expression() const;
 };
 
 using PrintStatmentSyntaxNodeSP = std::shared_ptr< PrintStatmentSyntaxNode >;

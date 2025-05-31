@@ -1,7 +1,6 @@
 #include "terminals/asterisk_syntax_node.h"
 
 #include "terminals/f_syntax_node.h"
-#include "nonterminals/computational_expression_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"

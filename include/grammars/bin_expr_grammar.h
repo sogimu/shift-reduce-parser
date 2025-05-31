@@ -1,7 +1,6 @@
 #pragma once
 
 #include "terminals/name_syntax_node.h"
-#include "nonterminals/computational_expression_syntax_node.h"
 #include "i_grammar.h"
 #include "i_syntax_node.h"
 #include "nonterminals/print_statment_syntax_node.h"
@@ -354,56 +353,6 @@ public:
             plan.to_add.nodes.push_back( expression_node );
             return plan;
          } );
-      // // OPEN_CIRCLE_BRACKET BIN_EXPR CLOSE_CIRCLE_BRACKET
-      // mProductions.emplace_back(
-      //    [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
-      //    {
-      //       OpenCircleBracketSyntaxNodeSP open_circle_bracket;
-      //       ISyntaxNodeSP expression;
-      //       CloseCircleBracketSyntaxNodeSP close_circle_bracket;
-      //
-      //       State state = State::START;
-      //
-      //       Plan plan;
-      //       SyntaxNodeEmptyVisitor::Handlers handlers;
-      //       handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-      //       handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::START )
-      //          {
-      //             open_circle_bracket = node;
-      //             state = State::OPEN_CIRCLE_BRACKET;
-      //          }
-      //       };
-      //       handlers.bin_expr_syntax_node = [ &expression, &state ]( const BinExprSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::OPEN_CIRCLE_BRACKET )
-      //          {
-      //             expression = node;
-      //             state = State::BIN_EXPR;
-      //          }
-      //       };
-      //       handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::BIN_EXPR )
-      //          {
-      //             close_circle_bracket = node;
-      //             state = State::FINISH;
-      //          }
-      //       };
-      //       iterate_over_last_n_nodes( stack, 3, handlers );
-      //
-      //       if( state != State::FINISH )
-      //          return {};
-      //
-      //       plan.to_remove.nodes.push_back( open_circle_bracket );
-      //       plan.to_remove.nodes.push_back( expression );
-      //       plan.to_remove.nodes.push_back( close_circle_bracket );
-      //
-      //       plan.to_add.nodes.push_back( expression );
-      //       return plan;
-      //    } );
-
 
    }
 };

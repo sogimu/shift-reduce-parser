@@ -2,7 +2,6 @@
 
 #include "is_last_nodes.h"
 #include "terminals/name_syntax_node.h"
-#include "nonterminals/computational_expression_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
@@ -12,12 +11,6 @@
 ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode()
    : ISyntaxNode{ Token_Type::RETURN_STATMENT }
 {
-}
-
-ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode( const ComputationalExpressionSyntaxNodeSP& computational_expression )
-   : ISyntaxNode{ Token_Type::RETURN_STATMENT }
-{
-   add_back( computational_expression );
 }
 
 ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode( const ISyntaxNodeSP& argument )
@@ -64,13 +57,13 @@ bool ReturnStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-ComputationalExpressionSyntaxNodeSP ReturnStatmentSyntaxNode::computational_expression() const
-{
-   ComputationalExpressionSyntaxNodeSP argument;
-   const auto& value_node = this->operator[]( 0 );
-   match( value_node,
-          { .computational_expression_syntax_node = [ &argument ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
-            { argument = computational_expression; },
-            .name_syntax_node = [ &argument ]( const NameSyntaxNodeSP& name ) { argument = std::make_shared< ComputationalExpressionSyntaxNode >( name ); } } );
-   return argument;
-}
+// ComputationalExpressionSyntaxNodeSP ReturnStatmentSyntaxNode::computational_expression() const
+// {
+//    ComputationalExpressionSyntaxNodeSP argument;
+//    const auto& value_node = this->operator[]( 0 );
+//    match( value_node,
+//           { .computational_expression_syntax_node = [ &argument ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
+//             { argument = computational_expression; },
+//             .name_syntax_node = [ &argument ]( const NameSyntaxNodeSP& name ) { argument = std::make_shared< ComputationalExpressionSyntaxNode >( name ); } } );
+//    return argument;
+// }

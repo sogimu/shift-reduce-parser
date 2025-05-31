@@ -25,9 +25,7 @@
 #include "terminals/slash_syntax_node.h"
 #include "terminals/return_syntax_node.h"
 #include "terminals/function_syntax_node.h"
-#include "nonterminals/computational_expression_syntax_node.h"
 #include "nonterminals/varible_syntax_node.h"
-#include "nonterminals/conditional_expression_syntax_node.h"
 #include "nonterminals/un_expr_syntax_node.h"
 #include "nonterminals/bin_expr_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
@@ -62,9 +60,7 @@ public:
    virtual void visit( const CloseCurlyBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const OpenCircleBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const CloseCircleBracketSyntaxNodeSP& ) = 0;
-   virtual void visit( const ComputationalExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const VaribleSyntaxNodeSP& ) = 0;
-   virtual void visit( const ConditionalExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const PrintStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const PrintSyntaxNodeSP& ) = 0;
    virtual void visit( const EqualSyntaxNodeSP& ) = 0;

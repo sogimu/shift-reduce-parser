@@ -33,11 +33,7 @@ public:
       { default_handler( node ); };
       std::function< void( const CloseCircleBracketSyntaxNodeSP& ) > close_circle_bracket_syntax_node = [ this ]( const CloseCircleBracketSyntaxNodeSP& node )
       { default_handler( node ); };
-      std::function< void( const ComputationalExpressionSyntaxNodeSP& ) > computational_expression_syntax_node =
-         [ this ]( const ComputationalExpressionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const VaribleSyntaxNodeSP& ) > varible_syntax_node = [ this ]( const VaribleSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const ConditionalExpressionSyntaxNodeSP& ) > conditional_expression_syntax_node = [ this ]( const ConditionalExpressionSyntaxNodeSP& node )
-      { default_handler( node ); };
       std::function< void( const PrintStatmentSyntaxNodeSP& ) > print_statment_syntax_node = [ this ]( const PrintStatmentSyntaxNodeSP& node )
       { default_handler( node ); };
       std::function< void( const VaribleAssigmentStatmentSyntaxNodeSP& ) > varible_assigment_statment_syntax_node =
@@ -151,19 +147,9 @@ public:
       mHandlers.close_circle_bracket_syntax_node( node );
    }
 
-   void visit( const ComputationalExpressionSyntaxNodeSP& node ) override
-   {
-      mHandlers.computational_expression_syntax_node( node );
-   }
-
    void visit( const VaribleSyntaxNodeSP& node ) override
    {
       mHandlers.varible_syntax_node( node );
-   }
-
-   void visit( const ConditionalExpressionSyntaxNodeSP& node ) override
-   {
-      mHandlers.conditional_expression_syntax_node( node );
    }
 
    void visit( const PrintStatmentSyntaxNodeSP& node ) override

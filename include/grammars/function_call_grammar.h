@@ -98,14 +98,14 @@ public:
                   state = State::ARGUMENT;
                }
             };
-            handlers.computational_expression_syntax_node = [ /*  &name, */ &arguments, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
-            {
-               if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
-               {
-                  arguments.emplace_back( node );
-                  state = State::ARGUMENT;
-               }
-            };
+            // handlers.computational_expression_syntax_node = [ /*  &name, */ &arguments, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
+            // {
+            //    if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
+            //    {
+            //       arguments.emplace_back( node );
+            //       state = State::ARGUMENT;
+            //    }
+            // };
             handlers.comma_syntax_node = [ &commas, &state ]( const CommaSyntaxNodeSP& node )
             {
                if( state == State::ARGUMENT )

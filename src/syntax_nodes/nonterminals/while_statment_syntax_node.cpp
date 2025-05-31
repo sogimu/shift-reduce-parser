@@ -9,12 +9,6 @@ WhileStatmentSyntaxNode::WhileStatmentSyntaxNode()
    : ISyntaxNode{ Token_Type::WHILE_STATMENT }
 {
 }
-WhileStatmentSyntaxNode::WhileStatmentSyntaxNode( const ConditionalExpressionSyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
-   : ISyntaxNode{ Token_Type::WHILE_STATMENT }
-{
-   add_back( conditional_expression );
-   add_back( scope );
-}
 WhileStatmentSyntaxNode::WhileStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
    : ISyntaxNode{ Token_Type::WHILE_STATMENT }
 {
@@ -51,10 +45,10 @@ bool WhileStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-ConditionalExpressionSyntaxNodeSP WhileStatmentSyntaxNode::conditional_expression() const
-{
-   return std::dynamic_pointer_cast< ConditionalExpressionSyntaxNode >( this->operator[]( 0 ) );
-}
+// ConditionalExpressionSyntaxNodeSP WhileStatmentSyntaxNode::conditional_expression() const
+// {
+//    return std::dynamic_pointer_cast< ConditionalExpressionSyntaxNode >( this->operator[]( 0 ) );
+// }
 
 ScopeSyntaxNodeSP WhileStatmentSyntaxNode::scope() const
 {

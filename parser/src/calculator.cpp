@@ -2,8 +2,6 @@
 
 #include "gmock/gmock.h"
 #include "is_last_nodes.h"
-#include "nonterminals/computational_expression_syntax_node.h"
-#include "nonterminals/conditional_expression_syntax_node.h"
 // #include "nonterminals/division/division_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
@@ -83,40 +81,40 @@ double Calculator::solve( const std::string& expression ) const
                }
             }
          }
-         else if( IsLastNodesIs< VaribleAssigmentStatmentSyntaxNode, ComputationalExpressionSyntaxNode >( source_stack ) )
-         {
-            auto it = target_stack.rbegin();
-            const auto& varible_assigment = it->get();
-            std::advance( it, 1 );
-            auto& parent_of_varible_assigment = it->get();
-            if( auto varible_assigment_it = std::find( parent_of_varible_assigment->begin(), parent_of_varible_assigment->end(), varible_assigment );
-                varible_assigment_it != parent_of_varible_assigment->end() )
-            {
-               if( auto inserted_node_it = parent_of_varible_assigment->insert( varible_assigment_it, target_node );
-                   inserted_node_it != parent_of_varible_assigment->end() )
-               {
-                  new_parent_target_node = *inserted_node_it;
-               }
-            }
-         }
+         // else if( IsLastNodesIs< VaribleAssigmentStatmentSyntaxNode, ComputationalExpressionSyntaxNode >( source_stack ) )
+         // {
+         //    auto it = target_stack.rbegin();
+         //    const auto& varible_assigment = it->get();
+         //    std::advance( it, 1 );
+         //    auto& parent_of_varible_assigment = it->get();
+         //    if( auto varible_assigment_it = std::find( parent_of_varible_assigment->begin(), parent_of_varible_assigment->end(), varible_assigment );
+         //        varible_assigment_it != parent_of_varible_assigment->end() )
+         //    {
+         //       if( auto inserted_node_it = parent_of_varible_assigment->insert( varible_assigment_it, target_node );
+         //           inserted_node_it != parent_of_varible_assigment->end() )
+         //       {
+         //          new_parent_target_node = *inserted_node_it;
+         //       }
+         //    }
+         // }
          else if( IsLastNodesIs< IfStatmentSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
             // std::advance( it, 1 );
             new_parent_target_node = it->get()->add_back( target_node );
          }
-         else if( IsLastNodesIs< IfStatmentSyntaxNode, ConditionalExpressionSyntaxNode >( source_stack ) )
-         {
-            auto it = target_stack.rbegin();
-            const auto& if_node = it->get();
-            std::advance( it, 1 );
-            auto& parent_of_if = it->get();
-            if( auto if_it = std::find( parent_of_if->begin(), parent_of_if->end(), if_node ); if_it != parent_of_if->end() )
-            {
-               auto it = parent_of_if->insert( if_it, target_node );
-               new_parent_target_node = *it;
-            }
-         }
+         // else if( IsLastNodesIs< IfStatmentSyntaxNode, ConditionalExpressionSyntaxNode >( source_stack ) )
+         // {
+         //    auto it = target_stack.rbegin();
+         //    const auto& if_node = it->get();
+         //    std::advance( it, 1 );
+         //    auto& parent_of_if = it->get();
+         //    if( auto if_it = std::find( parent_of_if->begin(), parent_of_if->end(), if_node ); if_it != parent_of_if->end() )
+         //    {
+         //       auto it = parent_of_if->insert( if_it, target_node );
+         //       new_parent_target_node = *it;
+         //    }
+         // }
          else if( IsLastNodesIs< WhileStatmentSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
@@ -169,33 +167,33 @@ double Calculator::solve( const std::string& expression ) const
                scope_statment->add_back( function->scope() );
             }
          }
-         else if( IsLastNodesIs< FunctionCallSyntaxNode, VaribleSyntaxNode >( source_stack ) ||
-                  IsLastNodesIs< FunctionCallSyntaxNode, ComputationalExpressionSyntaxNode >( source_stack ) )
-         {
-            auto source_it = source_stack.rbegin();
-            std::advance( source_it, 1 );
-            const auto& function_call_node = std::dynamic_pointer_cast< FunctionCallSyntaxNode >( source_it->get() );
-            if( auto argument_it = std::find( function_call_node->begin(), function_call_node->end(), source_node.get() ); argument_it != function_call_node->end() )
-            {
-               auto call_argument_index = std::distance( function_call_node->begin(), argument_it );
-               if( auto function_info_it = function_by_name.find( function_call_node->name() ); function_info_it != function_by_name.end() )
-               {
-                  const auto& function = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( function_info_it->second.function );
-                  auto function_argument_name_it = function->begin();
-                  std::advance( function_argument_name_it, call_argument_index );
-                  const auto& argument_node = std::dynamic_pointer_cast< VaribleSyntaxNode >( *function_argument_name_it );
-                  const auto& argument_name_node = std::make_shared< NameSyntaxNode >( argument_node->name() );
-                  const auto& varible_assigment_statment_syntax_node =
-                     std::make_shared< VaribleAssigmentStatmentSyntaxNode >( VaribleAssigmentStatmentSyntaxNode( VaribleAssigmentStatmentSyntaxNode::Context::LOCAL ) );
-                  varible_assigment_statment_syntax_node->add_back( argument_name_node );
-                  auto scope_it = taget_node_parent->end();
-                  std::advance( scope_it, 1 );
-                  new_parent_target_node = *taget_node_parent->insert( scope_it, target_node );
-                  taget_node_parent->insert( scope_it, varible_assigment_statment_syntax_node );
-               }
-            }
-         }
-
+         // else if( IsLastNodesIs< FunctionCallSyntaxNode, VaribleSyntaxNode >( source_stack ) ||
+         //          IsLastNodesIs< FunctionCallSyntaxNode, ComputationalExpressionSyntaxNode >( source_stack ) )
+         // {
+         //    auto source_it = source_stack.rbegin();
+         //    std::advance( source_it, 1 );
+         //    const auto& function_call_node = std::dynamic_pointer_cast< FunctionCallSyntaxNode >( source_it->get() );
+         //    if( auto argument_it = std::find( function_call_node->begin(), function_call_node->end(), source_node.get() ); argument_it != function_call_node->end() )
+         //    {
+         //       auto call_argument_index = std::distance( function_call_node->begin(), argument_it );
+         //       if( auto function_info_it = function_by_name.find( function_call_node->name() ); function_info_it != function_by_name.end() )
+         //       {
+         //          const auto& function = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( function_info_it->second.function );
+         //          auto function_argument_name_it = function->begin();
+         //          std::advance( function_argument_name_it, call_argument_index );
+         //          const auto& argument_node = std::dynamic_pointer_cast< VaribleSyntaxNode >( *function_argument_name_it );
+         //          const auto& argument_name_node = std::make_shared< NameSyntaxNode >( argument_node->name() );
+         //          const auto& varible_assigment_statment_syntax_node =
+         //             std::make_shared< VaribleAssigmentStatmentSyntaxNode >( VaribleAssigmentStatmentSyntaxNode( VaribleAssigmentStatmentSyntaxNode::Context::LOCAL ) );
+         //          varible_assigment_statment_syntax_node->add_back( argument_name_node );
+         //          auto scope_it = taget_node_parent->end();
+         //          std::advance( scope_it, 1 );
+         //          new_parent_target_node = *taget_node_parent->insert( scope_it, target_node );
+         //          taget_node_parent->insert( scope_it, varible_assigment_statment_syntax_node );
+         //       }
+         //    }
+         // }
+         //
          return new_parent_target_node;
       },
       []( const std::vector< std::reference_wrapper< const ISyntaxNodeSP > >& source_stack,
@@ -210,10 +208,10 @@ double Calculator::solve( const std::string& expression ) const
          {
             return new_parent_target_node;
          }
-         else if( IsLastNodesIs< ComputationalExpressionSyntaxNode >( source_stack ) )
-         {
-            return new_parent_target_node;
-         }
+         // else if( IsLastNodesIs< ComputationalExpressionSyntaxNode >( source_stack ) )
+         // {
+         //    return new_parent_target_node;
+         // }
          new_parent_target_node = taget_node_parent->add_back( target_node );
 
          return new_parent_target_node;
@@ -393,45 +391,45 @@ double Calculator::solve( const std::string& expression ) const
                argument_stack.pop_back();
             std::cout << "print: " << std::to_string( result ) << std::endl;
          };
-         handlers.conditional_expression_syntax_node = [ &argument_stack ]( const ConditionalExpressionSyntaxNodeSP& conditional_expression )
-         {
-            auto rhs = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
-            auto lhs = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
-            // argument_stack.pop_back();
-
-            switch( conditional_expression->type() )
-            {
-            case ConditionalExpressionSyntaxNode::Type::LESS:
-            {
-               argument_stack.push_back( static_cast< int >( lhs < rhs ) );
-            };
-            break;
-            case ConditionalExpressionSyntaxNode::Type::MORE:
-            {
-               argument_stack.push_back( static_cast< int >( lhs > rhs ) );
-            };
-            break;
-            case ConditionalExpressionSyntaxNode::Type::LESS_OR_EQUAL:
-            {
-               argument_stack.push_back( static_cast< int >( lhs <= rhs ) );
-            };
-            break;
-            case ConditionalExpressionSyntaxNode::Type::MORE_OR_EQUAL:
-            {
-               argument_stack.push_back( static_cast< int >( lhs >= rhs ) );
-            };
-            break;
-            case ConditionalExpressionSyntaxNode::Type::EQUAL:
-            {
-               argument_stack.push_back( static_cast< int >( lhs == rhs ) );
-            };
-            break;
-            }
-         };
+         // handlers.conditional_expression_syntax_node = [ &argument_stack ]( const ConditionalExpressionSyntaxNodeSP& conditional_expression )
+         // {
+         //    auto rhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    auto lhs = argument_stack.back();
+         //    if( !argument_stack.empty() )
+         //       argument_stack.pop_back();
+         //    // argument_stack.pop_back();
+         //
+         //    switch( conditional_expression->type() )
+         //    {
+         //    case ConditionalExpressionSyntaxNode::Type::LESS:
+         //    {
+         //       argument_stack.push_back( static_cast< int >( lhs < rhs ) );
+         //    };
+         //    break;
+         //    case ConditionalExpressionSyntaxNode::Type::MORE:
+         //    {
+         //       argument_stack.push_back( static_cast< int >( lhs > rhs ) );
+         //    };
+         //    break;
+         //    case ConditionalExpressionSyntaxNode::Type::LESS_OR_EQUAL:
+         //    {
+         //       argument_stack.push_back( static_cast< int >( lhs <= rhs ) );
+         //    };
+         //    break;
+         //    case ConditionalExpressionSyntaxNode::Type::MORE_OR_EQUAL:
+         //    {
+         //       argument_stack.push_back( static_cast< int >( lhs >= rhs ) );
+         //    };
+         //    break;
+         //    case ConditionalExpressionSyntaxNode::Type::EQUAL:
+         //    {
+         //       argument_stack.push_back( static_cast< int >( lhs == rhs ) );
+         //    };
+         //    break;
+         //    }
+         // };
          handlers.varible_assigment_statment_syntax_node = [ &varible_store, &argument_stack ]( const VaribleAssigmentStatmentSyntaxNodeSP& varible_assigment )
          {
             // const auto& source = varible_assigment->source();

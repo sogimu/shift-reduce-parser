@@ -1,13 +1,5 @@
 #pragma once
 
-#include "nonterminals/function_statment_syntax_node.h"
-#include "nonterminals/statment_syntax_node.h"
-#include "nonterminals/varible_assigment_statment_syntax_node.h"
-#include "nonterminals/varible_syntax_node.h"
-#include "terminals/asterisk_syntax_node.h"
-#include "terminals/return_syntax_node.h"
-#include "terminals/slash_syntax_node.h"
-#include "nonterminals/conditional_expression_syntax_node.h"
 #include <cstddef>
 #include <iostream>
 #include <string>
@@ -19,6 +11,13 @@
 #include <sstream>
 #include <functional>
 #include <optional>
+#include "nonterminals/function_statment_syntax_node.h"
+#include "nonterminals/statment_syntax_node.h"
+#include "nonterminals/varible_assigment_statment_syntax_node.h"
+#include "nonterminals/varible_syntax_node.h"
+#include "terminals/asterisk_syntax_node.h"
+#include "terminals/return_syntax_node.h"
+#include "terminals/slash_syntax_node.h"
 #include "enums.h"
 #include "syntax_nodes/terminals/bol_syntax_node.h"
 #include "syntax_nodes/terminals/close_curly_bracket_syntax_node.h"
@@ -56,70 +55,7 @@
 class SyntaxTree
 {
 public:
-   SyntaxTree( const LexicalTokens& lexical_tokens )
-   {
-      std::vector< IGrammarSP > grammars{
-         std::make_shared< F >(),
-         std::make_shared< BinExpr >(),
-         std::make_shared< UnExpr >(),
-         std::make_shared< Print >(),
-         std::make_shared< CircleBrackets >(),
-         std::make_shared< VaribleAssigment >(),
-         std::make_shared< Return >(),
-         std::make_shared< Statment >(),
-         std::make_shared< Scope >(),
-         std::make_shared< If >(),
-         std::make_shared< While >(),
-         std::make_shared< FunctionStatment >(),
-         std::make_shared< FunctionCall >()
-      };
-
-      Stack stack;
-      const auto& tokens = lexical_tokens.list();
-      for( auto it = tokens.begin(); it != tokens.end(); ++it )
-      {
-         ISyntaxNodeSP lookahead_node;
-         if( auto next_it = std::next( it ); next_it != tokens.end() )
-         {
-           lookahead_node = createSyntaxNodeFromToken( *next_it );
-         }
-         const auto& token = *it;
-         const auto& node = createSyntaxNodeFromToken( token );
-         stack.emplace_back( node );
-
-         bool is_production_can_be = stack.size() >= 1;
-         while( is_production_can_be )
-         {
-            is_production_can_be = false;
-            for( const auto& grammar : grammars )
-            {
-              const auto& plan_opt = grammar->TryReduce( stack, lookahead_node );
-              if( !plan_opt )
-              {
-                continue;
-              }
-              is_production_can_be = true;
-              const auto& plan = plan_opt.value();
-
-              for( size_t i = 0; i < plan.to_remove.nodes.size(); ++i )
-                stack.pop_back();
-
-              for( const auto& d : plan.to_add.nodes )
-                stack.push_back( d );
-
-              break;
-            }
-         }
-      }
-
-      if( stack.size() > 1 )
-         throw std::runtime_error( "Not all nodes reduced" );
-
-      if( stack.size() == 0 )
-         throw std::runtime_error( "No final reduced node" );
-
-      mRoot = stack.front();
-   }
+   SyntaxTree( const LexicalTokens& lexical_tokens );
 
    SyntaxTree( const ISyntaxNodeSP& root )
       : mRoot{ root }
@@ -353,41 +289,40 @@ public:
             handlers.scope_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SCOPE" << "}"; };
             handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
             handlers.close_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CLOSE_CURLY_BRACKET" << "}"; };
-            handlers.computational_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "COMPUTATIONAL_EXPRESSION" << "}"; };
             handlers.varible_syntax_node = [ &s ]( const VaribleSyntaxNodeSP& node ) { s << "{" << "VARIBLE" << '(' << node->name() << ')' << "}"; };
-            handlers.conditional_expression_syntax_node = [ &s ]( const ConditionalExpressionSyntaxNodeSP& node )
-            {
-               std::string type;
-               switch( node->type() )
-               {
-               case ConditionalExpressionSyntaxNode::Type::LESS:
-               {
-                  type = "LESS";
-               };
-               break;
-               case ConditionalExpressionSyntaxNode::Type::MORE:
-               {
-                  type = "MORE";
-               };
-               break;
-               case ConditionalExpressionSyntaxNode::Type::EQUAL:
-               {
-                  type = "EQUAL";
-               };
-               break;
-               case ConditionalExpressionSyntaxNode::Type::LESS_OR_EQUAL:
-               {
-                  type = "LESS_OR_EQUAL";
-               };
-               break;
-               case ConditionalExpressionSyntaxNode::Type::MORE_OR_EQUAL:
-               {
-                  type = "MORE_OR_EQUAL";
-               };
-               break;
-               }
-               s << "{" << "CONDITIONAL_EXPRESSION" << " (" << type << ")" << "}";
-            };
+            // handlers.conditional_expression_syntax_node = [ &s ]( const ConditionalExpressionSyntaxNodeSP& node )
+            // {
+            //    std::string type;
+            //    switch( node->type() )
+            //    {
+            //    case ConditionalExpressionSyntaxNode::Type::LESS:
+            //    {
+            //       type = "LESS";
+            //    };
+            //    break;
+            //    case ConditionalExpressionSyntaxNode::Type::MORE:
+            //    {
+            //       type = "MORE";
+            //    };
+            //    break;
+            //    case ConditionalExpressionSyntaxNode::Type::EQUAL:
+            //    {
+            //       type = "EQUAL";
+            //    };
+            //    break;
+            //    case ConditionalExpressionSyntaxNode::Type::LESS_OR_EQUAL:
+            //    {
+            //       type = "LESS_OR_EQUAL";
+            //    };
+            //    break;
+            //    case ConditionalExpressionSyntaxNode::Type::MORE_OR_EQUAL:
+            //    {
+            //       type = "MORE_OR_EQUAL";
+            //    };
+            //    break;
+            //    }
+            //    s << "{" << "CONDITIONAL_EXPRESSION" << " (" << type << ")" << "}";
+            // };
             handlers.print_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT_STATMENT" << "}"; };
             handlers.equal_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EQUAL" << "}"; };
             handlers.less_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "LESS" << "}"; };

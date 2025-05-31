@@ -1,7 +1,6 @@
 #pragma once
 
 #include "i_syntax_node.h"
-#include "nonterminals/conditional_expression_syntax_node.h"
 #include "i_grammar.h"
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/scope_statment_syntax_node.h"
