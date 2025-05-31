@@ -35,7 +35,7 @@ public:
          FUNCTION_CALL
       };
 
-      // FUNCTION NAME OPEN_CIRCLE_BRACKET (NAME|COMPUTATIONAL_EXPRESSION COMMA?)+ CLOSE_CIRCLE_BRACKET SCOPE
+      // FUNCTION NAME OPEN_CIRCLE_BRACKET (NAME|F|BIN_EXPR|UN_EXPR|FUNC_CALL COMMA?)+ CLOSE_CIRCLE_BRACKET SCOPE
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -111,14 +111,6 @@ public:
                   state = State::ARGUMENT;
                }
             };
-            // handlers.computational_expression_syntax_node = [ /*  &name, */ &arguments, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
-            // {
-            //    if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
-            //    {
-            //       arguments.emplace_back( node );
-            //       state = State::ARGUMENT;
-            //    }
-            // };
             handlers.comma_syntax_node = [ &commas, &state ]( const CommaSyntaxNodeSP& node )
             {
                auto s = state;

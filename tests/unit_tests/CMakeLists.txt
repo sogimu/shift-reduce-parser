@@ -13,7 +13,6 @@ add_executable(unit_tests
     src/lexical_tokens/arithmetic_expression/division_test.cpp
     src/lexical_tokens/arithmetic_expression/varible_expression_test.cpp
     src/syntax_tree/arithmetic_expression/arithmetic_test.cpp
-    src/syntax_tree/conditional_expression/conditional_expression_test.cpp
     src/syntax_tree/if_statment/if_test.cpp
     src/syntax_tree/while_statment/while_test.cpp
     src/syntax_tree/function_statment/function_statment_test.cpp

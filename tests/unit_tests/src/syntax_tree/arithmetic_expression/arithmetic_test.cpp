@@ -16,15 +16,15 @@ TEST( SYNTAX_TREE_ARITHMETIC, INT_SEMICOLON )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
     {
-      "StatmentSyntaxNode": [
-        {
-              "FSyntaxNode": [
-                1
-              ]
-        }
+      "FSyntaxNode": [
+        1
       ]
     }
+  ]
+}
     )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
@@ -45,14 +45,14 @@ TEST( SYNTAX_TREE_ARITHMETIC, MINUS_INT_SEMICOLON )
 {
   "StatmentSyntaxNode": [
     {
-          "UnExprSyntaxNode": [
-            0,
-            {
-              "FSyntaxNode": [
-                1
-              ]
-            }
+      "UnExprSyntaxNode": [
+        0,
+        {
+          "FSyntaxNode": [
+            1
           ]
+        }
+      ]
     }
   ]
 }
@@ -75,24 +75,24 @@ TEST( SYNTAX_TREE_ARITHMETIC, TWO_MINUSIES )
 {
   "StatmentSyntaxNode": [
     {
-          "BinExprSyntaxNode": [
-            1,
-            {
-              "UnExprSyntaxNode": [
-                0,
-                {
-                  "FSyntaxNode": [
-                    2
-                  ]
-                }
-              ]
-            },
+      "BinExprSyntaxNode": [
+        1,
+        {
+          "UnExprSyntaxNode": [
+            0,
             {
               "FSyntaxNode": [
-                1
+                2
               ]
             }
           ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
     }
   ]
 }
@@ -113,35 +113,35 @@ TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_MINUS_NUMBER_DIVIDE_NUMBER_CLO
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-           "StatmentSyntaxNode": [
-              {
-                    "BinExprSyntaxNode": [
-                      1,
-                      {
-                        "BinExprSyntaxNode": [
-                          3,
-                          {
-                                "FSyntaxNode": [
-                                  3 
-                                ]
-                          },
-                          {
-                                "FSyntaxNode": [
-                                  2
-                                ]
-                          }
-                        ]
-                      },
-                      {
-                            "FSyntaxNode": [
-                              5
-                            ]
-                      }
-                    ]
-              }
-            ]
-      }
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        1,
+        {
+          "BinExprSyntaxNode": [
+            3,
+            {
+              "FSyntaxNode": [
+                3
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            5
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
@@ -158,25 +158,25 @@ TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_MULTIPLY_OPEN_BRACKET_NUMBER_C
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-           "StatmentSyntaxNode": [
-              {
-                    "BinExprSyntaxNode": [
-                      2,
-                      {
-                            "FSyntaxNode": [
-                              8 
-                            ]
-                      },
-                      {
-                            "FSyntaxNode": [
-                              1
-                            ]
-                      }
-                    ]
-              }
-            ]
-      }
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        2,
+        {
+          "FSyntaxNode": [
+            8
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
@@ -197,9 +197,9 @@ TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_CLOSE_BRACKET )
 {
   "StatmentSyntaxNode": [
     {
-          "FSyntaxNode": [
-            1
-          ]
+      "FSyntaxNode": [
+        1
+      ]
     }
   ]
 }
@@ -220,25 +220,25 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_PLUS )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-           "StatmentSyntaxNode": [
-              {
-                    "BinExprSyntaxNode": [
-                      0,
-                      {
-                            "FSyntaxNode": [
-                              2 
-                            ]
-                      },
-                      {
-                            "FSyntaxNode": [
-                              1
-                            ]
-                      }
-                    ]
-              }
-            ]
-      }
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        0,
+        {
+          "FSyntaxNode": [
+            2
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
@@ -256,25 +256,25 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_DIVISION )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-           "StatmentSyntaxNode": [
-              {
-                    "BinExprSyntaxNode": [
-                      3,
-                      {
-                            "FSyntaxNode": [
-                              2 
-                            ]
-                      },
-                      {
-                            "FSyntaxNode": [
-                              6
-                            ]
-                      }
-                    ]
-              }
-            ]
-      }
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        3,
+        {
+          "FSyntaxNode": [
+            2
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            6
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
@@ -293,33 +293,33 @@ TEST( SYNTAX_TREE_ARITHMETIC, MANY_PLUSs )
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
 {
-     "StatmentSyntaxNode": [
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        0,
         {
-              "BinExprSyntaxNode": [
-                0,
-                {
-                      "BinExprSyntaxNode": [
-                        0,
-                        {
-                              "FSyntaxNode": [
-                                3
-                              ]
-                        },
-                        {
-                              "FSyntaxNode": [
-                                2
-                              ]
-                        }
-                      ]
-                },
-                {
-                      "FSyntaxNode": [
-                        1
-                      ]
-                }
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                3
               ]
+            },
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
         }
       ]
+    }
+  ]
 }
       )""";
 
@@ -338,35 +338,35 @@ TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
     {
-         "StatmentSyntaxNode": [
+      "BinExprSyntaxNode": [
+        0,
+        {
+          "BinExprSyntaxNode": [
+            2,
             {
-                  "BinExprSyntaxNode": [
-                    0,
-                    {
-                          "BinExprSyntaxNode": [
-                            2,
-                            {
-                                  "FSyntaxNode": [
-                                    3 
-                                  ]
-                            },
-                            {
-                                "FSyntaxNode": [
-                                  2
-                                ]
-                          }
-                        ]
-                  },
-                  {
-                        "FSyntaxNode": [
-                          1
-                        ]
-                  }
-                ]
-          }
-        ]
-  }
+              "FSyntaxNode": [
+                3
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
@@ -384,35 +384,35 @@ TEST( SYNTAX_TREE_ARITHMETIC, CIRCLE_CASE0 )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-           "StatmentSyntaxNode": [
-              {
-                    "BinExprSyntaxNode": [
-                      0,
-                      {
-                            "BinExprSyntaxNode": [
-                              2,
-                              {
-                                    "FSyntaxNode": [
-                                      3 
-                                    ]
-                              },
-                              {
-                                    "FSyntaxNode": [
-                                      2
-                                    ]
-                              }
-                            ]
-                      },
-                      {
-                            "FSyntaxNode": [
-                              1 
-                            ]
-                      }
-                    ]
-              }
-            ]
-      }
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        0,
+        {
+          "BinExprSyntaxNode": [
+            2,
+            {
+              "FSyntaxNode": [
+                3
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
@@ -430,35 +430,35 @@ TEST( SYNTAX_TREE_ARITHMETIC, CIRCLE_CASE1 )
 
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
-      {
-           "StatmentSyntaxNode": [
-              {
-                    "BinExprSyntaxNode": [
-                      0,
-                      {
-                            "BinExprSyntaxNode": [
-                              2,
-                              {
-                                    "FSyntaxNode": [
-                                      3 
-                                    ]
-                              },
-                              {
-                                    "FSyntaxNode": [
-                                      2
-                                    ]
-                              }
-                            ]
-                      },
-                      {
-                            "FSyntaxNode": [
-                              1 
-                            ]
-                      }
-                    ]
-              }
-            ]
-      }
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        0,
+        {
+          "BinExprSyntaxNode": [
+            2,
+            {
+              "FSyntaxNode": [
+                3
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
       )""";
 
    const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
@@ -477,23 +477,23 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_MINUS )
    // ASSERT
    const auto& expected_syntax_tree_description = R"""(
 {
-     "StatmentSyntaxNode": [
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        1,
         {
-              "BinExprSyntaxNode": [
-                1,
-                {
-                      "FSyntaxNode": [
-                        2
-                      ]
-                },
-                {
-                      "FSyntaxNode": [
-                        1
-                      ]
-                }
-              ]
+          "FSyntaxNode": [
+            2
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
         }
       ]
+    }
+  ]
 }
       )""";
 

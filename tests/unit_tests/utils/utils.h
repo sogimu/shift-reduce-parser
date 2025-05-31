@@ -197,14 +197,15 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                   else if( key == "FunctionCallSyntaxNode" )
                   {
                      std::vector<ISyntaxNodeSP> function_arguments;
-                     if( arguments.size() > 1 )
+                     const auto& value = search_path.back().value;
+                     if( arguments.size() >= value.size() )
                      {
-                        for( size_t i = arguments.size() - 1; i < arguments.size(); ++i )
+                        for( size_t i = arguments.size()-1; i > arguments.size() - value.size(); --i )
                         {
                            ISyntaxNodeSP argument = std::get< ISyntaxNodeSP >( arguments[ i ] );
                            function_arguments.push_back( argument );
                         }
-                        for( size_t i = arguments.size() - 1; i < arguments.size(); ++i )
+                        for( size_t i = 0; i < value.size()-1; ++i )
                         {
                            arguments.pop_back();
                         }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "terminals/close_circle_bracket_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "terminals/minus_syntax_node.h"
 #include "terminals/number_syntax_node.h"
@@ -32,7 +33,7 @@ public:
          F
       };
 
-      // MINUS F [SEMICOLON, PLUS, MINUS, MULTIPLY, DIVISION]
+      // MINUS F [SEMICOLON, PLUS, MINUS, MULTIPLY, DIVISION, CLOSE_CIRCLE_BRACKET, COMMA]
       mProductions.emplace_back(
          [  ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -59,7 +60,9 @@ public:
                                                  {
                                                     if( state == State::FIRST_MINUS )
                                                     {
-                                                       if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) )
+                                                       if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) ||
+                                                                        check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
+                                                                        check_type< CommaSyntaxNode >( lookahead ) )
                                                        {
                                                          state = State::F;
                                                          f = node;

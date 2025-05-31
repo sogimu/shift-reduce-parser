@@ -1,5 +1,6 @@
 #pragma once
 
+#include "terminals/comma_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "i_grammar.h"
 #include "i_syntax_node.h"
@@ -36,7 +37,7 @@ public:
          CLOSE_CIRCLE_BRACKET,
       };
       
-      // F|BIN_EXPR|UN_EXPR +|-|*|/ F|BIN_EXPR|UN_EXPR 
+      // F|BIN_EXPR|UN_EXPR +|-|*|/ F|BIN_EXPR|UN_EXPR [SEMICOLON|CLOSE_CIRCLE_BRACKET,BIN_EXPR,COMMA] 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -64,7 +65,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Addition;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
                   {
                     state = State::FINISH;
                   }
@@ -76,7 +78,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Substruction;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
                   {
                     state = State::FINISH;
                   }
@@ -88,7 +91,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Multiply;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
                   {
                     state = State::FINISH;
                   }
@@ -100,7 +104,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Division;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
                   {
                     state = State::FINISH;
                   }
@@ -120,7 +125,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Addition;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead )  || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ))
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ))
                   {
                     state = State::FINISH;
                   }
@@ -132,7 +138,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Substruction;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead )  || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ))
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ))
                   {
                     state = State::FINISH;
                   }
@@ -144,7 +151,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Multiply;
                   if( lookahead && ( check_type< SemicolonSyntaxNode >( lookahead )  || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) ) )
                   {
                     state = State::FINISH;
                   }
@@ -156,7 +164,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Division;
                   if( lookahead && ( check_type< SemicolonSyntaxNode >( lookahead )  || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) ) )
                   {
                     state = State::FINISH;
                   }
@@ -176,7 +185,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Addition;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
                   {
                     state = State::FINISH;
                   }
@@ -188,7 +198,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Substruction;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
                   {
                     state = State::FINISH;
                   }
@@ -200,7 +211,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Multiply;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
                   {
                     state = State::FINISH;
                   }
@@ -212,7 +224,8 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Division;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                   check_type< BinExprSyntaxNode >( lookahead ) )
+                                   check_type< BinExprSyntaxNode >( lookahead ) || 
+                                   check_type< CommaSyntaxNode >( lookahead ) )
                   {
                     state = State::FINISH;
                   }

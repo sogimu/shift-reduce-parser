@@ -3,10 +3,13 @@
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
 #include "i_grammar.h"
+#include "terminals/asterisk_syntax_node.h"
 #include "terminals/close_circle_bracket_syntax_node.h"
+#include "terminals/minus_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
+#include "terminals/slash_syntax_node.h"
 #include "utils.h"
 
 #include <memory>
@@ -33,7 +36,7 @@ public:
          SEMICOLON,
       };
 
-      // NAME OPEN_CIRCLE_BRACKET (NAME|COMPUTATIONAL_EXPRESSION COMMA?)+ CLOSE_CIRCLE_BRACKET
+      // NAME OPEN_CIRCLE_BRACKET (NAME|F|BIN_EXPR|UN_EXPR|FUNCTION_CALL COMMA?)+ CLOSE_CIRCLE_BRACKET
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -98,14 +101,38 @@ public:
                   state = State::ARGUMENT;
                }
             };
-            // handlers.computational_expression_syntax_node = [ /*  &name, */ &arguments, &state ]( const ComputationalExpressionSyntaxNodeSP& node )
-            // {
-            //    if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
-            //    {
-            //       arguments.emplace_back( node );
-            //       state = State::ARGUMENT;
-            //    }
-            // };
+            handlers.f_syntax_node = [ &arguments, &state ]( const FSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
+               {
+                  arguments.emplace_back( node );
+                  state = State::ARGUMENT;
+               }
+            };
+            handlers.bin_expr_syntax_node = [ &arguments, &state ]( const BinExprSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
+               {
+                  arguments.emplace_back( node );
+                  state = State::ARGUMENT;
+               }
+            };
+            handlers.un_expr_syntax_node = [ &arguments, &state ]( const UnExprSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
+               {
+                  arguments.emplace_back( node );
+                  state = State::ARGUMENT;
+               }
+            };
+            handlers.function_call_syntax_node = [ &arguments, &state ]( const FunctionCallSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
+               {
+                  arguments.emplace_back( node );
+                  state = State::ARGUMENT;
+               }
+            };
             handlers.comma_syntax_node = [ &commas, &state ]( const CommaSyntaxNodeSP& node )
             {
                if( state == State::ARGUMENT )
@@ -126,7 +153,13 @@ public:
             {
                if( state == State::ARGUMENT )
                {
-                 if( lookahead && ( check_type<SemicolonSyntaxNode>( lookahead ) ) )
+                 if( lookahead && ( check_type<SemicolonSyntaxNode>( lookahead ) || 
+                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) ||
+                                    check_type<PlusSyntaxNode>( lookahead ) ||
+                                    check_type<MinusSyntaxNode>( lookahead ) ||
+                                    check_type<AsteriskSyntaxNode>( lookahead ) ||
+                                    check_type<SlashSyntaxNode>( lookahead ) ||
+                                    check_type<CommaSyntaxNode>( lookahead ) ) )
                  {
                     close_circle_bracket = node;
                     state = State::CLOSE_CIRCLE_BRACKET;
