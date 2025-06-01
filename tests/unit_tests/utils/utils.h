@@ -177,15 +177,13 @@ inline SyntaxTree CreateSyntaxNodeTree( const std::string& description )
                      ScopeSyntaxNodeSP scope = std::dynamic_pointer_cast<ScopeSyntaxNode>(std::get< ISyntaxNodeSP >( arguments.back() ));
                      arguments.pop_back();
                      std::vector<ISyntaxNodeSP> function_arguments;
-                     if( arguments.size() > 1 )
+                     const auto& value = search_path.back().value;
+                     if( arguments.size() >= value.size()-2 )
                      {
-                        for( size_t i = arguments.size() - 1; i < arguments.size(); ++i )
+                        for( size_t i=0; i < value.size()-2; ++i )
                         {
-                           ISyntaxNodeSP argument = std::get< ISyntaxNodeSP >( arguments[ i ] );
+                           ISyntaxNodeSP argument = std::get< ISyntaxNodeSP >( arguments.back() );
                            function_arguments.push_back( argument );
-                        }
-                        for( size_t i = arguments.size() - 1; i < arguments.size(); ++i )
-                        {
                            arguments.pop_back();
                         }
                      }
