@@ -26,7 +26,7 @@ public:
          NAME
       };
 
-      // NAME EQUAL F|BIN_EXPR|UN_EXPR|FUNCTION_CALL SEMICOLON
+      // NAME EQUAL F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL SEMICOLON
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -39,12 +39,21 @@ public:
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& /* node */ ) { state = State::ERROR; };
-            handlers.name_syntax_node = [ &name, &state ]( const NameSyntaxNodeSP& node )
+            handlers.name_syntax_node = [ &name, &value, &state, &lookahead ]( const NameSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
                   state = State::NAME;
                   name = node;
+               }
+               else if( state == State::EQUAL )
+               {
+                   if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) )
+                   {
+                        value = node;
+                        state = State::VALUE;
+                        state = State::FINISH;
+                    }
                }
             };
             handlers.equal_syntax_node = [ &equal, &state ]( const EqualSyntaxNodeSP& node )
