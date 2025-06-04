@@ -48,7 +48,7 @@ public:
          CLOSE_CIRCLE_BRACKET,
       };
       
-      // F|BIN_EXPR|UN_EXPR +|-|*|/ F|BIN_EXPR|UN_EXPR [SEMICOLON|CLOSE_CIRCLE_BRACKET,BIN_EXPR,COMMA,EQUAL] 
+      // F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL +|-|*|/ F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL [SEMICOLON|CLOSE_CIRCLE_BRACKET,BIN_EXPR,COMMA,EQUAL] 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -468,7 +468,7 @@ public:
             return plan;
          } );
 
-      // F|BIN_EXPR|UN_EXPR EQUAL EQUAL | LESS EQUAL | MORE EQUAL F|BIN_EXPR|UN_EXPR[!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
+      // F|BIN_EXPR|UN_EXPR EQUAL EQUAL|LESS EQUAL|MORE EQUAL F|BIN_EXPR|UN_EXPR[!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {

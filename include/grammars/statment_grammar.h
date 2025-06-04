@@ -253,7 +253,7 @@ public:
             return plan;
          } );
 
-      // F SEMICOLON
+      // F|BIN_EXPR|UN_EXPR|NAME SEMICOLON
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -281,6 +281,22 @@ public:
                }
             };
             handlers.un_expr_syntax_node = [ &f, &state ]( const UnExprSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  f = node;
+                  state = State::F;
+               }
+            };
+            handlers.name_syntax_node = [ &f, &state ]( const NameSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  f = node;
+                  state = State::F;
+               }
+            };
+            handlers.function_call_syntax_node = [ &f, &state ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::START )
                {

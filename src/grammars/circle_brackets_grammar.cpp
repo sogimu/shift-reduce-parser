@@ -46,9 +46,17 @@ CircleBrackets::CircleBrackets()
           Plan plan;
           SyntaxNodeEmptyVisitor::Handlers handlers;
           handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::START; };
-          handlers.name_syntax_node = [ &state ]( const NameSyntaxNodeSP& node )
+          handlers.name_syntax_node = [ &state, &expression ]( const NameSyntaxNodeSP& node )
           {
-              state = State::ERROR;
+             if( state == State::OPEN_CIRCLE_BRACKET )
+             {
+                expression = node;
+                state = State::F;
+             }
+             else if( state == State::START )
+             {
+                state = State::ERROR;
+             }
           };
           handlers.if_syntax_node = [ &state ]( const IfSyntaxNodeSP& node )
           {
@@ -83,6 +91,14 @@ CircleBrackets::CircleBrackets()
              }
           };
           handlers.un_expr_syntax_node = [ &expression, &state ]( const UnExprSyntaxNodeSP& node )
+          {
+             if( state == State::OPEN_CIRCLE_BRACKET )
+             {
+                expression = node;
+                state = State::F;
+             }
+          };
+          handlers.function_call_syntax_node = [ &expression, &state ]( const FunctionCallSyntaxNodeSP& node )
           {
              if( state == State::OPEN_CIRCLE_BRACKET )
              {

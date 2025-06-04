@@ -758,7 +758,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, MANY_PLUSs )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
-TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION )
+TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION0 )
 {
    // ARRANGE
    const auto& input = R"""(1+2*3;)""";
@@ -785,6 +785,108 @@ TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION )
             {
               "FSyntaxNode": [
                 2
+              ]
+            }
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION1 )
+{
+   // ARRANGE
+   const auto& input = R"""(x-1/x;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        1,
+        {
+          "BinExprSyntaxNode": [
+            3,
+            {
+              "NameSyntaxNode": [
+                "x"
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "NameSyntaxNode": [
+            "x"
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION2 )
+{
+   // ARRANGE
+   const auto& input = R"""(1-x*a-c;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        1,
+        {
+          "BinExprSyntaxNode": [
+            1,
+            {
+              "NameSyntaxNode": [
+                "c"
+              ]
+            },
+            {
+              "BinExprSyntaxNode": [
+                2,
+                {
+                  "NameSyntaxNode": [
+                    "a"
+                  ]
+                },
+                {
+                  "NameSyntaxNode": [
+                    "x"
+                  ]
+                }
               ]
             }
           ]

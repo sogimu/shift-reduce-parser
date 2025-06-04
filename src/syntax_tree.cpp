@@ -55,9 +55,6 @@
 SyntaxTree::SyntaxTree( const LexicalTokens& lexical_tokens )
  {
     std::vector< IGrammarSP > grammars{
-       std::make_shared< F >(),
-       std::make_shared< BinExpr >(),
-       std::make_shared< UnExpr >(),
        std::make_shared< Print >(),
        std::make_shared< CircleBrackets >(),
        std::make_shared< VaribleAssigment >(),
@@ -67,7 +64,10 @@ SyntaxTree::SyntaxTree( const LexicalTokens& lexical_tokens )
        std::make_shared< If >(),
        std::make_shared< While >(),
        std::make_shared< FunctionStatment >(),
-       std::make_shared< FunctionCall >()
+       std::make_shared< FunctionCall >(),
+       std::make_shared< F >(),
+       std::make_shared< BinExpr >(),
+       std::make_shared< UnExpr >(),
     };
 
     Stack stack;

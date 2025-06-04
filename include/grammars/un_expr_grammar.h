@@ -1,6 +1,8 @@
 #pragma once
 
+#include "i_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
+#include "terminals/bol_syntax_node.h"
 #include "terminals/close_circle_bracket_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "terminals/minus_syntax_node.h"
@@ -13,10 +15,6 @@
 #include "utils.h"
 
 #include <vector>
-
-class E;
-class T;
-class P;
 
 class UnExpr : public IGrammar
 {
@@ -33,50 +31,98 @@ public:
          MINUS,
          NUMBER,
          F,
-         NOT_F
+         ALLOWED,
+         NOT_ALLOWED
       };
 
-      // !F MINUS F
+      // !F&&!BIN_EXPR|!UN_EXPR|!NAME|!FUNCTION_CALL MINUS F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL
       mProductions.emplace_back(
          [  ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             MinusSyntaxNodeSP minus;
-            FSyntaxNodeSP f;
+            ISyntaxNodeSP f;
 
             State state = State::START;
 
-            iterate_over_last_n_nodes(
-               stack, 3,
-               SyntaxNodeEmptyVisitor::Handlers{ .default_handler = [ &state ]( const ISyntaxNodeSP& )
-                                                 { state = State::NOT_F; },
-                                                 .minus_syntax_node =
-                                                    [ &minus, &f, &state ]( const MinusSyntaxNodeSP& node )
-                                                 {
-                                                    if( state == State::START )
-                                                    {
-                                                       state = State::NOT_F;
-                                                    }
-                                                    else if( state == State::NOT_F )
-                                                    {
-                                                       state = State::MINUS;
-                                                       minus = node;
-                                                    }
-                                                 },
-                                                 .f_syntax_node =
-                                                    [ &f, &state, &lookahead ]( const FSyntaxNodeSP& node )
-                                                 {
-                                                    if( state == State::START )
-                                                    {
-                                                       state = State::ERROR;
-                                                    }
-                                                    else if( state == State::MINUS )
-                                                    {
-                                                       state = State::F;
-                                                       f = node;
-                                                       state = State::FINISH;
-                                                    }
-                                                 }
-               } );
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& )
+                                                 { state = State::ALLOWED; };
+
+           handlers.minus_syntax_node =
+              [ &minus, &f, &state ]( const MinusSyntaxNodeSP& node )
+           {
+              if( state == State::START )
+              {
+                 state = State::ALLOWED;
+                 minus = node;
+              }
+              else if( state == State::ALLOWED )
+              {
+                 state = State::MINUS;
+                 minus = node;
+              }
+           };
+           handlers.f_syntax_node =
+              [ &f, &state, &lookahead ]( const FSyntaxNodeSP& node )
+           {
+              if( state == State::START )
+              {
+                 f = node;
+                 state = State::NOT_ALLOWED;
+              }
+              else if( state == State::MINUS )
+              {
+                 state = State::F;
+                 f = node;
+                 state = State::FINISH;
+              }
+           };
+           handlers.bin_expr_syntax_node =
+              [ &f, &state, &lookahead ]( const BinExprSyntaxNodeSP& node )
+           {
+              if( state == State::START )
+              {
+                 f = node;
+                 state = State::NOT_ALLOWED;
+              }
+              else if( state == State::MINUS )
+              {
+                 state = State::F;
+                 f = node;
+                 state = State::FINISH;
+              }
+           };
+           handlers.name_syntax_node =
+              [ &f, &state, &lookahead ]( const NameSyntaxNodeSP& node )
+           {
+              if( state == State::START )
+              {
+                 f = node;
+                 state = State::NOT_ALLOWED;
+              }
+              else if( state == State::MINUS )
+              {
+                 state = State::F;
+                 f = node;
+                 state = State::FINISH;
+              }
+           };
+           handlers.function_call_syntax_node =
+              [ &f, &state, &lookahead ]( const FunctionCallSyntaxNodeSP& node )
+           {
+              if( state == State::START )
+              {
+                 f = node;
+                 state = State::NOT_ALLOWED;
+              }
+              else if( state == State::MINUS )
+              {
+                 state = State::F;
+                 f = node;
+                 state = State::FINISH;
+              }
+           };
+            iterate_over_last_n_nodes( stack, 3, handlers );
 
             if( state != State::FINISH )
                return {};

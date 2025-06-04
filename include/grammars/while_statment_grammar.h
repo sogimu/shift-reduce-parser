@@ -31,7 +31,7 @@ public:
          SCOPE_STATMENT,
       };
 
-      // WHILE OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR|FUNCTION_CALL CLOSE_CIRCLE_BRACKET SCOPE
+      // WHILE OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL CLOSE_CIRCLE_BRACKET SCOPE
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -78,6 +78,22 @@ public:
                }
             };
             handlers.un_expr_syntax_node = [ &conditional_expression, &state ]( const UnExprSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  conditional_expression = node;
+                  state = State::CONDITION;
+               }
+            };
+            handlers.name_syntax_node = [ &conditional_expression, &state ]( const NameSyntaxNodeSP& node )
+            {
+               if( state == State::OPEN_CIRCLE_BRACKET )
+               {
+                  conditional_expression = node;
+                  state = State::CONDITION;
+               }
+            };
+            handlers.function_call_syntax_node = [ &conditional_expression, &state ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
