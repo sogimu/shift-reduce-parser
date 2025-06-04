@@ -57,6 +57,8 @@ bool FunctionCallSyntaxNode::compare( const ISyntaxNode& node ) const
             return;
          }
       }
+      if( node->name() != this->name() )
+        return;
       is_equal = true;
    };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );

@@ -14,7 +14,11 @@ public:
     Substruction,
     Multiply,
     Division,
-    Equality
+    Equal,
+    Less,
+    LessEqual,
+    More,
+    MoreEqual
   };
    BinExprSyntaxNode();
    BinExprSyntaxNode( const Type& type, const ISyntaxNodeSP& f0, const ISyntaxNodeSP& f1 );

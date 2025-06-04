@@ -167,9 +167,29 @@ std::string SyntaxTree::to_string() const
               type = "Division";
            };
            break;
-           case BinExprSyntaxNode::Type::Equality:
+           case BinExprSyntaxNode::Type::Equal:
            {
-              type = "Equality";
+              type = "Equal";
+           };
+           break;
+           case BinExprSyntaxNode::Type::Less:
+           {
+              type = "Less";
+           };
+           break;
+           case BinExprSyntaxNode::Type::LessEqual:
+           {
+              type = "LessEqual";
+           };
+           break;
+           case BinExprSyntaxNode::Type::More:
+           {
+              type = "More";
+           };
+           break;
+           case BinExprSyntaxNode::Type::MoreEqual:
+           {
+              type = "MoreEqual";
            };
            break;
            }
@@ -200,39 +220,6 @@ std::string SyntaxTree::to_string() const
         handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
         handlers.close_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CLOSE_CURLY_BRACKET" << "}"; };
         handlers.varible_syntax_node = [ &s ]( const VaribleSyntaxNodeSP& node ) { s << "{" << "VARIBLE" << '(' << node->name() << ')' << "}"; };
-        // handlers.conditional_expression_syntax_node = [ &s ]( const ConditionalExpressionSyntaxNodeSP& node )
-        // {
-        //    std::string type;
-        //    switch( node->type() )
-        //    {
-        //    case ConditionalExpressionSyntaxNode::Type::LESS:
-        //    {
-        //       type = "LESS";
-        //    };
-        //    break;
-        //    case ConditionalExpressionSyntaxNode::Type::MORE:
-        //    {
-        //       type = "MORE";
-        //    };
-        //    break;
-        //    case ConditionalExpressionSyntaxNode::Type::EQUAL:
-        //    {
-        //       type = "EQUAL";
-        //    };
-        //    break;
-        //    case ConditionalExpressionSyntaxNode::Type::LESS_OR_EQUAL:
-        //    {
-        //       type = "LESS_OR_EQUAL";
-        //    };
-        //    break;
-        //    case ConditionalExpressionSyntaxNode::Type::MORE_OR_EQUAL:
-        //    {
-        //       type = "MORE_OR_EQUAL";
-        //    };
-        //    break;
-        //    }
-        //    s << "{" << "CONDITIONAL_EXPRESSION" << " (" << type << ")" << "}";
-        // };
         handlers.print_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT_STATMENT" << "}"; };
         handlers.equal_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EQUAL" << "}"; };
         handlers.less_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "LESS" << "}"; };

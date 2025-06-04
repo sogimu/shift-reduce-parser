@@ -31,7 +31,7 @@ public:
          CLOSE_CIRCLE_BRACKET
       };
 
-      // NUMBER [PLUS,MINUS,MULTIPLY,DIVISION,SEMICOLON,CLOSE_CIRCLE_BRACKET,EQUAL,COMMA]
+      // NUMBER [PLUS,MINUS,MULTIPLY,DIVISION,SEMICOLON,CLOSE_CIRCLE_BRACKET,COMMA,EQUAL,LESS,MORE]
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -54,9 +54,12 @@ public:
                                                                                     check_type<PlusSyntaxNode>( lookahead ) || 
                                                                                     check_type<AsteriskSyntaxNode>( lookahead ) || 
                                                                                     check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                                                                    check_type<EqualSyntaxNode>( lookahead ) || 
-                                                                                    check_type<SlashSyntaxNode>( lookahead )  || 
-                                                                                    check_type<CommaSyntaxNode>( lookahead )) )
+                                                                                    check_type<SlashSyntaxNode>( lookahead ) || 
+                                                                                    check_type<CommaSyntaxNode>( lookahead ) ||
+                                                                                    check_type<EqualSyntaxNode>( lookahead ) ||
+                                                                                    check_type<LessSyntaxNode>( lookahead ) ||
+                                                                                    check_type<MoreSyntaxNode>( lookahead )  
+                                      ) )
                                                                                {
                                                                                  number = node;
                                                                                  state = State::FINISH;

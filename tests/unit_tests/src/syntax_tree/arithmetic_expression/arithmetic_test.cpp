@@ -285,6 +285,321 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_PLUS )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
+TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_EQUAL_F )
+{
+   // ARRANGE
+   const auto& input = R"""(1==2;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        4,
+        {
+          "FSyntaxNode": [
+            2
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_EQUAL_BIN_EXPR )
+{
+   // ARRANGE
+   const auto& input = R"""(1+2==3+4;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        4,
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                4
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_MORE_EQUAL_BIN_EXPR )
+{
+   // ARRANGE
+   const auto& input = R"""(1+2>=3+4;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        8,
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                4
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_LESS_EQUAL_BIN_EXPR )
+{
+   // ARRANGE
+   const auto& input = R"""(1+2<=3+4;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        6,
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                4
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_LESS_BIN_EXPR )
+{
+   // ARRANGE
+   const auto& input = R"""(1+2<3+4;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        5,
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                4
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_MORE_BIN_EXPR )
+{
+   // ARRANGE
+   const auto& input = R"""(1+2>3+4;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        7,
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                4
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "BinExprSyntaxNode": [
+            0,
+            {
+              "FSyntaxNode": [
+                2
+              ]
+            },
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
 TEST( SYNTAX_TREE_ARITHMETIC, F_PLUS_VARIBLE )
 {
    // ARRANGE
@@ -553,7 +868,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CIRCLE_CASE1 )
         0,
         {
           "BinExprSyntaxNode": [
-            2,
+            0,
             {
               "FSyntaxNode": [
                 3

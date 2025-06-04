@@ -70,6 +70,8 @@ bool UnExprSyntaxNode::compare( const ISyntaxNode& node ) const
             return;
          }
       }
+      if( node->type() != this->type() )
+        return;
       is_equal = true;
    };
    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
