@@ -10,7 +10,27 @@
 
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <cstdlib>   // getenv
+#include <sys/stat.h> // mkdir
+#include <cstring>   // strerror
+#include <cerrno>    // errno
+#include <unistd.h>  // access
+
 using namespace std;
+
+bool ensureDirExists(const std::string& path) {
+    struct stat st{};
+    if (stat(path.c_str(), &st) != 0) {
+        if (mkdir(path.c_str(), 0700) != 0) {
+            std::cerr << "Ошибка создания директории " << path << ": " << strerror(errno) << "\n";
+            return false;
+        }
+    } else if (!S_ISDIR(st.st_mode)) {
+        std::cerr << path << " существует, но не является директорией\n";
+        return false;
+    }
+    return true;
+}
 
 bool isInputComplete(const std::string& input) {
     int balance = 0;
@@ -141,28 +161,39 @@ int main()
    // return 0;
 
     std::cout << "JavaScript AST REPL. Enter JavaScript code:\n";
-    std::cout << "For exit Ctrl+D.\n";
+    std::cout << "For exit and save history of commands type Ctrl+D.\n";
 
-    std::string buffer;  // собираем многострочный ввод
+    const char* home = getenv("HOME");
+    if (!home) {
+        std::cerr << "Env HOME does not exist\n";
+        return 1;
+    }
 
+    std::string config_dir = std::string(home) + "/.config/my_programm";
+    std::string history_file = config_dir + "/history";
+
+    if (!ensureDirExists(config_dir)) {
+        return 1;
+    }
+
+    if (access(history_file.c_str(), F_OK) == 0) {
+        read_history(history_file.c_str());
+    }
+    std::string buffer;
     while (true)
     {
         const char* prompt = buffer.empty() ? ">>> " : "... ";
         char* line_cstr = readline(prompt);
         if (!line_cstr) {  // EOF (Ctrl+D)
-            std::cout << "\nExit from REPL.\n";
+            std::cout << "\nREPL exit.\n";
             break;
         }
 
         std::string line(line_cstr);
         free(line_cstr);
 
-        if (buffer.empty() && line.empty()) continue;
-
-        if (!buffer.empty()) buffer += "\n";
-        buffer += line;
-
-        if (isInputComplete(buffer))
+        // If enter on empty line - user is finsih input
+        if (line.empty())
         {
             if (!buffer.empty())
             {
@@ -178,9 +209,56 @@ int main()
                {
                   std::cout << "error: " << e.what() << "\n";
                }
+
+                buffer.clear();
             }
-            buffer.clear();
+            continue;
         }
+
+        if (!buffer.empty()) buffer += "\n";
+        buffer += line;
     }
+
+    if (write_history(history_file.c_str()) != 0)
+    {
+        std::cerr << "Could not save hostory to file " << history_file << "\n";
+    }
+    // while (true)
+    // {
+    //     const char* prompt = buffer.empty() ? ">>> " : "... ";
+    //     char* line_cstr = readline(prompt);
+    //     if (!line_cstr) {  // EOF (Ctrl+D)
+    //         std::cout << "\nExit from REPL.\n";
+    //         break;
+    //     }
+    //
+    //     std::string line(line_cstr);
+    //     free(line_cstr);
+    //
+    //     if (buffer.empty() && line.empty()) continue;
+    //
+    //     if (!buffer.empty()) buffer += "\n";
+    //     buffer += line;
+    //
+    //     if (isInputComplete(buffer))
+    //     {
+    //         if (!buffer.empty())
+    //         {
+    //             add_history(buffer.c_str());
+    //
+    //            try 
+    //            {
+    //              const auto& lexical_tokens = LexicalTokens(buffer.c_str());
+    //              const auto& syntax_tree = SyntaxTree( lexical_tokens );
+    //               std::cout << syntax_tree.to_string() << "\n";
+    //            } 
+    //            catch (const std::exception& e) 
+    //            {
+    //               std::cout << "error: " << e.what() << "\n";
+    //            }
+    //         }
+    //         buffer.clear();
+    //     }
+    // }
     return 0;
 }
