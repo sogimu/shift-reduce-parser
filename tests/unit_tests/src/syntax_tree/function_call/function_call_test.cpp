@@ -5,6 +5,34 @@
 
 using namespace std;
 
+TEST( SYNTAX_TREE_FUNCTION_CALL, FROM_ZERO_VARIBLE )
+{
+   // ARRANGE
+   const auto& input = R"""(
+    foo();
+   )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "FunctionCallSyntaxNode": [
+        "foo"
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
 TEST( SYNTAX_TREE_FUNCTION_CALL, FROM_ONE_VARIBLE )
 {
    // ARRANGE

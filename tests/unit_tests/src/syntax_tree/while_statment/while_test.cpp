@@ -29,14 +29,14 @@ TEST( SYNTAX_TREE_WHILE, CASE0 )
           "BinExprSyntaxNode": [
             4,
             {
-                  "FSyntaxNode": [
-                    1
-                  ]
+              "FSyntaxNode": [
+                1
+              ]
             },
             {
-                  "FSyntaxNode": [
-                    1
-                  ]
+              "FSyntaxNode": [
+                1
+              ]
             }
           ]
         },

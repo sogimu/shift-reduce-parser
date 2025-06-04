@@ -534,8 +534,6 @@ public:
             };
             handlers.bin_expr_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const BinExprSyntaxNodeSP& node )
             {
-                auto s = state;
-               (void) s;
                if( state == State::START )
                {
                   a = node;
@@ -583,8 +581,6 @@ public:
             };
             handlers.un_expr_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const UnExprSyntaxNodeSP& node )
             {
-               auto s = state;
-               (void) s;
                if( state == State::START )
                {
                   a = node;
@@ -632,8 +628,6 @@ public:
             };
             handlers.equal_syntax_node = [ &equal0, &equal1, &state ]( const EqualSyntaxNodeSP& node )
             {
-                auto s = state;
-               (void) s;
                if( state == State::F )
                {
                   equal0 = node;
@@ -657,8 +651,6 @@ public:
             };
             handlers.more_syntax_node = [ &more, &equal1, &state ]( const MoreSyntaxNodeSP& node )
             {
-                auto s = state;
-               (void) s;
                if( state == State::F )
                {
                   more = node;
@@ -821,8 +813,6 @@ public:
             };
             handlers.more_syntax_node = [ &more, &state ]( const MoreSyntaxNodeSP& node )
             {
-               auto s = state;
-               (void) s;
                if( state == State::F )
                {
                   more = node;
@@ -831,8 +821,6 @@ public:
             };
             handlers.less_syntax_node = [ &less, &state ]( const LessSyntaxNodeSP& node )
             {
-               auto s = state;
-               (void) s;
                if( state == State::F )
                {
                   less = node;

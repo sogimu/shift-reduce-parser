@@ -5,7 +5,7 @@
 
 using namespace std;
 
-TEST( SYNTAX_TREE_SCOPE, TEST0 )
+TEST( SYNTAX_TREE_SCOPE, F_F )
 {
    // ARRANGE
    const auto& input = R"""(

@@ -98,8 +98,6 @@ public:
             };
             handlers.name_syntax_node = [ &name, &arguments, &state ]( const NameSyntaxNodeSP& node )
             {
-               auto s = state;
-               (void) s;
                if( state == State::FUNCTION )
                {
                   name = node;
@@ -113,8 +111,6 @@ public:
             };
             handlers.comma_syntax_node = [ &commas, &state ]( const CommaSyntaxNodeSP& node )
             {
-               auto s = state;
-               (void) s;
                if( state == State::ARGUMENT )
                {
                   commas.emplace_back( node );
@@ -123,8 +119,6 @@ public:
             };
             handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
             {
-               auto s = state;
-               (void) s;
                if( state == State::NAME )
                {
                   open_circle_bracket = node;
@@ -133,9 +127,7 @@ public:
             };
             handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
             {
-               auto s = state;
-               (void) s;
-               if( state == State::ARGUMENT )
+               if( state == State::ARGUMENT || state == State::OPEN_CIRCLE_BRACKET )
                {
                   close_circle_bracket = node;
                   state = State::CLOSE_CIRCLE_BRACKET;
@@ -143,8 +135,6 @@ public:
             };
             handlers.scope_statment_syntax_node = [ &scope_statment, &state ]( const ScopeSyntaxNodeSP& node )
             {
-               auto s = state;
-               (void) s;
                if( state == State::CLOSE_CIRCLE_BRACKET )
                {
                   scope_statment = node;

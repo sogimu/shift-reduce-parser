@@ -60,8 +60,6 @@ CircleBrackets::CircleBrackets()
           };
           handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
           {
-             auto s = state;
-             (void) s;
              if( state == State::START )
              {
                 open_circle_bracket = node;

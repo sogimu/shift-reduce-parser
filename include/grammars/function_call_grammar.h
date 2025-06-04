@@ -151,7 +151,7 @@ public:
             };
             handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state, &lookahead ]( const CloseCircleBracketSyntaxNodeSP& node )
             {
-               if( state == State::ARGUMENT )
+               if( state == State::ARGUMENT || state == State::OPEN_CIRCLE_BRACKET )
                {
                  if( lookahead && ( check_type<SemicolonSyntaxNode>( lookahead ) || 
                                     check_type<CloseCircleBracketSyntaxNode>( lookahead ) ||
