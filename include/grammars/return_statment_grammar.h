@@ -27,13 +27,12 @@ public:
          SEMICOLON,
       };
 
-      // RETURN F|BIN_EXPR|UN_EXPR SEMICOLON
+      // RETURN F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL [SEMICOLON]
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
             ReturnSyntaxNodeSP return_node;
             ISyntaxNodeSP argument;
-            SemicolonSyntaxNodeSP semiclon;
 
             State state = State::START;
 
@@ -47,61 +46,68 @@ public:
                   return_node = node;
                }
             };
-            handlers.name_syntax_node = [ &argument, &state ]( const NameSyntaxNodeSP& node )
+            handlers.f_syntax_node = [ &argument, &state, &lookahead ]( const FSyntaxNodeSP& node )
             {
                if( state == State::RETURN )
                {
-                  state = State::ARGUMENT;
-                  argument = node;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                  {
+                      argument = node;
+                      state = State::ARGUMENT;
+                      state = State::FINISH;
+                  }
                }
             };
-            handlers.f_syntax_node = [ &argument, &state ]( const FSyntaxNodeSP& node )
+            handlers.bin_expr_syntax_node = [ &argument, &state, &lookahead ]( const BinExprSyntaxNodeSP& node )
             {
                if( state == State::RETURN )
                {
-                  argument = node;
-                  state = State::ARGUMENT;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                  {
+                      argument = node;
+                      state = State::ARGUMENT;
+                      state = State::FINISH;
+                  }
                }
             };
-            handlers.bin_expr_syntax_node = [ &argument, &state ]( const BinExprSyntaxNodeSP& node )
+            handlers.un_expr_syntax_node = [ &argument, &state, &lookahead ]( const UnExprSyntaxNodeSP& node )
             {
                if( state == State::RETURN )
                {
-                  argument = node;
-                  state = State::ARGUMENT;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                  {
+                      argument = node;
+                      state = State::ARGUMENT;
+                      state = State::FINISH;
+                  }
                }
             };
-            handlers.un_expr_syntax_node = [ &argument, &state ]( const UnExprSyntaxNodeSP& node )
+            handlers.name_syntax_node = [ &argument, &state, &lookahead ]( const NameSyntaxNodeSP& node )
             {
                if( state == State::RETURN )
                {
-                  argument = node;
-                  state = State::ARGUMENT;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                  {
+                      argument = node;
+                      state = State::ARGUMENT;
+                      state = State::FINISH;
+                  }
                }
             };
-            handlers.function_call_syntax_node = [ &argument, &state ]( const FunctionCallSyntaxNodeSP& node )
+            handlers.function_call_syntax_node = [ &argument, &state, &lookahead ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::RETURN )
                {
-                  std::vector< ISyntaxNodeSP > arguments;
-                  for( const auto& argument : *node )
-                     arguments.push_back( argument );
-                  const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( node->name(), arguments );
-                  argument = function_call;
-                  state = State::ARGUMENT;
-               }
-            };
-            handlers.semicolon_syntax_node = [ &semiclon, &state ]( const SemicolonSyntaxNodeSP& node )
-            {
-               if( state == State::ARGUMENT )
-               {
-                  state = State::SEMICOLON;
-                  state = State::FINISH;
-                  semiclon = node;
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                  {
+                      argument = node;
+                      state = State::ARGUMENT;
+                      state = State::FINISH;
+                  }
                }
             };
 
-            iterate_over_last_n_nodes( stack, 3, handlers );
+            iterate_over_last_n_nodes( stack, 2, handlers );
 
             if( state != State::FINISH )
                return {};
@@ -109,7 +115,6 @@ public:
             Plan plan;
             plan.to_remove.nodes.push_back( return_node );
             plan.to_remove.nodes.push_back( argument );
-            plan.to_remove.nodes.push_back( semiclon );
 
             const auto& return_statment_node = std::make_shared< ReturnStatmentSyntaxNode >( argument );
             plan.to_add.nodes.push_back( return_statment_node );

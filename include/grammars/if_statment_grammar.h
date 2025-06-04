@@ -4,6 +4,7 @@
 #include "i_grammar.h"
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/scope_statment_syntax_node.h"
+#include "terminals/semicolon_syntax_node.h"
 #include "utils.h"
 
 #include <memory>

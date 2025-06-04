@@ -3,6 +3,7 @@
 #include "nonterminals/bin_expr_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
+#include "terminals/close_curly_bracket_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
 #include "terminals/less_syntax_node.h"
 #include "terminals/minus_syntax_node.h"
@@ -76,6 +77,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Addition;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -91,6 +93,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Substruction;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -106,6 +109,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Multiply;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -123,6 +127,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Division;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -148,6 +153,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Addition;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead )  || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -163,6 +169,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Substruction;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead )  || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -178,6 +185,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Multiply;
                   if( lookahead && ( check_type< SemicolonSyntaxNode >( lookahead )  || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -195,6 +203,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Division;
                   if( lookahead && ( check_type< SemicolonSyntaxNode >( lookahead )  || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< BinExprSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
@@ -219,6 +228,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Addition;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -234,6 +244,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Substruction;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -249,6 +260,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Multiply;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -266,6 +278,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Division;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -291,6 +304,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Addition;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -306,6 +320,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Substruction;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -321,6 +336,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Multiply;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -338,6 +354,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Division;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -363,6 +380,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Addition;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -378,6 +396,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Substruction;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -393,6 +412,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Multiply;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -410,6 +430,7 @@ public:
                   operation_type = BinExprSyntaxNode::Type::Division;
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                    check_type< CommaSyntaxNode >( lookahead ) || 

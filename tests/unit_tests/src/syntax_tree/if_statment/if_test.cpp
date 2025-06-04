@@ -60,7 +60,7 @@ TEST( SYNTAX_TREE_IF, F )
     if(1)
     {
     
-    }
+    };
    )""";
 
    // ACT
@@ -228,6 +228,49 @@ TEST( SYNTAX_TREE_IF, FUNCTION_CALL )
     {
     
     }
+   )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "IfStatmentSyntaxNode": [
+        {
+          "FunctionCallSyntaxNode": [
+            "foo",
+            {
+              "FSyntaxNode": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "ScopeSyntaxNode": []
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_IF, IF_SEMICOLON )
+{
+   // ARRANGE
+   const auto& input = R"""(
+    if(foo(1))
+    {
+    
+    };
    )""";
 
    // ACT

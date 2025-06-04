@@ -1,5 +1,6 @@
 #pragma once
 
+#include "terminals/close_curly_bracket_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "terminals/minus_syntax_node.h"
@@ -38,35 +39,35 @@ public:
             NumberSyntaxNodeSP number;
 
             State state = State::START;
+            SyntaxNodeEmptyVisitor::Handlers handlers;
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
+             handlers.number_syntax_node =
+                [ &number, &state, &lookahead ]( const NumberSyntaxNodeSP& node )
+             {
+                if( state == State::START )
+                {
+                   state = State::NUMBER;
 
-            iterate_over_last_n_nodes( stack, 1,
-                                       SyntaxNodeEmptyVisitor::Handlers{ .default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; },
-                                                                         .number_syntax_node =
-                                                                            [ &number, &state, &lookahead ]( const NumberSyntaxNodeSP& node )
-                                                                         {
-                                                                            if( state == State::START )
-                                                                            {
-                                                                               state = State::NUMBER;
+                   if( lookahead && ( 
+                        check_type<SemicolonSyntaxNode>( lookahead ) || 
+                        check_type<MinusSyntaxNode>( lookahead ) || 
+                        check_type<PlusSyntaxNode>( lookahead ) || 
+                        check_type<AsteriskSyntaxNode>( lookahead ) || 
+                        check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
+                        check_type<CloseCurlyBracketSyntaxNode>( lookahead ) || 
+                        check_type<SlashSyntaxNode>( lookahead ) || 
+                        check_type<CommaSyntaxNode>( lookahead ) ||
+                        check_type<EqualSyntaxNode>( lookahead ) ||
+                        check_type<LessSyntaxNode>( lookahead ) ||
+                        check_type<MoreSyntaxNode>( lookahead ) ) )
+                   {
+                     number = node;
+                     state = State::FINISH;
+                   }
+                }
+             };
 
-                                                                               if( lookahead && ( 
-                                                                                    check_type<SemicolonSyntaxNode>( lookahead ) || 
-                                                                                    check_type<MinusSyntaxNode>( lookahead ) || 
-                                                                                    check_type<PlusSyntaxNode>( lookahead ) || 
-                                                                                    check_type<AsteriskSyntaxNode>( lookahead ) || 
-                                                                                    check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
-                                                                                    check_type<SlashSyntaxNode>( lookahead ) || 
-                                                                                    check_type<CommaSyntaxNode>( lookahead ) ||
-                                                                                    check_type<EqualSyntaxNode>( lookahead ) ||
-                                                                                    check_type<LessSyntaxNode>( lookahead ) ||
-                                                                                    check_type<MoreSyntaxNode>( lookahead )  
-                                      ) )
-                                                                               {
-                                                                                 number = node;
-                                                                                 state = State::FINISH;
-                                                                               }
-                                                                            }
-                                                                         } } );
-
+            iterate_over_last_n_nodes( stack, 1, handlers );
             if( state != State::FINISH )
                return {};
 
