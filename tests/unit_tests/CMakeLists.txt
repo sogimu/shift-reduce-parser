@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.6)
 project(unit_tests VERSION 0.0.1 LANGUAGES CXX)
 
+# Enable AddressSanitizer
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "Enabling AddressSanitizer")
+    add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=address)
+endif()
+
 # set(CMAKE_C_COMPILER "/usr/bin/clang")
 # set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 add_subdirectory(libs/googletest)

@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 project(parser VERSION 0.0.1 LANGUAGES CXX)
 
+# Enable AddressSanitizer
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "Enabling AddressSanitizer")
+    add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=address,undefined)
+endif()
+
 add_executable(parser
     src/varible_store.h
     src/function_store.h
