@@ -52,13 +52,13 @@ public:
       mCopy = std::make_shared< FSyntaxNode >( *node );
    }
 
-   void visit( const UnExprSyntaxNodeSP& /* node */ ) override
+   void visit( const UnExprSyntaxNodeSP& node ) override
    {
-      mCopy = std::make_shared< UnExprSyntaxNode >();
+      mCopy = std::make_shared< UnExprSyntaxNode >( node->type() );
    }
-   void visit( const BinExprSyntaxNodeSP& /* node */ ) override
+   void visit( const BinExprSyntaxNodeSP& node ) override
    {
-      mCopy = std::make_shared< BinExprSyntaxNode >();
+      mCopy = std::make_shared< BinExprSyntaxNode >( node->type() );
    }
 
    void visit( const SemicolonSyntaxNodeSP& /* node */ ) override

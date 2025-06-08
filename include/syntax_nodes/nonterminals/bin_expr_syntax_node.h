@@ -21,6 +21,7 @@ public:
     MoreEqual
   };
    BinExprSyntaxNode();
+   BinExprSyntaxNode( const Type& type );
    BinExprSyntaxNode( const Type& type, const ISyntaxNodeSP& f0, const ISyntaxNodeSP& f1 );
    bool compare( const ISyntaxNode& node ) const override;
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;

@@ -15,6 +15,12 @@ UnExprSyntaxNode::UnExprSyntaxNode()
 {
 }
 
+UnExprSyntaxNode::UnExprSyntaxNode( const Type& type )
+   : ISyntaxNode{ Token_Type::UnExpr }
+   , mType{ type }
+{
+}
+
 UnExprSyntaxNode::UnExprSyntaxNode( const Type& type, const ISyntaxNodeSP& f0 )
    : ISyntaxNode{ Token_Type::UnExpr }
    , mType{ type }

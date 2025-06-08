@@ -17,6 +17,7 @@ public:
   };
 
    UnExprSyntaxNode();
+   UnExprSyntaxNode( const Type& type );
    UnExprSyntaxNode( const Type& type, const ISyntaxNodeSP& f0 );
 
    Type type() const;

@@ -11,6 +11,11 @@ BinExprSyntaxNode::BinExprSyntaxNode()
    : ISyntaxNode{ Token_Type::BinExpr }
 {
 }
+BinExprSyntaxNode::BinExprSyntaxNode( const Type& type )
+   : ISyntaxNode{ Token_Type::BinExpr }
+   , mType{ type }
+{
+}
 BinExprSyntaxNode::BinExprSyntaxNode( const Type& type, const ISyntaxNodeSP& f0, const ISyntaxNodeSP& f1 )
    : ISyntaxNode{ Token_Type::BinExpr }
    , mType{ type }
