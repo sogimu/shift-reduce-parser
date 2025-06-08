@@ -3,6 +3,9 @@
 #include "gmock/gmock.h"
 #include "is_last_nodes.h"
 // #include "nonterminals/division/division_syntax_node.h"
+#include "nonterminals/bin_expr_syntax_node.h"
+#include "nonterminals/function_statment_syntax_node.h"
+#include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
 // #include "nonterminals/multiply/multiply_syntax_node.h"
@@ -11,6 +14,8 @@
 #include "nonterminals/varible_assigment_statment_syntax_node.h"
 #include "nonterminals/varible_syntax_node.h"
 #include "nonterminals/while_statment_syntax_node.h"
+#include "terminals/f_syntax_node.h"
+#include "terminals/if_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 #include "lexical_tokens.h"
@@ -43,6 +48,9 @@ double Calculator::solve( const std::string& expression ) const
 
    std::map< std::string, FunctionCallMeta > function_by_name;
 
+   ISyntaxNodeSP pre_func_subtree_ignore = nullptr;
+   std::list<ISyntaxNodeSP>::iterator insert_it;
+
    std::cout << syntax_tree.to_string() << std::endl;
    const auto& transformed_tree = create_tree_from1< ISyntaxNodeSP, ISyntaxNodeSP >(
       syntax_tree.root(),
@@ -51,170 +59,71 @@ double Calculator::solve( const std::string& expression ) const
          const auto& target_node = make_shallow_copy( source_node );
          return target_node;
       },
-      [ &function_by_name ]( const std::vector< std::reference_wrapper< const ISyntaxNodeSP > >& source_stack,
-                             const std::vector< std::reference_wrapper< ISyntaxNodeSP > >& target_stack ) -> std::optional< std::reference_wrapper< ISyntaxNodeSP > >
+      [ &function_by_name, &pre_func_subtree_ignore, &insert_it ]( const std::vector< ISyntaxNodeSP >& source_stack,
+                                                                   const std::vector< std::pair<ISyntaxNodeSP, std::list<ISyntaxNodeSP>::iterator> >& target_stack )
       {
-         std::optional< std::reference_wrapper< ISyntaxNodeSP > > new_parent_target_node;
+         bool is_node_added = false;   
+
          const auto& source_node = *source_stack.rbegin();
-         auto& taget_node_parent = target_stack.rbegin()->get();
+         const auto& [target_node_parent, it] = *target_stack.rbegin();
+         
          const auto& target_node = make_shallow_copy( source_node );
 
-         if( IsLastNodesIs< VaribleAssigmentStatmentSyntaxNode >( source_stack ) )
+         if( IsLastNodesIs< StatmentSyntaxNode >( source_stack ) ||
+             IsLastNodesIs< ScopeSyntaxNode >( source_stack ) || 
+             IsLastNodesIs< IfStatmentSyntaxNode >( source_stack ) ||
+             IsLastNodesIs< WhileStatmentSyntaxNode >( source_stack ) ||
+             IsLastNodesIs< FunctionStatmentSyntaxNode >( source_stack ) )
          {
-            auto it = target_stack.rbegin();
-            // std::advance( it, 1 );
-            new_parent_target_node = it->get()->add_back( target_node );
+           auto new_parent_target_node = target_node_parent->add_back( target_node );
+            is_node_added = true;
+           return std::make_tuple(new_parent_target_node, is_node_added, new_parent_target_node->end());
          }
-         else if( IsLastNodesIs< VaribleAssigmentStatmentSyntaxNode, VaribleSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< IfStatmentSyntaxNode, BinExprSyntaxNode >( source_stack ) || 
+                  IsLastNodesIs< IfStatmentSyntaxNode, UnExprSyntaxNode >( source_stack ) || 
+                  IsLastNodesIs< IfStatmentSyntaxNode, FSyntaxNode >( source_stack ) || 
+                  IsLastNodesIs< IfStatmentSyntaxNode, NameSyntaxNode >( source_stack ) ||
+                  IsLastNodesIs< IfStatmentSyntaxNode, FunctionCallSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
-            const auto& varible_assigment = it->get();
+            const auto& [if_statment, if_statment_it] = *it;
             std::advance( it, 1 );
-            auto& parent_of_varible_assigment = it->get();
-            if( auto varible_assigment_it = std::find( parent_of_varible_assigment->begin(), parent_of_varible_assigment->end(), varible_assigment );
-                varible_assigment_it != parent_of_varible_assigment->end() )
+            const auto& [parent_of_if_statment, parent_it] = *it;
+            if( auto if_statment_it = std::find( parent_of_if_statment->begin(), parent_of_if_statment->end(), if_statment );
+                if_statment_it != parent_of_if_statment->end() )
             {
-               if( auto inserted_node_it = parent_of_varible_assigment->insert( varible_assigment_it, target_node );
-                   inserted_node_it != parent_of_varible_assigment->end() )
-               {
-                  new_parent_target_node = *inserted_node_it;
-               }
+               return std::make_tuple(parent_of_if_statment, false, if_statment_it);
             }
          }
-         // else if( IsLastNodesIs< VaribleAssigmentStatmentSyntaxNode, ComputationalExpressionSyntaxNode >( source_stack ) )
-         // {
-         //    auto it = target_stack.rbegin();
-         //    const auto& varible_assigment = it->get();
-         //    std::advance( it, 1 );
-         //    auto& parent_of_varible_assigment = it->get();
-         //    if( auto varible_assigment_it = std::find( parent_of_varible_assigment->begin(), parent_of_varible_assigment->end(), varible_assigment );
-         //        varible_assigment_it != parent_of_varible_assigment->end() )
-         //    {
-         //       if( auto inserted_node_it = parent_of_varible_assigment->insert( varible_assigment_it, target_node );
-         //           inserted_node_it != parent_of_varible_assigment->end() )
-         //       {
-         //          new_parent_target_node = *inserted_node_it;
-         //       }
-         //    }
-         // }
-         else if( IsLastNodesIs< IfStatmentSyntaxNode >( source_stack ) )
+         else if( IsLastNodesIs< WhileStatmentSyntaxNode, BinExprSyntaxNode >( source_stack ) || 
+                  IsLastNodesIs< WhileStatmentSyntaxNode, UnExprSyntaxNode >( source_stack ) || 
+                  IsLastNodesIs< WhileStatmentSyntaxNode, FSyntaxNode >( source_stack ) || 
+                  IsLastNodesIs< WhileStatmentSyntaxNode, NameSyntaxNode >( source_stack ) ||
+                  IsLastNodesIs< WhileStatmentSyntaxNode, FunctionCallSyntaxNode >( source_stack ) )
          {
             auto it = target_stack.rbegin();
-            // std::advance( it, 1 );
-            new_parent_target_node = it->get()->add_back( target_node );
-         }
-         // else if( IsLastNodesIs< IfStatmentSyntaxNode, ConditionalExpressionSyntaxNode >( source_stack ) )
-         // {
-         //    auto it = target_stack.rbegin();
-         //    const auto& if_node = it->get();
-         //    std::advance( it, 1 );
-         //    auto& parent_of_if = it->get();
-         //    if( auto if_it = std::find( parent_of_if->begin(), parent_of_if->end(), if_node ); if_it != parent_of_if->end() )
-         //    {
-         //       auto it = parent_of_if->insert( if_it, target_node );
-         //       new_parent_target_node = *it;
-         //    }
-         // }
-         else if( IsLastNodesIs< WhileStatmentSyntaxNode >( source_stack ) )
-         {
-            auto it = target_stack.rbegin();
-            // std::advance( it, 1 );
-            new_parent_target_node = it->get()->add_back( target_node );
-         }
-         else if( IsLastNodesIs< WhileStatmentSyntaxNode, ScopeSyntaxNode >( source_stack ) )
-         {
-            const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >();
-            const auto& new_if_statment = taget_node_parent->add_back( if_statment );
-            const auto& scope_statment = std::make_shared< ScopeSyntaxNode >();
-            const auto& new_scope_statment = new_if_statment->add_back( scope_statment );
-            new_parent_target_node = new_scope_statment->add_back( target_node );
-            const auto& while_expression = taget_node_parent;
-            scope_statment->add_back( while_expression );
-         }
-         else if( IsLastNodesIs< ScopeSyntaxNode >( source_stack ) )
-         {
-            auto it = target_stack.rbegin();
-            // std::advance( it, 1 );
-            new_parent_target_node = it->get()->add_back( target_node );
-         }
-         else if( IsLastNodesIs< FunctionStatmentSyntaxNode >( source_stack ) )
-         {
-            const auto& function_syntax_node = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( target_node );
-            function_by_name[ function_syntax_node->name() ] = FunctionCallMeta{ function_syntax_node, {} };
-            new_parent_target_node = taget_node_parent->add_back( target_node );
-         }
-         else if( IsLastNodesIs< FunctionStatmentSyntaxNode, NameSyntaxNode >( source_stack ) )
-         {
-            const auto& name_syntax_node = std::dynamic_pointer_cast< NameSyntaxNode >( target_node );
-            auto target_it = target_stack.rbegin();
-            const auto& function_node = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( target_it->get() );
-            auto& meta = function_by_name[ function_node->name() ];
-            meta.arguments.push_back( name_syntax_node );
-            new_parent_target_node = taget_node_parent->add_back( target_node );
-            // new_parent_target_node = {};
-         }
-         else if( IsLastNodesIs< FunctionCallSyntaxNode >( source_stack ) )
-         {
-            auto& function_call = target_node;
-            new_parent_target_node = taget_node_parent->add_back( function_call );
-            const auto& scope_statment = std::make_shared< ScopeSyntaxNode >();
-            new_parent_target_node = function_call->add_back( scope_statment );
-            // new_parent_target_node = taget_node_parent->add_back( scope_statment );
-            const auto& function_call_syntax_node = std::dynamic_pointer_cast< FunctionCallSyntaxNode >( function_call );
-            if( const auto& function_info_it = function_by_name.find( function_call_syntax_node->name() ); function_info_it != function_by_name.end() )
+            const auto& [if_statment, if_statment_it] = *it;
+            std::advance( it, 1 );
+            const auto& [parent_of_if_statment, parent_it] = *it;
+            if( auto if_statment_it = std::find( parent_of_if_statment->begin(), parent_of_if_statment->end(), if_statment );
+                if_statment_it != parent_of_if_statment->end() )
             {
-               const auto& function = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( function_info_it->second.function );
-               scope_statment->add_back( function->scope() );
+               return std::make_tuple(parent_of_if_statment, false, if_statment_it);
             }
          }
-         // else if( IsLastNodesIs< FunctionCallSyntaxNode, VaribleSyntaxNode >( source_stack ) ||
-         //          IsLastNodesIs< FunctionCallSyntaxNode, ComputationalExpressionSyntaxNode >( source_stack ) )
-         // {
-         //    auto source_it = source_stack.rbegin();
-         //    std::advance( source_it, 1 );
-         //    const auto& function_call_node = std::dynamic_pointer_cast< FunctionCallSyntaxNode >( source_it->get() );
-         //    if( auto argument_it = std::find( function_call_node->begin(), function_call_node->end(), source_node.get() ); argument_it != function_call_node->end() )
-         //    {
-         //       auto call_argument_index = std::distance( function_call_node->begin(), argument_it );
-         //       if( auto function_info_it = function_by_name.find( function_call_node->name() ); function_info_it != function_by_name.end() )
-         //       {
-         //          const auto& function = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( function_info_it->second.function );
-         //          auto function_argument_name_it = function->begin();
-         //          std::advance( function_argument_name_it, call_argument_index );
-         //          const auto& argument_node = std::dynamic_pointer_cast< VaribleSyntaxNode >( *function_argument_name_it );
-         //          const auto& argument_name_node = std::make_shared< NameSyntaxNode >( argument_node->name() );
-         //          const auto& varible_assigment_statment_syntax_node =
-         //             std::make_shared< VaribleAssigmentStatmentSyntaxNode >( VaribleAssigmentStatmentSyntaxNode( VaribleAssigmentStatmentSyntaxNode::Context::LOCAL ) );
-         //          varible_assigment_statment_syntax_node->add_back( argument_name_node );
-         //          auto scope_it = taget_node_parent->end();
-         //          std::advance( scope_it, 1 );
-         //          new_parent_target_node = *taget_node_parent->insert( scope_it, target_node );
-         //          taget_node_parent->insert( scope_it, varible_assigment_statment_syntax_node );
-         //       }
-         //    }
-         // }
-         //
-         return new_parent_target_node;
+         return std::make_tuple(target_node_parent, false, it);
       },
-      []( const std::vector< std::reference_wrapper< const ISyntaxNodeSP > >& source_stack,
-          const std::vector< std::reference_wrapper< ISyntaxNodeSP > >& target_stack ) -> std::optional< std::reference_wrapper< ISyntaxNodeSP > >
+      [&pre_func_subtree_ignore]( const std::vector< ISyntaxNodeSP >& source_stack,
+                                  const std::vector< std::pair<ISyntaxNodeSP, std::list<ISyntaxNodeSP>::iterator> >& target_stack )
       {
-         std::optional< std::reference_wrapper< ISyntaxNodeSP > > new_parent_target_node;
-         const auto& source_node = *source_stack.rbegin();
-         const auto& taget_node_parent = target_stack.rbegin()->get();
-         const auto& target_node = make_shallow_copy( source_node );
+         const auto& source_node_wrapper = *source_stack.rbegin();
+         const auto& [target_node_parent_wrapper, it] = *target_stack.rbegin();
+         const auto& target_node = make_shallow_copy( source_node_wrapper );
+         std::optional< ISyntaxNodeSP > new_parent_target_node = target_node_parent_wrapper;
 
-         if( IsLastNodesIs< StatmentSyntaxNode >( source_stack ) )
-         {
-            return new_parent_target_node;
-         }
-         // else if( IsLastNodesIs< ComputationalExpressionSyntaxNode >( source_stack ) )
-         // {
-         //    return new_parent_target_node;
-         // }
-         new_parent_target_node = taget_node_parent->add_back( target_node );
-
-         return new_parent_target_node;
+         // if( source_node_wrapper.get() == pre_func_subtree_ignore )
+         //    pre_func_subtree_ignore = {};
+         target_node_parent_wrapper->insert( it, target_node );
       },
       []( const ISyntaxNodeSP& node )
          -> std::pair< std::reverse_iterator< std::list< ISyntaxNodeSP >::iterator >, std::reverse_iterator< std::list< ISyntaxNodeSP >::iterator > >
@@ -305,7 +214,7 @@ double Calculator::solve( const std::string& expression ) const
          SyntaxNodeEmptyVisitor::Handlers handlers;
          handlers.f_syntax_node = [ &argument_stack ]( const FSyntaxNodeSP& node )
          {
-            // std::cout << "f = " << std::to_string( node->value() ) << std::endl;
+            std::cout << "f = " << std::to_string( node->value() ) << std::endl;
             argument_stack.push_back( node->value() );
          };
          handlers.varible_syntax_node = [ &argument_stack, &varible_store ]( const VaribleSyntaxNodeSP& varible )
@@ -316,7 +225,7 @@ double Calculator::solve( const std::string& expression ) const
             // std::cout << "varible " + varible->name() + "(" << std::to_string( value ) << ")" << std::endl;
             argument_stack.push_back( value );
          };
-         handlers.bin_expr_syntax_node = [ &argument_stack ]( const BinExprSyntaxNodeSP& /* node */ )
+         handlers.bin_expr_syntax_node = [ &argument_stack ]( const BinExprSyntaxNodeSP& node )
          {
             auto rhs = argument_stack.back();
             if( !argument_stack.empty() )
@@ -324,58 +233,31 @@ double Calculator::solve( const std::string& expression ) const
             auto lhs = argument_stack.back();
             if( !argument_stack.empty() )
                argument_stack.pop_back();
-            auto result = lhs + rhs;
-            std::cout << std::to_string( lhs ) << " + " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
-            argument_stack.push_back( result );
+            if( node->type() == BinExprSyntaxNode::Type::Addition )
+            {
+              auto result = lhs + rhs;
+              std::cout << std::to_string( lhs ) << " + " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+              argument_stack.push_back( result );
+            }
+            else if( node->type() == BinExprSyntaxNode::Type::Substruction )
+            {
+              auto result = lhs - rhs;
+              std::cout << std::to_string( lhs ) << " - " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+              argument_stack.push_back( result );
+            }
+            else if( node->type() == BinExprSyntaxNode::Type::Multiply )
+            {
+              auto result = lhs * rhs;
+              std::cout << std::to_string( lhs ) << " * " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+              argument_stack.push_back( result );
+            }
+            else if( node->type() == BinExprSyntaxNode::Type::Division )
+            {
+              auto result = lhs / rhs;
+              std::cout << std::to_string( lhs ) << " / " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+              argument_stack.push_back( result );
+            }
          };
-         // handlers.addition_syntax_node = [ &argument_stack ]( const AdditionSyntaxNodeSP& /* node */ )
-         // {
-         //    auto rhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    auto lhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    auto result = lhs + rhs;
-         //    std::cout << std::to_string( lhs ) << " + " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
-         //    argument_stack.push_back( result );
-         // };
-         // handlers.subtraction_syntax_node = [ &argument_stack ]( const SubtractionSyntaxNodeSP& /* node */ )
-         // {
-         //    auto rhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    auto lhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    auto result = lhs - rhs;
-         //    // std::cout << std::to_string( lhs ) << " - " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
-         //    argument_stack.push_back( result );
-         // };
-         // handlers.multiply_syntax_node = [ &argument_stack ]( const MultiplySyntaxNodeSP& /* node */ )
-         // {
-         //    auto rhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    auto lhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    auto result = lhs * rhs;
-         //    // std::cout << std::to_string( lhs ) << " * " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
-         //    argument_stack.push_back( result );
-         // };
-         // handlers.division_syntax_node = [ &argument_stack ]( const DivisionSyntaxNodeSP& /* node */ )
-         // {
-         //    auto rhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    auto lhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    auto result = lhs / rhs;
-         //    // std::cout << std::to_string( lhs ) << " / " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
-         //    argument_stack.push_back( result );
-         // };
          handlers.scope_statment_syntax_node = [ &varible_store, &function_store ]( const ScopeSyntaxNodeSP& /*  scope */ )
          {
             // delete scope in a VaribleStore

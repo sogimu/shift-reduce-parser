@@ -35,7 +35,7 @@ public:
          {
             IfSyntaxNodeSP if_node;
             OpenCircleBracketSyntaxNodeSP open_circle_bracket;
-            ISyntaxNodeSP conditional_expression;
+            ISyntaxNodeSP condition;
             CloseCircleBracketSyntaxNodeSP close_circle_bracket;
             ScopeSyntaxNodeSP scope_statment;
 
@@ -59,43 +59,43 @@ public:
                   state = State::OPEN_CIRCLE_BRACKET;
                }
             };
-            handlers.f_syntax_node = [ &conditional_expression, &state ]( const FSyntaxNodeSP& node )
+            handlers.f_syntax_node = [ &condition, &state ]( const FSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
-                  conditional_expression = node;
+                  condition = node;
                   state = State::CONDITION;
                }
             };
-            handlers.bin_expr_syntax_node = [ &conditional_expression, &state ]( const BinExprSyntaxNodeSP& node )
+            handlers.bin_expr_syntax_node = [ &condition, &state ]( const BinExprSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
-                  conditional_expression = node;
+                  condition = node;
                   state = State::CONDITION;
                }
             };
-            handlers.un_expr_syntax_node = [ &conditional_expression, &state ]( const UnExprSyntaxNodeSP& node )
+            handlers.un_expr_syntax_node = [ &condition, &state ]( const UnExprSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
-                  conditional_expression = node;
+                  condition = node;
                   state = State::CONDITION;
                }
             };
-            handlers.name_syntax_node = [ &conditional_expression, &state ]( const NameSyntaxNodeSP& node )
+            handlers.name_syntax_node = [ &condition, &state ]( const NameSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
-                  conditional_expression = node;
+                  condition = node;
                   state = State::CONDITION;
                }
             };
-            handlers.function_call_syntax_node = [ &conditional_expression, &state ]( const FunctionCallSyntaxNodeSP& node )
+            handlers.function_call_syntax_node = [ &condition, &state ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::OPEN_CIRCLE_BRACKET )
                {
-                  conditional_expression = node;
+                  condition = node;
                   state = State::CONDITION;
                }
             };
@@ -126,11 +126,11 @@ public:
             Plan plan;
             plan.to_remove.nodes.push_back( if_node );
             plan.to_remove.nodes.push_back( open_circle_bracket );
-            plan.to_remove.nodes.push_back( conditional_expression );
+            plan.to_remove.nodes.push_back( condition );
             plan.to_remove.nodes.push_back( close_circle_bracket );
             plan.to_remove.nodes.push_back( scope_statment );
 
-            const auto& if_statment_node = std::make_shared< IfStatmentSyntaxNode >( conditional_expression, scope_statment );
+            const auto& if_statment_node = std::make_shared< IfStatmentSyntaxNode >( condition, scope_statment );
             plan.to_add.nodes.push_back( if_statment_node );
             return plan;
          } );

@@ -53,7 +53,7 @@ bool IfStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
 
 ScopeSyntaxNodeSP IfStatmentSyntaxNode::true_scope() const
 {
-   const auto& true_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 0 ) );
+   const auto& true_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( *rbegin() );
    if( !true_scope )
       throw std::runtime_error( "True scope not found in if expression" );
    return true_scope;
@@ -61,7 +61,7 @@ ScopeSyntaxNodeSP IfStatmentSyntaxNode::true_scope() const
 
 ScopeSyntaxNodeSP IfStatmentSyntaxNode::false_scope() const
 {
-   const auto& false_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 1 ) );
+   const auto& false_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( *std::next(rbegin()) );
    if( !false_scope )
       throw std::runtime_error( "False scope not found in if expression" );
    return false_scope;

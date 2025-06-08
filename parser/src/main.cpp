@@ -201,9 +201,13 @@ int main()
 
                try 
                {
-                 const auto& lexical_tokens = LexicalTokens(buffer.c_str());
-                 const auto& syntax_tree = SyntaxTree( lexical_tokens );
-                  std::cout << syntax_tree.to_string() << "\n";
+                 Calculator calculator;
+                 auto result0 = calculator.solve( buffer.c_str() );
+                 std::cout << result0 << std::endl;
+
+                 // const auto& lexical_tokens = LexicalTokens(buffer.c_str());
+                 // const auto& syntax_tree = SyntaxTree( lexical_tokens );
+                 // std::cout << syntax_tree.to_string() << "\n";
                } 
                catch (const std::exception& e) 
                {

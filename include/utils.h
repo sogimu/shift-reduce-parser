@@ -366,21 +366,44 @@ TargetNode create_tree_from( const SourceNode& source_root, const CreateRoot& cr
    return target_root;
 }
 
+// Шаблон для извлечения типа объекта из Ptr
+
+template <typename Ptr, typename = void>
+struct pointee {
+    // По умолчанию считаем, что Ptr — это уже тип объекта
+    using type = Ptr;
+};
+
+template <typename Ptr>
+struct pointee<Ptr, std::void_t<typename Ptr::element_type>> {
+    // Если есть element_type (умный указатель), берем его
+    using type = typename Ptr::element_type;
+};
+
+template <typename T>
+struct pointee<T*, void> {
+    // Если Ptr — обычный указатель T*
+    using type = T;
+};
+
 template< typename SourceNode, typename TargetNode, typename CreateRoot, typename CreateNodePre, typename CreateNodePost, typename GetChildrenReverseIterators >
 TargetNode create_tree_from1( const SourceNode& source_root, const CreateRoot& create_root, const CreateNodePre& create_node_pre_func,
                               const CreateNodePost& create_node_on_post_func, const GetChildrenReverseIterators& get_children_reverse_iterators )
 {
-   std::vector< std::pair< std::reference_wrapper< const SourceNode >, std::optional< std::reference_wrapper< TargetNode > > > > stack;
-   stack.emplace_back( std::make_pair( std::cref( source_root ), std::optional< std::reference_wrapper< TargetNode > >{} ) );
-   std::vector< std::reference_wrapper< const TargetNode > > source_stack;
-   source_stack.emplace_back( std::cref( source_root ) );
-   std::vector< std::reference_wrapper< TargetNode > > target_stack;
+   using CleanTargetNode = typename pointee<TargetNode>::type;
+   using TargetIterator = decltype(std::declval<CleanTargetNode>().begin()); 
+   
+   std::vector< std::pair< const SourceNode, bool > > stack;
+   stack.emplace_back( std::make_pair( source_root, false ) );
+   std::vector< TargetNode > source_stack;
+   source_stack.emplace_back( source_root );
+   std::vector< std::pair<TargetNode, TargetIterator> > target_stack;
    auto target_root = create_root( source_root );
-   target_stack.emplace_back( std::ref( target_root ) );
-   stack.emplace_back( std::make_pair( std::cref( source_root ), std::optional< std::reference_wrapper< TargetNode > >{ std::ref( target_root ) } ) );
+   target_stack.emplace_back( target_root, target_root->end() );
+   stack.emplace_back( std::make_pair( source_root, target_root ) );
    const auto& [ rbegin, rend ] = get_children_reverse_iterators( source_root );
    // size_t root_children_size = std::distance( rbegin, rend );
-   std::vector< std::reference_wrapper< const SourceNode > > source_root_children_forward_order( rbegin, rend );
+   std::vector< SourceNode > source_root_children_forward_order( rbegin, rend );
    std::reverse( source_root_children_forward_order.begin(), source_root_children_forward_order.end() );
    for( const auto& child_of_root : source_root_children_forward_order )
    {
@@ -389,26 +412,20 @@ TargetNode create_tree_from1( const SourceNode& source_root, const CreateRoot& c
          [ &create_node_pre_func, &stack, &target_stack, &source_stack ]( const SourceNode& source_node ) -> bool
          {
             source_stack.emplace_back( std::cref( source_node ) );
-            std::optional< std::reference_wrapper< TargetNode > > new_target_node_opt = create_node_pre_func( source_stack, target_stack );
-            stack.emplace_back( std::make_pair( std::cref( source_node ), new_target_node_opt ) );
-            if( new_target_node_opt )
-            {
-               target_stack.emplace_back( new_target_node_opt.value() );
-            }
+            // std::optional< std::reference_wrapper< TargetNode > > new_target_node_opt = create_node_pre_func( source_stack, target_stack );
+            const auto& [ new_target_parent, is_node_added, it]  = create_node_pre_func( source_stack, target_stack );
+            stack.emplace_back( std::make_pair( source_node, is_node_added ) );
+            target_stack.emplace_back( new_target_parent, it );
             return false;
          },
          [ &create_node_on_post_func, &stack, &source_stack, &target_stack ]( [[maybe_unused]] const SourceNode& source_node )
          {
-            const auto& [ source, target ] = stack.back();
-            if( !target )
+            const auto& [ source, is_node_added ] = stack.back();
+            if( !is_node_added )
             {
-               [[maybe_unused]] std::optional< std::reference_wrapper< TargetNode > > new_target_node_opt = create_node_on_post_func( source_stack, target_stack );
-               // target = new_target_node_opt;
+               create_node_on_post_func( source_stack, target_stack );
             }
-            if( target )
-            {
-               target_stack.pop_back();
-            }
+            target_stack.pop_back();
             source_stack.pop_back();
             stack.pop_back();
          },

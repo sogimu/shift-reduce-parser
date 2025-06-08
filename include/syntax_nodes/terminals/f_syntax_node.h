@@ -11,6 +11,11 @@ class FSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< FSy
 
 {
 public:
+   FSyntaxNode()
+      : ISyntaxNode{ Token_Type::F }
+   {
+   }
+
    FSyntaxNode( const int& number )
       : ISyntaxNode{ Token_Type::F }
    {
