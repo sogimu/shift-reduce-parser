@@ -357,6 +357,78 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_EQUAL_NAME )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
+TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_LESS_NAME )
+{
+   // ARRANGE
+   const auto& input = R"""(1<a;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        5,
+        {
+          "NameSyntaxNode": [
+            "a"
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_MORE_NAME )
+{
+   // ARRANGE
+   const auto& input = R"""(1>a;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = SyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& expected_syntax_tree_description = R"""(
+{
+  "StatmentSyntaxNode": [
+    {
+      "BinExprSyntaxNode": [
+        7,
+        {
+          "NameSyntaxNode": [
+            "a"
+          ]
+        },
+        {
+          "FSyntaxNode": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}
+      )""";
+
+   const auto& expected_syntax_tree = CreateSyntaxNodeTree( expected_syntax_tree_description );
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
 TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_EQUAL_BIN_EXPR )
 {
    // ARRANGE

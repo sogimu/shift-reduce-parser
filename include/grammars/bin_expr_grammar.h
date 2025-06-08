@@ -809,7 +809,7 @@ public:
             return plan;
          } );
 
-      // F|BIN_EXPR|UN_EXPR LESS|MORE F|BIN_EXPR|UN_EXPR[!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
+      // F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL LESS|MORE F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL [!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -925,6 +925,74 @@ public:
                     state = State::FINISH;
                   }
                }
+            };
+            handlers.name_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const NameSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  a = node;
+                  state = State::F;
+               }
+               else if( state == State::MORE )
+               {
+                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                  {
+                    b = node;
+                    state = State::F;
+                    operation_type = BinExprSyntaxNode::Type::More;
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::LESS )
+               {
+                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                  {
+                    b = node;
+                    state = State::F;
+                    operation_type = BinExprSyntaxNode::Type::Less;
+                    state = State::FINISH;
+                  }
+               }
+            };
+            handlers.function_call_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const FunctionCallSyntaxNodeSP& node )
+            {
+                if( state == State::START )
+                {
+                   a = node;
+                   state = State::F;
+                }
+                else if( state == State::MORE )
+                {
+                   if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                    !check_type< MinusSyntaxNode >( lookahead ) && 
+                                    !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                    !check_type< SlashSyntaxNode >( lookahead ) )
+                   {
+                     b = node;
+                     state = State::F;
+                     operation_type = BinExprSyntaxNode::Type::More;
+                     state = State::FINISH;
+                   }
+                }
+                else if( state == State::LESS )
+                {
+                   if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                    !check_type< MinusSyntaxNode >( lookahead ) && 
+                                    !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                    !check_type< SlashSyntaxNode >( lookahead ) )
+                   {
+                     b = node;
+                     state = State::F;
+                     operation_type = BinExprSyntaxNode::Type::Less;
+                     state = State::FINISH;
+                   }
+                }
             };
             handlers.more_syntax_node = [ &more, &state ]( const MoreSyntaxNodeSP& node )
             {
