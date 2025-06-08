@@ -489,7 +489,7 @@ public:
             return plan;
          } );
 
-      // F|BIN_EXPR|UN_EXPR EQUAL EQUAL|LESS EQUAL|MORE EQUAL F|BIN_EXPR|UN_EXPR[!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
+      // F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL EQUAL EQUAL|LESS EQUAL|MORE EQUAL F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL[!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
          {
@@ -601,6 +601,100 @@ public:
                }
             };
             handlers.un_expr_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const UnExprSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  a = node;
+                  state = State::F;
+               }
+               else if( state == State::EQUAL_EXPRESSION )
+               {
+                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                  {
+                    b = node;
+                    state = State::F;
+                    operation_type = BinExprSyntaxNode::Type::Equal;
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::MORE_EQUAL )
+               {
+                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                  {
+                    b = node;
+                    state = State::F;
+                    operation_type = BinExprSyntaxNode::Type::MoreEqual;
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::LESS_EQUAL )
+               {
+                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                  {
+                    b = node;
+                    state = State::F;
+                    operation_type = BinExprSyntaxNode::Type::LessEqual;
+                    state = State::FINISH;
+                  }
+               }
+            };
+            handlers.name_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const NameSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  a = node;
+                  state = State::F;
+               }
+               else if( state == State::EQUAL_EXPRESSION )
+               {
+                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                  {
+                    b = node;
+                    state = State::F;
+                    operation_type = BinExprSyntaxNode::Type::Equal;
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::MORE_EQUAL )
+               {
+                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                  {
+                    b = node;
+                    state = State::F;
+                    operation_type = BinExprSyntaxNode::Type::MoreEqual;
+                    state = State::FINISH;
+                  }
+               }
+               else if( state == State::LESS_EQUAL )
+               {
+                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                  {
+                    b = node;
+                    state = State::F;
+                    operation_type = BinExprSyntaxNode::Type::LessEqual;
+                    state = State::FINISH;
+                  }
+               }
+            };
+            handlers.function_call_syntax_node = [ &operation_type, &a, &b, &state, &lookahead ]( const FunctionCallSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
