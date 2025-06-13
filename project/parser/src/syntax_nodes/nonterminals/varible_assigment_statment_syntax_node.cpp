@@ -16,8 +16,8 @@ VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const Na
    : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT_STATMENT }
    , mContext{ context }
 {
-   const auto& varible = std::make_shared< VaribleSyntaxNode >( name );
-   add_back( varible );
+   // const auto& varible = std::make_shared< VaribleSyntaxNode >( name );
+   add_back( name );
    add_back( node );
 }
 
@@ -27,8 +27,8 @@ VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const Na
    , mContext{ context }
 {
    add_back( target_name );
-   const auto& varible = std::make_shared< VaribleSyntaxNode >( source_name );
-   add_back( varible );
+   // const auto& varible = std::make_shared< VaribleSyntaxNode >( source_name );
+   add_back( source_name );
 }
 NameSyntaxNodeSP VaribleAssigmentStatmentSyntaxNode::target() const
 {

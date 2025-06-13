@@ -1,14 +1,11 @@
-#include "calculator.h"
+#include "naive_stack_interpreter.h"
 
 #include "gmock/gmock.h"
-#include "is_last_nodes.h"
-// #include "nonterminals/division/division_syntax_node.h"
 #include "nonterminals/bin_expr_syntax_node.h"
 #include "nonterminals/function_statment_syntax_node.h"
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
-// #include "nonterminals/multiply/multiply_syntax_node.h"
 #include "nonterminals/return_statment_syntax_node.h"
 #include "nonterminals/scope_statment_syntax_node.h"
 #include "nonterminals/varible_assigment_statment_syntax_node.h"
@@ -26,6 +23,7 @@
 #include "i_syntax_node.h"
 #include "make_deep_syntax_node_copy.h"
 #include "make_shallow_syntax_node_copy.h"
+#include "is_last_nodes.h"
 
 #include <functional>
 #include <iostream>
@@ -41,17 +39,15 @@ struct FunctionCallMeta
    std::vector< ISyntaxNodeSP > arguments;
 };
 
-double Calculator::solve( const std::string& expression ) const
+double NaiveStackInterpreter::eval( const std::string& expression ) const
 {
    LexicalTokens lexical_tokens( expression );
    SyntaxTree syntax_tree( lexical_tokens );
+   std::cout << "== AST ==" << std::endl;
+   std::cout << syntax_tree.to_string() << std::endl;
 
    std::map< std::string, FunctionCallMeta > function_by_name;
 
-   ISyntaxNodeSP pre_func_subtree_ignore = nullptr;
-   std::list<ISyntaxNodeSP>::iterator insert_it;
-
-   std::cout << syntax_tree.to_string() << std::endl;
    const auto& transformed_tree = create_tree_from1< ISyntaxNodeSP, ISyntaxNodeSP >(
       syntax_tree.root(),
       []( const ISyntaxNodeSP& source_node ) -> ISyntaxNodeSP
@@ -59,7 +55,7 @@ double Calculator::solve( const std::string& expression ) const
          const auto& target_node = make_shallow_copy( source_node );
          return target_node;
       },
-      [ &function_by_name, &pre_func_subtree_ignore, &insert_it ]( const std::vector< ISyntaxNodeSP >& source_stack,
+      [ &function_by_name ]( const std::vector< ISyntaxNodeSP >& source_stack,
                                                                    const std::vector< std::pair<ISyntaxNodeSP, std::list<ISyntaxNodeSP>::iterator> >& target_stack )
       {
          bool is_node_added = false;   
@@ -113,7 +109,7 @@ double Calculator::solve( const std::string& expression ) const
          }
          return std::make_tuple(target_node_parent, false, it);
       },
-      [&pre_func_subtree_ignore]( const std::vector< ISyntaxNodeSP >& source_stack,
+      []( const std::vector< ISyntaxNodeSP >& source_stack,
                                   const std::vector< std::pair<ISyntaxNodeSP, std::list<ISyntaxNodeSP>::iterator> >& target_stack )
       {
          const auto& source_node_wrapper = *source_stack.rbegin();
@@ -121,16 +117,16 @@ double Calculator::solve( const std::string& expression ) const
          const auto& target_node = make_shallow_copy( source_node_wrapper );
          std::optional< ISyntaxNodeSP > new_parent_target_node = target_node_parent_wrapper;
 
-         // if( source_node_wrapper.get() == pre_func_subtree_ignore )
-         //    pre_func_subtree_ignore = {};
          target_node_parent_wrapper->insert( it, target_node );
       },
       []( const ISyntaxNodeSP& node )
          -> std::pair< std::reverse_iterator< std::list< ISyntaxNodeSP >::iterator >, std::reverse_iterator< std::list< ISyntaxNodeSP >::iterator > >
       { return { node->rbegin(), node->rend() }; } );
    SyntaxTree cfg{ transformed_tree };
+   std::cout << "== CFG ==" << std::endl;
    std::cout << cfg.to_string() << std::endl;
 
+   std::cout << "== Execution ==" << std::endl;
    int result = 0;
 
    VaribleStore varible_store;
@@ -154,6 +150,8 @@ double Calculator::solve( const std::string& expression ) const
          },
          handlers.if_statment_syntax_node = [ &children, &argument_stack ]( const IfStatmentSyntaxNodeSP& if_statment )
          {
+            auto s = argument_stack;
+            (void) s;
             // const auto& condition = if_statment->conditional_expression();
             auto condition_result = argument_stack.back();
             if( !argument_stack.empty() )
@@ -217,10 +215,10 @@ double Calculator::solve( const std::string& expression ) const
             std::cout << "f = " << std::to_string( node->value() ) << std::endl;
             argument_stack.push_back( node->value() );
          };
-         handlers.varible_syntax_node = [ &argument_stack, &varible_store ]( const VaribleSyntaxNodeSP& varible )
+         handlers.name_syntax_node = [ &argument_stack, &varible_store ]( const NameSyntaxNodeSP& varible )
          {
-            const auto& value = varible_store[ varible->name() ];
-            std::cout << "Read " << varible->name() << " .Value is " << std::to_string( value ) << std::endl;
+            const auto& value = varible_store[ varible->value() ];
+            std::cout << "Read " << varible->value() << " .Value is " << std::to_string( value ) << std::endl;
             varible_store.print();
             // std::cout << "varible " + varible->name() + "(" << std::to_string( value ) << ")" << std::endl;
             argument_stack.push_back( value );
@@ -257,6 +255,12 @@ double Calculator::solve( const std::string& expression ) const
               std::cout << std::to_string( lhs ) << " / " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
               argument_stack.push_back( result );
             }
+            else if( node->type() == BinExprSyntaxNode::Type::Equal )
+            {
+              auto result = lhs == rhs;
+              std::cout << std::to_string( lhs ) << " == " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+              argument_stack.push_back( result );
+            }
          };
          handlers.scope_statment_syntax_node = [ &varible_store, &function_store ]( const ScopeSyntaxNodeSP& /*  scope */ )
          {
@@ -268,6 +272,8 @@ double Calculator::solve( const std::string& expression ) const
          };
          handlers.print_statment_syntax_node = [ &argument_stack ]( const PrintStatmentSyntaxNodeSP& /* print_statment */ )
          {
+            auto s = argument_stack;
+            (void) s;
             auto result = argument_stack.back();
             if( !argument_stack.empty() )
                argument_stack.pop_back();

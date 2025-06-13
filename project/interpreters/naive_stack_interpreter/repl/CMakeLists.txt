@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(parser VERSION 0.0.1 LANGUAGES CXX)
+project(naive_stack_interpreter_repl VERSION 0.0.1 LANGUAGES CXX)
 
 # Enable AddressSanitizer
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -8,19 +8,14 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
     add_link_options(-fsanitize=address,undefined)
 endif()
 
-add_executable(parser
-    src/varible_store.h
-    src/function_store.h
-    src/calculator.h
-    src/calculator.cpp
+add_executable(${PROJECT_NAME}
     src/main.cpp
 )
-
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
 find_package(Readline REQUIRED)
 
-target_include_directories(parser PRIVATE ${READLINE_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${READLINE_INCLUDE_DIR})
 
 message(STATUS ${READLINE_INCLUDE_DIR})
 message(STATUS ${READLINE_LIBRARIES})
@@ -36,6 +31,6 @@ endif()
 message(STATUS "Found readline include dir: ${READLINE_INCLUDE_DIR}")
 message(STATUS "Found readline library: ${READLINE_LIBRARY}")
 
-target_link_libraries(parser PRIVATE shift-reduce-parser ${READLINE_LIBRARIES})
-target_include_directories(parser PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-target_compile_features(parser PRIVATE cxx_std_20)
+target_link_libraries(${PROJECT_NAME} PRIVATE naive_stack_interpreter ${READLINE_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)

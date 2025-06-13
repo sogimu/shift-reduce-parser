@@ -16,7 +16,7 @@ TEST( CreateSyntaxNodeTree, Test0 )
               {
                 "VaribleAssigmentStatmentSyntaxNode": [
                   {
-                    "VaribleSyntaxNode": [
+                    "NameSyntaxNode": [
                       "m"
                     ]
                   },

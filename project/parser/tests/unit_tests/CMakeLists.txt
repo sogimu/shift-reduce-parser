@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(unit_tests VERSION 0.0.1 LANGUAGES CXX)
+project(parser_unit_tests VERSION 0.0.1 LANGUAGES CXX)
 
 # Enable AddressSanitizer
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -8,11 +8,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
     add_link_options(-fsanitize=address)
 endif()
 
-# set(CMAKE_C_COMPILER "/usr/bin/clang")
-# set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
-add_subdirectory(libs/googletest)
-
-add_executable(unit_tests
+add_executable(${PROJECT_NAME}
     src/lexical_tokens/arithmetic_expression/expression_in_circle_brackets_test.cpp
     src/lexical_tokens/arithmetic_expression/addition_test.cpp
     src/lexical_tokens/arithmetic_expression/subtraction_test.cpp
@@ -31,6 +27,6 @@ add_executable(unit_tests
     src/create_syntax_node_tree_test.cpp
     src/main.cpp
 )
-target_link_libraries(unit_tests PRIVATE shift-reduce-parser GTest::gtest_main)
-target_include_directories(unit_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-target_compile_features(unit_tests PRIVATE cxx_std_20)
+target_link_libraries(${PROJECT_NAME} PRIVATE parser GTest::gtest_main nlohmann_json::nlohmann_json)
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)

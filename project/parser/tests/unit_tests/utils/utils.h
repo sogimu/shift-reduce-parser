@@ -1,7 +1,7 @@
 #pragma once
 
 #include "i_syntax_node.h"
-#include "nlohmann_json/json.hpp"
+#include "nlohmann/json.hpp"
 #include "nonterminals/function_statment_syntax_node.h"
 #include "syntax_tree.h"
 

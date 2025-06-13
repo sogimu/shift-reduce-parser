@@ -1,12 +1,9 @@
-#include "calculator.h"
+#include "naive_stack_interpreter.h"
 
 #include <exception>
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include "lexical_tokens.h"
-#include "syntax_tree.h"
 
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -22,11 +19,11 @@ bool ensureDirExists(const std::string& path) {
     struct stat st{};
     if (stat(path.c_str(), &st) != 0) {
         if (mkdir(path.c_str(), 0700) != 0) {
-            std::cerr << "Ошибка создания директории " << path << ": " << strerror(errno) << "\n";
+            std::cerr << "Dir creation error " << path << ": " << strerror(errno) << "\n";
             return false;
         }
     } else if (!S_ISDIR(st.st_mode)) {
-        std::cerr << path << " существует, но не является директорией\n";
+        std::cerr << path << " exist but is not dir!\n";
         return false;
     }
     return true;
@@ -40,7 +37,6 @@ bool isInputComplete(const std::string& input) {
     for (size_t i = 0; i < input.size(); ++i) {
         char c = input[i];
 
-        // Пропускаем символы внутри строк
         if (in_string) {
             if (c == string_char && input[i - 1] != '\\') {
                 in_string = false;
@@ -201,13 +197,9 @@ int main()
 
                try 
                {
-                 Calculator calculator;
-                 auto result0 = calculator.solve( buffer.c_str() );
+                 NaiveStackInterpreter naive_stack_interpreter;
+                 auto result0 = naive_stack_interpreter.eval( buffer.c_str() );
                  std::cout << result0 << std::endl;
-
-                 // const auto& lexical_tokens = LexicalTokens(buffer.c_str());
-                 // const auto& syntax_tree = SyntaxTree( lexical_tokens );
-                 // std::cout << syntax_tree.to_string() << "\n";
                } 
                catch (const std::exception& e) 
                {
@@ -227,42 +219,5 @@ int main()
     {
         std::cerr << "Could not save hostory to file " << history_file << "\n";
     }
-    // while (true)
-    // {
-    //     const char* prompt = buffer.empty() ? ">>> " : "... ";
-    //     char* line_cstr = readline(prompt);
-    //     if (!line_cstr) {  // EOF (Ctrl+D)
-    //         std::cout << "\nExit from REPL.\n";
-    //         break;
-    //     }
-    //
-    //     std::string line(line_cstr);
-    //     free(line_cstr);
-    //
-    //     if (buffer.empty() && line.empty()) continue;
-    //
-    //     if (!buffer.empty()) buffer += "\n";
-    //     buffer += line;
-    //
-    //     if (isInputComplete(buffer))
-    //     {
-    //         if (!buffer.empty())
-    //         {
-    //             add_history(buffer.c_str());
-    //
-    //            try 
-    //            {
-    //              const auto& lexical_tokens = LexicalTokens(buffer.c_str());
-    //              const auto& syntax_tree = SyntaxTree( lexical_tokens );
-    //               std::cout << syntax_tree.to_string() << "\n";
-    //            } 
-    //            catch (const std::exception& e) 
-    //            {
-    //               std::cout << "error: " << e.what() << "\n";
-    //            }
-    //         }
-    //         buffer.clear();
-    //     }
-    // }
     return 0;
 }

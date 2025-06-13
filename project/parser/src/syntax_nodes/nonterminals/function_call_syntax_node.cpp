@@ -23,15 +23,15 @@ FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name, const s
 {
    for( const auto& argument : arguments )
    {
-      ISyntaxNodeSP child = argument;
+      // ISyntaxNodeSP child = argument;
+      //
+      // if( IsNode< NameSyntaxNode >( argument ) )
+      // {
+      //    const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
+      //    child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
+      // }
 
-      if( IsNode< NameSyntaxNode >( argument ) )
-      {
-         const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
-         child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
-      }
-
-      add_back( child );
+      add_back( argument );
    }
 }
 
