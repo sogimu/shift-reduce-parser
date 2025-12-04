@@ -11,33 +11,11 @@ class FSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< FSy
 
 {
 public:
-   FSyntaxNode()
-      : ISyntaxNode{ Token_Type::F }
-   {
-   }
+   FSyntaxNode( const int& number );
+   FSyntaxNode( const MinusSyntaxNodeSP& minus, const NumberSyntaxNodeSP& number );
+   FSyntaxNode( const NumberSyntaxNodeSP& number );
 
-   FSyntaxNode( const int& number )
-      : ISyntaxNode{ Token_Type::F }
-   {
-      mValue = number;
-   }
-
-   FSyntaxNode( const MinusSyntaxNodeSP& /* minus */, const NumberSyntaxNodeSP& number )
-      : ISyntaxNode{ Token_Type::F }
-   {
-      mValue = -1 * number->value();
-   }
-
-   FSyntaxNode( const NumberSyntaxNodeSP& number )
-      : ISyntaxNode{ Token_Type::F }
-   {
-      mValue = number->value();
-   }
-
-   int value() const
-   {
-      return mValue;
-   }
+   int value() const;
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 

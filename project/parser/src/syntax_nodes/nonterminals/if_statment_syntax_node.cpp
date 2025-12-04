@@ -5,14 +5,16 @@
 #include "syntax_node_empty_visitor.h"
 #include "nonterminals/scope_statment_syntax_node.h"
 #include <stdexcept>
-
-IfStatmentSyntaxNode::IfStatmentSyntaxNode()
-   : ISyntaxNode{ Token_Type::IF_STATMENT }
+IfStatmentSyntaxNode::IfStatmentSyntaxNode( const IfStatmentSyntaxNode& if_statment_syntax_node )
+   : ISyntaxNode{ if_statment_syntax_node }
 {
+   mTokens = if_statment_syntax_node.lexical_tokens();
 }
-IfStatmentSyntaxNode::IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
+
+IfStatmentSyntaxNode::IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::IF_STATMENT }
 {
+   mTokens = lexical_tokens;
    add_back( conditional_expression );
    add_back( scope );
 }
@@ -28,6 +30,8 @@ bool IfStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    handlers.if_statment_syntax_node = [ this, &is_equal ]( const IfStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
+         return;
+      if( node->lexical_tokens() != this->lexical_tokens() )
          return;
       for( size_t i = 0; i < Children().size(); ++i )
       {
@@ -66,3 +70,8 @@ ScopeSyntaxNodeSP IfStatmentSyntaxNode::false_scope() const
       throw std::runtime_error( "False scope not found in if expression" );
    return false_scope;
 }
+
+std::vector< LexicalTokens::LexicalToken > IfStatmentSyntaxNode::lexical_tokens() const
+{ 
+    return { mTokens }; 
+};

@@ -16,9 +16,8 @@ public:
     Negation
   };
 
-   UnExprSyntaxNode();
    UnExprSyntaxNode( const Type& type );
-   UnExprSyntaxNode( const Type& type, const ISyntaxNodeSP& f0 );
+   UnExprSyntaxNode( const Type& type, const ISyntaxNodeSP& argument, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens );
 
    Type type() const;
 
@@ -28,6 +27,7 @@ public:
    bool compare( const ISyntaxNode& node ) const override;
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 private:
+  std::vector< LexicalTokens::LexicalToken > mTokens;
   Type mType;
 };
 

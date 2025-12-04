@@ -1,8 +1,11 @@
 #pragma once
 
+#include "i_grammar.h"
 #include "i_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
+#include "syntax_node_progress_visitor.h"
 
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -11,6 +14,7 @@
 #include <vector>
 #include <list>
 #include <utility>
+#include <cmath>
 
 template< typename Node, typename PreFunc, typename PostFunc >
 void iterative_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
@@ -235,6 +239,62 @@ static Stack last_n_syntax_nodes( const Stack& stack, size_t n )
          throw std::runtime_error( "Node is not exist" );
       node->accept( visitor );
    }
+}
+template<typename State>
+struct Result
+{
+  State state;
+  double readiness;
+};
+template< typename State >
+[[maybe_unused]] static Result< State > iterate_over_last_n_nodesv2( const Stack& stack, size_t n, const typename SyntaxNodeProgressVisitor< State >::Handlers& handlers )
+{
+   const auto& visitor = std::make_shared< SyntaxNodeProgressVisitor< State > >( handlers );
+   const auto& nodes = last_n_syntax_nodes( stack, n );
+   for( const auto& node : nodes )
+   {
+      if( !node )
+         throw std::runtime_error( "Node is not exist" );
+      node->accept( visitor );
+   }
+   return Result<State>{ visitor->state(), visitor->readiness() };
+}
+
+[[maybe_unused]] static IGrammar::PlanOrProgress find_grammar_matching_progress( const Stack& stack, const size_t needed_nodes_size, const std::function<IGrammar::PlanOrProgress(size_t n)>& find_progress_over_last_n_nodes )
+{
+    const auto& stack_size = stack.size();
+
+    size_t start_index = 0;
+
+    if( stack_size >= needed_nodes_size )
+    {
+        start_index = stack_size-needed_nodes_size;
+    }
+
+    IGrammar::Progress max_progress{ .readiness = 0.0 };
+    std::optional<IGrammar::Plan> plan_opt;
+
+    for( size_t n=needed_nodes_size; n>0; --n )
+    { 
+        const auto& plan_or_progress = find_progress_over_last_n_nodes( n );
+        std::visit( [ &max_progress, &plan_opt ]( auto&& arg )
+        {
+          using T = std::decay_t<decltype(arg)>;
+          if constexpr (std::is_same_v<T, IGrammar::Progress>)
+          {
+            if( arg.readiness > max_progress.readiness )
+              max_progress = arg;
+          } 
+          else if constexpr (std::is_same_v<T, IGrammar::Plan>) 
+          {
+              plan_opt = arg;
+          }          
+        }, plan_or_progress );
+        if( plan_opt )
+          return plan_opt.value();
+    }
+
+    return max_progress;
 }
 
 template< typename Range >

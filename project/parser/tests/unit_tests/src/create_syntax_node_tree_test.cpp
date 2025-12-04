@@ -42,7 +42,7 @@ TEST( CreateSyntaxNodeTree, Test0 )
    const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name, f );
    const auto& expression = std::make_shared< StatmentSyntaxNode >( varible_assigment );
    const auto& root = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP >{ expression } );
-   SyntaxTree expected_syntax_tree( root );
+   AbstractSyntaxTree expected_syntax_tree( root );
 
    EXPECT_EQ( result_syntax_tree, expected_syntax_tree );
 }

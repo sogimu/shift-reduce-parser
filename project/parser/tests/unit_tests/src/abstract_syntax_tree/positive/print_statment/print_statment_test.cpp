@@ -1,0 +1,69 @@
+#include "abstract_syntax_tree.h"
+
+#include <gtest/gtest.h>
+#include "utils/utils.h"
+
+using namespace std;
+
+TEST( SYNTAX_TREE_PRINT, F )
+{
+   // ARRANGE
+   const auto& input = R"""(
+      print(1);
+  )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& number = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
+   const auto& f = std::make_shared< FSyntaxNode >( number );
+   const auto& print = std::make_shared< PrintStatmentSyntaxNode >( f );
+   
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( print, lexical_tokens[5] );
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_PRINT, VARIBALE )
+{
+   // ARRANGE
+   const auto& input = R"""(
+      print(a);
+  )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[3] );
+   const auto& print = std::make_shared< PrintStatmentSyntaxNode >( name );
+   
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( print, lexical_tokens[5] );
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_PRINT, FUNCTION_CALL )
+{
+   // ARRANGE
+   const auto& input = R"""(
+      print(foo());
+  )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[3] );
+   const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( name, std::vector< ISyntaxNodeSP >{} );
+   
+   const auto& print = std::make_shared< PrintStatmentSyntaxNode >( function_call );
+   
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( print, lexical_tokens[7] );
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}

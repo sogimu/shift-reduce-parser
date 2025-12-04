@@ -2,8 +2,14 @@
 
 #include "i_syntax_node_visitor.h"
 
-FunctionSyntaxNode::FunctionSyntaxNode()
-  : ISyntaxNode( Token_Type::FUNCTION )
+FunctionSyntaxNode::FunctionSyntaxNode( const FunctionSyntaxNode& node )
+   : ITerminalSyntaxNode{ Token_Type::FUNCTION, node.lexical_tokens() }
+{
+
+}
+
+FunctionSyntaxNode::FunctionSyntaxNode( const LexicalTokens::LexicalToken& token )
+   : ITerminalSyntaxNode{ Token_Type::FUNCTION, token }
 {
 
 }

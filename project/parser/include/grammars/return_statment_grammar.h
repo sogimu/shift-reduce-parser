@@ -1,5 +1,6 @@
 #pragma once
 
+#include "lexical_tokens.h"
 #include "terminals/return_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
@@ -29,96 +30,132 @@ public:
 
       // RETURN F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL [SEMICOLON]
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            ReturnSyntaxNodeSP return_node;
-            ISyntaxNodeSP argument;
-
-            State state = State::START;
-
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.return_syntax_node = [ &return_node, &state ]( const ReturnSyntaxNodeSP& node )
+            const size_t minimal_size = 2;
+            size_t minimal_steps_number = 2;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
+                                                            
             {
-               if( state == State::START )
-               {
-                  state = State::RETURN;
-                  return_node = node;
-               }
-            };
-            handlers.f_syntax_node = [ &argument, &state, &lookahead ]( const FSyntaxNodeSP& node )
-            {
-               if( state == State::RETURN )
-               {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
-                  {
-                      argument = node;
-                      state = State::ARGUMENT;
-                      state = State::FINISH;
-                  }
-               }
-            };
-            handlers.bin_expr_syntax_node = [ &argument, &state, &lookahead ]( const BinExprSyntaxNodeSP& node )
-            {
-               if( state == State::RETURN )
-               {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
-                  {
-                      argument = node;
-                      state = State::ARGUMENT;
-                      state = State::FINISH;
-                  }
-               }
-            };
-            handlers.un_expr_syntax_node = [ &argument, &state, &lookahead ]( const UnExprSyntaxNodeSP& node )
-            {
-               if( state == State::RETURN )
-               {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
-                  {
-                      argument = node;
-                      state = State::ARGUMENT;
-                      state = State::FINISH;
-                  }
-               }
-            };
-            handlers.name_syntax_node = [ &argument, &state, &lookahead ]( const NameSyntaxNodeSP& node )
-            {
-               if( state == State::RETURN )
-               {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
-                  {
-                      argument = node;
-                      state = State::ARGUMENT;
-                      state = State::FINISH;
-                  }
-               }
-            };
-            handlers.function_call_syntax_node = [ &argument, &state, &lookahead ]( const FunctionCallSyntaxNodeSP& node )
-            {
-               if( state == State::RETURN )
-               {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
-                  {
-                      argument = node;
-                      state = State::ARGUMENT;
-                      state = State::FINISH;
-                  }
-               }
-            };
+                ReturnSyntaxNodeSP return_node;
+                ISyntaxNodeSP argument;
 
-            iterate_over_last_n_nodes( stack, 2, handlers );
+                const Stack& s = stack;
+                SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
+                using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                using HandlerReturn = Handlers::HandlerReturn;
+                using Impact = Handlers::Impact;
 
-            if( state != State::FINISH )
-               return {};
+                handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn
+                { 
+                   return { State::ERROR, Impact::ERROR };
+                };
 
-            Plan plan;
-            plan.to_remove.nodes.push_back( return_node );
-            plan.to_remove.nodes.push_back( argument );
+                handlers.return_syntax_node = [ &return_node ]( const State& state, const ReturnSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::START )
+                   {
+                      return_node = node;
+                       return { State::RETURN, Impact::MOVE };
+                   }
+                     return { state, Impact::ERROR };
+                };
+                handlers.f_syntax_node = [ &argument, &lookahead ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::RETURN )
+                   {
+                      if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                      {
+                          argument = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
+                   }
+                     return { state, Impact::ERROR };
+                };
+                handlers.bin_expr_syntax_node = [ &argument, &lookahead ]( const State& state, const BinExprSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::RETURN )
+                   {
+                      if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                      {
+                          argument = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
+                   }
+                     return { state, Impact::ERROR };
+                };
+                handlers.un_expr_syntax_node = [ &argument, &lookahead ]( const State& state, const UnExprSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::RETURN )
+                   {
+                      if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                      {
+                          argument = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
+                   }
+                     return { state, Impact::ERROR };
+                };
+                handlers.name_syntax_node = [ &argument, &lookahead ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::RETURN )
+                   {
+                      if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                      {
+                          argument = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
+                   }
+                     return { state, Impact::ERROR };
+                };
+                handlers.function_call_syntax_node = [ &argument, &lookahead ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::RETURN )
+                   {
+                      if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
+                      {
+                          argument = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
+                   }
+                     return { state, Impact::ERROR };
+                };
+                auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            const auto& return_statment_node = std::make_shared< ReturnStatmentSyntaxNode >( argument );
-            plan.to_add.nodes.push_back( return_statment_node );
-            return plan;
+                PlanOrProgress plan_or_progress;
+                if( iteration_result.state == State::ERROR )
+                {
+                    plan_or_progress = Progress{ .readiness = 0 };
+                }  
+                else if( iteration_result.state == State::FINISH )
+                {
+                    Plan plan;
+                    plan.to_remove.nodes.push_back( return_node );
+                    plan.to_remove.nodes.push_back( argument );
+
+                    const auto& return_statment_node = std::make_shared< ReturnStatmentSyntaxNode >( argument, return_node->lexical_tokens().at(0) );
+                    plan.to_add.nodes.push_back( return_statment_node );
+                    plan_or_progress = plan;
+                }
+                else
+                {
+                    plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                }
+                return plan_or_progress;
+            });
+
+            // iterate_over_last_n_nodes( stack, 2, handlers );
+            //
+            // if( state != State::FINISH )
+            //    return state == ERROR ? 0 : 10;
+            //
+            // Plan plan;
+            // plan.to_remove.nodes.push_back( return_node );
+            // plan.to_remove.nodes.push_back( argument );
+            //
+            // const auto& return_statment_node = std::make_shared< ReturnStatmentSyntaxNode >( argument );
+            // plan.to_add.nodes.push_back( return_statment_node );
+            // return plan;
          } );
    }
 };

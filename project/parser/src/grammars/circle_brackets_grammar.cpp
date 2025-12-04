@@ -1,10 +1,11 @@
 #include "circle_brackets_grammar.h"
 
+#include "i_grammar.h"
 #include "terminals/equal_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "i_syntax_node.h"
 #include "nonterminals/print_statment_syntax_node.h"
-#include "syntax_node_empty_visitor.h"
+// #include "syntax_node_empty_visitor.h"
 #include "terminals/open_curly_bracket_syntax_node.h"
 #include "utils.h"
 
@@ -35,98 +36,126 @@ CircleBrackets::CircleBrackets()
 
     // !NAME|!IF|!PRINT OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR CLOSE_CIRCLE_BRACKET 
     mProductions.emplace_back(
-       [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+       []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
        {
-          OpenCircleBracketSyntaxNodeSP open_circle_bracket;
-          ISyntaxNodeSP expression;
-          CloseCircleBracketSyntaxNodeSP close_circle_bracket;
+          const size_t minimal_size = 4;
+          size_t minimal_steps_number = 4;
+          return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
+                                                          {
+                                                            OpenCircleBracketSyntaxNodeSP open_circle_bracket;
+                                                            ISyntaxNodeSP expression;
+                                                            CloseCircleBracketSyntaxNodeSP close_circle_bracket;
 
-          State state = State::START;
+                                                            const Stack& s = stack;
+                                                            SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
+                                                            using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                                                            using HandlerReturn = Handlers::HandlerReturn;
+                                                            using Impact = Handlers::Impact;
 
-          Plan plan;
-          SyntaxNodeEmptyVisitor::Handlers handlers;
-          handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::START; };
-          handlers.name_syntax_node = [ &state, &expression ]( const NameSyntaxNodeSP& node )
-          {
-             if( state == State::OPEN_CIRCLE_BRACKET )
-             {
-                expression = node;
-                state = State::F;
-             }
-             else if( state == State::START )
-             {
-                state = State::ERROR;
-             }
-          };
-          handlers.if_syntax_node = [ &state ]( const IfSyntaxNodeSP& node )
-          {
-              state = State::ERROR;
-          };
-          handlers.print_syntax_node = [ &state ]( const PrintSyntaxNodeSP& node )
-          {
-              state = State::ERROR;
-          };
-          handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
-          {
-             if( state == State::START )
-             {
-                open_circle_bracket = node;
-                state = State::OPEN_CIRCLE_BRACKET;
-             }
-          };
-          handlers.f_syntax_node = [ &expression, &state ]( const FSyntaxNodeSP& node )
-          {
-             if( state == State::OPEN_CIRCLE_BRACKET )
-             {
-                expression = node;
-                state = State::F;
-             }
-          };
-          handlers.bin_expr_syntax_node = [ &expression, &state ]( const BinExprSyntaxNodeSP& node )
-          {
-             if( state == State::OPEN_CIRCLE_BRACKET )
-             {
-                expression = node;
-                state = State::F;
-             }
-          };
-          handlers.un_expr_syntax_node = [ &expression, &state ]( const UnExprSyntaxNodeSP& node )
-          {
-             if( state == State::OPEN_CIRCLE_BRACKET )
-             {
-                expression = node;
-                state = State::F;
-             }
-          };
-          handlers.function_call_syntax_node = [ &expression, &state ]( const FunctionCallSyntaxNodeSP& node )
-          {
-             if( state == State::OPEN_CIRCLE_BRACKET )
-             {
-                expression = node;
-                state = State::F;
-             }
-          };
-          handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state, &lookahead ]( const CloseCircleBracketSyntaxNodeSP& node )
-          {
-             if( state == State::F )
-             {
-               if( lookahead && !check_type<OpenCurlyBracketSyntaxNode>( lookahead ) )
-               {
-                  close_circle_bracket = node;
-                  state = State::FINISH;
-                }
-             }
-          };
-          iterate_over_last_n_nodes( stack, 4, handlers );
+                                                            handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn
+                                                            { 
+                                                               return { State::ERROR, Impact::ERROR };
+                                                            };
 
-          if( state != State::FINISH )
-             return {};
+                                                            handlers.name_syntax_node = [ &expression ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CIRCLE_BRACKET )
+                                                               {
+                                                                  expression = node;
+                                                                  return { State::F, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::START )
+                                                               {
+                                                                  return { State::ERROR, Impact::ERROR };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.if_syntax_node = []( const State& state, const IfSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               return { State::ERROR, Impact::ERROR };
+                                                            };
+                                                            handlers.print_syntax_node = []( const State& state, const PrintSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               return { State::ERROR, Impact::ERROR };
+                                                            };
+                                                            handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket ]( const State& state, const OpenCircleBracketSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::START )
+                                                               {
+                                                                  open_circle_bracket = node;
+                                                                  return { State::OPEN_CIRCLE_BRACKET, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.f_syntax_node = [ &expression ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CIRCLE_BRACKET )
+                                                               {
+                                                                  expression = node;
+                                                                    return { State::F, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.bin_expr_syntax_node = [ &expression ]( const State& state, const BinExprSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CIRCLE_BRACKET )
+                                                               {
+                                                                  expression = node;
+                                                                  return { State::F, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.un_expr_syntax_node = [ &expression ]( const State& state, const UnExprSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CIRCLE_BRACKET )
+                                                               {
+                                                                  expression = node;
+                                                                  return { State::F, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.function_call_syntax_node = [ &expression ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CIRCLE_BRACKET )
+                                                               {
+                                                                  expression = node;
+                                                                  return { State::F, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &lookahead ]( const State& state, const CloseCircleBracketSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::F )
+                                                               {
+                                                                 if( lookahead && !check_type<OpenCurlyBracketSyntaxNode>( lookahead ) )
+                                                                 {
+                                                                    close_circle_bracket = node;
+                                                                    return { State::FINISH, Impact::MOVE };
+                                                                 }
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-          plan.to_remove.nodes.push_back( open_circle_bracket );
-          plan.to_remove.nodes.push_back( expression );
-          plan.to_remove.nodes.push_back( close_circle_bracket );
+                                                            PlanOrProgress plan_or_progress;
+                                                            if( iteration_result.state == State::ERROR )
+                                                            {
+                                                                plan_or_progress = Progress{ .readiness = 0 };
+                                                            }  
+                                                            else if( iteration_result.state == State::FINISH )
+                                                            {
+                                                                Plan plan;
+                                                                plan.to_remove.nodes.push_back( open_circle_bracket );
+                                                                plan.to_remove.nodes.push_back( expression );
+                                                                plan.to_remove.nodes.push_back( close_circle_bracket );
 
-          plan.to_add.nodes.push_back( expression );
-          return plan;
+                                                                plan.to_add.nodes.push_back( expression );
+                                                                  plan_or_progress = plan;
+                                                            }
+                                                            else {
+                                                                plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                                                            }
+                                                            return plan_or_progress;
+                                                          });
        } );
  }

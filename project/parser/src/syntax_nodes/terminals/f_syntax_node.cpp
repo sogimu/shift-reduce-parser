@@ -4,6 +4,30 @@
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
+FSyntaxNode::FSyntaxNode( const int& number )
+  : ISyntaxNode{ Token_Type::F }
+{
+  mValue = number;
+}
+
+FSyntaxNode::FSyntaxNode( const MinusSyntaxNodeSP& minus, const NumberSyntaxNodeSP& number )
+  : ISyntaxNode{ Token_Type::F }
+{
+  add_back( minus );
+  add_back( number );
+}
+
+FSyntaxNode::FSyntaxNode( const NumberSyntaxNodeSP& number )
+  : ISyntaxNode{ Token_Type::F }
+  , mValue{ number->value() }
+{
+  add_back( number );
+}
+
+int FSyntaxNode::value() const
+{
+  return mValue;
+}
 void FSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );

@@ -8,11 +8,6 @@
 #include "utils.h"
 #include <iterator>
 
-PrintStatmentSyntaxNode::PrintStatmentSyntaxNode()
-   : ISyntaxNode{ Token_Type::PRINT_STATMENT }
-{
-}
-
 PrintStatmentSyntaxNode::PrintStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
    : ISyntaxNode{ Token_Type::PRINT_STATMENT }
 {
@@ -49,6 +44,8 @@ bool PrintStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    {
       if( node->Children().size() != this->Children().size() )
          return;
+      if( node->lexical_tokens() != this->lexical_tokens() )
+         return;
       for( size_t i = 0; i < Children().size(); ++i )
       {
          const auto& lft_child = ( *this )[ i ];
@@ -66,13 +63,4 @@ bool PrintStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-// ComputationalExpressionSyntaxNodeSP PrintStatmentSyntaxNode::computational_expression() const
-// {
-//    ComputationalExpressionSyntaxNodeSP argument;
-//    const auto& value_node = this->operator[]( 0 );
-//    match( value_node,
-//           { .computational_expression_syntax_node = [ &argument ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
-//             { argument = computational_expression; },
-//             .name_syntax_node = [ &argument ]( const NameSyntaxNodeSP& name ) { argument = std::make_shared< ComputationalExpressionSyntaxNode >( name ); } } );
-//    return argument;
-// }
+

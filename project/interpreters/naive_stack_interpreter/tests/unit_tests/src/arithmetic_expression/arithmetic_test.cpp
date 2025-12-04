@@ -1,4 +1,4 @@
-#include "naive_stack_interpreter.h"
+#include "interpreter.h"
 
 #include <gtest/gtest.h>
 
@@ -10,8 +10,8 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, INT_SEMICOLON )
    const auto& input = R"""(1;)""";
 
    // ACT
-   NaiveStackInterpreter naive_stack_interpreter;
-   auto result = naive_stack_interpreter.eval( input );
+  Interpreter naive_stack_machine;
+   auto result = naive_stack_machine.eval( input );
 
    // ASSERT
    EXPECT_EQ( result, 1 );

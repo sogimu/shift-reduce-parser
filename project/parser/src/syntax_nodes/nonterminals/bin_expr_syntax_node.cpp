@@ -7,38 +7,26 @@
 
 #include <vector>
 
-BinExprSyntaxNode::BinExprSyntaxNode()
-   : ISyntaxNode{ Token_Type::BinExpr }
-{
-}
 BinExprSyntaxNode::BinExprSyntaxNode( const Type& type )
    : ISyntaxNode{ Token_Type::BinExpr }
    , mType{ type }
 {
 }
-BinExprSyntaxNode::BinExprSyntaxNode( const Type& type, const ISyntaxNodeSP& f0, const ISyntaxNodeSP& f1 )
+BinExprSyntaxNode::BinExprSyntaxNode( const Type& type, const ISyntaxNodeSP& arg0, const ISyntaxNodeSP& arg1, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::BinExpr }
    , mType{ type }
 {
-   add_back( f0 );
-   add_back( f1 );
+   add_back( arg0 );
+   add_back( arg1 );
+
+   mTokens = lexical_tokens;
 }
+
 BinExprSyntaxNode::Type BinExprSyntaxNode::type() const
 {
   return mType;
 }
 
-// ISyntaxNodeSP& BinExprSyntaxNode::add_back( const ISyntaxNodeSP& child )
-// {
-//    ISyntaxNodeSP node = child;
-//    SyntaxNodeEmptyVisitor::Handlers handlers;
-//    handlers.name_syntax_node = [ &node ]( const NameSyntaxNodeSP& name ) { node = std::make_shared< VaribleSyntaxNode >( name ); };
-//
-//    const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
-//    child->accept( visitor );
-//
-//    return ISyntaxNode::add_back( node );
-// }
 bool BinExprSyntaxNode::compare( const ISyntaxNode& node ) const
 {
    bool is_equal = false;
@@ -46,6 +34,8 @@ bool BinExprSyntaxNode::compare( const ISyntaxNode& node ) const
    handlers.bin_expr_syntax_node = [ this, &is_equal ]( const BinExprSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
+         return;
+      if( node->lexical_tokens() != this->lexical_tokens() )
          return;
       for( size_t i = 0; i < Children().size(); ++i )
       {
@@ -69,4 +59,13 @@ bool BinExprSyntaxNode::compare( const ISyntaxNode& node ) const
 void BinExprSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
+}
+
+std::vector< LexicalTokens::LexicalToken > BinExprSyntaxNode::lexical_tokens() const
+{ 
+    return { mTokens }; 
+};
+void BinExprSyntaxNode::add_lexical_token(const LexicalTokens::LexicalToken& token)
+{
+  mTokens.push_back( token );
 }

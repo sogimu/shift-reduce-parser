@@ -2,9 +2,11 @@
 
 #include "i_syntax_node_visitor.h"
 
-#include "nonterminals/function_statment_syntax_node.h"
 #include <functional>
 #include <memory>
+
+#include "nonterminals/function_statment_syntax_node.h"
+#include "progress_counter.h"
 
 class SyntaxNodeEmptyVisitor : public ISyntaxNodeVisitor
 {

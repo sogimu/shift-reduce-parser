@@ -2,17 +2,22 @@
 
 #include "enums.h"
 #include "i_syntax_node.h"
+#include "i_terminal_syntax_node.h"
 
 #include <memory>
 
 class ISyntaxNodeVisitor;
 
-class SemicolonSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< SemicolonSyntaxNode >
+class SemicolonSyntaxNode : public ITerminalSyntaxNode, public std::enable_shared_from_this< SemicolonSyntaxNode >
 {
 public:
-   SemicolonSyntaxNode();
+   SemicolonSyntaxNode( const SemicolonSyntaxNode& node );
+
+   SemicolonSyntaxNode( const LexicalTokens::LexicalToken& token );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
+   
+   bool compare( const ISyntaxNode& node ) const override;
 };
 
 using SemicolonSyntaxNodeSP = std::shared_ptr< SemicolonSyntaxNode >;

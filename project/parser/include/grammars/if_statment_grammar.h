@@ -31,108 +31,139 @@ public:
 
       // IF OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR|FUNCTION_CALL|NAME CLOSE_CIRCLE_BRACKET SCOPE
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            IfSyntaxNodeSP if_node;
-            OpenCircleBracketSyntaxNodeSP open_circle_bracket;
-            ISyntaxNodeSP condition;
-            CloseCircleBracketSyntaxNodeSP close_circle_bracket;
-            ScopeSyntaxNodeSP scope_statment;
+            const size_t minimal_size = 5;
+            size_t minimal_steps_number = 5;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
+                                                            
+            {
+                IfSyntaxNodeSP if_node;
+                OpenCircleBracketSyntaxNodeSP open_circle_bracket;
+                ISyntaxNodeSP condition;
+                CloseCircleBracketSyntaxNodeSP close_circle_bracket;
+                ScopeSyntaxNodeSP scope_statment;
 
-            State state = State::START;
 
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.if_syntax_node = [ &if_node, &state ]( const IfSyntaxNodeSP& node )
-            {
-               if( state == State::START )
-               {
-                  if_node = node;
-                  state = State::IF;
-               }
-            };
-            handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket, &state ]( const OpenCircleBracketSyntaxNodeSP& node )
-            {
-               if( state == State::IF )
-               {
-                  open_circle_bracket = node;
-                  state = State::OPEN_CIRCLE_BRACKET;
-               }
-            };
-            handlers.f_syntax_node = [ &condition, &state ]( const FSyntaxNodeSP& node )
-            {
-               if( state == State::OPEN_CIRCLE_BRACKET )
-               {
-                  condition = node;
-                  state = State::CONDITION;
-               }
-            };
-            handlers.bin_expr_syntax_node = [ &condition, &state ]( const BinExprSyntaxNodeSP& node )
-            {
-               if( state == State::OPEN_CIRCLE_BRACKET )
-               {
-                  condition = node;
-                  state = State::CONDITION;
-               }
-            };
-            handlers.un_expr_syntax_node = [ &condition, &state ]( const UnExprSyntaxNodeSP& node )
-            {
-               if( state == State::OPEN_CIRCLE_BRACKET )
-               {
-                  condition = node;
-                  state = State::CONDITION;
-               }
-            };
-            handlers.name_syntax_node = [ &condition, &state ]( const NameSyntaxNodeSP& node )
-            {
-               if( state == State::OPEN_CIRCLE_BRACKET )
-               {
-                  condition = node;
-                  state = State::CONDITION;
-               }
-            };
-            handlers.function_call_syntax_node = [ &condition, &state ]( const FunctionCallSyntaxNodeSP& node )
-            {
-               if( state == State::OPEN_CIRCLE_BRACKET )
-               {
-                  condition = node;
-                  state = State::CONDITION;
-               }
-            };
-            handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket, &state ]( const CloseCircleBracketSyntaxNodeSP& node )
-            {
-               if( state == State::CONDITION )
-               {
-                  close_circle_bracket = node;
-                  state = State::CLOSE_CIRCLE_BRACKET;
-               }
-            };
+                const Stack& s = stack;
+                SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
+                using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                using HandlerReturn = Handlers::HandlerReturn;
+                using Impact = Handlers::Impact;
 
-            handlers.scope_statment_syntax_node = [ &scope_statment, &state ]( const ScopeSyntaxNodeSP& node )
-            {
-               if( state == State::CLOSE_CIRCLE_BRACKET )
-               {
-                  scope_statment = node;
-                  state = State::SCOPE_STATMENT;
-                  state = State::FINISH;
-               }
-            };
+                handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn
+                { 
+                   return { State::ERROR, Impact::ERROR };
+                };
+                handlers.if_syntax_node = [ &if_node ]( const State& state, const IfSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::START )
+                   {
+                      if_node = node;
+                       return { State::IF, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.open_circle_bracket_syntax_node = [ &open_circle_bracket ]( const State& state, const OpenCircleBracketSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::IF )
+                   {
+                      open_circle_bracket = node;
+                       return { State::OPEN_CIRCLE_BRACKET, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.f_syntax_node = [ &condition ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_CIRCLE_BRACKET )
+                   {
+                      condition = node;
+                       return { State::CONDITION, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.bin_expr_syntax_node = [ &condition ]( const State& state, const BinExprSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_CIRCLE_BRACKET )
+                   {
+                      condition = node;
+                       return { State::CONDITION, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.un_expr_syntax_node = [ &condition ]( const State& state, const UnExprSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_CIRCLE_BRACKET )
+                   {
+                      condition = node;
+                       return { State::CONDITION, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.name_syntax_node = [ &condition ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_CIRCLE_BRACKET )
+                   {
+                      condition = node;
+                       return { State::CONDITION, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.function_call_syntax_node = [ &condition ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_CIRCLE_BRACKET )
+                   {
+                      condition = node;
+                       return { State::CONDITION, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.close_circle_bracket_syntax_node = [ &close_circle_bracket ]( const State& state, const CloseCircleBracketSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::CONDITION )
+                   {
+                      close_circle_bracket = node;
+                       return { State::CLOSE_CIRCLE_BRACKET, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
 
-            iterate_over_last_n_nodes( stack, 5, handlers );
+                handlers.scope_statment_syntax_node = [ &scope_statment ]( const State& state, const ScopeSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::CLOSE_CIRCLE_BRACKET )
+                   {
+                      scope_statment = node;
+                       return { State::FINISH, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
 
-            if( state != State::FINISH )
-               return {};
+                auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            Plan plan;
-            plan.to_remove.nodes.push_back( if_node );
-            plan.to_remove.nodes.push_back( open_circle_bracket );
-            plan.to_remove.nodes.push_back( condition );
-            plan.to_remove.nodes.push_back( close_circle_bracket );
-            plan.to_remove.nodes.push_back( scope_statment );
+                PlanOrProgress plan_or_progress;
+                if( iteration_result.state == State::ERROR )
+                {
+                    plan_or_progress = Progress{ .readiness = 0 };
+                }  
+                else if( iteration_result.state == State::FINISH )
+                {
+                    Plan plan;
+                    plan.to_remove.nodes.push_back( if_node );
+                    plan.to_remove.nodes.push_back( open_circle_bracket );
+                    plan.to_remove.nodes.push_back( condition );
+                    plan.to_remove.nodes.push_back( close_circle_bracket );
+                    plan.to_remove.nodes.push_back( scope_statment );
 
-            const auto& if_statment_node = std::make_shared< IfStatmentSyntaxNode >( condition, scope_statment );
-            plan.to_add.nodes.push_back( if_statment_node );
-            return plan;
+                    const auto& if_statment_node = std::make_shared< IfStatmentSyntaxNode >( condition, scope_statment, std::vector< LexicalTokens::LexicalToken >{ if_node->lexical_tokens().at(0) } );
+                    plan.to_add.nodes.push_back( if_statment_node );
+                    plan_or_progress = plan;
+                }
+                else
+                {
+                    plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                }
+                return plan_or_progress;
+              });
          } );
    }
 };

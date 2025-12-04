@@ -10,52 +10,22 @@
 #include "nonterminals/print_statment_syntax_node.h"
 #include "nonterminals/varible_assigment_statment_syntax_node.h"
 #include "nonterminals/return_statment_syntax_node.h"
+#include "nonterminals/un_expr_syntax_node.h"
+#include "nonterminals/bin_expr_syntax_node.h"
+#include "nonterminals/scope_statment_syntax_node.h"
 
 #include <vector>
 
-StatmentSyntaxNode::StatmentSyntaxNode()
+StatmentSyntaxNode::StatmentSyntaxNode( const ISyntaxNodeSP& syntax_node )
    : ISyntaxNode{ Token_Type::STATMENT }
 {
+   add_back( syntax_node );
 }
-StatmentSyntaxNode::StatmentSyntaxNode( const FSyntaxNodeSP& f_syntax_node )
-   : ISyntaxNode{ Token_Type::STATMENT }
+
+StatmentSyntaxNode::StatmentSyntaxNode( const ISyntaxNodeSP& syntax_node, const LexicalTokens::LexicalToken& semicolon_lexical_token )
 {
-   add_back( f_syntax_node );
-}
-StatmentSyntaxNode::StatmentSyntaxNode( const IfStatmentSyntaxNodeSP& if_statment_syntax_node )
-   : ISyntaxNode{ Token_Type::STATMENT }
-{
-   add_back( if_statment_syntax_node );
-}
-StatmentSyntaxNode::StatmentSyntaxNode( const WhileStatmentSyntaxNodeSP& while_statment_syntax_node )
-   : ISyntaxNode{ Token_Type::STATMENT }
-{
-   add_back( while_statment_syntax_node );
-}
-StatmentSyntaxNode::StatmentSyntaxNode( const FunctionStatmentSyntaxNodeSP& function_statment_syntax_node )
-   : ISyntaxNode{ Token_Type::STATMENT }
-{
-   add_back( function_statment_syntax_node );
-}
-StatmentSyntaxNode::StatmentSyntaxNode( const FunctionCallSyntaxNodeSP& function_call_syntax_node )
-   : ISyntaxNode{ Token_Type::STATMENT }
-{
-   add_back( function_call_syntax_node );
-}
-StatmentSyntaxNode::StatmentSyntaxNode( const PrintStatmentSyntaxNodeSP& print_statment_syntax_node )
-   : ISyntaxNode{ Token_Type::STATMENT }
-{
-   add_back( print_statment_syntax_node );
-}
-StatmentSyntaxNode::StatmentSyntaxNode( const VaribleAssigmentStatmentSyntaxNodeSP& varible_assigment_statment_syntax_node )
-   : ISyntaxNode{ Token_Type::STATMENT }
-{
-   add_back( varible_assigment_statment_syntax_node );
-}
-StatmentSyntaxNode::StatmentSyntaxNode( const ReturnStatmentSyntaxNodeSP& return_statment_syntax_node )
-   : ISyntaxNode{ Token_Type::STATMENT }
-{
-   add_back( return_statment_syntax_node );
+   add_back( syntax_node );
+   mTokens = { semicolon_lexical_token };
 }
 
 void StatmentSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
@@ -70,6 +40,8 @@ bool StatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    handlers.statment_syntax_node = [ this, &is_equal ]( const StatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
+         return;
+      if( node->lexical_tokens() != this->lexical_tokens() )
          return;
       for( size_t i = 0; i < Children().size(); ++i )
       {
@@ -86,4 +58,13 @@ bool StatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    const_cast< ISyntaxNode& >( node ).accept( visitor );
 
    return is_equal;
+}
+
+std::vector< LexicalTokens::LexicalToken > StatmentSyntaxNode::lexical_tokens() const
+{ 
+    return { mTokens }; 
+};
+void StatmentSyntaxNode::add_lexical_token(const LexicalTokens::LexicalToken& token)
+{
+  mTokens.push_back( token );
 }

@@ -7,13 +7,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(HEADERS
     include/utils/dfs_pre_order_range.h
     include/enums.h
-    include/lexical_tokens.h
-    include/syntax_tree.h
+    include/lexical_tokens/lexical_tokens.h
+    include/abstract_syntax_tree/abstract_syntax_tree.h
+    include/abstract_syntax_tree/syntax_exception.hpp
     include/utils.h
+    include/progress_counter.h
     include/i_grammar.h
     include/i_syntax_node.h
     include/i_syntax_node_visitor.h
     include/syntax_node_empty_visitor.h
+    include/syntax_node_progress_visitor.h
     include/make_deep_syntax_node_copy.h
     include/make_shallow_syntax_node_copy.h
     include/syntax_node_state_machine_visitor.h
@@ -53,22 +56,22 @@ set(HEADERS
     include/syntax_nodes/nonterminals/varible_syntax_node.h
     include/syntax_nodes/nonterminals/return_statment_syntax_node.h
     include/grammars/f_grammar.h
-    include/grammars/un_expr_grammar.h
-    include/grammars/print_statment_grammar.h
-    include/grammars/if_statment_grammar.h
-    include/grammars/while_statment_grammar.h
-    include/grammars/statment_grammar.h
-    include/grammars/varible_assigment_grammar.h
+    # include/grammars/un_expr_grammar.h
+    # include/grammars/print_statment_grammar.h
+    # include/grammars/if_statment_grammar.h
+    # include/grammars/while_statment_grammar.h
+    # include/grammars/statment_grammar.h
+    # include/grammars/varible_assigment_grammar.h
     include/grammars/circle_brackets_grammar.h
-    include/grammars/scope_grammar.h
-    include/grammars/function_statment_grammar.h
-    include/grammars/function_call_grammar.h
-    include/grammars/return_statment_grammar.h
+    # include/grammars/scope_grammar.h
+    # include/grammars/function_statment_grammar.h
+    # include/grammars/function_call_grammar.h
+    # include/grammars/return_statment_grammar.h
 )
 
 set(SOURCES
-    src/lexical_tokens.cpp
-    src/syntax_tree.cpp
+    src/lexical_tokens/lexical_tokens.cpp
+    src/abstract_syntax_tree/abstract_syntax_tree.cpp
     src/syntax_nodes/terminals/plus_syntax_node.cpp
     src/syntax_nodes/terminals/minus_syntax_node.cpp
     src/syntax_nodes/terminals/asterisk_syntax_node.cpp
@@ -114,6 +117,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   "include" 
   "include/grammars" 
   "include/syntax_nodes"
+  "include/lexical_tokens"
+  "include/abstract_syntax_tree"
 )
 
 add_subdirectory ("tests/unit_tests")

@@ -1,4 +1,5 @@
-#include "naive_stack_interpreter.h"
+#include "interpreter.h"
+// #include "stack_machine.h"
 
 #include <exception>
 #include <iostream>
@@ -12,8 +13,7 @@
 #include <cstring>   // strerror
 #include <cerrno>    // errno
 #include <unistd.h>  // access
-
-using namespace std;
+#include <sstream>
 
 bool ensureDirExists(const std::string& path) {
     struct stat st{};
@@ -55,6 +55,41 @@ bool isInputComplete(const std::string& input) {
     }
 
     return balance <= 0;
+}
+
+void PointToSyntaxError(const std::string& text, int line, int col)
+{
+  stringstream ss( text );
+  std::string currentLine;
+  int currentLineNumber = 0;
+  bool markerPlaced = false;
+ 
+  std::cout << "File \"<stdin>\", line " << std::to_string( line ) << std::endl;
+  while( getline(ss, currentLine) )
+  {
+      // Проверяем, нужно ли поставить маркер
+      if (currentLineNumber == line && !markerPlaced)
+      {
+          // Выводим текущую строку
+          std::cout << currentLine << std::endl;
+          // Проверяем, не выходит ли col за пределы строки
+          if (col <= currentLine.size())
+          {
+              std::cout << string(col, ' ') << "^" << std::endl;
+              std::cout << "SyntaxError: invalid syntax" << std::endl;
+              markerPlaced = true;
+          }
+      }
+      
+      currentLineNumber++;
+  }
+  
+  // Если маркер не был помещен и line существует
+  if (!markerPlaced && line < currentLineNumber)
+  {
+      std::cout << string(col, ' ') << "^" << endl;
+      std::cout << "SyntaxError: invalid syntax" << std::endl;
+  }
 }
 
 int main()
@@ -193,17 +228,19 @@ int main()
         {
             if (!buffer.empty())
             {
-                add_history(buffer.c_str());
-
+               add_history(buffer.c_str());
                try 
                {
-                 NaiveStackInterpreter naive_stack_interpreter;
-                 auto result0 = naive_stack_interpreter.eval( buffer.c_str() );
+                 Interpreter naive_stack_machine;
+                 auto result0 = naive_stack_machine.eval( buffer.c_str() );
                  std::cout << result0 << std::endl;
                } 
-               catch (const std::exception& e) 
+               catch (const SyntaxException& e) 
                {
-                  std::cout << "error: " << e.what() << "\n";
+                  const auto& stack = e.stack();
+                  const auto& last_node = *stack.rbegin();
+                  const auto last_token = last_node->lexical_tokens().at(0);
+                  PointToSyntaxError( buffer, last_token.line, last_token.col ); 
                }
 
                 buffer.clear();

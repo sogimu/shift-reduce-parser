@@ -5,16 +5,10 @@
 #include "syntax_node_empty_visitor.h"
 #include "terminals/name_syntax_node.h"
 
-FunctionCallSyntaxNode::FunctionCallSyntaxNode()
-   : ISyntaxNode{ Token_Type::FUNCTION_CALL }
-{
-}
-
 FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name )
    : ISyntaxNode{ Token_Type::FUNCTION_CALL }
    , mName{ name }
 {
-   // add_back( name );
 }
 
 FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments )
@@ -23,14 +17,17 @@ FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name, const s
 {
    for( const auto& argument : arguments )
    {
-      // ISyntaxNodeSP child = argument;
-      //
-      // if( IsNode< NameSyntaxNode >( argument ) )
-      // {
-      //    const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
-      //    child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
-      // }
+      add_back( argument );
+   }
+}
 
+FunctionCallSyntaxNode::FunctionCallSyntaxNode( const NameSyntaxNodeSP& name_syntax_node, const std::vector< ISyntaxNodeSP >& arguments_syntax_nodes )
+   : ISyntaxNode{ Token_Type::FUNCTION_CALL }
+   , mName{ name_syntax_node->value() }
+{
+   add_back(name_syntax_node);
+   for( const auto& argument : arguments_syntax_nodes )
+   {
       add_back( argument );
    }
 }
@@ -47,6 +44,8 @@ bool FunctionCallSyntaxNode::compare( const ISyntaxNode& node ) const
    handlers.function_call_syntax_node = [ this, &is_equal ]( const FunctionCallSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
+         return;
+      if( node->lexical_tokens() != this->lexical_tokens() )
          return;
       for( size_t i = 0; i < Children().size(); ++i )
       {

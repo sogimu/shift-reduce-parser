@@ -7,11 +7,6 @@
 #include "terminals/name_syntax_node.h"
 #include "utils.h"
 
-FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode()
-   : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
-{
-}
-
 FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name )
    : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
    , mName{ name }
@@ -21,6 +16,25 @@ FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name 
 FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope )
    : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
    , mName{ name }
+{
+   for( const auto& argument : arguments )
+   {
+      ISyntaxNodeSP child = argument;
+
+      if( check_type< NameSyntaxNode >( argument ) )
+      {
+         const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
+         child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
+      }
+
+      add_back( child );
+   }
+   add_back( scope );
+}
+
+FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope )
+   : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
+   , mName{ name_syntax_node->value() }
 {
    for( const auto& argument : arguments )
    {
@@ -49,6 +63,8 @@ bool FunctionStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    handlers.function_statment_syntax_node = [ this, &is_equal ]( const FunctionStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
+         return;
+      if( node->lexical_tokens() != this->lexical_tokens() )
          return;
       for( size_t i = 0; i < Children().size(); ++i )
       {
@@ -83,4 +99,9 @@ ScopeSyntaxNodeSP FunctionStatmentSyntaxNode::scope() const
 std::vector< NameSyntaxNodeSP > FunctionStatmentSyntaxNode::arguments() const
 {
    return {};
+}
+
+std::vector< LexicalTokens::LexicalToken > FunctionStatmentSyntaxNode::lexical_tokens() const
+{ 
+    return mTokens; 
 }

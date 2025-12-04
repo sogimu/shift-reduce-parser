@@ -11,21 +11,22 @@
 template< typename T >
 concept DerivedFromInterface = std::derived_from< T, ISyntaxNode >;
 
-template< DerivedFromInterface... Nodes, typename Container >
+template<DerivedFromInterface... Nodes, typename Container>
 bool IsLastNodesIs(
-   const Container& container,
-   const std::function< ISyntaxNodeSP( const typename Container::value_type& ) >& delegate = []( const typename Container::value_type& value ) { return value; } )
+    const Container& container,
+    const std::function<ISyntaxNodeSP(const typename Container::value_type&)>& delegate = 
+        [](const typename Container::value_type& value) { return value; })
 {
-   if( sizeof...( Nodes ) > container.size() )
-      return false;
+    constexpr size_t nodesCount = sizeof...(Nodes);
+    if (nodesCount > container.size())
+        return false;
 
-   return std::apply(
-      [ & ]( auto&&... args )
-      {
-         size_t index = container.size() - sizeof...( args );
-         return ( ( dynamic_cast< std::decay_t< decltype( args ) >* >( delegate( container[ index++ ] ).get() ) ) && ... );
-      },
-      std::tuple< Nodes... >() );
+    size_t startIndex = container.size() - nodesCount;
+    
+    return [&]<std::size_t... Is>(std::index_sequence<Is...>)
+    {
+        return ((dynamic_cast<Nodes*>(delegate(container[startIndex + Is]).get()) != nullptr) && ...);
+    }(std::make_index_sequence<nodesCount>{});
 }
 
 template< DerivedFromInterface Node >

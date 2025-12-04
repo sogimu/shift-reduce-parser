@@ -2,10 +2,16 @@
 
 #include "syntax_node_empty_visitor.h"
 
-PrintSyntaxNode::PrintSyntaxNode()
-   : ISyntaxNode( Token_Type::PRINT )
+PrintSyntaxNode::PrintSyntaxNode( const PrintSyntaxNode& node )
+   : ITerminalSyntaxNode( Token_Type::PRINT, node.lexical_tokens() )
 {
 }
+
+PrintSyntaxNode::PrintSyntaxNode( const LexicalTokens::LexicalToken& token )
+   : ITerminalSyntaxNode{ Token_Type::PRINT, token }
+{
+}
+
 void PrintSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );

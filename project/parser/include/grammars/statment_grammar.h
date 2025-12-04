@@ -5,9 +5,11 @@
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/print_statment_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
+#include "syntax_node_progress_visitor.h"
 #include "terminals/close_curly_bracket_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
 #include "utils.h"
+#include "progress_counter.h"
 
 class Statment : public IGrammar
 {
@@ -38,214 +40,337 @@ public:
 
       // IF_STATMENT
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            IfStatmentSyntaxNodeSP if_statment_syntax_node;
-
-            State state = State::START;
-
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.if_statment_syntax_node = [ &if_statment_syntax_node, &state, &lookahead ]( const IfStatmentSyntaxNodeSP& node )
+            const size_t minimal_size = 1;
+            const size_t minimal_steps_number = 1;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &lookahead, &minimal_size]( size_t n )->PlanOrProgress
             {
-               if( state == State::START )
-               {
-                  if_statment_syntax_node = node;
-                  state = State::IF_STATMENT;
-                  state = State::FINISH;
-               }
-            };
+                IfStatmentSyntaxNodeSP if_statment_syntax_node;
 
-            iterate_over_last_n_nodes( stack, 1, handlers );
+                SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+                using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                using HandlerReturn = Handlers::HandlerReturn;
+                using Impact = Handlers::Impact;
+                handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn 
+                { 
+                    return { State::ERROR, Impact::ERROR };
+                };
+                handlers.if_statment_syntax_node = [ &if_statment_syntax_node, &lookahead ]( const State& state, const IfStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::START )
+                   {
+                      if_statment_syntax_node = node;
+                      return { State::FINISH, Impact::MOVE };
+                   }
+                    return { state, Impact::ERROR };
+                };
 
-            if( state != State::FINISH )
-               return {};
+                auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            Plan plan;
-            plan.to_remove.nodes.push_back( if_statment_syntax_node );
+                PlanOrProgress plan_or_progress;
+                if( iteration_result.state == State::ERROR )
+                {
+                    plan_or_progress = Progress{ .readiness = 0 };
+                }  
+                else if( iteration_result.state == State::FINISH )
+                {
+                    Plan plan;
+                    plan.to_remove.nodes.push_back( if_statment_syntax_node );
 
-            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( if_statment_syntax_node );
-            plan.to_add.nodes.push_back( expression_syntax_node );
-            return plan;
+                    const auto& statment_syntax_node = std::make_shared< StatmentSyntaxNode >( if_statment_syntax_node );
+                    plan.to_add.nodes.push_back( statment_syntax_node );
+                    plan_or_progress = plan;
+                }
+                else
+                {
+                    plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                }
+                return plan_or_progress;
+            });
          } );
-      
+
 
       // WHILE_STATMENT
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            WhileStatmentSyntaxNodeSP while_statment_syntax_node;
-
-            State state = State::START;
-
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.while_statment_syntax_node = [ &while_statment_syntax_node, &state ]( const WhileStatmentSyntaxNodeSP& node )
+            const size_t minimal_size = 1;
+            const size_t minimal_steps_number = 1;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &lookahead, &minimal_size]( size_t n )->PlanOrProgress
             {
-               if( state == State::START )
-               {
-                  while_statment_syntax_node = node;
-                  state = State::WHILE_STATMENT;
-                  state = State::FINISH;
-               }
-            };
+                WhileStatmentSyntaxNodeSP while_statment_syntax_node;
 
-            iterate_over_last_n_nodes( stack, 1, handlers );
+                SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+                using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                using HandlerReturn = Handlers::HandlerReturn;
+                using Impact = Handlers::Impact;
+                handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn 
+                { 
+                    return { State::ERROR, Impact::ERROR };
+                };
+                handlers.while_statment_syntax_node = [ &while_statment_syntax_node ]( const State& state, const WhileStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::START )
+                   {
+                      while_statment_syntax_node = node;
+                      return { State::FINISH, Impact::MOVE };
+                   }
+                    return { state, Impact::ERROR };
+                };
 
-            if( state != State::FINISH )
-               return {};
+                auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            Plan plan;
-            plan.to_remove.nodes.push_back( while_statment_syntax_node );
+                PlanOrProgress plan_or_progress;
+                if( iteration_result.state == State::ERROR )
+                {
+                    plan_or_progress = Progress{ .readiness = 0 };
+                }  
+                else if( iteration_result.state == State::FINISH )
+                {
+                    Plan plan;
+                    plan.to_remove.nodes.push_back( while_statment_syntax_node );
 
-            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( while_statment_syntax_node );
-            plan.to_add.nodes.push_back( expression_syntax_node );
-            return plan;
+                    const auto& statment_syntax_node = std::make_shared< StatmentSyntaxNode >( while_statment_syntax_node );
+                    plan.to_add.nodes.push_back( statment_syntax_node );
+                    plan_or_progress = plan;
+                }
+                else
+                {
+                    plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                }
+                return plan_or_progress;
+            });
          } );
 
       // FUNCTION_STATMENT
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            FunctionStatmentSyntaxNodeSP function_syntax_node;
-
-            State state = State::START;
-
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.function_statment_syntax_node = [ &function_syntax_node, &state ]( const FunctionStatmentSyntaxNodeSP& node )
+            const size_t minimal_size = 1;
+            const size_t minimal_steps_number = 1;
+            return find_grammar_matching_progress( stack, minimal_size, [ &stack, &lookahead, &minimal_size ]( size_t n ) -> PlanOrProgress
             {
-               if( state == State::START )
-               {
-                  function_syntax_node = node;
-                  state = State::FUNCTION_STATMENT;
-                  state = State::FINISH;
-               }
-            };
+                FunctionStatmentSyntaxNodeSP function_syntax_node;
 
-            iterate_over_last_n_nodes( stack, 1, handlers );
+                SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+                using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                using HandlerReturn = Handlers::HandlerReturn;
+                using Impact = Handlers::Impact;
+                handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn 
+                { 
+                    return { State::ERROR, Impact::ERROR };
+                };
 
-            if( state != State::FINISH )
-               return {};
+                handlers.function_statment_syntax_node = [ &function_syntax_node ]( const State& state, const FunctionStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                    if( state == State::START )
+                    {
+                        function_syntax_node = node;
+                        return { State::FINISH, Impact::MOVE };
+                    }
+                    return { state, Impact::ERROR };
+                };
+                
+                auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            Plan plan;
-            plan.to_remove.nodes.push_back( function_syntax_node );
+                PlanOrProgress plan_or_progress;
+                if( iteration_result.state == State::ERROR )
+                {
+                    plan_or_progress = Progress{ .readiness = 0 };
+                }  
+                else if( iteration_result.state == State::FINISH )
+                {
+                    Plan plan;
+                    plan.to_remove.nodes.push_back( function_syntax_node );
 
-            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( function_syntax_node );
-            plan.to_add.nodes.push_back( expression_syntax_node );
-            return plan;
+                    const auto& statment_syntax_node = std::make_shared< StatmentSyntaxNode >( function_syntax_node );
+                    plan.to_add.nodes.push_back( statment_syntax_node );
+                    plan_or_progress = plan;
+                }
+                else
+                {
+                    plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                }
+                return plan_or_progress;
+            });
          } );
 
-      // FUNCTION_CALL
-      mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
-         {
-            FunctionCallSyntaxNodeSP function_call_syntax_node;
-
-            State state = State::START;
-
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.function_call_syntax_node = [ &function_call_syntax_node, &state ]( const FunctionCallSyntaxNodeSP& node )
-            {
-               if( state == State::START )
-               {
-                  function_call_syntax_node = node;
-                  state = State::FUNCTION_CALL;
-               }
-            };
-
-            iterate_over_last_n_nodes( stack, 1, handlers );
-
-            if( state != State::FINISH )
-               return {};
-
-            Plan plan;
-            plan.to_remove.nodes.push_back( function_call_syntax_node );
-
-            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( function_call_syntax_node );
-            plan.to_add.nodes.push_back( expression_syntax_node );
-            return plan;
-         } );
+      // // FUNCTION_CALL
+      // mProductions.emplace_back(
+      //    [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
+      //    {
+      //       const size_t minimal_size = 1;
+      //       const size_t minimal_steps_number = 1;
+      //       return find_grammar_matching_progress(stack, minimal_size, [&stack, &lookahead, &minimal_size]( size_t n )->PlanOrProgress
+      //       {
+      //           FunctionCallSyntaxNodeSP function_call_syntax_node;
+      //
+      //           SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+      //           using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+      //           using HandlerReturn = Handlers::HandlerReturn;
+      //           using Impact = Handlers::Impact;
+      //           handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn 
+      //           { 
+      //               return { State::ERROR, Impact::ERROR };
+      //           };
+      //
+      //           handlers.function_call_syntax_node = [ &function_call_syntax_node ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+      //           {
+      //               if( state == State::START )
+      //               {
+      //                   function_call_syntax_node = node;
+      //                   return { State::FINISH, Impact::MOVE };
+      //               }
+      //               return { state, Impact::ERROR };
+      //           };
+      //
+      //           auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
+      //
+      //           PlanOrProgress plan_or_progress;
+      //           if( iteration_result.state == State::ERROR )
+      //           {
+      //               plan_or_progress = Progress{ .readiness = 0 };
+      //           }  
+      //           else if( iteration_result.state == State::FINISH )
+      //           {
+      //               Plan plan;
+      //               plan.to_remove.nodes.push_back( function_call_syntax_node );
+      //
+      //               const auto& statment_syntax_node = std::make_shared< StatmentSyntaxNode >( function_call_syntax_node );
+      //               plan.to_add.nodes.push_back( statment_syntax_node );
+      //               plan_or_progress = plan;
+      //           }
+      //           else
+      //           {
+      //               plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+      //           }
+      //           return plan_or_progress;
+      //       });
+      //
+      //    } );
 
       // PRINT_STATMENT
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            PrintStatmentSyntaxNodeSP print_statment_syntax_node;
-
-            State state = State::START;
-
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.print_statment_syntax_node = [ &print_statment_syntax_node, &state ]( const PrintStatmentSyntaxNodeSP& node )
+            const size_t minimal_size = 1;
+            const size_t minimal_steps_number = 1;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_size]( size_t n )->PlanOrProgress
             {
-               if( state == State::START )
-               {
-                  print_statment_syntax_node = node;
-                  state = State::PRINT_STATMENT;
-                  state = State::FINISH;
-               }
-            };
+                PrintStatmentSyntaxNodeSP print_statment_syntax_node;
 
-            iterate_over_last_n_nodes( stack, 1, handlers );
+                SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+                using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                using HandlerReturn = Handlers::HandlerReturn;
+                using Impact = Handlers::Impact;
+                handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn 
+                { 
+                    return { State::ERROR, Impact::ERROR };
+                };
+                handlers.print_statment_syntax_node = [ &print_statment_syntax_node ]( const State& state, const PrintStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::START )
+                   {
+                      print_statment_syntax_node = node;
+                      return { State::FINISH, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
 
-            if( state != State::FINISH )
-               return {};
+                auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            Plan plan;
-            plan.to_remove.nodes.push_back( print_statment_syntax_node );
+                PlanOrProgress plan_or_progress;
+                if( iteration_result.state == State::ERROR )
+                {
+                    plan_or_progress = Progress{ .readiness = 0 };
+                }  
+                else if( iteration_result.state == State::FINISH )
+                {
+                    Plan plan;
+                    plan.to_remove.nodes.push_back( print_statment_syntax_node );
 
-            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( print_statment_syntax_node );
-            plan.to_add.nodes.push_back( expression_syntax_node );
-            return plan;
+                    const auto& statment_syntax_node = std::make_shared< StatmentSyntaxNode >( print_statment_syntax_node );
+                    plan.to_add.nodes.push_back( statment_syntax_node );
+                    plan_or_progress = plan;
+                }
+                else
+                {
+                    plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                }
+                return plan_or_progress;
+            });
          } );
 
       // RETURN_STATMENT
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            ReturnStatmentSyntaxNodeSP return_statment_syntax_node;
-
-            State state = State::START;
-
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.return_statment_syntax_node = [ &return_statment_syntax_node, &state ]( const ReturnStatmentSyntaxNodeSP& node )
+            const size_t minimal_size = 1;
+            const size_t minimal_steps_number = 1;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_size]( size_t n )->PlanOrProgress
             {
-               if( state == State::START )
-               {
-                  return_statment_syntax_node = node;
-                  state = State::RETURN_STATMENT;
-                  state = State::FINISH;
-               }
-            };
+                ReturnStatmentSyntaxNodeSP return_statment_syntax_node;
 
-            iterate_over_last_n_nodes( stack, 1, handlers );
+                SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+                using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                using HandlerReturn = Handlers::HandlerReturn;
+                using Impact = Handlers::Impact;
+                handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn 
+                { 
+                    return { State::ERROR, Impact::ERROR };
+                };
 
-            if( state != State::FINISH )
-               return {};
+                handlers.return_statment_syntax_node = [ &return_statment_syntax_node ]( const State& state,  const ReturnStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::START )
+                   {
+                      return_statment_syntax_node = node;
+                      return { State::FINISH, Impact::MOVE };
+                   }
+                    return { state, Impact::ERROR };
+                };
+                auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            Plan plan;
-            plan.to_remove.nodes.push_back( return_statment_syntax_node );
+                PlanOrProgress plan_or_progress;
+                if( iteration_result.state == State::ERROR )
+                {
+                    plan_or_progress = Progress{ .readiness = 0 };
+                }  
+                else if( iteration_result.state == State::FINISH )
+                {
+                    Plan plan;
+                    plan.to_remove.nodes.push_back( return_statment_syntax_node );
 
-            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( return_statment_syntax_node );
-            plan.to_add.nodes.push_back( expression_syntax_node );
-            return plan;
+                    const auto& statment_syntax_node = std::make_shared< StatmentSyntaxNode >( return_statment_syntax_node );
+                    plan.to_add.nodes.push_back( statment_syntax_node );
+                    plan_or_progress = plan;
+                }
+                else
+                {
+                    plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                }
+                return plan_or_progress;
+            });
+
          } );
 
       // F|BIN_EXPR|UN_EXPR|NAME [SEMICOLON, CLOSE_CURLY_BRACKET]
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
+            ProgressCounter progress_counter{1};
             ISyntaxNodeSP f;
             SemicolonSyntaxNodeSP semicolon;
 
             State state = State::START;
 
             SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.f_syntax_node = [ &f, &state, &lookahead ]( const FSyntaxNodeSP& node )
+            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) 
+            { 
+                state = State::ERROR;
+            };
+            handlers.f_syntax_node = [ &f, &state, &lookahead, &progress_counter ]( const FSyntaxNodeSP& node )
             {
                if( state == State::START )
                {
@@ -255,6 +380,7 @@ public:
                       f = node;
                       state = State::F;
                       state = State::FINISH;
+                     progress_counter.Step();
                   }
                }
             };
@@ -313,145 +439,204 @@ public:
 
             iterate_over_last_n_nodes( stack, 1, handlers );
 
-            if( state != State::FINISH )
-               return {};
+            if( state == State::ERROR )
+            {
+                return Progress{ .readiness = 0.0 };
+            }  
+            else if( state != State::FINISH )
+            {
+               return Progress{ .readiness = progress_counter.Status() };
+            }
 
             Plan plan;
             plan.to_remove.nodes.push_back( f );
 
-            const auto& expression_node = std::make_shared< StatmentSyntaxNode >();
-            expression_node->add_back(f);
-            plan.to_add.nodes.push_back( expression_node );
+            const auto& statment_node = std::make_shared< StatmentSyntaxNode >( f );
+            statment_node->add_back(f);
+            plan.to_add.nodes.push_back( statment_node );
             return plan;
          } );
 
       // VARIBLE_ASSIGMENT_STATMENT
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            VaribleAssigmentStatmentSyntaxNodeSP varible_assigment_statment_syntax_node;
+            const size_t minimal_size = 1;
+            const size_t minimal_steps_number = 1;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_size]( size_t n )->PlanOrProgress
+                                                        {
+                                                            VaribleAssigmentStatmentSyntaxNodeSP varible_assigment_statment_syntax_node;
 
-            State state = State::START;
+                                                            SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+                                                            using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                                                            using HandlerReturn = Handlers::HandlerReturn;
+                                                            using Impact = Handlers::Impact;
+                                                            handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn 
+                                                            { 
+                                                                return { State::ERROR, Impact::ERROR };
+                                                            };
+                                                            handlers.varible_assigment_statment_syntax_node = [ &varible_assigment_statment_syntax_node ]( const State& state, const VaribleAssigmentStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                                if( state == State::START )
+                                                                {
+                                                                    varible_assigment_statment_syntax_node = node;
+                                                                    return { State::FINISH, Impact::MOVE };
+                                                                }
+                                                                return { state, Impact::ERROR };
+                                                            };
 
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.varible_assigment_statment_syntax_node = [ &varible_assigment_statment_syntax_node, &state ]( const VaribleAssigmentStatmentSyntaxNodeSP& node )
-            {
-               if( state == State::START )
-               {
-                  varible_assigment_statment_syntax_node = node;
-                  state = State::VARIBLE_ASSIGMENT_STATMENT;
-                  state = State::FINISH;
-               }
-            };
+                                                            auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            iterate_over_last_n_nodes( stack, 1, handlers );
+                                                            PlanOrProgress plan_or_progress;
+                                                            if( iteration_result.state == State::ERROR )
+                                                            {
+                                                                plan_or_progress = Progress{ .readiness = 0 };
+                                                            }  
+                                                            else if( iteration_result.state == State::FINISH )
+                                                            {
+                                                                Plan plan;
+                                                                plan.to_remove.nodes.push_back( varible_assigment_statment_syntax_node );
 
-            if( state != State::FINISH )
-               return {};
-
-            Plan plan;
-            plan.to_remove.nodes.push_back( varible_assigment_statment_syntax_node );
-
-            const auto& expression_syntax_node = std::make_shared< StatmentSyntaxNode >( varible_assigment_statment_syntax_node );
-            plan.to_add.nodes.push_back( expression_syntax_node );
-            return plan;
+                                                                const auto& statment_syntax_node = std::make_shared< StatmentSyntaxNode >( varible_assigment_statment_syntax_node );
+                                                                plan.to_add.nodes.push_back( statment_syntax_node );
+                                                                plan_or_progress = plan;
+                                                            }
+                                                            else
+                                                            {
+                                                                plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                                                            }
+                                                            return plan_or_progress;
+                                                        });
          } );
 
       // STATMENT SEMICOLON
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            StatmentSyntaxNodeSP statment;
-            SemicolonSyntaxNodeSP semicolon;    
+            const size_t minimal_size = 2;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_size]( size_t n )->PlanOrProgress
+                                                            {
+                                                            StatmentSyntaxNodeSP statment;
+                                                            SemicolonSyntaxNodeSP semicolon;    
 
-            State state = State::START;
+                                                            SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+                                                            using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                                                            using HandlerReturn = Handlers::HandlerReturn;
+                                                            using Impact = Handlers::Impact;
+                                                            handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn { return { state, Impact::ERROR }; };
+                                                            handlers.statment_syntax_node = [ &statment ]( const State& state, const StatmentSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::START )
+                                                               {
+                                                                  statment = node;
+                                                                  return {State::STATMENT, Impact::MOVE};
+                                                               }
+                                                               return {state, Impact::NO_MOVE};
+                                                            };
+                                                            
+                                                            handlers.semicolon_syntax_node = [ &semicolon ]( const State& state, const SemicolonSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::STATMENT )
+                                                               {
+                                                                  semicolon = node;
+                                                                  return { State::FINISH, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
 
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.statment_syntax_node = [ &statment, &state ]( const StatmentSyntaxNodeSP& node )
-            {
-               if( state == State::START )
-               {
-                  statment = node;
-                  state = State::STATMENT;
-               }
-            };
-            
-            handlers.semicolon_syntax_node = [ &semicolon, &state ]( const SemicolonSyntaxNodeSP& node )
-            {
-               if( state == State::STATMENT )
-               {
-                  semicolon = node;
-                  state = State::SEMICOLON;
-                  state = State::FINISH;
-               }
-            };
+                                                            auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            iterate_over_last_n_nodes( stack, 2, handlers );
+                                                            PlanOrProgress plan_or_progress;
+                                                            if( iteration_result.state == State::ERROR )
+                                                            {
+                                                                plan_or_progress = Progress{ .readiness = 0 };
+                                                            }  
+                                                            else if( iteration_result.state == State::FINISH )
+                                                            {
+                                                                Plan plan;
+                                                                plan.to_remove.nodes.push_back( statment );
+                                                                plan.to_remove.nodes.push_back( semicolon );
+                                                                statment->add_lexical_token( semicolon->lexical_tokens().at(0) );
 
-            if( state != State::FINISH )
-               return {};
-
-            Plan plan;
-            plan.to_remove.nodes.push_back( statment );
-            plan.to_remove.nodes.push_back( semicolon );
-
-            plan.to_add.nodes.push_back( statment );
-            return plan;
+                                                                plan.to_add.nodes.push_back( statment );
+                                                                plan_or_progress = plan;
+                                                            }
+                                                            else {
+                                                                plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                                                            }
+                                                            return plan_or_progress;
+                                                            });
          } );
 
       // BOL STATMENT EOL
       mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
             BolSyntaxNodeSP bol;
-            StatmentSyntaxNodeSP expression;
+            StatmentSyntaxNodeSP statment;
             EolSyntaxNodeSP eol;
+            
+            const size_t minimal_size = 3;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_size]( size_t n )->PlanOrProgress
+                                                            {
+                                                            BolSyntaxNodeSP bol;
+                                                            StatmentSyntaxNodeSP statment;
+                                                            EolSyntaxNodeSP eol;
 
-            State state = State::START;
+                                                            SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+                                                            using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                                                            using HandlerReturn = Handlers::HandlerReturn;
+                                                            using Impact = Handlers::Impact;
+                                                            handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn { return { state, Impact::ERROR }; };
+                                                            handlers.bol_syntax_node = [ &bol ]( const State& state, const BolSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::START )
+                                                               {
+                                                                  bol = node;
+                                                                  return {State::BOL, Impact::MOVE};
+                                                               }
+                                                               return {state, Impact::ERROR};
+                                                            };
+                                                            handlers.statment_syntax_node = [ &statment ]( const State& state, const StatmentSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::BOL )
+                                                               {
+                                                                  statment = node;
+                                                                  return {State::STATMENT, Impact::MOVE};
+                                                               }
+                                                               return {state, Impact::ERROR};
+                                                            };
+                                                            handlers.eol_syntax_node = [ &eol ]( const State& state, const EolSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::STATMENT )
+                                                               {
+                                                                  eol = node;
+                                                                  return {State::FINISH, Impact::MOVE};
+                                                               }
+                                                               return {state, Impact::ERROR};
+                                                            };
+                                                            auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            handlers.bol_syntax_node = [ &bol, &state ]( const BolSyntaxNodeSP& node )
-            {
-               if( state == State::START )
-               {
-                  bol = node;
-                  state = State::BOL;
-               }
-            };
-            handlers.statment_syntax_node = [ &expression, &state ]( const StatmentSyntaxNodeSP& node )
-            {
-               if( state == State::BOL )
-               {
-                  expression = node;
-                  state = State::STATMENT;
-               }
-            };
-            handlers.eol_syntax_node = [ &eol, &state ]( const EolSyntaxNodeSP& node )
-            {
-               if( state == State::STATMENT )
-               {
-                  eol = node;
-                  state = State::EOL;
-                  state = State::FINISH;
-               }
-            };
+                                                            PlanOrProgress plan_or_progress;
+                                                            if( iteration_result.state == State::ERROR )
+                                                            {
+                                                                plan_or_progress = Progress{ .readiness = 0 };
+                                                            }  
+                                                            else if( iteration_result.state == State::FINISH )
+                                                            {
+                                                                Plan plan;
+                                                                plan.to_remove.nodes.push_back( bol );
+                                                                plan.to_remove.nodes.push_back( statment );
+                                                                plan.to_remove.nodes.push_back( eol );
 
-            iterate_over_last_n_nodes( stack, 3, handlers );
-
-            if( state != State::FINISH )
-               return {};
-
-            Plan plan;
-            plan.to_remove.nodes.push_back( bol );
-            plan.to_remove.nodes.push_back( expression );
-            plan.to_remove.nodes.push_back( eol );
-
-            // const auto& scope_node = std::make_shared< ScopeSyntaxNode >( expressions );
-            plan.to_add.nodes.push_back( expression );
-            return plan;
+                                                                plan.to_add.nodes.push_back( statment );
+                                                                plan_or_progress = plan;
+                                                            }
+                                                            else {
+                                                                plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                                                            }
+                                                            return plan_or_progress;
+                                                            });
          } );
    }
 };

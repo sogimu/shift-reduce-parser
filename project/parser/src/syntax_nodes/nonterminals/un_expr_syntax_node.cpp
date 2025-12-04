@@ -10,22 +10,18 @@
 #include <cstddef>
 #include <vector>
 
-UnExprSyntaxNode::UnExprSyntaxNode()
-   : ISyntaxNode{ Token_Type::UnExpr }
-{
-}
-
 UnExprSyntaxNode::UnExprSyntaxNode( const Type& type )
    : ISyntaxNode{ Token_Type::UnExpr }
    , mType{ type }
 {
 }
 
-UnExprSyntaxNode::UnExprSyntaxNode( const Type& type, const ISyntaxNodeSP& f0 )
+UnExprSyntaxNode::UnExprSyntaxNode( const Type& type, const ISyntaxNodeSP& argument, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::UnExpr }
    , mType{ type }
 {
-   add_back( f0 );
+   mTokens = lexical_tokens;
+   add_back( argument );
 }
 
 UnExprSyntaxNode::Type UnExprSyntaxNode::type() const
@@ -66,6 +62,8 @@ bool UnExprSyntaxNode::compare( const ISyntaxNode& node ) const
    handlers.un_expr_syntax_node = [ this, &is_equal ]( const UnExprSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
+         return;
+      if( node->lexical_tokens() != this->lexical_tokens() )
          return;
       for( size_t i = 0; i < Children().size(); ++i )
       {

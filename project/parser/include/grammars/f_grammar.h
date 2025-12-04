@@ -19,9 +19,9 @@ public:
    {
       enum class State
       {
+         ERROR,
          START,
          FINISH,
-         ERROR,
          BOL,
          EOL,
          FIRST_MINUS,
@@ -34,15 +34,17 @@ public:
 
       // NUMBER [PLUS,MINUS,MULTIPLY,DIVISION,SEMICOLON,CLOSE_CIRCLE_BRACKET,COMMA,EQUAL,LESS,MORE]
       mProductions.emplace_back(
-         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
             NumberSyntaxNodeSP number;
+
+            ProgressCounter progress_counter{1};
 
             State state = State::START;
             SyntaxNodeEmptyVisitor::Handlers handlers;
             handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
              handlers.number_syntax_node =
-                [ &number, &state, &lookahead ]( const NumberSyntaxNodeSP& node )
+                [ &number, &state, &lookahead, &progress_counter ]( const NumberSyntaxNodeSP& node )
              {
                 if( state == State::START )
                 {
@@ -62,6 +64,7 @@ public:
                         check_type<MoreSyntaxNode>( lookahead ) ) )
                    {
                      number = node;
+                     progress_counter.Step();
                      state = State::FINISH;
                    }
                 }
@@ -69,7 +72,7 @@ public:
 
             iterate_over_last_n_nodes( stack, 1, handlers );
             if( state != State::FINISH )
-               return {};
+               return Progress{ .readiness = progress_counter.Status() };
 
             Plan plan;
             plan.to_remove.nodes.push_back( number );

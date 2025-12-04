@@ -4,11 +4,15 @@ project(naive_stack_interpreter VERSION 0.0.1 LANGUAGES CXX)
 set(HEADERS
     include/varible_store.h
     include/function_store.h
-    include/naive_stack_interpreter.h
+    include/control_flow_graph.h
+    include/stack_machine.h
+    include/interpreter.h
 )
 
 set(SOURCES
-    src/naive_stack_interpreter.cpp
+    src/control_flow_graph.cpp
+    src/stack_machine.cpp
+    src/interpreter.cpp
 )
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
@@ -17,7 +21,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   "include" 
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE parser )
+target_link_libraries(${PROJECT_NAME} PUBLIC parser )
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 

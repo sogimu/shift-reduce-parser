@@ -2,19 +2,18 @@
 
 #include "enums.h"
 #include "i_syntax_node.h"
+#include "i_terminal_syntax_node.h"
 
-#include <memory>
+#include "lexical_tokens.h"
 
 class ISyntaxNodeVisitor;
 
-class EolSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< EolSyntaxNode >
+class EolSyntaxNode : public ITerminalSyntaxNode, public std::enable_shared_from_this< EolSyntaxNode >
 {
 public:
-   EolSyntaxNode()
-      : ISyntaxNode( Token_Type::EOL )
-   {
-   }
-
+   EolSyntaxNode( const EolSyntaxNode& node );
+   EolSyntaxNode( LexicalTokens::LexicalToken token );
+   
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 };
 

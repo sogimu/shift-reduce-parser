@@ -1,5 +1,6 @@
 #pragma once
 
+#include "lexical_tokens.h"
 #include <string>
 
 #include "i_syntax_node.h"
@@ -20,9 +21,9 @@ public:
       GLOBAL,
       LOCAL
    };
-   VaribleAssigmentStatmentSyntaxNode( Context context = Context::GLOBAL );
-   VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, const ISyntaxNodeSP& node, Context context = Context::GLOBAL );
-   VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, Context context = Context::GLOBAL );
+   VaribleAssigmentStatmentSyntaxNode( const VaribleAssigmentStatmentSyntaxNode& node );
+   VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, const ISyntaxNodeSP& node, LexicalTokens::LexicalToken token, Context context = Context::GLOBAL );
+   VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, LexicalTokens::LexicalToken token, Context context = Context::GLOBAL );
 
    std::string name() const;
    // ComputationalExpressionSyntaxNodeSP source() const;
@@ -32,8 +33,12 @@ public:
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
 
+   std::vector< LexicalTokens::LexicalToken > lexical_tokens() const override;
+   void add_lexical_token(const LexicalTokens::LexicalToken& token);
+
 private:
-   Context mContext = Context::GLOBAL;
+    Context mContext = Context::GLOBAL;
+    std::vector< LexicalTokens::LexicalToken > mTokens;
 };
 
 using VaribleAssigmentStatmentSyntaxNodeSP = std::shared_ptr< VaribleAssigmentStatmentSyntaxNode >;

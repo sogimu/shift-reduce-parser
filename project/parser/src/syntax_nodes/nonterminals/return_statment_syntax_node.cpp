@@ -8,22 +8,15 @@
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 
-ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode()
-   : ISyntaxNode{ Token_Type::RETURN_STATMENT }
+ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode( const ReturnStatmentSyntaxNode& return_statment_syntax_node )
+   : ISyntaxNode{ return_statment_syntax_node }
 {
+   mTokens = return_statment_syntax_node.lexical_tokens();
 }
-
-ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode( const ISyntaxNodeSP& argument )
+ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode( const ISyntaxNodeSP& argument, const LexicalTokens::LexicalToken& lexical_tokens )
    : ISyntaxNode{ Token_Type::RETURN_STATMENT }
 {
-   // ISyntaxNodeSP child = argument;
-
-   // if( IsNode< NameSyntaxNode >( argument ) )
-   // {
-   //    const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
-   //    child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
-   // }
-
+   mTokens = { lexical_tokens };
    add_back( argument );
 }
 
@@ -39,6 +32,8 @@ bool ReturnStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    handlers.return_statment_syntax_node = [ this, &is_equal ]( const ReturnStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
+         return;
+      if( node->lexical_tokens() != this->lexical_tokens() )
          return;
       for( size_t i = 0; i < Children().size(); ++i )
       {

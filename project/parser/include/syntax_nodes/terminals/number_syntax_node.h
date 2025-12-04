@@ -2,27 +2,25 @@
 
 #include "enums.h"
 #include "i_syntax_node.h"
+#include "i_terminal_syntax_node.h"
 
+#include "lexical_tokens.h"
 #include <string>
 
 class ISyntaxNodeVisitor;
 
-class NumberSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< NumberSyntaxNode >
+class NumberSyntaxNode : public ITerminalSyntaxNode, public std::enable_shared_from_this< NumberSyntaxNode >
 {
 public:
-   NumberSyntaxNode( const std::string& text )
-      : ISyntaxNode{ Token_Type::INT }
-   {
-      mValue = std::stod( text );
-   }
+   NumberSyntaxNode( const NumberSyntaxNode& node );
 
-   int value() const
-   {
-      return mValue;
-   }
+   NumberSyntaxNode( const LexicalTokens::LexicalToken& token );
+
+   int value() const;
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 
+   bool compare( const ISyntaxNode& node ) const override;
 private:
    int mValue;
 };

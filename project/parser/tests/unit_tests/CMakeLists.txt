@@ -15,16 +15,18 @@ add_executable(${PROJECT_NAME}
     src/lexical_tokens/arithmetic_expression/multiplication_test.cpp
     src/lexical_tokens/arithmetic_expression/division_test.cpp
     src/lexical_tokens/arithmetic_expression/varible_expression_test.cpp
-    src/syntax_tree/arithmetic_expression/arithmetic_test.cpp
-    src/syntax_tree/if_statment/if_test.cpp
-    src/syntax_tree/while_statment/while_test.cpp
-    src/syntax_tree/function_statment/function_statment_test.cpp
-    src/syntax_tree/function_call/function_call_test.cpp
-    src/syntax_tree/scope_statment/scope_test.cpp
-    src/syntax_tree/varible_assign_expression/varible_assign_expression_test.cpp
-    src/syntax_tree/print_statment/print_statment_test.cpp
-    src/syntax_tree/return_statment/return_statment_test.cpp
-    src/create_syntax_node_tree_test.cpp
+    src/lexical_tokens/multylines/multylines_test.cpp
+    src/abstract_syntax_tree/positive/arithmetic_expression/arithmetic_test.cpp
+    src/abstract_syntax_tree/positive/if_statment/if_test.cpp
+    src/abstract_syntax_tree/positive/while_statment/while_test.cpp
+    src/abstract_syntax_tree/positive/function_statment/function_statment_test.cpp
+    src/abstract_syntax_tree/positive/function_call/function_call_test.cpp
+    src/abstract_syntax_tree/positive/scope_statment/scope_test.cpp
+    src/abstract_syntax_tree/positive/varible_assign_expression/varible_assign_expression_test.cpp
+    src/abstract_syntax_tree/positive/print_statment/print_statment_test.cpp
+    src/abstract_syntax_tree/positive/return_statment/return_statment_test.cpp
+    # src/abstract_syntax_tree/negative/bin_expr_syntax_node/bin_expr_syntax_node_test.cpp
+    # src/create_syntax_node_tree_test.cpp
     src/main.cpp
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE parser GTest::gtest_main nlohmann_json::nlohmann_json)

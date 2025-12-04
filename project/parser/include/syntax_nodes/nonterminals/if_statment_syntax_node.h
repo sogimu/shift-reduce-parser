@@ -14,8 +14,8 @@ using ConditionalExpressionSyntaxNodeSP = std::shared_ptr< ConditionalExpression
 class IfStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< IfStatmentSyntaxNode >
 {
 public:
-   IfStatmentSyntaxNode();
-   IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope );
+   IfStatmentSyntaxNode( const IfStatmentSyntaxNode& if_statment_syntax_node );
+   IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
@@ -23,6 +23,9 @@ public:
    // ConditionalExpressionSyntaxNodeSP conditional_expression() const;
    ScopeSyntaxNodeSP true_scope() const;
    ScopeSyntaxNodeSP false_scope() const;
+   std::vector< LexicalTokens::LexicalToken > lexical_tokens() const override;
+private:
+  std::vector< LexicalTokens::LexicalToken > mTokens;
 };
 
 using IfStatmentSyntaxNodeSP = std::shared_ptr< IfStatmentSyntaxNode >;

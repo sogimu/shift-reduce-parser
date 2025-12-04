@@ -31,109 +31,130 @@ public:
          MINUS,
          NUMBER,
          F,
-         ALLOWED,
-         NOT_ALLOWED
+         CORRECT_FIRST_NODE,
+         INCORRECT_FIRST_NODE
       };
 
-      // !F&&!BIN_EXPR|!UN_EXPR|!NAME|!FUNCTION_CALL MINUS F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL
+      // !F&&!BIN_EXPR | !UN_EXPR | !NAME | !FUNCTION_CALL MINUS F | BIN_EXPR | UN_EXPR | NAME | FUNCTION_CALL
       mProductions.emplace_back(
-         [  ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> std::optional< Plan >
+         [  ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
-            MinusSyntaxNodeSP minus;
-            ISyntaxNodeSP f;
+            const size_t minimal_size = 3;
+            const size_t minimal_steps_number = 3;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number]( size_t n )->PlanOrProgress
+                                                            {
+                                                            MinusSyntaxNodeSP minus;
+                                                            ISyntaxNodeSP f;
 
-            State state = State::START;
+                                                            const Stack& s = stack;
+                                                            SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
+                                                            using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                                                            using HandlerReturn = Handlers::HandlerReturn;
+                                                            using Impact = Handlers::Impact;
 
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.default_handler = [ &state ]( const ISyntaxNodeSP& )
-                                                 { state = State::ALLOWED; };
+                                                             handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn
+                                                             { 
+                                                                if( state == State::START )
+                                                                {
+                                                                  return { State::CORRECT_FIRST_NODE, Impact::NO_MOVE };
+                                                                }
+                                                                return { State::ERROR, Impact::ERROR };
+                                                             };
 
-           handlers.minus_syntax_node =
-              [ &minus, &f, &state ]( const MinusSyntaxNodeSP& node )
-           {
-              if( state == State::START )
-              {
-                 state = State::ALLOWED;
-                 minus = node;
-              }
-              else if( state == State::ALLOWED )
-              {
-                 state = State::MINUS;
-                 minus = node;
-              }
-           };
-           handlers.f_syntax_node =
-              [ &f, &state, &lookahead ]( const FSyntaxNodeSP& node )
-           {
-              if( state == State::START )
-              {
-                 f = node;
-                 state = State::NOT_ALLOWED;
-              }
-              else if( state == State::MINUS )
-              {
-                 state = State::F;
-                 f = node;
-                 state = State::FINISH;
-              }
-           };
-           handlers.bin_expr_syntax_node =
-              [ &f, &state, &lookahead ]( const BinExprSyntaxNodeSP& node )
-           {
-              if( state == State::START )
-              {
-                 f = node;
-                 state = State::NOT_ALLOWED;
-              }
-              else if( state == State::MINUS )
-              {
-                 state = State::F;
-                 f = node;
-                 state = State::FINISH;
-              }
-           };
-           handlers.name_syntax_node =
-              [ &f, &state, &lookahead ]( const NameSyntaxNodeSP& node )
-           {
-              if( state == State::START )
-              {
-                 f = node;
-                 state = State::NOT_ALLOWED;
-              }
-              else if( state == State::MINUS )
-              {
-                 state = State::F;
-                 f = node;
-                 state = State::FINISH;
-              }
-           };
-           handlers.function_call_syntax_node =
-              [ &f, &state, &lookahead ]( const FunctionCallSyntaxNodeSP& node )
-           {
-              if( state == State::START )
-              {
-                 f = node;
-                 state = State::NOT_ALLOWED;
-              }
-              else if( state == State::MINUS )
-              {
-                 state = State::F;
-                 f = node;
-                 state = State::FINISH;
-              }
-           };
-            iterate_over_last_n_nodes( stack, 3, handlers );
+                                                             handlers.minus_syntax_node =
+                                                                [ &minus ]( const State& state, const MinusSyntaxNodeSP& node ) -> HandlerReturn
+                                                             {
+                                                                if( state == State::START )
+                                                                {
+                                                                   minus = node;
+                                                                  return { State::CORRECT_FIRST_NODE, Impact::MOVE };
+                                                                }
+                                                                else if( state == State::CORRECT_FIRST_NODE )
+                                                                {
+                                                                   minus = node;
+                                                                  return { State::MINUS, Impact::MOVE };
+                                                                }
+                                                               return { state, Impact::ERROR };
+                                                             };
+                                                             handlers.f_syntax_node =
+                                                                [ &f ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
+                                                             {
+                                                                if( state == State::START )
+                                                                {
+                                                                  return { State::INCORRECT_FIRST_NODE, Impact::ERROR };
+                                                                }
+                                                                else if( state == State::MINUS )
+                                                                {
+                                                                  f = node;
+                                                                  return { State::FINISH, Impact::MOVE };
+                                                                }
+                                                                return { state, Impact::ERROR };
+                                                             };
+                                                             handlers.bin_expr_syntax_node =
+                                                                [ &f ]( const State& state, const BinExprSyntaxNodeSP& node ) -> HandlerReturn
+                                                             {
+                                                                if( state == State::START )
+                                                                {
+                                                                  return { State::INCORRECT_FIRST_NODE, Impact::ERROR };
+                                                                }
+                                                                else if( state == State::MINUS )
+                                                                {
+                                                                  f = node;
+                                                                  return { State::FINISH, Impact::MOVE };
+                                                                }
+                                                                 return { state, Impact::ERROR };
+                                                             };
+                                                             handlers.name_syntax_node =
+                                                                [ &f ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
+                                                             {
+                                                                if( state == State::START )
+                                                                {
+                                                                  return { State::INCORRECT_FIRST_NODE, Impact::ERROR };
+                                                                }
+                                                                else if( state == State::MINUS )
+                                                                {
+                                                                  f = node;
+                                                                  return { State::FINISH, Impact::MOVE };
+                                                                }
+                                                                 return { state, Impact::ERROR };
+                                                             };
+                                                             handlers.function_call_syntax_node =
+                                                                [ &f ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                                                             {
+                                                                if( state == State::START )
+                                                                {
+                                                                  return { State::INCORRECT_FIRST_NODE, Impact::ERROR };
+                                                                }
+                                                                else if( state == State::MINUS )
+                                                                {
+                                                                  f = node;
+                                                                  return { State::FINISH, Impact::MOVE };
+                                                                }
+                                                                return { state, Impact::ERROR };
+                                                              };
 
-            if( state != State::FINISH )
-               return {};
+                                                            auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
 
-            Plan plan;
-            plan.to_remove.nodes.push_back( minus );
-            plan.to_remove.nodes.push_back( f );
+                                                            PlanOrProgress plan_or_progress;
+                                                            if( iteration_result.state == State::ERROR )
+                                                            {
+                                                                plan_or_progress = Progress{ .readiness = 0 };
+                                                            }  
+                                                            else if( iteration_result.state == State::FINISH )
+                                                            {
+                                                                Plan plan;
+                                                                plan.to_remove.nodes.push_back( minus );
+                                                                plan.to_remove.nodes.push_back( f );
 
-            const auto& un_expr_node = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, f );
-            plan.to_add.nodes.push_back( un_expr_node );
-            return plan;
+                                                                const auto& un_expr_node = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, f, minus->lexical_tokens() );
+                                                                plan.to_add.nodes.push_back( un_expr_node );
+                                                                plan_or_progress = plan;
+                                                            }
+                                                            else {
+                                                                plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                                                            }
+                                                            return plan_or_progress;
+                                                            });
          } );
    }
 };

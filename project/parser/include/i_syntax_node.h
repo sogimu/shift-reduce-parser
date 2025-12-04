@@ -1,5 +1,7 @@
 #pragma once
 
+#include "lexical_tokens.h"
+#include <optional>
 #include <string>
 #include <list>
 #include <memory>
@@ -18,6 +20,12 @@ struct ISyntaxNode
    // using const_iterator = decltype( mChildren )::const_iterator;
    ISyntaxNode() = default;
 
+   ISyntaxNode( const ISyntaxNode& node )
+      : mType{ node.mType }
+      , mChildren{ node.mChildren }
+   {
+   }
+
    ISyntaxNode( const Token_Type& type )
       : mType{ type }
    {
@@ -27,15 +35,12 @@ struct ISyntaxNode
 
    virtual void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) = 0;
 
-   Token_Type type() const
-   {
-      return mType;
-   }
+   // Token_Type type() const
+   // {
+   //    return mType;
+   // }
 
-   const std::string& text() const
-   {
-      return mText;
-   }
+   virtual std::vector< LexicalTokens::LexicalToken > lexical_tokens() const { return {}; };
 
    virtual ISyntaxNodeSP& add_back( const ISyntaxNodeSP& child )
    {
@@ -127,8 +132,9 @@ struct ISyntaxNode
       return mChildren.rend();
    }
 
-private:
+protected:
    Token_Type mType;
-   std::string mText;
+   // std::string mText;
    std::list< ISyntaxNodeSP > mChildren;
+   // std::optional< LexicalTokens::LexicalToken > mToken;
 };

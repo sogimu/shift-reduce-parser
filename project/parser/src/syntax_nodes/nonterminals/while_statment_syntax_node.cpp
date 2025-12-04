@@ -5,13 +5,17 @@
 #include "syntax_node_empty_visitor.h"
 #include <cstddef>
 
-WhileStatmentSyntaxNode::WhileStatmentSyntaxNode()
-   : ISyntaxNode{ Token_Type::WHILE_STATMENT }
+WhileStatmentSyntaxNode::WhileStatmentSyntaxNode( const WhileStatmentSyntaxNode& while_statment_syntax_node )
+   : ISyntaxNode{ while_statment_syntax_node }
 {
+   mTokens = while_statment_syntax_node.lexical_tokens();
+
 }
-WhileStatmentSyntaxNode::WhileStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope )
+
+WhileStatmentSyntaxNode::WhileStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::WHILE_STATMENT }
 {
+   mTokens = lexical_tokens;
    add_back( conditional_expression );
    add_back( scope );
 }
@@ -27,6 +31,8 @@ bool WhileStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    handlers.while_statment_syntax_node = [ this, &is_equal ]( const WhileStatmentSyntaxNodeSP& node )
    {
       if( node->Children().size() != this->Children().size() )
+         return;
+      if( node->lexical_tokens() != this->lexical_tokens() )
          return;
       for( size_t i = 0; i < Children().size(); ++i )
       {
@@ -54,3 +60,8 @@ ScopeSyntaxNodeSP WhileStatmentSyntaxNode::scope() const
 {
    return std::dynamic_pointer_cast< ScopeSyntaxNode >( this->operator[]( 1 ) );
 }
+
+std::vector< LexicalTokens::LexicalToken > WhileStatmentSyntaxNode::lexical_tokens() const
+{ 
+    return { mTokens }; 
+};
