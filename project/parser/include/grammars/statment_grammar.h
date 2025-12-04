@@ -452,7 +452,6 @@ public:
             plan.to_remove.nodes.push_back( f );
 
             const auto& statment_node = std::make_shared< StatmentSyntaxNode >( f );
-            statment_node->add_back(f);
             plan.to_add.nodes.push_back( statment_node );
             return plan;
          } );
