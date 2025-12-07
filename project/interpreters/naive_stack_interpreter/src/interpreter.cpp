@@ -47,7 +47,7 @@ double Interpreter::eval( const std::string& expression ) const
    std::cout << "== CFG ==" << std::endl;
    std::cout << cfg << std::endl;
 
-   std::cout << "== Execution ==" << std::endl;
+   std::cout << "== Executioning ==" << std::endl;
    int result = 0;
    
    StackMachine stack_machine{ cfg };
@@ -270,5 +270,11 @@ double Interpreter::eval( const std::string& expression ) const
          node->accept( visitor );
       } );
 
-   return result;
+    if( !argument_stack.empty() )
+    {
+        result = argument_stack.back();
+        argument_stack.pop_back();
+    }
+
+    return result;
 }

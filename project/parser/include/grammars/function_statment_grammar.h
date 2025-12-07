@@ -39,47 +39,74 @@ public:
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
+            bool is_function_syntax_node_found = false;
+
+            auto reversed_it = stack.rbegin();
+            
+            SyntaxNodeEmptyVisitor::Handlers function_handler;
+            function_handler.function_syntax_node = [ &is_function_syntax_node_found ]( const FunctionSyntaxNodeSP& /* node */ )
+            { 
+                is_function_syntax_node_found = true;
+            };
+            const auto& function_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( function_handler );
+            for( ; reversed_it != stack.rend(); ++reversed_it )
+            {
+                ( *reversed_it )->accept( function_visitor );
+                if( is_function_syntax_node_found )
+                    break;
+            }
+            if( !is_function_syntax_node_found )
+                return Progress{ .readiness = 0.0 };
+            
             bool is_open_circle_bracket_found = false;
             bool is_close_circle_bracket_found = false;
             size_t distance_between_open_close_circle_bracket = 0;
-
-            auto it = stack.rbegin();
-
+            
+            auto it = reversed_it.base();
             SyntaxNodeEmptyVisitor::Handlers open_circle_bracket_handler;
-            for( ; it != stack.rend(); ++it )
+            auto open_circle_bracket_syntax_node_it = it;
+            open_circle_bracket_handler.open_circle_bracket_syntax_node = [ &is_open_circle_bracket_found ]( const OpenCircleBracketSyntaxNodeSP& /* node */ )
+            { 
+                is_open_circle_bracket_found = true;
+            };
+            const auto& open_circle_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( open_circle_bracket_handler );
+            for( ; it != stack.end(); ++it )
             {
-               open_circle_bracket_handler.open_circle_bracket_syntax_node = [ &is_open_circle_bracket_found ]( const OpenCircleBracketSyntaxNodeSP& /* node */ )
-               { is_open_circle_bracket_found = true; };
-               const auto& open_circle_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( open_circle_bracket_handler );
                ( *it )->accept( open_circle_bracket_visitor );
                if( is_open_circle_bracket_found )
                {
-                  distance_between_open_close_circle_bracket = std::distance( stack.rbegin(), it ) + 1;
+                  open_circle_bracket_syntax_node_it = it;
                   break;
                }
             }
             
             if( !is_open_circle_bracket_found )
-                return Progress{ .readiness = 0.0 };
+                return Progress{ .readiness = 0.1 };
 
 
             SyntaxNodeEmptyVisitor::Handlers close_circle_bracket_handler;
-            for( ; it != stack.rend(); ++it )
+            auto close_circle_bracket_syntax_node_it = it;
+            close_circle_bracket_handler.close_circle_bracket_syntax_node = [ &is_close_circle_bracket_found ]( const CloseCircleBracketSyntaxNodeSP& /* node */ )
+            { 
+                is_close_circle_bracket_found = true;
+            };
+            const auto& close_circle_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( close_circle_bracket_handler );
+            for( ; it != stack.end(); ++it )
             {
-               close_circle_bracket_handler.close_circle_bracket_syntax_node = [ &is_close_circle_bracket_found ]( const CloseCircleBracketSyntaxNodeSP& /* node */ )
-               { is_close_circle_bracket_found = true; };
-               const auto& close_circle_bracket_visitor = std::make_shared< SyntaxNodeEmptyVisitor >( close_circle_bracket_handler );
                ( *it )->accept( close_circle_bracket_visitor );
                if( is_close_circle_bracket_found )
                {
+                  close_circle_bracket_syntax_node_it = it;
+                  distance_between_open_close_circle_bracket = std::distance( open_circle_bracket_syntax_node_it, close_circle_bracket_syntax_node_it ) + 1;
                   break;
                }
             }
             
-            const size_t minimal_size = distance_between_open_close_circle_bracket + 2;
-            size_t minimal_steps_number = 0;
-            if( is_open_circle_bracket_found && !is_close_circle_bracket_found )
-                minimal_steps_number = minimal_size + 1;
+            if( !is_close_circle_bracket_found )
+                return Progress{ .readiness = 0.2 };
+            
+            const size_t minimal_size = distance_between_open_close_circle_bracket + 3;
+            size_t minimal_steps_number = minimal_size + 1;
             return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
                                                             
             {
@@ -181,8 +208,10 @@ public:
                        plan.to_remove.nodes.push_back( comma );
                     plan.to_remove.nodes.push_back( close_circle_bracket );
                     plan.to_remove.nodes.push_back( scope_statment );
-
-                    const auto& function_node = std::make_shared< FunctionStatmentSyntaxNode >( name->value(), arguments, scope_statment );
+                    std::vector< LexicalTokens::LexicalToken > lexical_tokens { 
+                                                  function->lexical_tokens().at(0)
+                                                  };
+                    const auto& function_node = std::make_shared< FunctionStatmentSyntaxNode >( name, arguments, scope_statment, lexical_tokens );
                     plan.to_add.nodes.push_back( function_node );
                     plan_or_progress = plan;
                 }

@@ -32,10 +32,12 @@ FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name,
    add_back( scope );
 }
 
-FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope )
+FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
    , mName{ name_syntax_node->value() }
 {
+   mTokens = lexical_tokens;
+  add_back( name_syntax_node );
    for( const auto& argument : arguments )
    {
       ISyntaxNodeSP child = argument;

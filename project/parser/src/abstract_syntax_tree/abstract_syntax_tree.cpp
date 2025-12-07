@@ -128,7 +128,6 @@ AbstractSyntaxTree::AbstractSyntaxTree( const LexicalTokens& lexical_tokens )
        if( best_progress_opt && best_progress_opt->readiness == 0.0 )
           if( stack.size() > 1 )
               throw SyntaxException( "Stack has more that on node and no one grammars may reduce current stack. It's seems that there is syntax error in program!", stack );
-               // throw std::runtime_error( "Stack has more that on node and no one grammars may reduce current stack. It's seems that there is syntax error in program!" );
        
        ++it;
     }
