@@ -11,6 +11,7 @@ using NameSyntaxNodeSP = std::shared_ptr< NameSyntaxNode >;
 class PrintStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< PrintStatmentSyntaxNode >
 {
 public:
+   PrintStatmentSyntaxNode( const PrintStatmentSyntaxNode& print_statment_syntax_node );
    PrintStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node );
    PrintStatmentSyntaxNode( const ISyntaxNodeSP& argument );
 
@@ -18,6 +19,9 @@ public:
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 
    bool compare( const ISyntaxNode& node ) const override;
+   std::vector< LexicalTokens::LexicalToken > lexical_tokens() const override;
+private:
+  std::vector< LexicalTokens::LexicalToken > mTokens;
 };
 
 using PrintStatmentSyntaxNodeSP = std::shared_ptr< PrintStatmentSyntaxNode >;

@@ -181,23 +181,7 @@ public:
 
    bool operator==( const AbstractSyntaxTree& syntax_tree ) const
    {
-      bool result = true;
-      const auto& our_range = DfsRange< ISyntaxNodeSP >{ std::list< ISyntaxNodeSP >{ root() } };
-      const auto& their_range = DfsRange< ISyntaxNodeSP >{ std::list< ISyntaxNodeSP >{ syntax_tree.root() } };
-      for( const auto& [ a, b ] : zip( our_range, their_range ) )
-      {
-         if( !a || !b )
-         {
-            result = false;
-            break;
-         }
-         if( *a.value() != *b.value() )
-         {
-            result = false;
-            break;
-         }
-      }
-      return result;
+    return ::equal( syntax_tree.mRoot, mRoot );
    }
 
    std::string to_string() const;

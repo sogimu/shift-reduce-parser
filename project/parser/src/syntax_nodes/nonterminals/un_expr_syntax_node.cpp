@@ -1,5 +1,9 @@
 #include "nonterminals/un_expr_syntax_node.h"
 
+#include <cstddef>
+#include <vector>
+
+#include "make_shallow_syntax_node_copy.h"
 #include "nonterminals/varible_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "enums.h"
@@ -7,13 +11,24 @@
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
 
-#include <cstddef>
-#include <vector>
 
-UnExprSyntaxNode::UnExprSyntaxNode( const Type& type )
+UnExprSyntaxNode::UnExprSyntaxNode( const UnExprSyntaxNode& un_expr_syntax_node )
+   : ISyntaxNode{ Token_Type::UnExpr }
+   , mType{ un_expr_syntax_node.type() }
+{
+   mTokens = un_expr_syntax_node.lexical_tokens();
+   // for( const auto& child : mChildren )
+   // {
+   //     add_back( make_shallow_copy( child ) );
+   // }
+
+}
+
+UnExprSyntaxNode::UnExprSyntaxNode( const Type& type, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::UnExpr }
    , mType{ type }
 {
+   mTokens = lexical_tokens;
 }
 
 UnExprSyntaxNode::UnExprSyntaxNode( const Type& type, const ISyntaxNodeSP& argument, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )

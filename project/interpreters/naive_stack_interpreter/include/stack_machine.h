@@ -6,6 +6,7 @@ class StackMachine
 {
 public:
    StackMachine( const ControlFlowGraph& cfg );
+   int exec();
 private:
   ControlFlowGraph mCfg;
 };

@@ -2,7 +2,18 @@
 
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
+#include "make_shallow_syntax_node_copy.h"
 #include "syntax_node_empty_visitor.h"
+
+FSyntaxNode::FSyntaxNode( const FSyntaxNode& f_syntax_node )
+  : ISyntaxNode{ Token_Type::F }
+  , mValue{ f_syntax_node.mValue }
+{
+  for( const auto& child : mChildren )
+  {
+    add_back( make_shallow_copy(child));
+  }
+}
 
 FSyntaxNode::FSyntaxNode( const int& number )
   : ISyntaxNode{ Token_Type::F }

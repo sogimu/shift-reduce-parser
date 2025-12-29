@@ -11,9 +11,12 @@ class ControlFlowGraph
 {
 public:
    ControlFlowGraph() = default;
+   ControlFlowGraph( const ISyntaxNodeSP& cfg_root );
    ControlFlowGraph( const AbstractSyntaxTree& ast );
    ISyntaxNodeSP root() const;
    std::string to_string() const;
+   bool operator==( const ControlFlowGraph& cfg ) const;
+
 private:
   ISyntaxNodeSP mRoot;
 };

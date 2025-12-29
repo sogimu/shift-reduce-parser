@@ -16,7 +16,8 @@ public:
     Negation
   };
 
-   UnExprSyntaxNode( const Type& type );
+   UnExprSyntaxNode( const UnExprSyntaxNode& un_expr_syntax_node );
+   UnExprSyntaxNode( const Type& type, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens );
    UnExprSyntaxNode( const Type& type, const ISyntaxNodeSP& argument, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens );
 
    Type type() const;

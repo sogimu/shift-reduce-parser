@@ -4,6 +4,7 @@
 #include "i_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 #include "syntax_node_progress_visitor.h"
+#include "utils/dfs_pre_order_range.h"
 
 #include <cstdint>
 #include <functional>
@@ -15,6 +16,8 @@
 #include <list>
 #include <utility>
 #include <cmath>
+#include <unordered_set>
+#include <sstream>
 
 template< typename Node, typename PreFunc, typename PostFunc >
 void iterative_dfs( const Node& start, PreFunc pre_func, PostFunc post_func )
@@ -473,15 +476,15 @@ TargetNode create_tree_from1( const SourceNode& source_root, const CreateRoot& c
          {
             source_stack.emplace_back( std::cref( source_node ) );
             // std::optional< std::reference_wrapper< TargetNode > > new_target_node_opt = create_node_pre_func( source_stack, target_stack );
-            const auto& [ new_target_parent, is_node_added, it]  = create_node_pre_func( source_stack, target_stack );
-            stack.emplace_back( std::make_pair( source_node, is_node_added ) );
+            const auto& [ new_target_parent, call_post_func, it]  = create_node_pre_func( source_stack, target_stack );
+            stack.emplace_back( std::make_pair( source_node, call_post_func ) );
             target_stack.emplace_back( new_target_parent, it );
             return false;
          },
          [ &create_node_on_post_func, &stack, &source_stack, &target_stack ]( [[maybe_unused]] const SourceNode& source_node )
          {
-            const auto& [ source, is_node_added ] = stack.back();
-            if( !is_node_added )
+            const auto& [ source, call_post_func ] = stack.back();
+            if( call_post_func )
             {
                create_node_on_post_func( source_stack, target_stack );
             }
@@ -492,6 +495,25 @@ TargetNode create_tree_from1( const SourceNode& source_root, const CreateRoot& c
          get_children_reverse_iterators );
    }
    return target_root;
+}
+
+template< typename Node, typename PreFunc, typename PostFunc, typename GetChildrenReverseIterators >
+void iterative_dfs3( const Node& root, const PreFunc& pre_func, const PostFunc& post_func, const GetChildrenReverseIterators& get_children_reverse_iterators )
+{
+   std::vector< Node > stack;
+    iterative_dfs2(
+       root,
+       [ &stack, pre_func]( const Node& node ) -> bool
+       {
+          stack.emplace_back( std::cref( node ) );
+          return pre_func(stack);
+       },
+       [ &stack, post_func ]( [[maybe_unused]] const Node& node )
+       {
+          post_func(stack);
+          stack.pop_back();
+       },
+       get_children_reverse_iterators );
 }
 
 namespace
@@ -728,4 +750,194 @@ static bool check_type( const ISyntaxNodeSP& node )
    const auto& visitor = std::make_shared< SyntaxNodeCheckTypeVisitor< T > >();
    node->accept( visitor );
    return visitor->result();
+}
+    
+static std::string to_string( const ISyntaxNodeSP& node )
+{
+  std::string result;
+  std::stringstream s{ result };
+
+  auto print_lexical_tokens = [](const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
+  {
+      std::string result;
+      std::stringstream s{ result };
+      
+      for( auto it = lexical_tokens.begin(); it != lexical_tokens.end(); ++it )
+      {
+         const auto& lexical_token = *it;
+         s << lexical_token << ", ";
+      }
+      return s.str();
+  };
+
+  std::unordered_set< ISyntaxNodeSP > visited;
+
+  size_t n = 0;
+  iterative_dfs(
+     node,
+     [ &n, &s, &visited, &print_lexical_tokens ]( const ISyntaxNodeSP& node ) -> bool
+     {
+        bool visited_node = visited.contains( node );
+        if( !visited_node )
+        {
+           visited.insert( node );
+        }
+        SyntaxNodeEmptyVisitor::Handlers handlers;
+        handlers.bol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "BOL" << "}"; };
+        handlers.plus_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PLUS" << "}"; };
+        handlers.minus_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MINUS" << "}"; };
+        handlers.asterisk_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ASTERISK" << "}"; };
+        handlers.slash_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SLASH" << "}"; };
+        handlers.number_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "NUMBER" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"; };
+        handlers.f_syntax_node = [ &s, print_lexical_tokens ]( const FSyntaxNodeSP& node ) { s << "{" << "F" << '(' << std::to_string( node->value() ) << ')' << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"; };
+        handlers.bin_expr_syntax_node = [ &s ]( const BinExprSyntaxNodeSP& node )
+        { 
+           std::string type;
+           switch( node->type() )
+           {
+           case BinExprSyntaxNode::Type::Addition:
+           {
+              type = "Addition";
+           };
+           break;
+           case BinExprSyntaxNode::Type::Substruction:
+           {
+              type = "Substruction";
+           };
+           break;
+           case BinExprSyntaxNode::Type::Multiply:
+           {
+              type = "Multiply";
+           };
+           break;
+           case BinExprSyntaxNode::Type::Division:
+           {
+              type = "Division";
+           };
+           break;
+           case BinExprSyntaxNode::Type::Equal:
+           {
+              type = "Equal";
+           };
+           break;
+           case BinExprSyntaxNode::Type::Less:
+           {
+              type = "Less";
+           };
+           break;
+           case BinExprSyntaxNode::Type::LessEqual:
+           {
+              type = "LessEqual";
+           };
+           break;
+           case BinExprSyntaxNode::Type::More:
+           {
+              type = "More";
+           };
+           break;
+           case BinExprSyntaxNode::Type::MoreEqual:
+           {
+              type = "MoreEqual";
+           };
+           break;
+           }
+
+           s << "{" << "BIN_EXPR" << '(' << type << ')' << "}";
+        };
+        handlers.un_expr_syntax_node = [ &s ]( const UnExprSyntaxNodeSP& node )
+        { 
+           std::string type;
+           switch( node->type() )
+           {
+           case UnExprSyntaxNode::Type::Negation:
+           {
+              type = "Negation";
+           };
+           break;
+           }
+
+           s << "{" << "UN_EXPR" << '(' << type << ')' << "}";
+        };
+        handlers.eol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EOL" << "}"; };
+        handlers.semicolon_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SEMICOLON" << "}"; };
+        handlers.return_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN" << "}"; };
+        handlers.return_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN_STATMENT" << "}"; };
+        handlers.comma_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "COMMA" << "}"; };
+        handlers.statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "STATMENT" << "}"; };
+        handlers.scope_statment_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "SCOPE" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"  << "}"; };
+        handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
+        handlers.close_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CLOSE_CURLY_BRACKET" << "}"; };
+        handlers.varible_syntax_node = [ &s ]( const VaribleSyntaxNodeSP& node ) { s << "{" << "VARIBLE" << '(' << node->name() << ')' << "}"; };
+        handlers.print_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT_STATMENT" << "}"; };
+        handlers.equal_syntax_node = [ &s ]( const ISyntaxNodeSP& node ) { s << "{" << "EQUAL " << node->lexical_tokens()[0] << "}"; };
+        handlers.less_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "LESS" << "}"; };
+        handlers.more_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MORE" << "}"; };
+        handlers.if_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF" << "}"; };
+        handlers.if_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_STATMENT" << "}"; };
+        handlers.while_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE" << "}"; };
+        handlers.while_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_STATMENT" << "}"; };
+        handlers.function_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION" << "}"; };
+        handlers.function_call_syntax_node = [ &s ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << "}"; };
+        handlers.function_statment_syntax_node = [ &s ]( const FunctionStatmentSyntaxNodeSP& node )
+        { s << "{" << "FUNCTION_STATMENT" << " (" << node->name() << ")" << "}"; };
+        handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
+        handlers.varible_assigment_statment_syntax_node = [ &s ]( const VaribleAssigmentStatmentSyntaxNodeSP& node )
+        {
+           std::string context;
+           switch( node->context() )
+           {
+           case VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL:
+           {
+              context = "GLOBAL";
+           };
+           break;
+           case VaribleAssigmentStatmentSyntaxNode::Context::LOCAL:
+           {
+              context = "LOCAL";
+           };
+           break;
+           }
+           s << "{" << "VARIBLE ASSIGMENT" << " (" << context << ")" << "}";
+        };
+        handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << " (" << node->value() << ')' << "}"; };
+        for( size_t i = 0; i < n; ++i )
+           s << "   ";
+
+        const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+        node->accept( visitor );
+        s << '\n';
+
+        ++n;
+        if( visited_node )
+        {
+           return true;
+        }
+        else
+        {
+           return false;
+        }
+     },
+     [ &n ]( const ISyntaxNodeSP& /* node */ ) { --n; } );
+  return s.str();
+}
+
+static bool equal( const ISyntaxNodeSP& lhs, const ISyntaxNodeSP& rhs )
+{
+  bool result = true;
+  const auto& our_range = DfsRange< ISyntaxNodeSP >{ std::list< ISyntaxNodeSP >{ lhs } };
+  const auto& their_range = DfsRange< ISyntaxNodeSP >{ std::list< ISyntaxNodeSP >{ rhs } };
+  for( const auto& [ a, b ] : zip( our_range, their_range ) )
+  {
+     if( !a || !b )
+     {
+        result = false;
+        break;
+     }
+     if( *a.value() != *b.value() )
+     {
+        result = false;
+        break;
+     }
+  }
+  return result;
 }

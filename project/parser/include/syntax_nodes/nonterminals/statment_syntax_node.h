@@ -11,6 +11,8 @@ class ISyntaxNodeVisitor;
 class StatmentSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< StatmentSyntaxNode >
 {
 public:
+   StatmentSyntaxNode( const StatmentSyntaxNode& statment_syntax_node );
+   StatmentSyntaxNode( const LexicalTokens::LexicalToken& semicolon_lexical_token );
    StatmentSyntaxNode( const ISyntaxNodeSP& syntax_node, const LexicalTokens::LexicalToken& semicolon_lexical_token );
    StatmentSyntaxNode( const ISyntaxNodeSP& syntax_node );
    

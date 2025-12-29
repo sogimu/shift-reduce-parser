@@ -74,6 +74,14 @@ struct ISyntaxNode
       std::advance( it, index );
       return *it;
    }
+   virtual void remove( size_t index )
+   {
+      if( index >= mChildren.size() )
+         return;
+      auto it = mChildren.begin();
+      std::advance( it, index );
+      mChildren.erase(it);
+   }
 
    auto Children() const
    {
@@ -134,7 +142,6 @@ struct ISyntaxNode
 
 protected:
    Token_Type mType;
-   // std::string mText;
    std::list< ISyntaxNodeSP > mChildren;
    // std::optional< LexicalTokens::LexicalToken > mToken;
 };

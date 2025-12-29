@@ -36,6 +36,11 @@ struct FunctionCallMeta
 };
 
 StackMachine::StackMachine( const ControlFlowGraph& cfg )
+    : mCfg{ cfg }
+{
+}
+
+int StackMachine::exec()
 {
    VaribleStore varible_store;
    FunctionStore function_store;
@@ -43,7 +48,7 @@ StackMachine::StackMachine( const ControlFlowGraph& cfg )
    std::deque< FunctionCallSyntaxNodeSP > function_call_stack;
 
    iterative_managed_dfs(
-      cfg.root(),
+      mCfg.root(),
       [ &varible_store, &function_store, &function_call_stack, &argument_stack ]( const ISyntaxNodeSP& node, StackDFS< ISyntaxNodeSP >& stack_dfs )
       {
          auto children = node->Children();
@@ -61,9 +66,12 @@ StackMachine::StackMachine( const ControlFlowGraph& cfg )
             auto s = argument_stack;
             (void) s;
             // const auto& condition = if_statment->conditional_expression();
-            auto condition_result = argument_stack.back();
+            double condition_result = 0;
             if( !argument_stack.empty() )
-               argument_stack.pop_back();
+            {
+                condition_result = argument_stack.back();
+                argument_stack.pop_back();
+            }
             if( condition_result )
             {
                const auto& true_scope = if_statment->true_scope();
@@ -73,25 +81,6 @@ StackMachine::StackMachine( const ControlFlowGraph& cfg )
             {
                children = {};
             }
-            // else
-            // {
-            //    const auto& false_scope = if_statment->false_scope();
-            //    children = std::vector< ISyntaxNodeSP >{ false_scope };
-            // }
-         };
-         handlers.while_statment_syntax_node = []( const WhileStatmentSyntaxNodeSP& /* while_expression */ )
-         {
-            // varible_store.print();
-            // const auto& condition = while_expression->conditional_expression();
-            // if( HandleConditionExpression( varible_store, condition ) )
-            {
-               //       const auto& scope = while_expression->scope();
-               //       children = std::vector< ISyntaxNodeSP >{ scope, while_expression };
-            }
-            //    else
-            //    {
-            // children = {};
-            //    }
          };
          handlers.function_statment_syntax_node = [ &children ]( const FunctionStatmentSyntaxNodeSP& /* function */ )
          {
@@ -101,7 +90,9 @@ StackMachine::StackMachine( const ControlFlowGraph& cfg )
             children = {};
          };
          handlers.function_call_syntax_node = [ &function_call_stack ]( const FunctionCallSyntaxNodeSP& function_call )
-         { function_call_stack.emplace_back( function_call ); };
+         { 
+             function_call_stack.emplace_back( function_call );
+         };
          handlers.return_statment_syntax_node = [ &stack_dfs, &function_call_stack, &argument_stack ]( const ReturnStatmentSyntaxNodeSP& /* return_statment */ )
          {
             auto result = argument_stack.back();
@@ -187,45 +178,6 @@ StackMachine::StackMachine( const ControlFlowGraph& cfg )
                argument_stack.pop_back();
             std::cout << "print: " << std::to_string( result ) << std::endl;
          };
-         // handlers.conditional_expression_syntax_node = [ &argument_stack ]( const ConditionalExpressionSyntaxNodeSP& conditional_expression )
-         // {
-         //    auto rhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    auto lhs = argument_stack.back();
-         //    if( !argument_stack.empty() )
-         //       argument_stack.pop_back();
-         //    // argument_stack.pop_back();
-         //
-         //    switch( conditional_expression->type() )
-         //    {
-         //    case ConditionalExpressionSyntaxNode::Type::LESS:
-         //    {
-         //       argument_stack.push_back( static_cast< int >( lhs < rhs ) );
-         //    };
-         //    break;
-         //    case ConditionalExpressionSyntaxNode::Type::MORE:
-         //    {
-         //       argument_stack.push_back( static_cast< int >( lhs > rhs ) );
-         //    };
-         //    break;
-         //    case ConditionalExpressionSyntaxNode::Type::LESS_OR_EQUAL:
-         //    {
-         //       argument_stack.push_back( static_cast< int >( lhs <= rhs ) );
-         //    };
-         //    break;
-         //    case ConditionalExpressionSyntaxNode::Type::MORE_OR_EQUAL:
-         //    {
-         //       argument_stack.push_back( static_cast< int >( lhs >= rhs ) );
-         //    };
-         //    break;
-         //    case ConditionalExpressionSyntaxNode::Type::EQUAL:
-         //    {
-         //       argument_stack.push_back( static_cast< int >( lhs == rhs ) );
-         //    };
-         //    break;
-         //    }
-         // };
          handlers.varible_assigment_statment_syntax_node = [ &varible_store, &argument_stack ]( const VaribleAssigmentStatmentSyntaxNodeSP& varible_assigment )
          {
             // const auto& source = varible_assigment->source();
@@ -252,5 +204,12 @@ StackMachine::StackMachine( const ControlFlowGraph& cfg )
          const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
          node->accept( visitor );
       } );
-
+    
+    int result = 0;
+    if( !argument_stack.empty() )
+    {
+        result = argument_stack.back();
+        argument_stack.pop_back();
+    }
+    return result;
 }

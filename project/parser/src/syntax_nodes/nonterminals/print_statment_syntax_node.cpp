@@ -8,6 +8,13 @@
 #include "utils.h"
 #include <iterator>
 
+PrintStatmentSyntaxNode::PrintStatmentSyntaxNode( const PrintStatmentSyntaxNode& print_statment_syntax_node )
+   : ISyntaxNode{ Token_Type::PRINT_STATMENT }
+{
+   mTokens = print_statment_syntax_node.lexical_tokens();
+
+}
+
 PrintStatmentSyntaxNode::PrintStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node )
    : ISyntaxNode{ Token_Type::PRINT_STATMENT }
 {
@@ -63,4 +70,8 @@ bool PrintStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
+std::vector< LexicalTokens::LexicalToken > PrintStatmentSyntaxNode::lexical_tokens() const
+{ 
+    return { mTokens }; 
+};
 

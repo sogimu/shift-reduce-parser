@@ -4,14 +4,34 @@
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
+#include "make_shallow_syntax_node_copy.h"
 
 #include <vector>
+
+BinExprSyntaxNode::BinExprSyntaxNode( const BinExprSyntaxNode& bin_expr_syntax_node )
+   : ISyntaxNode{ Token_Type::BinExpr }
+   , mType{ bin_expr_syntax_node.type() }
+{
+   mTokens = bin_expr_syntax_node.lexical_tokens();
+   // for( const auto& child : mChildren )
+   // {
+   //     add_back( make_shallow_copy( child ) );
+   // }
+}
 
 BinExprSyntaxNode::BinExprSyntaxNode( const Type& type )
    : ISyntaxNode{ Token_Type::BinExpr }
    , mType{ type }
 {
 }
+
+BinExprSyntaxNode::BinExprSyntaxNode( const Type& type, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
+   : ISyntaxNode{ Token_Type::BinExpr }
+   , mType{ type }
+{
+   mTokens = lexical_tokens;
+}
+
 BinExprSyntaxNode::BinExprSyntaxNode( const Type& type, const ISyntaxNodeSP& arg0, const ISyntaxNodeSP& arg1, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::BinExpr }
    , mType{ type }

@@ -11,6 +11,7 @@ class FSyntaxNode : public ISyntaxNode, public std::enable_shared_from_this< FSy
 
 {
 public:
+   FSyntaxNode( const FSyntaxNode& f_syntax_node );
    FSyntaxNode( const int& number );
    FSyntaxNode( const MinusSyntaxNodeSP& minus, const NumberSyntaxNodeSP& number );
    FSyntaxNode( const NumberSyntaxNodeSP& number );

@@ -284,3 +284,12 @@ inline std::ostream& operator<<( std::ostream& o, const LexicalTokens::LexicalTo
    o << "[" << "\"" << rhs.text << "\"" << ", type=" << rhs.type << ", line=" << std::to_string(rhs.line) << ", col=" << std::to_string(rhs.col) << ", length=" << std::to_string(rhs.length) << "]";
    return o;
 }
+
+inline std::ostream& operator<<( std::ostream& o, const LexicalTokens& lexical_tokens )
+{
+  for( const auto& lexical_token : lexical_tokens.list() )
+  {
+      o << lexical_token << std::endl;
+  }
+  return o;
+}

@@ -1,5 +1,7 @@
 #include "nonterminals/statment_syntax_node.h"
 
+#include <vector>
+
 #include "i_syntax_node.h"
 #include "i_syntax_node_visitor.h"
 #include "syntax_node_empty_visitor.h"
@@ -13,13 +15,27 @@
 #include "nonterminals/un_expr_syntax_node.h"
 #include "nonterminals/bin_expr_syntax_node.h"
 #include "nonterminals/scope_statment_syntax_node.h"
+#include "make_shallow_syntax_node_copy.h"
 
-#include <vector>
+StatmentSyntaxNode::StatmentSyntaxNode( const StatmentSyntaxNode& statment_syntax_node )
+  : ISyntaxNode{ Token_Type::STATMENT }
+  , mTokens{ statment_syntax_node.mTokens }
+{
+  // for( const auto& child : mChildren )
+  // {
+  //   add_back( make_shallow_copy(child) );
+  // }
+}
 
 StatmentSyntaxNode::StatmentSyntaxNode( const ISyntaxNodeSP& syntax_node )
    : ISyntaxNode{ Token_Type::STATMENT }
 {
    add_back( syntax_node );
+}
+
+StatmentSyntaxNode::StatmentSyntaxNode( const LexicalTokens::LexicalToken& semicolon_lexical_token )
+{
+   mTokens = { semicolon_lexical_token };
 }
 
 StatmentSyntaxNode::StatmentSyntaxNode( const ISyntaxNodeSP& syntax_node, const LexicalTokens::LexicalToken& semicolon_lexical_token )

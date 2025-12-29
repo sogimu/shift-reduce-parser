@@ -254,7 +254,7 @@ int main()
 
     if (write_history(history_file.c_str()) != 0)
     {
-        std::cerr << "Could not save hostory to file " << history_file << "\n";
+        std::cerr << "Could not save history to file " << history_file << "\n";
     }
     return 0;
 }

@@ -6,7 +6,7 @@
 #include <cstddef>
 
 WhileStatmentSyntaxNode::WhileStatmentSyntaxNode( const WhileStatmentSyntaxNode& while_statment_syntax_node )
-   : ISyntaxNode{ while_statment_syntax_node }
+   : ISyntaxNode{ Token_Type::WHILE_STATMENT }
 {
    mTokens = while_statment_syntax_node.lexical_tokens();
 

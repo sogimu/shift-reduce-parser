@@ -7,6 +7,13 @@
 #include "terminals/name_syntax_node.h"
 #include "utils.h"
 
+FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const FunctionStatmentSyntaxNode& function_statment_syntax_node )
+   : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
+   , mName{ function_statment_syntax_node.name() }
+{
+   mTokens = function_statment_syntax_node.lexical_tokens();
+}
+
 FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name )
    : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
    , mName{ name }

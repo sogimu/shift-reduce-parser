@@ -6,7 +6,7 @@
 #include "nonterminals/scope_statment_syntax_node.h"
 #include <stdexcept>
 IfStatmentSyntaxNode::IfStatmentSyntaxNode( const IfStatmentSyntaxNode& if_statment_syntax_node )
-   : ISyntaxNode{ if_statment_syntax_node }
+   : ISyntaxNode{ Token_Type::IF_STATMENT }
 {
    mTokens = if_statment_syntax_node.lexical_tokens();
 }

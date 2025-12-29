@@ -8,7 +8,7 @@
 #include "utils.h"
 
 VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const VaribleAssigmentStatmentSyntaxNode& node )
-   : ISyntaxNode{ node }
+   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT_STATMENT }
    , mTokens{ node.mTokens }
 {
 

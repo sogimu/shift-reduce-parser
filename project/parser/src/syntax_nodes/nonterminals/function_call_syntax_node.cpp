@@ -5,6 +5,13 @@
 #include "syntax_node_empty_visitor.h"
 #include "terminals/name_syntax_node.h"
 
+FunctionCallSyntaxNode::FunctionCallSyntaxNode( const FunctionCallSyntaxNode& function_call_syntax_node )
+   : ISyntaxNode{ Token_Type::FUNCTION_CALL }
+   , mName{ function_call_syntax_node.name() }
+{
+   mTokens = function_call_syntax_node.lexical_tokens();
+}
+
 FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name )
    : ISyntaxNode{ Token_Type::FUNCTION_CALL }
    , mName{ name }
@@ -75,3 +82,8 @@ std::vector< NameSyntaxNodeSP > FunctionCallSyntaxNode::arguments() const
 {
    return {};
 }
+
+std::vector< LexicalTokens::LexicalToken > FunctionCallSyntaxNode::lexical_tokens() const
+{ 
+    return { mTokens }; 
+};

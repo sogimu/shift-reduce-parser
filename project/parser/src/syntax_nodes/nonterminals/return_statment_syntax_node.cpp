@@ -9,7 +9,7 @@
 #include "utils.h"
 
 ReturnStatmentSyntaxNode::ReturnStatmentSyntaxNode( const ReturnStatmentSyntaxNode& return_statment_syntax_node )
-   : ISyntaxNode{ return_statment_syntax_node }
+   : ISyntaxNode{ Token_Type::RETURN_STATMENT }
 {
    mTokens = return_statment_syntax_node.lexical_tokens();
 }
