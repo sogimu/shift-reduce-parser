@@ -17,8 +17,8 @@ class FunctionStatmentSyntaxNode : public ISyntaxNode, public std::enable_shared
 {
 public:
    FunctionStatmentSyntaxNode( const FunctionStatmentSyntaxNode& function_statment_syntax_node );
-   FunctionStatmentSyntaxNode( const std::string& name );
-   FunctionStatmentSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope );
+   // FunctionStatmentSyntaxNode( const std::string& name );
+   // FunctionStatmentSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope );
    FunctionStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens );
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;

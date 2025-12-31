@@ -22,12 +22,16 @@ public:
    bool compare( const ISyntaxNode& node ) const override;
 
    std::string name() const;
-   std::vector< NameSyntaxNodeSP > arguments() const;
+   std::vector< ISyntaxNodeSP > arguments() const;
+
+   std::pair<std::string, size_t> signature() const;
 
    std::vector< LexicalTokens::LexicalToken > lexical_tokens() const override;
 private:
     std::vector< LexicalTokens::LexicalToken > mTokens;
     std::string mName;
+    size_t mArgumentsNumber;
+    std::pair<std::string, size_t> mSignature;
 };
 
 using FunctionCallSyntaxNodeSP = std::shared_ptr< FunctionCallSyntaxNode >;

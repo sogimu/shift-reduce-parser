@@ -53,6 +53,8 @@ public:
 
    void insert( const std::pair< std::string, size_t >& function_key, const FunctionStatmentSyntaxNodeSP& node )
    {
+      if( mScope.empty() )
+          pushScope();
       mScope.back().insert( { function_key, node } );
    }
 

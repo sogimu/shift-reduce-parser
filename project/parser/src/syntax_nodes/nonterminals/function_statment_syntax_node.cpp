@@ -14,30 +14,30 @@ FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const FunctionStatmentSy
    mTokens = function_statment_syntax_node.lexical_tokens();
 }
 
-FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name )
-   : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
-   , mName{ name }
-{
-}
+// FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name )
+//    : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
+//    , mName{ name }
+// {
+// }
 
-FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope )
-   : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
-   , mName{ name }
-{
-   for( const auto& argument : arguments )
-   {
-      ISyntaxNodeSP child = argument;
-
-      if( check_type< NameSyntaxNode >( argument ) )
-      {
-         const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
-         child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
-      }
-
-      add_back( child );
-   }
-   add_back( scope );
-}
+// FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope )
+//    : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
+//    , mName{ name }
+// {
+//    for( const auto& argument : arguments )
+//    {
+//       ISyntaxNodeSP child = argument;
+//
+//       // if( check_type< NameSyntaxNode >( argument ) )
+//       // {
+//          // const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
+//          // child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
+//       // }
+//
+//       add_back( child );
+//    }
+//    add_back( scope );
+// }
 
 FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const NameSyntaxNodeSP& name_syntax_node, const std::vector< ISyntaxNodeSP >& arguments, const ScopeSyntaxNodeSP& scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::FUNCTION_STATMENT }
@@ -49,10 +49,9 @@ FunctionStatmentSyntaxNode::FunctionStatmentSyntaxNode( const NameSyntaxNodeSP& 
    {
       ISyntaxNodeSP child = argument;
 
-      if( check_type< NameSyntaxNode >( argument ) )
+      if( !check_type< NameSyntaxNode >( argument ) )
       {
-         const auto& name_node = std::dynamic_pointer_cast< NameSyntaxNode >( argument );
-         child = std::make_shared< VaribleSyntaxNode >( name_node->value() );
+         child = std::make_shared< NameSyntaxNode >( argument->lexical_tokens()[0] );
       }
 
       add_back( child );
@@ -107,7 +106,13 @@ ScopeSyntaxNodeSP FunctionStatmentSyntaxNode::scope() const
 
 std::vector< NameSyntaxNodeSP > FunctionStatmentSyntaxNode::arguments() const
 {
-   return {};
+   std::vector< NameSyntaxNodeSP > result;
+   for( auto index = 1; index < mChildren.size(); ++index )
+   {
+     const auto& name = std::dynamic_pointer_cast< NameSyntaxNode >( this->operator[]( index ) );
+     result.emplace_back( name );
+   }
+   return result;
 }
 
 std::vector< LexicalTokens::LexicalToken > FunctionStatmentSyntaxNode::lexical_tokens() const

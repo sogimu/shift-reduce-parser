@@ -37,16 +37,10 @@ NameSyntaxNodeSP VaribleAssigmentStatmentSyntaxNode::target() const
    return std::dynamic_pointer_cast< NameSyntaxNode >( this->operator[]( 0 ) );
 }
 
-// ComputationalExpressionSyntaxNodeSP VaribleAssigmentStatmentSyntaxNode::source() const
-// {
-//    ComputationalExpressionSyntaxNodeSP argument;
-//    const auto& value_node = this->operator[]( 1 );
-//    match( value_node,
-//           { .computational_expression_syntax_node = [ &argument ]( const ComputationalExpressionSyntaxNodeSP& computational_expression )
-//             { argument = computational_expression; },
-//             .name_syntax_node = [ &argument ]( const NameSyntaxNodeSP& name ) { argument = std::make_shared< ComputationalExpressionSyntaxNode >( name ); } } );
-//    return argument;
-// }
+ISyntaxNodeSP VaribleAssigmentStatmentSyntaxNode::source() const
+{
+   return this->operator[]( 1 );
+}
 
 VaribleAssigmentStatmentSyntaxNode::Context VaribleAssigmentStatmentSyntaxNode::context() const
 {

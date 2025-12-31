@@ -26,7 +26,7 @@ public:
    VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, LexicalTokens::LexicalToken token, Context context = Context::GLOBAL );
 
    std::string name() const;
-   // ComputationalExpressionSyntaxNodeSP source() const;
+   ISyntaxNodeSP source() const;
    NameSyntaxNodeSP target() const;
    Context context() const;
 

@@ -49,8 +49,8 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, FUNCTION_CALL_INT )
    const auto& input = R"""({ function foo(arg){ return arg+1; } foo(1); } )""";
 
    // ACT
-   Interpreter naive_stack_machine;
-   auto result = naive_stack_machine.eval( input );
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
 
    // ASSERT
    EXPECT_EQ( result, 2 );

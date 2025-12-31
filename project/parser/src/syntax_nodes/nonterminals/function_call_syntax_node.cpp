@@ -8,6 +8,7 @@
 FunctionCallSyntaxNode::FunctionCallSyntaxNode( const FunctionCallSyntaxNode& function_call_syntax_node )
    : ISyntaxNode{ Token_Type::FUNCTION_CALL }
    , mName{ function_call_syntax_node.name() }
+   , mSignature{ function_call_syntax_node.mSignature }
 {
    mTokens = function_call_syntax_node.lexical_tokens();
 }
@@ -21,6 +22,7 @@ FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name )
 FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name, const std::vector< ISyntaxNodeSP >& arguments )
    : ISyntaxNode{ Token_Type::FUNCTION_CALL }
    , mName{ name }
+   , mSignature{ mName, arguments.size() }
 {
    for( const auto& argument : arguments )
    {
@@ -31,6 +33,7 @@ FunctionCallSyntaxNode::FunctionCallSyntaxNode( const std::string& name, const s
 FunctionCallSyntaxNode::FunctionCallSyntaxNode( const NameSyntaxNodeSP& name_syntax_node, const std::vector< ISyntaxNodeSP >& arguments_syntax_nodes )
    : ISyntaxNode{ Token_Type::FUNCTION_CALL }
    , mName{ name_syntax_node->value() }
+   , mSignature{ mName, arguments_syntax_nodes.size() }
 {
    add_back(name_syntax_node);
    for( const auto& argument : arguments_syntax_nodes )
@@ -78,9 +81,17 @@ std::string FunctionCallSyntaxNode::name() const
    return mName;
 }
 
-std::vector< NameSyntaxNodeSP > FunctionCallSyntaxNode::arguments() const
+std::pair<std::string, size_t> FunctionCallSyntaxNode::signature() const
 {
-   return {};
+  return mSignature;
+}
+
+std::vector< ISyntaxNodeSP > FunctionCallSyntaxNode::arguments() const
+{
+    std::vector< ISyntaxNodeSP > result;
+    for( int i=1; i < mChildren.size(); ++i)
+      result.emplace_back( this->operator[](i) );
+    return result; 
 }
 
 std::vector< LexicalTokens::LexicalToken > FunctionCallSyntaxNode::lexical_tokens() const
