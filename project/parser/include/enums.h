@@ -49,6 +49,7 @@ enum class Token_Type
    FUNCTION_CALL,
    VARIBLE,
    VARIBLE_ASSIGMENT_STATMENT,
+   VAR,
    NO
 };
 
@@ -98,6 +99,7 @@ inline std::ostream& operator<<(std::ostream& os, Token_Type type) {
         case Token_Type::FUNCTION_CALL: return os << "FUNCTION_CALL";
         case Token_Type::VARIBLE: return os << "VARIBLE";
         case Token_Type::VARIBLE_ASSIGMENT_STATMENT: return os << "VARIBLE_ASSIGMENT_STATMENT";
+        case Token_Type::VAR: return os << "VAR";
         case Token_Type::NO: return os << "NO";
         default: 
             assert(false && "Неизвестный тип токена");

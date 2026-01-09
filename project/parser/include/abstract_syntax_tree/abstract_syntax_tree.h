@@ -32,6 +32,7 @@
 #include "syntax_nodes/nonterminals/bin_expr_syntax_node.h"
 #include "syntax_nodes/terminals/plus_syntax_node.h"
 #include "syntax_nodes/terminals/semicolon_syntax_node.h"
+#include "syntax_nodes/terminals/var_syntax_node.h"
 #include "i_syntax_node.h"
 #include "lexical_tokens.h"
 #include "syntax_node_empty_visitor.h"
@@ -115,6 +116,11 @@ public:
       case Token_Type::SEMICOLON:
       {
          syntax_node = std::make_shared< SemicolonSyntaxNode >( lexical_token );
+      };
+      break;
+      case Token_Type::VAR:
+      {
+         syntax_node = std::make_shared< VarSyntaxNode >( lexical_token );
       };
       break;
       case Token_Type::OPEN_CURLY_BRACKET:

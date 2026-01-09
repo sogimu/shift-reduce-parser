@@ -25,6 +25,7 @@ public:
       std::function< void( const BinExprSyntaxNodeSP& ) > bin_expr_syntax_node = [ this ]( const BinExprSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const EolSyntaxNodeSP& ) > eol_syntax_node = [ this ]( const EolSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const SemicolonSyntaxNodeSP& ) > semicolon_syntax_node = [ this ]( const SemicolonSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const VarSyntaxNodeSP& ) > var_syntax_node = [ this ]( const VarSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const StatmentSyntaxNodeSP& ) > statment_syntax_node = [ this ]( const StatmentSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ScopeSyntaxNodeSP& ) > scope_statment_syntax_node = [ this ]( const ScopeSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const OpenCurlyBracketSyntaxNodeSP& ) > open_curly_bracket_syntax_node = [ this ]( const OpenCurlyBracketSyntaxNodeSP& node )
@@ -91,6 +92,12 @@ public:
    {
       mHandlers.asterisk_syntax_node( node );
    }
+   
+   void visit( const VarSyntaxNodeSP& node ) override
+   {
+      mHandlers.var_syntax_node( node );
+   }
+   
    void visit( const SlashSyntaxNodeSP& node ) override
    {
       mHandlers.slash_syntax_node( node );

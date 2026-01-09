@@ -10,6 +10,7 @@
 VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const VaribleAssigmentStatmentSyntaxNode& node )
    : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT_STATMENT }
    , mTokens{ node.mTokens }
+   , mContext{ node.mContext }
 {
 
 }
@@ -64,6 +65,11 @@ bool VaribleAssigmentStatmentSyntaxNode::compare( const ISyntaxNode& node ) cons
          return;
       }
       if( node->Children().size() != this->Children().size() )
+      {
+         is_equal = false;
+         return;
+      }
+      if( node->context() != this->context() )
       {
          is_equal = false;
          return;

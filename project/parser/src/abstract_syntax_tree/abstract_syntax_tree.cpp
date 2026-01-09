@@ -33,6 +33,7 @@
 #include "syntax_nodes/nonterminals/bin_expr_syntax_node.h"
 #include "syntax_nodes/terminals/plus_syntax_node.h"
 #include "syntax_nodes/terminals/semicolon_syntax_node.h"
+#include "syntax_nodes/terminals/var_syntax_node.h"
 #include "grammars/un_expr_grammar.h"
 #include "grammars/bin_expr_grammar.h"
 #include "grammars/circle_brackets_grammar.h"

@@ -37,6 +37,12 @@ public:
    {
       mCopy = std::make_shared< AsteriskSyntaxNode >( *node );
    }
+   
+   void visit( const VarSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< VarSyntaxNode >( *node );
+   }
+   
    void visit( const SlashSyntaxNodeSP& node ) override
    {
       mCopy = std::make_shared< SlashSyntaxNode >( *node );

@@ -553,6 +553,13 @@ public:
       if constexpr( std::is_same_v< T, AsteriskSyntaxNode > )
          mResult = true;
    }
+   
+   void visit( const VarSyntaxNodeSP& /* node */ ) override
+   {
+      if constexpr( std::is_same_v< T, VarSyntaxNode > )
+         mResult = true;
+   }
+   
    void visit( const SlashSyntaxNodeSP& /* node */ ) override
    {
       if constexpr( std::is_same_v< T, SlashSyntaxNode > )

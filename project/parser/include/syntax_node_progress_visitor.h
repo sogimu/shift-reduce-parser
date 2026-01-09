@@ -37,6 +37,7 @@ public:
       std::function< HandlerReturn( const State& state, const PlusSyntaxNodeSP& ) > plus_syntax_node = [ this ] ( const State& state,  const PlusSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const MinusSyntaxNodeSP& ) > minus_syntax_node = [ this ] ( const State& state,  const MinusSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const AsteriskSyntaxNodeSP& ) > asterisk_syntax_node = [ this ] ( const State& state,  const AsteriskSyntaxNodeSP& node ) { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const VarSyntaxNodeSP& ) > var_syntax_node = [ this ] ( const State& state,  const VarSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const SlashSyntaxNodeSP& ) > slash_syntax_node = [ this ] ( const State& state,  const SlashSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const NumberSyntaxNodeSP& ) > number_syntax_node = [ this ] ( const State& state,  const NumberSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const FSyntaxNodeSP& ) > f_syntax_node = [ this ] ( const State& state,  const FSyntaxNodeSP& node ) { return default_handler( state, node ); };
@@ -148,6 +149,12 @@ public:
    {
       mHandlers.call( &Handlers::asterisk_syntax_node, mHandlers.state(), node );
    }
+   
+   void visit( const VarSyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::var_syntax_node, mHandlers.state(), node );
+   }
+   
    void visit( const SlashSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::slash_syntax_node, mHandlers.state(), node );

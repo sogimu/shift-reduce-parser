@@ -22,6 +22,7 @@
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/print_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
+#include "terminals/var_syntax_node.h"
 #include "terminals/slash_syntax_node.h"
 #include "terminals/return_syntax_node.h"
 #include "terminals/function_syntax_node.h"
@@ -54,6 +55,7 @@ public:
    virtual void visit( const UnExprSyntaxNodeSP& ) = 0;
    virtual void visit( const BinExprSyntaxNodeSP& ) = 0;
    virtual void visit( const SemicolonSyntaxNodeSP& ) = 0;
+   virtual void visit( const VarSyntaxNodeSP& ) = 0;
    virtual void visit( const StatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const ScopeSyntaxNodeSP& ) = 0;
    virtual void visit( const OpenCurlyBracketSyntaxNodeSP& ) = 0;

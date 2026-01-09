@@ -66,6 +66,11 @@ public:
       mCopy = std::make_shared< SemicolonSyntaxNode >( *node );
    }
 
+   void visit( const VarSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< VarSyntaxNode >( *node );
+   }
+
    void visit( const StatmentSyntaxNodeSP& node ) override
    {
       mCopy = std::make_shared< StatmentSyntaxNode >( *node );
