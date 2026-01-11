@@ -14,7 +14,8 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, NUMBER_INT )
    auto result = naive_stack_machine.eval( input );
 
    // ASSERT
-   EXPECT_EQ( result, 1 );
+   EXPECT_EQ( result.is_double(), true );
+   EXPECT_EQ( result.get_double(), 1 );
 }
 
 TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, BIN_EXPR_INT_ADDITION_INT )
@@ -27,7 +28,22 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, BIN_EXPR_INT_ADDITION_INT )
    auto result = naive_stack_machine.eval( input );
 
    // ASSERT
-   EXPECT_EQ( result, 3 );
+   EXPECT_EQ( result.is_double(), true );
+   EXPECT_EQ( result.get_double(), 3 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, BIN_EXPR_DOUBLE_ADDITION_DOUBLE )
+{
+   // ARRANGE
+   const auto& input = R"""(1.5+2.3;)""";
+
+   // ACT
+   Interpreter naive_stack_machine;
+   auto result = naive_stack_machine.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_double(), true );
+   EXPECT_EQ( result.get_double(), 3.8 );
 }
 
 TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, RETURN_INT )
@@ -40,7 +56,8 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, RETURN_INT )
    auto result = naive_stack_machine.eval( input );
 
    // ASSERT
-   EXPECT_EQ( result, 1 );
+   EXPECT_EQ( result.is_double(), true );
+   EXPECT_EQ( result.get_double(), 1 );
 }
 
 TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, FUNCTION_CALL_INT )
@@ -53,6 +70,7 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, FUNCTION_CALL_INT )
    auto result = interpreter.eval( input );
 
    // ASSERT
-   EXPECT_EQ( result, 2 );
+   EXPECT_EQ( result.is_double(), true );
+   EXPECT_EQ( result.get_double(), 2 );
 }
 
