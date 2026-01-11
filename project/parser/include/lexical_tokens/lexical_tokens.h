@@ -192,12 +192,18 @@ public:
             std::string token;
             size_t line = chars.current.value().line;
             size_t col = chars.current.value().col;
-            for( ; chars.current && didgits.count( chars.current.value().value ); chars = next_chars() )
+            bool is_dot_met = false;
+            for( ; chars.current && ( didgits.count( chars.current.value().value ) || ( !is_dot_met && chars.current.value().value == '.') ); chars = next_chars() )
             {
-               token += chars.current.value().value;
+              token += chars.current.value().value;
+
+              if( chars.current.value().value == '.' )
+              {
+                is_dot_met = true;
+              }
             }
             result.emplace_back( LexicalToken{ .text = token, 
-                                               .type = Token_Type::INT, 
+                                               .type = Token_Type::NUMBER, 
                                                .line = line, 
                                                .col = col, 
                                                .length = token.size() } );
@@ -272,7 +278,7 @@ private:
    const std::set< char > alphabet{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '_',
                                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
-   const std::set< char > terminals{ '+', '-', '/', '*', '(', ')', '=', '<', '>', ';', '{', '}', ',' };
+   const std::set< char > terminals{ '+', '-', '/', '*', '(', ')', '=', '<', '>', ';', '{', '}', ',', '.' };
 
    const std::unordered_map< std::string, Token_Type > token_by_text{
       { "if", Token_Type::IF }, 

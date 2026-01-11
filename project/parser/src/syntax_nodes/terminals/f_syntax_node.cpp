@@ -35,7 +35,7 @@ FSyntaxNode::FSyntaxNode( const NumberSyntaxNodeSP& number )
   add_back( number );
 }
 
-int FSyntaxNode::value() const
+double FSyntaxNode::value() const
 {
   return mValue;
 }

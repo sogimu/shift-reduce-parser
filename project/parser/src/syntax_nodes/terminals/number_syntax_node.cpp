@@ -5,18 +5,18 @@
 #include "syntax_node_empty_visitor.h"
 
 NumberSyntaxNode::NumberSyntaxNode( const NumberSyntaxNode& node )
-  : ITerminalSyntaxNode{ Token_Type::INT, node.lexical_tokens() }
+  : ITerminalSyntaxNode{ Token_Type::NUMBER, node.lexical_tokens() }
   , mValue{ node.mValue }
 {
 }
 
 NumberSyntaxNode::NumberSyntaxNode( const LexicalTokens::LexicalToken& token )
-  : ITerminalSyntaxNode{ Token_Type::INT, token }
+  : ITerminalSyntaxNode{ Token_Type::NUMBER, token }
 {
   mValue = std::stod( token.text );
 }
 
-int NumberSyntaxNode::value() const
+double NumberSyntaxNode::value() const
 {
   return mValue;
 }

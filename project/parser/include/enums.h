@@ -7,7 +7,7 @@ enum class Token_Type
 {
    BOL,
    EOL,
-   INT,
+   NUMBER,
    PLUS,
    MINUS,
    ASTERISK,
@@ -57,7 +57,7 @@ inline std::ostream& operator<<(std::ostream& os, Token_Type type) {
     switch(type) {
         case Token_Type::BOL: return os << "BOL";
         case Token_Type::EOL: return os << "EOL";
-        case Token_Type::INT: return os << "INT";
+        case Token_Type::NUMBER: return os << "NUMBER";
         case Token_Type::PLUS: return os << "PLUS";
         case Token_Type::MINUS: return os << "MINUS";
         case Token_Type::ASTERISK: return os << "ASTERISK";

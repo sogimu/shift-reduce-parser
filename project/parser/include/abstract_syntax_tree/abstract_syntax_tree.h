@@ -93,7 +93,7 @@ public:
          syntax_node = std::make_shared< SlashSyntaxNode >( lexical_token );
       };
       break;
-      case Token_Type::INT:
+      case Token_Type::NUMBER:
       {
          syntax_node = std::make_shared< NumberSyntaxNode >( lexical_token );
       };

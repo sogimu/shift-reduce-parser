@@ -16,13 +16,13 @@ public:
 
    NumberSyntaxNode( const LexicalTokens::LexicalToken& token );
 
-   int value() const;
+   double value() const;
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 
    bool compare( const ISyntaxNode& node ) const override;
 private:
-   int mValue;
+   double mValue;
 };
 
 using NumberSyntaxNodeSP = std::shared_ptr< NumberSyntaxNode >;

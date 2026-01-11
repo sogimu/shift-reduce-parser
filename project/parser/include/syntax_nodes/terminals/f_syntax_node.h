@@ -16,14 +16,14 @@ public:
    FSyntaxNode( const MinusSyntaxNodeSP& minus, const NumberSyntaxNodeSP& number );
    FSyntaxNode( const NumberSyntaxNodeSP& number );
 
-   int value() const;
+   double value() const;
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
 
    bool compare( const ISyntaxNode& node ) const override;
 
 private:
-   int mValue;
+   double mValue;
 };
 
 using FSyntaxNodeSP = std::shared_ptr< FSyntaxNode >;

@@ -9,6 +9,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
 endif()
 
 add_executable(${PROJECT_NAME}
+    src/lexical_tokens/numbers/numbers_test.cpp
     src/lexical_tokens/arithmetic_expression/expression_in_circle_brackets_test.cpp
     src/lexical_tokens/arithmetic_expression/addition_test.cpp
     src/lexical_tokens/arithmetic_expression/subtraction_test.cpp

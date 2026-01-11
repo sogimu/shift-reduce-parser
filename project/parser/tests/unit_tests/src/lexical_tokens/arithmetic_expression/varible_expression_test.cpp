@@ -19,7 +19,7 @@ TEST( VARIBLE_EXPRESSION, SIMPLE_ASSIGMENT )
    EXPECT_EQ( lexical_tokens[1], t1 );
    LexicalTokens::LexicalToken t2{ .text="=", .type=Token_Type::EQUAL, .line=0, .col=1, .length=1 };
    EXPECT_EQ( lexical_tokens[2], t2 );
-   LexicalTokens::LexicalToken t3{ .text="2", .type=Token_Type::INT, .line=0, .col=2, .length=1 };
+   LexicalTokens::LexicalToken t3{ .text="2", .type=Token_Type::NUMBER, .line=0, .col=2, .length=1 };
    EXPECT_EQ( lexical_tokens[3], t3 );
    LexicalTokens::LexicalToken t4{ .text=";", .type=Token_Type::SEMICOLON, .line=0, .col=3, .length=1 };
    EXPECT_EQ( lexical_tokens[4], t4 );
@@ -42,7 +42,7 @@ TEST( VARIBLE_EXPRESSION, SIMPLE_ASSIGMENT_LONG_NAME )
    EXPECT_EQ( lexical_tokens[1], t1 );
    LexicalTokens::LexicalToken t2{ .text="=", .type=Token_Type::EQUAL, .line=0, .col=3, .length=1 };
    EXPECT_EQ( lexical_tokens[2], t2 );
-   LexicalTokens::LexicalToken t3{ .text="2", .type=Token_Type::INT, .line=0, .col=4, .length=1 };
+   LexicalTokens::LexicalToken t3{ .text="2", .type=Token_Type::NUMBER, .line=0, .col=4, .length=1 };
    EXPECT_EQ( lexical_tokens[3], t3 );
    LexicalTokens::LexicalToken t4{ .text=";", .type=Token_Type::SEMICOLON, .line=0, .col=5, .length=1 };
    EXPECT_EQ( lexical_tokens[4], t4 );
