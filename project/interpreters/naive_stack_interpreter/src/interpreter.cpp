@@ -4,6 +4,7 @@
 #include "lexical_tokens.h"
 #include "abstract_syntax_tree.h"
 #include "control_flow_graph.h"
+#include <exception>
 #include <iostream>
 #include <string>
 
@@ -104,8 +105,11 @@
    // cout << result0 << std::endl;
    // return 0;
 
-double Interpreter::eval( const std::string& expression ) const
+Json Interpreter::eval( const std::string& expression ) const
 {
+  Json result;
+  try 
+  {
     std::cout << "== Lexemes ==" << std::endl;
     LexicalTokens lexical_tokens( expression );
     std::cout << lexical_tokens << std::endl;
@@ -120,8 +124,12 @@ double Interpreter::eval( const std::string& expression ) const
 
     std::cout << "== Executioning ==" << std::endl;
     StackMachine stack_machine{ cfg };
-    double result = 0;
     result = stack_machine.exec();
-
-    return result;
+  } 
+  catch (const std::exception& e)
+  {
+    std::cerr << e.what() << std::endl;
+  } 
+  
+  return result;
 }

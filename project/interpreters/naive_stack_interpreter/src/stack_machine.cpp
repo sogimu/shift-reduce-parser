@@ -41,11 +41,11 @@ StackMachine::StackMachine( const ControlFlowGraph& cfg )
 {
 }
 
-int StackMachine::exec()
+Json StackMachine::exec()
 {
    VaribleStore varible_store;
    FunctionStore function_store;
-   std::deque< double > argument_stack;
+   std::deque< Json > argument_stack;
    std::deque< FunctionCallSyntaxNodeSP > function_call_stack;
 
    std::vector< ISyntaxNodeSP > stack;
@@ -53,7 +53,7 @@ int StackMachine::exec()
       mCfg.root(),
       [ &varible_store, &function_store, &function_call_stack, &argument_stack, &stack ]( const ISyntaxNodeSP& node, StackDFS< ISyntaxNodeSP >& stack_dfs )
       {
-            stack.emplace_back( node );
+          stack.emplace_back( node );
          auto children = node->Children();
          SyntaxNodeEmptyVisitor::Handlers handlers;
          handlers.scope_statment_syntax_node =
@@ -70,13 +70,13 @@ int StackMachine::exec()
             auto s = argument_stack;
             (void) s;
             // const auto& condition = if_statment->conditional_expression();
-            double condition_result = 0;
+            Json condition_result /*= None{}*/;
             if( !argument_stack.empty() )
             {
                 condition_result = argument_stack.back();
                 argument_stack.pop_back();
             }
-            if( condition_result )
+            if( !condition_result.is_null() )
             {
                const auto& true_scope = if_statment->true_scope();
                children = std::list< ISyntaxNodeSP >{ true_scope };
@@ -137,7 +137,7 @@ int StackMachine::exec()
          handlers.f_syntax_node = [ &argument_stack ]( const FSyntaxNodeSP& node )
          {
             // std::cout << "f = " << std::to_string( node->value() ) << std::endl;
-            argument_stack.push_back( node->value() );
+            argument_stack.push_back( double( node->value() ) );
          };
          handlers.name_syntax_node = [ &argument_stack, &varible_store ]( const NameSyntaxNodeSP& varible )
          {
@@ -152,7 +152,7 @@ int StackMachine::exec()
              // std::cout << "<<<STACK>>>>";
              // for (const auto& j : argument_stack )
              // {
-             //     std::cout << std::to_string( j ) << ", ";
+             //     std::cout << j << ", ";
              // }
              // std::cout << "<<<STACK>>>>" << std::endl;
             auto rhs = argument_stack.back();
@@ -247,7 +247,7 @@ int StackMachine::exec()
             auto result = argument_stack.back();
             if( !argument_stack.empty() )
                argument_stack.pop_back();
-            std::cout << "print: " << std::to_string( result ) << std::endl;
+            std::cout << "print: " << result << std::endl;
          };
          handlers.varible_assigment_statment_syntax_node = [ &varible_store, &argument_stack ]( const VaribleAssigmentStatmentSyntaxNodeSP& varible_assigment )
          {
@@ -282,7 +282,7 @@ int StackMachine::exec()
          stack.pop_back();
 } );
     
-    int result = 0;
+    Json result;
     if( !argument_stack.empty() )
     {
         result = argument_stack.back();

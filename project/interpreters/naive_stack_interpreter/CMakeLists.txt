@@ -6,12 +6,14 @@ set(HEADERS
     include/function_store.h
     include/control_flow_graph.h
     include/stack_machine.h
+    include/json.h
     include/interpreter.h
 )
 
 set(SOURCES
     src/control_flow_graph.cpp
     src/stack_machine.cpp
+    src/json.cpp
     src/interpreter.cpp
 )
 

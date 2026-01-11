@@ -5,14 +5,14 @@
 #include <ostream>
 #include <string>
 
-using namespace std;
+#include "json.h"
 
 class VaribleStore
 {
 public:
    void pushScope()
    {
-      mScope.emplace_back( std::map< std::string, int >{} );
+      mScope.emplace_back( std::map< std::string, Json >{} );
    }
 
    void popScope()
@@ -20,7 +20,7 @@ public:
       mScope.pop_back();
    }
 
-   int& operator[]( const std::string& name )
+   Json& operator[]( const std::string& name )
    {
       auto it = std::find_if( mScope.rbegin(), mScope.rend(),
                               [ &name ]( const auto& layer ) -> bool
@@ -35,7 +35,7 @@ public:
       return mScope.back()[ name ];
    }
 
-   const int& operator[]( const std::string& name ) const
+   const Json& operator[]( const std::string& name ) const
    {
       auto it = std::find_if( mScope.rbegin(), mScope.rend(),
                               [ &name ]( const auto& layer ) -> bool
@@ -50,7 +50,7 @@ public:
       return mScope.back()[ name ];
    }
 
-   void writeValueToLocalVarible( const std::string& name, int value )
+   void writeValueToLocalVarible( const std::string& name, const Json& value )
    {
       mScope.back()[ name ] = value;
    }
@@ -65,7 +65,7 @@ public:
          std::cout << "=LAYER (" << std::to_string( index ) << "): ";
          for( const auto& [ key, value ] : layer )
          {
-            std::cout << key << " == " << std::to_string( value ) << ", ";
+            std::cout << key << " == " << value << ", ";
          }
          --index;
          std::cout << std::endl;
@@ -74,5 +74,5 @@ public:
    }
 
 private:
-   mutable std::deque< std::map< std::string, int > > mScope;
+   mutable std::deque< std::map< std::string, Json > > mScope;
 };

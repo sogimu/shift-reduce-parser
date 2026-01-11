@@ -1,12 +1,14 @@
 #pragma once
 
+
 #include "control_flow_graph.h"
+#include "json.h"
 
 class StackMachine
 {
 public:
    StackMachine( const ControlFlowGraph& cfg );
-   int exec();
+   Json exec();
 private:
   ControlFlowGraph mCfg;
 };

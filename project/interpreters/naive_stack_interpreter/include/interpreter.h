@@ -2,11 +2,12 @@
 
 #include <string>
 #include "syntax_exception.hpp"
+#include "json.h"
 
 using namespace std;
 
 class Interpreter
 {
 public:
-   double eval( const std::string& expression ) const;
+   Json eval( const std::string& expression ) const;
 };
