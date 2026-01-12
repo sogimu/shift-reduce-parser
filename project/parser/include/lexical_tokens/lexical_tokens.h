@@ -219,6 +219,27 @@ public:
                                                    .length = token.size() } );
             }
          }
+         else if( chars.current.value().value == '"' )
+         {
+            std::string token;
+            size_t line = chars.current.value().line;
+            size_t col = chars.current.value().col;
+            chars = next_chars();
+            for( ; alphabet.count( chars.current.value().value ) || didgits.count( chars.current.value().value ); chars = next_chars() )
+            {
+                token += chars.current.value().value;
+            }
+           
+            if( chars.current.value().value == '"' )
+            {
+                LexicalToken lexical_token{ .text = token, 
+                                            .type = Token_Type::STRING, 
+                                            .line = line, 
+                                            .col = col, 
+                                            .length = token.size() };
+                result.emplace_back( lexical_token );
+            }
+         }
          else if( alphabet.count( chars.current.value().value ) )
          {
             std::string token;
@@ -230,20 +251,20 @@ public:
             }
             if( token_by_text.contains( token ) )
             {
-               result.emplace_back( LexicalToken{ .text = token, 
-                                                  .type = token_by_text.at( token ), 
-                                                  .line = line, 
-                                                  .col = col , 
-                                                  .length = token.size() } );
+                result.emplace_back( LexicalToken{ .text = token, 
+                                                   .type = token_by_text.at( token ), 
+                                                   .line = line, 
+                                                   .col = col , 
+                                                   .length = token.size() } );
             }
             else
             {
-              LexicalToken lexical_token{ .text = token, 
-                                                  .type = Token_Type::NAME, 
-                                                  .line = line, 
-                                                  .col = col, 
-                                                  .length = token.size() };
-               result.emplace_back( lexical_token );
+                LexicalToken lexical_token{ .text = token, 
+                                            .type = Token_Type::NAME, 
+                                            .line = line, 
+                                            .col = col, 
+                                            .length = token.size() };
+                result.emplace_back( lexical_token );
             }
          }
          else

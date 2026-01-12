@@ -17,6 +17,7 @@ add_executable(${PROJECT_NAME}
     src/lexical_tokens/arithmetic_expression/division_test.cpp
     src/lexical_tokens/arithmetic_expression/varible_expression_test.cpp
     src/lexical_tokens/multylines/multylines_test.cpp
+    src/lexical_tokens/strings/strings_test.cpp
     src/abstract_syntax_tree/positive/arithmetic_expression/arithmetic_test.cpp
     src/abstract_syntax_tree/positive/if_statment/if_test.cpp
     src/abstract_syntax_tree/positive/while_statment/while_test.cpp
