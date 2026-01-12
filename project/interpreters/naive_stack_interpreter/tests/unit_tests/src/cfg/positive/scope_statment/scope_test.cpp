@@ -18,10 +18,10 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_SYNTAX_TREE_SCOPE, F_SEMICOLON_F_SEMI
    )""";
    const auto& lexical_tokens = LexicalTokens( input );
 
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
+   const auto& n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[2] );
    const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
    const auto& statment0 = std::make_shared< StatmentSyntaxNode >( f0, lexical_tokens[3] );
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
+   const auto& n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[4] );
    const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
    const auto& statment1 = std::make_shared< StatmentSyntaxNode >( f1, lexical_tokens[5] );
    std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens{ lexical_tokens[1], lexical_tokens[6]  };
@@ -32,10 +32,10 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_SYNTAX_TREE_SCOPE, F_SEMICOLON_F_SEMI
    ControlFlowGraph cfg{ syntax_tree };
    
    // ASSERT
-   const auto& expected_n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
+   const auto& expected_n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[2] );
    const auto& expected_f0 = std::make_shared< FSyntaxNode >( expected_n0 );
    const auto& expected_statment0 = std::make_shared< StatmentSyntaxNode >( expected_f0, lexical_tokens[3] );
-   const auto& expected_n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
+   const auto& expected_n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[4] );
    const auto& expected_f1 = std::make_shared< FSyntaxNode >( expected_n1 );
    const auto& expected_statment1 = std::make_shared< StatmentSyntaxNode >( expected_f1, lexical_tokens[5] );
    std::vector< LexicalTokens::LexicalToken > expected_scope_lexical_tokens{ lexical_tokens[1], lexical_tokens[6]  };

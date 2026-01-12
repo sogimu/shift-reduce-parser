@@ -18,7 +18,7 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, INT_SEMICOLON )
    // ARRANGE
    const auto& input = R"""(1;)""";
    const auto& lexical_tokens = LexicalTokens( input );
-   const auto& n = std::make_shared< NumberSyntaxNode >( lexical_tokens[1] );
+   const auto& n = std::make_shared< DoubleSyntaxNode >( lexical_tokens[1] );
    const auto& f = std::make_shared< FSyntaxNode >( n );
    const auto& statment = std::make_shared< StatmentSyntaxNode >( f, lexical_tokens[2] );
    const auto& syntax_tree = AbstractSyntaxTree( statment );
@@ -27,7 +27,7 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, INT_SEMICOLON )
    ControlFlowGraph cfg{ syntax_tree };
    
    // ASSERT
-   const auto& expected_n = std::make_shared< NumberSyntaxNode >( lexical_tokens[1] );
+   const auto& expected_n = std::make_shared< DoubleSyntaxNode >( lexical_tokens[1] );
    const auto& expected_f = std::make_shared< FSyntaxNode >( expected_n );
    const auto& expected_statment = std::make_shared< StatmentSyntaxNode >( expected_f, lexical_tokens[2] );
    ControlFlowGraph expected_cfg{ expected_statment };
@@ -40,7 +40,7 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, MINUS_INT_SEMICOLON )
    // ARRANGE
    const auto& input = R"""(-1;)""";
    const auto& lexical_tokens = LexicalTokens( input );
-   const auto& n = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
+   const auto& n = std::make_shared< DoubleSyntaxNode >( lexical_tokens[2] );
    const auto& f = std::make_shared< FSyntaxNode >( n );
    const auto& unexpr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, f, std::vector<LexicalTokens::LexicalToken>{ lexical_tokens[1] } );
    const auto& statment = std::make_shared< StatmentSyntaxNode >( unexpr, lexical_tokens[3] );
@@ -50,7 +50,7 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, MINUS_INT_SEMICOLON )
    ControlFlowGraph cfg{ syntax_tree };
 
    // ASSERT
-   const auto& expected_n = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
+   const auto& expected_n = std::make_shared< DoubleSyntaxNode >( lexical_tokens[2] );
    const auto& expected_f = std::make_shared< FSyntaxNode >( expected_n );
    const auto& expected_unexpr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, std::vector<LexicalTokens::LexicalToken>{ lexical_tokens[1] } );
    const auto& expected_statment = std::make_shared< StatmentSyntaxNode >( lexical_tokens[3] );
@@ -66,10 +66,10 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, UN_EXPR_LAST )
    // ARRANGE
    const auto& input = R"""(1--2;)""";
    const auto& lexical_tokens = LexicalTokens( input );
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[1] );
+   const auto& n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[1] );
    const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
 
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
+   const auto& n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[4] );
    const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
    const auto& unexpr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, f1, std::vector<LexicalTokens::LexicalToken>{ lexical_tokens[3] } );
 
@@ -82,10 +82,10 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, UN_EXPR_LAST )
    ControlFlowGraph cfg{ syntax_tree };
 
    // ASSERT
-   const auto& expected_n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[1] );
+   const auto& expected_n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[1] );
    const auto& expected_f0 = std::make_shared< FSyntaxNode >( expected_n0 );
 
-   const auto& expected_n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
+   const auto& expected_n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[4] );
    const auto& expected_f1 = std::make_shared< FSyntaxNode >( expected_n1 );
    const auto& expected_un_expr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, std::vector<LexicalTokens::LexicalToken>{ lexical_tokens[3] } );
 
@@ -106,11 +106,11 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, UN_EXPR_NOT_LAST )
    // ARRANGE
    const auto& input = R"""(-2-1;)""";
    const auto& lexical_tokens = LexicalTokens( input );
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
+   const auto& n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[2] );
    const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
    const auto& unexpr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, f0, std::vector<LexicalTokens::LexicalToken>{ lexical_tokens[1] } );
 
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
+   const auto& n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[4] );
    const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
 
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[3] };
@@ -122,11 +122,11 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, UN_EXPR_NOT_LAST )
    ControlFlowGraph cfg{ syntax_tree };
 
    // ASSERT
-   const auto& expected_n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
+   const auto& expected_n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[2] );
    const auto& expected_f0 = std::make_shared< FSyntaxNode >( expected_n0 );
    const auto& expected_un_expr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, std::vector<LexicalTokens::LexicalToken>{ lexical_tokens[1] } );
 
-   const auto& expected_n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
+   const auto& expected_n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[4] );
    const auto& expected_f1 = std::make_shared< FSyntaxNode >( expected_n1 );
 
    std::vector< LexicalTokens::LexicalToken > expected_bin_expr_lexical_tokens{ lexical_tokens[3] };
@@ -216,10 +216,10 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, ONE_PLUS )
    // ARRANGE
    const auto& input = R"""(1+2;)""";
    const auto& lexical_tokens = LexicalTokens( input );
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[1] );
+   const auto& n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[1] );
    const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
 
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
+   const auto& n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[3] );
    const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
 
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
@@ -231,10 +231,10 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_ARITHMETIC, ONE_PLUS )
    ControlFlowGraph cfg{ syntax_tree };
 
    // ASSERT
-   const auto& expected_n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[1] );
+   const auto& expected_n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[1] );
    const auto& expected_f0 = std::make_shared< FSyntaxNode >( expected_n0 );
 
-   const auto& expected_n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
+   const auto& expected_n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[3] );
    const auto& expected_f1 = std::make_shared< FSyntaxNode >( expected_n1 );
 
    std::vector< LexicalTokens::LexicalToken > expected_bin_expr_lexical_tokens{ lexical_tokens[2] };

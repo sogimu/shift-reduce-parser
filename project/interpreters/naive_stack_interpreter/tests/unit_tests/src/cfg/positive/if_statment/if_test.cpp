@@ -20,9 +20,9 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_IF, F_EQUAL_F )
 
    // ACT
    const auto& lexical_tokens = LexicalTokens( input );
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
+   const auto& n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[3] );
    const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[6] );
+   const auto& n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[6] );
    const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[4], lexical_tokens[5] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Equal, f0, f1, bin_expr_lexical_tokens );
@@ -36,9 +36,9 @@ TEST( NAIVE_STACK_INTERPRETER_CFG_POSITIVE_IF, F_EQUAL_F )
    // ASSERT
    ControlFlowGraph cfg{ syntax_tree };
    
-   const auto& expected_n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
+   const auto& expected_n0 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[3] );
    const auto& expected_f0 = std::make_shared< FSyntaxNode >( expected_n0 );
-   const auto& expected_n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[6] );
+   const auto& expected_n1 = std::make_shared< DoubleSyntaxNode >( lexical_tokens[6] );
    const auto& expected_f1 = std::make_shared< FSyntaxNode >( expected_n1 );
    std::vector< LexicalTokens::LexicalToken > expected_bin_expr_lexical_tokens{ lexical_tokens[4], lexical_tokens[5] };
    const auto& expected_bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Equal, expected_f0, expected_f1, expected_bin_expr_lexical_tokens );
