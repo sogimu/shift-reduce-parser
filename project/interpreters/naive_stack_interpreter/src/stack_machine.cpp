@@ -67,10 +67,7 @@ Json StackMachine::exec()
          },
          handlers.if_statment_syntax_node = [ &children, &argument_stack ]( const IfStatmentSyntaxNodeSP& if_statment )
          {
-            auto s = argument_stack;
-            (void) s;
-            // const auto& condition = if_statment->conditional_expression();
-            Json condition_result /*= None{}*/;
+            Json condition_result;
             if( !argument_stack.empty() )
             {
                 condition_result = argument_stack.back();
@@ -78,8 +75,15 @@ Json StackMachine::exec()
             }
             if( !condition_result.is_null() )
             {
-               const auto& true_scope = if_statment->true_scope();
-               children = std::list< ISyntaxNodeSP >{ true_scope };
+               if( ( condition_result.is_double() && condition_result.get_double() > 0.0 ) || 
+                   ( condition_result.is_int()    && condition_result.get_int() > 0 )      || 
+                   ( condition_result.is_bool()   && condition_result.get_bool() == true ) )
+               {
+                   const auto& true_scope = if_statment->true_scope();
+                   children = std::list< ISyntaxNodeSP >{ true_scope };
+               }    
+               children = {};
+               return;
             }
             else
             {
