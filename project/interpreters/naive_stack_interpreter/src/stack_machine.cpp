@@ -81,9 +81,9 @@ Json StackMachine::exec()
                {
                    const auto& true_scope = if_statment->true_scope();
                    children = std::list< ISyntaxNodeSP >{ true_scope };
+                   return;
                }    
                children = {};
-               return;
             }
             else
             {
