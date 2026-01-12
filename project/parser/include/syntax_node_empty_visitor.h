@@ -19,7 +19,8 @@ public:
       std::function< void( const MinusSyntaxNodeSP& ) > minus_syntax_node = [ this ]( const MinusSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const AsteriskSyntaxNodeSP& ) > asterisk_syntax_node = [ this ]( const AsteriskSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const SlashSyntaxNodeSP& ) > slash_syntax_node = [ this ]( const SlashSyntaxNodeSP& node ) { default_handler( node ); };
-      std::function< void( const NumberSyntaxNodeSP& ) > number_syntax_node = [ this ]( const NumberSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const DoubleSyntaxNodeSP& ) > double_syntax_node = [ this ]( const DoubleSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const IntSyntaxNodeSP& ) > int_syntax_node = [ this ]( const IntSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const FSyntaxNodeSP& ) > f_syntax_node = [ this ]( const FSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const UnExprSyntaxNodeSP& ) > un_expr_syntax_node = [ this ]( const UnExprSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const BinExprSyntaxNodeSP& ) > bin_expr_syntax_node = [ this ]( const BinExprSyntaxNodeSP& node ) { default_handler( node ); };
@@ -42,6 +43,7 @@ public:
       std::function< void( const VaribleAssigmentStatmentSyntaxNodeSP& ) > varible_assigment_statment_syntax_node =
          [ this ]( const VaribleAssigmentStatmentSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const NameSyntaxNodeSP& ) > name_syntax_node = [ this ]( const NameSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const StringSyntaxNodeSP& ) > string_syntax_node = [ this ]( const StringSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const CommaSyntaxNodeSP& ) > comma_syntax_node = [ this ]( const CommaSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const PrintSyntaxNodeSP& ) > print_syntax_node = [ this ]( const PrintSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const EqualSyntaxNodeSP& ) > equal_syntax_node = [ this ]( const EqualSyntaxNodeSP& node ) { default_handler( node ); };
@@ -103,9 +105,14 @@ public:
       mHandlers.slash_syntax_node( node );
    }
 
-   void visit( const NumberSyntaxNodeSP& node ) override
+   void visit( const DoubleSyntaxNodeSP& node ) override
    {
-      mHandlers.number_syntax_node( node );
+      mHandlers.double_syntax_node( node );
+   }
+
+   void visit( const IntSyntaxNodeSP& node ) override
+   {
+      mHandlers.int_syntax_node( node );
    }
 
    void visit( const FSyntaxNodeSP& node ) override
@@ -174,6 +181,11 @@ public:
    void visit( const NameSyntaxNodeSP& node ) override
    {
       mHandlers.name_syntax_node( node );
+   }
+   
+   void visit( const StringSyntaxNodeSP& node ) override
+   {
+      mHandlers.string_syntax_node( node );
    }
 
    void visit( const CommaSyntaxNodeSP& node ) override

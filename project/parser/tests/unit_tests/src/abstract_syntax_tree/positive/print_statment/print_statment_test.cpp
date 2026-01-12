@@ -17,7 +17,7 @@ TEST( SYNTAX_TREE_PRINT, F )
    const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
 
    // ASSERT
-   const auto& number = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
+   const auto& number = std::make_shared< IntSyntaxNode >( lexical_tokens[3] );
    const auto& f = std::make_shared< FSyntaxNode >( number );
    const auto& print = std::make_shared< PrintStatmentSyntaxNode >( f );
    

@@ -27,7 +27,8 @@ set(HEADERS
     include/syntax_nodes/terminals/minus_syntax_node.h
     include/syntax_nodes/terminals/asterisk_syntax_node.h
     include/syntax_nodes/terminals/slash_syntax_node.h
-    include/syntax_nodes/terminals/number_syntax_node.h
+    include/syntax_nodes/terminals/double_syntax_node.h
+    include/syntax_nodes/terminals/int_syntax_node.h
     include/syntax_nodes/terminals/f_syntax_node.h
     include/syntax_nodes/terminals/semicolon_syntax_node.h
     include/syntax_nodes/terminals/return_syntax_node.h
@@ -43,6 +44,7 @@ set(HEADERS
     include/syntax_nodes/terminals/var_syntax_node.h
     include/syntax_nodes/terminals/function_syntax_node.h
     include/syntax_nodes/terminals/name_syntax_node.h
+    include/syntax_nodes/terminals/string_syntax_node.h
     include/syntax_nodes/terminals/comma_syntax_node.h
     include/syntax_nodes/nonterminals/un_expr_syntax_node.h
     include/syntax_nodes/nonterminals/bin_expr_syntax_node.h
@@ -79,7 +81,8 @@ set(SOURCES
     src/syntax_nodes/terminals/slash_syntax_node.cpp
     src/syntax_nodes/terminals/bol_syntax_node.cpp
     src/syntax_nodes/terminals/eol_syntax_node.cpp
-    src/syntax_nodes/terminals/number_syntax_node.cpp
+    src/syntax_nodes/terminals/double_syntax_node.cpp
+    src/syntax_nodes/terminals/int_syntax_node.cpp
     src/syntax_nodes/terminals/f_syntax_node.cpp
     src/syntax_nodes/terminals/semicolon_syntax_node.cpp
     src/syntax_nodes/terminals/var_syntax_node.cpp
@@ -98,6 +101,7 @@ set(SOURCES
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/function_syntax_node.cpp
     src/syntax_nodes/terminals/name_syntax_node.cpp
+    src/syntax_nodes/terminals/string_syntax_node.cpp
     src/syntax_nodes/nonterminals/un_expr_syntax_node.cpp
     src/syntax_nodes/nonterminals/bin_expr_syntax_node.cpp
     src/syntax_nodes/nonterminals/varible_syntax_node.cpp

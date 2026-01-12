@@ -9,12 +9,12 @@
 
 class ISyntaxNodeVisitor;
 
-class NumberSyntaxNode : public ITerminalSyntaxNode, public std::enable_shared_from_this< NumberSyntaxNode >
+class DoubleSyntaxNode : public ITerminalSyntaxNode, public std::enable_shared_from_this< DoubleSyntaxNode >
 {
 public:
-   NumberSyntaxNode( const NumberSyntaxNode& node );
+   DoubleSyntaxNode( const DoubleSyntaxNode& node );
 
-   NumberSyntaxNode( const LexicalTokens::LexicalToken& token );
+   DoubleSyntaxNode( const LexicalTokens::LexicalToken& token );
 
    double value() const;
 
@@ -25,4 +25,4 @@ private:
    double mValue;
 };
 
-using NumberSyntaxNodeSP = std::shared_ptr< NumberSyntaxNode >;
+using DoubleSyntaxNodeSP = std::shared_ptr< DoubleSyntaxNode >;

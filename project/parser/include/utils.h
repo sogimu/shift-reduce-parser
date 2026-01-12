@@ -566,9 +566,15 @@ public:
          mResult = true;
    }
 
-   void visit( const NumberSyntaxNodeSP& /* node */ ) override
+   void visit( const DoubleSyntaxNodeSP& /* node */ ) override
    {
-      if constexpr( std::is_same_v< T, NumberSyntaxNode > )
+      if constexpr( std::is_same_v< T, DoubleSyntaxNode > )
+         mResult = true;
+   }
+   
+   void visit( const IntSyntaxNodeSP& /* node */ ) override
+   {
+      if constexpr( std::is_same_v< T, IntSyntaxNode > )
          mResult = true;
    }
 
@@ -653,6 +659,12 @@ public:
    void visit( const NameSyntaxNodeSP& /* node */ ) override
    {
       if constexpr( std::is_same_v< T, NameSyntaxNode > )
+         mResult = true;
+   }
+
+   void visit( const StringSyntaxNodeSP& /* node */ ) override
+   {
+      if constexpr( std::is_same_v< T, StringSyntaxNode > )
          mResult = true;
    }
 
@@ -795,7 +807,7 @@ static std::string to_string( const ISyntaxNodeSP& node )
         handlers.minus_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MINUS" << "}"; };
         handlers.asterisk_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ASTERISK" << "}"; };
         handlers.slash_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SLASH" << "}"; };
-        handlers.number_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "NUMBER" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"; };
+        handlers.double_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "NUMBER" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"; };
         handlers.f_syntax_node = [ &s, print_lexical_tokens ]( const FSyntaxNodeSP& node ) { s << "{" << "F" << '(' << std::to_string( node->value() ) << ')' << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"; };
         handlers.bin_expr_syntax_node = [ &s ]( const BinExprSyntaxNodeSP& node )
         { 
@@ -907,6 +919,7 @@ static std::string to_string( const ISyntaxNodeSP& node )
            s << "{" << "VARIBLE ASSIGMENT" << " (" << context << ")" << "}";
         };
         handlers.name_syntax_node = [ &s ]( const NameSyntaxNodeSP& node ) { s << "{" << "NAME" << " (" << node->value() << ')' << "}"; };
+        handlers.string_syntax_node = [ &s ]( const StringSyntaxNodeSP& node ) { s << "{" << "STRING" << " (" << node->value() << ')' << "}"; };
         for( size_t i = 0; i < n; ++i )
            s << "   ";
 

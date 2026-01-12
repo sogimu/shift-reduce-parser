@@ -42,9 +42,14 @@ public:
       mCopy = std::make_shared< SlashSyntaxNode >( *node );
    }
 
-   void visit( const NumberSyntaxNodeSP& node ) override
+   void visit( const DoubleSyntaxNodeSP& node ) override
    {
-      mCopy = std::make_shared< NumberSyntaxNode >( *node );
+      mCopy = std::make_shared< DoubleSyntaxNode >( *node );
+   }
+   
+   void visit( const IntSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< IntSyntaxNode >( *node );
    }
 
    void visit( const FSyntaxNodeSP& node ) override
@@ -119,6 +124,11 @@ public:
    void visit( const NameSyntaxNodeSP& node ) override
    {
       mCopy = std::make_shared< NameSyntaxNode >( *node );
+   }
+
+   void visit( const StringSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< StringSyntaxNode >( *node );
    }
 
    void visit( const CommaSyntaxNodeSP& node ) override

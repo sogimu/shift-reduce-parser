@@ -13,8 +13,10 @@
 #include "terminals/minus_syntax_node.h"
 #include "terminals/more_syntax_node.h"
 #include "terminals/name_syntax_node.h"
+#include "terminals/string_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
-#include "terminals/number_syntax_node.h"
+#include "terminals/double_syntax_node.h"
+#include "terminals/int_syntax_node.h"
 #include "terminals/open_circle_bracket_syntax_node.h"
 #include "terminals/open_curly_bracket_syntax_node.h"
 #include "terminals/plus_syntax_node.h"
@@ -50,7 +52,8 @@ public:
    virtual void visit( const MinusSyntaxNodeSP& ) = 0;
    virtual void visit( const AsteriskSyntaxNodeSP& ) = 0;
    virtual void visit( const SlashSyntaxNodeSP& ) = 0;
-   virtual void visit( const NumberSyntaxNodeSP& ) = 0;
+   virtual void visit( const DoubleSyntaxNodeSP& ) = 0;
+   virtual void visit( const IntSyntaxNodeSP& ) = 0;
    virtual void visit( const FSyntaxNodeSP& ) = 0;
    virtual void visit( const UnExprSyntaxNodeSP& ) = 0;
    virtual void visit( const BinExprSyntaxNodeSP& ) = 0;
@@ -77,6 +80,7 @@ public:
    virtual void visit( const FunctionCallSyntaxNodeSP& ) = 0;
    virtual void visit( const VaribleAssigmentStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const NameSyntaxNodeSP& ) = 0;
+   virtual void visit( const StringSyntaxNodeSP& ) = 0;
    virtual void visit( const CommaSyntaxNodeSP& ) = 0;
    virtual void visit( const ReturnSyntaxNodeSP& ) = 0;
    virtual void visit( const ReturnStatmentSyntaxNodeSP& ) = 0;

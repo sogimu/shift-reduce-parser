@@ -17,7 +17,7 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, F )
    const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
 
    // ASSERT
-   const auto& number = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
+   const auto& number = std::make_shared< IntSyntaxNode >( lexical_tokens[2] );
    const auto& f = std::make_shared< FSyntaxNode >( number );
    const auto& return_syntax_node = std::make_shared< ReturnStatmentSyntaxNode >( f, lexical_tokens[1] );
    
@@ -38,11 +38,11 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, BIN_EXPR )
    const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
 
    // ASSERT
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
-   const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
+   const auto& d0 = std::make_shared< IntSyntaxNode >( lexical_tokens[2] );
+   const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
 
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
-   const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
+   const auto& d1 = std::make_shared< IntSyntaxNode >( lexical_tokens[4] );
+   const auto& f1 = std::make_shared< FSyntaxNode >( d1 );
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[3] };
 
@@ -66,8 +66,8 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, UN_EXPR )
    const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
 
    // ASSERT
-   const auto& n = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
-   const auto& f = std::make_shared< FSyntaxNode >( n );
+   const auto& d = std::make_shared< IntSyntaxNode >( lexical_tokens[3] );
+   const auto& f = std::make_shared< FSyntaxNode >( d );
 
    std::vector< LexicalTokens::LexicalToken > un_expr_lexical_tokens{ lexical_tokens[2] };
 
@@ -92,8 +92,8 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, FUNCTION_CALL )
 
    // ASSERT
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
-   const auto& n = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
-   const auto& f = std::make_shared< FSyntaxNode >( n );
+   const auto& d = std::make_shared< IntSyntaxNode >( lexical_tokens[4] );
+   const auto& f = std::make_shared< FSyntaxNode >( d );
    const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( name, std::vector< ISyntaxNodeSP >{ f } );
    const auto& return_syntax_node = std::make_shared< ReturnStatmentSyntaxNode >( function_call, lexical_tokens[1] );
    

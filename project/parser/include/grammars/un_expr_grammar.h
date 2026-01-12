@@ -6,7 +6,7 @@
 #include "terminals/close_circle_bracket_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "terminals/minus_syntax_node.h"
-#include "terminals/number_syntax_node.h"
+#include "terminals/double_syntax_node.h"
 #include "terminals/plus_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
 #include "i_grammar.h"

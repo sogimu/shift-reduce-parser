@@ -15,20 +15,28 @@ FSyntaxNode::FSyntaxNode( const FSyntaxNode& f_syntax_node )
   }
 }
 
-FSyntaxNode::FSyntaxNode( const int& number )
-  : ISyntaxNode{ Token_Type::F }
-{
-  mValue = number;
-}
-
-FSyntaxNode::FSyntaxNode( const MinusSyntaxNodeSP& minus, const NumberSyntaxNodeSP& number )
+FSyntaxNode::FSyntaxNode( const MinusSyntaxNodeSP& minus, const DoubleSyntaxNodeSP& number )
   : ISyntaxNode{ Token_Type::F }
 {
   add_back( minus );
   add_back( number );
 }
 
-FSyntaxNode::FSyntaxNode( const NumberSyntaxNodeSP& number )
+FSyntaxNode::FSyntaxNode( const IntSyntaxNodeSP& number )
+  : ISyntaxNode{ Token_Type::F }
+  , mValue{ static_cast< double >( number->value() ) }
+{
+  add_back( number );
+}
+
+FSyntaxNode::FSyntaxNode( const MinusSyntaxNodeSP& minus, const IntSyntaxNodeSP& number )
+  : ISyntaxNode{ Token_Type::F }
+{
+  add_back( minus );
+  add_back( number );
+}
+
+FSyntaxNode::FSyntaxNode( const DoubleSyntaxNodeSP& number )
   : ISyntaxNode{ Token_Type::F }
   , mValue{ number->value() }
 {

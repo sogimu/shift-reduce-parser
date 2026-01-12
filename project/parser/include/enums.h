@@ -7,7 +7,8 @@ enum class Token_Type
 {
    BOL,
    EOL,
-   NUMBER,
+   DOUBLE,
+   INT,
    PLUS,
    MINUS,
    ASTERISK,
@@ -50,6 +51,7 @@ enum class Token_Type
    VARIBLE,
    VARIBLE_ASSIGMENT_STATMENT,
    VAR,
+   STRING,
    NO
 };
 
@@ -57,7 +59,8 @@ inline std::ostream& operator<<(std::ostream& os, Token_Type type) {
     switch(type) {
         case Token_Type::BOL: return os << "BOL";
         case Token_Type::EOL: return os << "EOL";
-        case Token_Type::NUMBER: return os << "NUMBER";
+        case Token_Type::DOUBLE: return os << "DOUBLE";
+        case Token_Type::INT: return os << "INT";
         case Token_Type::PLUS: return os << "PLUS";
         case Token_Type::MINUS: return os << "MINUS";
         case Token_Type::ASTERISK: return os << "ASTERISK";
@@ -100,6 +103,7 @@ inline std::ostream& operator<<(std::ostream& os, Token_Type type) {
         case Token_Type::VARIBLE: return os << "VARIBLE";
         case Token_Type::VARIBLE_ASSIGMENT_STATMENT: return os << "VARIBLE_ASSIGMENT_STATMENT";
         case Token_Type::VAR: return os << "VAR";
+        case Token_Type::STRING: return os << "STRING";
         case Token_Type::NO: return os << "NO";
         default: 
             assert(false && "Неизвестный тип токена");

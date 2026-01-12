@@ -21,7 +21,7 @@ TEST( SYNTAX_TREE_GLOBAL_VARIBLE_ASSIGN, F )
    // ASSERT
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[1] );
 
-   const auto& number = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
+   const auto& number = std::make_shared< IntSyntaxNode >( lexical_tokens[3] );
    const auto& f = std::make_shared< FSyntaxNode >( number );
   
    const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name, f, lexical_tokens[2] );
@@ -44,11 +44,11 @@ TEST( SYNTAX_TREE_GLOBAL_VARIBLE_ASSIGN, BIN_EXPR )
    // ASSERT
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[1] );
 
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
-   const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
+   const auto& d0 = std::make_shared< IntSyntaxNode >( lexical_tokens[3] );
+   const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
 
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[5] );
-   const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
+   const auto& d1 = std::make_shared< IntSyntaxNode >( lexical_tokens[5] );
+   const auto& f1 = std::make_shared< FSyntaxNode >( d1 );
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[4] };
 
@@ -74,8 +74,8 @@ TEST( SYNTAX_TREE_GLOBAL_VARIBLE_ASSIGN, UN_EXPR )
    // ASSERT
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[1] );
 
-   const auto& n = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
-   const auto& f = std::make_shared< FSyntaxNode >( n );
+   const auto& d = std::make_shared< IntSyntaxNode >( lexical_tokens[4] );
+   const auto& f = std::make_shared< FSyntaxNode >( d );
 
    std::vector< LexicalTokens::LexicalToken > un_expr_lexical_tokens{ lexical_tokens[3] };
 
@@ -124,8 +124,8 @@ TEST( SYNTAX_TREE_GLOBAL_VARIBLE_ASSIGN, FUNCTION_CALL )
    const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[1] );
 
    const auto& name1 = std::make_shared< NameSyntaxNode >( lexical_tokens[3] );
-   const auto& n = std::make_shared< NumberSyntaxNode >( lexical_tokens[5] );
-   const auto& f = std::make_shared< FSyntaxNode >( n );
+   const auto& d = std::make_shared< IntSyntaxNode >( lexical_tokens[5] );
+   const auto& f = std::make_shared< FSyntaxNode >( d );
    const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( name1, std::vector< ISyntaxNodeSP >{ f } );
 
    const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name0, function_call, lexical_tokens[2] );
@@ -148,7 +148,7 @@ TEST( SYNTAX_TREE_LOCAL_VARIBLE_ASSIGN, F )
    // ASSERT
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
 
-   const auto& number = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
+   const auto& number = std::make_shared< IntSyntaxNode >( lexical_tokens[4] );
    const auto& f = std::make_shared< FSyntaxNode >( number );
   
    const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name, f, lexical_tokens[3], VaribleAssigmentStatmentSyntaxNode::Context::LOCAL );
@@ -171,11 +171,11 @@ TEST( SYNTAX_TREE_LOCAL_VARIBLE_ASSIGN, BIN_EXPR )
    // ASSERT
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
 
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
-   const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
+   const auto& d0 = std::make_shared< IntSyntaxNode >( lexical_tokens[4] );
+   const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
 
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[6] );
-   const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
+   const auto& d1 = std::make_shared< IntSyntaxNode >( lexical_tokens[6] );
+   const auto& f1 = std::make_shared< FSyntaxNode >( d1 );
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[5] };
 
@@ -201,8 +201,8 @@ TEST( SYNTAX_TREE_LOCAL_VARIBLE_ASSIGN, UN_EXPR )
    // ASSERT
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
 
-   const auto& n = std::make_shared< NumberSyntaxNode >( lexical_tokens[5] );
-   const auto& f = std::make_shared< FSyntaxNode >( n );
+   const auto& d = std::make_shared< IntSyntaxNode >( lexical_tokens[5] );
+   const auto& f = std::make_shared< FSyntaxNode >( d );
 
    std::vector< LexicalTokens::LexicalToken > un_expr_lexical_tokens{ lexical_tokens[4] };
 
@@ -251,8 +251,8 @@ TEST( SYNTAX_TREE_LOCAL_VARIBLE_ASSIGN, FUNCTION_CALL )
    const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
 
    const auto& name1 = std::make_shared< NameSyntaxNode >( lexical_tokens[4] );
-   const auto& n = std::make_shared< NumberSyntaxNode >( lexical_tokens[6] );
-   const auto& f = std::make_shared< FSyntaxNode >( n );
+   const auto& d = std::make_shared< IntSyntaxNode >( lexical_tokens[6] );
+   const auto& f = std::make_shared< FSyntaxNode >( d );
    const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( name1, std::vector< ISyntaxNodeSP >{ f } );
 
    const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name0, function_call, lexical_tokens[3], VaribleAssigmentStatmentSyntaxNode::Context::LOCAL );

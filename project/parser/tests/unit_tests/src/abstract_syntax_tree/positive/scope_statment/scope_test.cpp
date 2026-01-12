@@ -21,11 +21,11 @@ TEST( SYNTAX_TREE_SCOPE, F_SEMICOLON_F_SEMICOLON )
    const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
 
    // ASSERT
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
-   const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
+   const auto& d0 = std::make_shared< IntSyntaxNode >( lexical_tokens[2] );
+   const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
    const auto& statment0 = std::make_shared< StatmentSyntaxNode >( f0, lexical_tokens[3] );
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
-   const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
+   const auto& d1 = std::make_shared< IntSyntaxNode >( lexical_tokens[4] );
+   const auto& f1 = std::make_shared< FSyntaxNode >( d1 );
    const auto& statment1 = std::make_shared< StatmentSyntaxNode >( f1, lexical_tokens[5] );
    std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens{ lexical_tokens[1], lexical_tokens[6]  };
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {statment0, statment1}, scope_lexical_tokens );
@@ -49,11 +49,11 @@ TEST( SYNTAX_TREE_SCOPE, F_SEMICOLON_F )
    const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
 
    // ASSERT
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
-   const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
+   const auto& d0 = std::make_shared< IntSyntaxNode >( lexical_tokens[2] );
+   const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
    const auto& statment0 = std::make_shared< StatmentSyntaxNode >( f0, lexical_tokens[3] );
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[4] );
-   const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
+   const auto& d1 = std::make_shared< IntSyntaxNode >( lexical_tokens[4] );
+   const auto& f1 = std::make_shared< FSyntaxNode >( d1 );
    const auto& statment1 = std::make_shared< StatmentSyntaxNode >( f1 );
    std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens{ lexical_tokens[1], lexical_tokens[6]  };
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {statment0, statment1}, scope_lexical_tokens );
@@ -77,12 +77,12 @@ TEST( SYNTAX_TREE_SCOPE, F_SEMICOLON_VARIBLE_ASSIGMENT )
    const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
 
    // ASSERT
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[2] );
-   const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
+   const auto& d0 = std::make_shared< IntSyntaxNode >( lexical_tokens[2] );
+   const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
    const auto& statment0 = std::make_shared< StatmentSyntaxNode >( f0, lexical_tokens[3] );
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[4] );
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[6] );
-   const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
+   const auto& d1 = std::make_shared< IntSyntaxNode >( lexical_tokens[6] );
+   const auto& f1 = std::make_shared< FSyntaxNode >( d1 );
    const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name, f1, lexical_tokens[5] );
    const auto& statment1 = std::make_shared< StatmentSyntaxNode >( varible_assigment );
    std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens{ lexical_tokens[1], lexical_tokens[7]  };
@@ -111,19 +111,19 @@ TEST( SYNTAX_TREE_SCOPE, NESTED_SCOPE )
    const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
 
    // ASSERT
-   const auto& n0 = std::make_shared< NumberSyntaxNode >( lexical_tokens[3] );
-   const auto& f0 = std::make_shared< FSyntaxNode >( n0 );
+   const auto& d0 = std::make_shared< IntSyntaxNode >( lexical_tokens[3] );
+   const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
    const auto& statment0 = std::make_shared< StatmentSyntaxNode >( f0, lexical_tokens[4] );
-   const auto& n1 = std::make_shared< NumberSyntaxNode >( lexical_tokens[5] );
-   const auto& f1 = std::make_shared< FSyntaxNode >( n1 );
+   const auto& d1 = std::make_shared< IntSyntaxNode >( lexical_tokens[5] );
+   const auto& f1 = std::make_shared< FSyntaxNode >( d1 );
    const auto& statment1 = std::make_shared< StatmentSyntaxNode >( f1, lexical_tokens[6] );
    std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens0{ lexical_tokens[2], lexical_tokens[7]  };
    const auto& scope0 = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {statment0, statment1}, scope_lexical_tokens0 );
-   const auto& n2 = std::make_shared< NumberSyntaxNode >( lexical_tokens[8] );
-   const auto& f2 = std::make_shared< FSyntaxNode >( n2 );
+   const auto& d2 = std::make_shared< IntSyntaxNode >( lexical_tokens[8] );
+   const auto& f2 = std::make_shared< FSyntaxNode >( d2 );
    const auto& statment2 = std::make_shared< StatmentSyntaxNode >( f2, lexical_tokens[9] );
-   const auto& n3 = std::make_shared< NumberSyntaxNode >( lexical_tokens[10] );
-   const auto& f3 = std::make_shared< FSyntaxNode >( n3 );
+   const auto& d3 = std::make_shared< IntSyntaxNode >( lexical_tokens[10] );
+   const auto& f3 = std::make_shared< FSyntaxNode >( d3 );
    const auto& statment3 = std::make_shared< StatmentSyntaxNode >( f3, lexical_tokens[11] );
    std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens1{ lexical_tokens[1], lexical_tokens[12]  };
    const auto& scope1 = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {scope0, statment2, statment3}, scope_lexical_tokens1 );
@@ -162,7 +162,7 @@ TEST( SYNTAX_TREE_SCOPE, FUNCTION_DECLARATION_FUNCTION_CALL )
    const auto& statment0 = std::make_shared< StatmentSyntaxNode >( function_statment );
    
    const auto& name2 = std::make_shared< NameSyntaxNode >( lexical_tokens[9] );
-   const auto& number = std::make_shared< NumberSyntaxNode >( lexical_tokens[11] );
+   const auto& number = std::make_shared< IntSyntaxNode >( lexical_tokens[11] );
    const auto& f = std::make_shared< FSyntaxNode >( number );
    const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( name2, std::vector< ISyntaxNodeSP >{ f } );
    

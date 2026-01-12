@@ -28,7 +28,7 @@
 #include "syntax_nodes/terminals/minus_syntax_node.h"
 #include "syntax_nodes/terminals/name_syntax_node.h"
 #include "syntax_nodes/terminals/comma_syntax_node.h"
-#include "syntax_nodes/terminals/number_syntax_node.h"
+#include "syntax_nodes/terminals/double_syntax_node.h"
 #include "syntax_nodes/terminals/open_curly_bracket_syntax_node.h"
 #include "syntax_nodes/nonterminals/bin_expr_syntax_node.h"
 #include "syntax_nodes/terminals/plus_syntax_node.h"

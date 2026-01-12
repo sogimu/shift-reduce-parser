@@ -202,11 +202,22 @@ public:
                 is_dot_met = true;
               }
             }
-            result.emplace_back( LexicalToken{ .text = token, 
-                                               .type = Token_Type::NUMBER, 
-                                               .line = line, 
-                                               .col = col, 
-                                               .length = token.size() } );
+            if( is_dot_met )
+            {
+                result.emplace_back( LexicalToken{ .text = token, 
+                                                   .type = Token_Type::DOUBLE, 
+                                                   .line = line, 
+                                                   .col = col, 
+                                                   .length = token.size() } );
+            }
+            else
+            {
+                result.emplace_back( LexicalToken{ .text = token, 
+                                                   .type = Token_Type::INT, 
+                                                   .line = line, 
+                                                   .col = col, 
+                                                   .length = token.size() } );
+            }
          }
          else if( alphabet.count( chars.current.value().value ) )
          {

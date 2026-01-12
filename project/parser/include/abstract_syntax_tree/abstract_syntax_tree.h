@@ -27,7 +27,7 @@
 #include "syntax_nodes/terminals/minus_syntax_node.h"
 #include "syntax_nodes/terminals/name_syntax_node.h"
 #include "syntax_nodes/terminals/comma_syntax_node.h"
-#include "syntax_nodes/terminals/number_syntax_node.h"
+#include "syntax_nodes/terminals/double_syntax_node.h"
 #include "syntax_nodes/terminals/open_curly_bracket_syntax_node.h"
 #include "syntax_nodes/nonterminals/bin_expr_syntax_node.h"
 #include "syntax_nodes/terminals/plus_syntax_node.h"
@@ -93,9 +93,14 @@ public:
          syntax_node = std::make_shared< SlashSyntaxNode >( lexical_token );
       };
       break;
-      case Token_Type::NUMBER:
+      case Token_Type::DOUBLE:
       {
-         syntax_node = std::make_shared< NumberSyntaxNode >( lexical_token );
+         syntax_node = std::make_shared< DoubleSyntaxNode >( lexical_token );
+      };
+      break;
+      case Token_Type::INT:
+      {
+         syntax_node = std::make_shared< IntSyntaxNode >( lexical_token );
       };
       break;
       case Token_Type::EQUAL:

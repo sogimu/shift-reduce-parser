@@ -39,7 +39,8 @@ public:
       std::function< HandlerReturn( const State& state, const AsteriskSyntaxNodeSP& ) > asterisk_syntax_node = [ this ] ( const State& state,  const AsteriskSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const VarSyntaxNodeSP& ) > var_syntax_node = [ this ] ( const State& state,  const VarSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const SlashSyntaxNodeSP& ) > slash_syntax_node = [ this ] ( const State& state,  const SlashSyntaxNodeSP& node ) { return default_handler( state, node ); };
-      std::function< HandlerReturn( const State& state, const NumberSyntaxNodeSP& ) > number_syntax_node = [ this ] ( const State& state,  const NumberSyntaxNodeSP& node ) { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const DoubleSyntaxNodeSP& ) > double_syntax_node = [ this ] ( const State& state,  const DoubleSyntaxNodeSP& node ) { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const IntSyntaxNodeSP& ) > int_syntax_node = [ this ] ( const State& state,  const IntSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const FSyntaxNodeSP& ) > f_syntax_node = [ this ] ( const State& state,  const FSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const UnExprSyntaxNodeSP& ) > un_expr_syntax_node = [ this ] ( const State& state,  const UnExprSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const BinExprSyntaxNodeSP& ) > bin_expr_syntax_node = [ this ] ( const State& state,  const BinExprSyntaxNodeSP& node ) { return default_handler( state, node ); };
@@ -61,6 +62,7 @@ public:
       std::function< HandlerReturn( const State& state, const VaribleAssigmentStatmentSyntaxNodeSP& ) > varible_assigment_statment_syntax_node =
          [ this ] ( const State& state,  const VaribleAssigmentStatmentSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const NameSyntaxNodeSP& ) > name_syntax_node = [ this ] ( const State& state,  const NameSyntaxNodeSP& node ) { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const StringSyntaxNodeSP& ) > string_syntax_node = [ this ] ( const State& state,  const StringSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const CommaSyntaxNodeSP& ) > comma_syntax_node = [ this ] ( const State& state,  const CommaSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const PrintSyntaxNodeSP& ) > print_syntax_node = [ this ] ( const State& state,  const PrintSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const EqualSyntaxNodeSP& ) > equal_syntax_node = [ this ] ( const State& state,  const EqualSyntaxNodeSP& node ) { return default_handler( state, node ); };
@@ -160,9 +162,14 @@ public:
       mHandlers.call( &Handlers::slash_syntax_node, mHandlers.state(), node );
    }
 
-   void visit( const NumberSyntaxNodeSP& node ) override
+   void visit( const DoubleSyntaxNodeSP& node ) override
    {
-      mHandlers.call( &Handlers::number_syntax_node, mHandlers.state(), node );
+      mHandlers.call( &Handlers::double_syntax_node, mHandlers.state(), node );
+   }
+   
+   void visit( const IntSyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::int_syntax_node, mHandlers.state(), node );
    }
 
    void visit( const FSyntaxNodeSP& node ) override
@@ -231,6 +238,11 @@ public:
    void visit( const NameSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::name_syntax_node, mHandlers.state(), node );
+   }
+
+   void visit( const StringSyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::string_syntax_node, mHandlers.state(), node );
    }
 
    void visit( const CommaSyntaxNodeSP& node ) override
