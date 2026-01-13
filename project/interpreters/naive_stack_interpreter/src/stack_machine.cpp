@@ -140,13 +140,15 @@ Json StackMachine::exec()
          SyntaxNodeEmptyVisitor::Handlers handlers;
          handlers.f_syntax_node = [ &argument_stack ]( const FSyntaxNodeSP& node )
          {
-            // std::cout << "f = " << std::to_string( node->value() ) << std::endl;
-            argument_stack.push_back( double( node->value() ) );
+            // std::cout << "f = " << node->value() << std::endl;
+            argument_stack.push_back( node->value() );
+            auto s = argument_stack;
+            (void) s;
          };
          handlers.name_syntax_node = [ &argument_stack, &varible_store ]( const NameSyntaxNodeSP& varible )
          {
             const auto& value = varible_store[ varible->value() ];
-            // std::cout << "Read " << varible->value() << " .Value is " << std::to_string( value ) << std::endl;
+            // std::cout << "Read " << varible->value() << " .Value is " << value << std::endl;
             // varible_store.print();
             // std::cout << "varible " + varible->name() + "(" << std::to_string( value ) << ")" << std::endl;
             argument_stack.push_back( value );
@@ -258,7 +260,7 @@ Json StackMachine::exec()
             // const auto& source = varible_assigment->source();
             const auto& target = varible_assigment->target();
             const auto& target_name = target->value();
-            const auto& value = argument_stack.back();
+            auto value = argument_stack.back();
             if( !argument_stack.empty() )
                argument_stack.pop_back();
             std::string context;
@@ -272,7 +274,7 @@ Json StackMachine::exec()
                varible_store.writeValueToLocalVarible( target_name, value );
                context = "Local";
             }
-            // std::cout << "Write " << target_name << " .Value is " << std::to_string( value ) << ". Context: " << context << std::endl;
+            // std::cout << "Write " << target_name << " .Value is " << value << ". Context: " << context << std::endl;
             // varible_store.print();
          };
          handlers.function_call_syntax_node = [ &function_call_stack ]( const FunctionCallSyntaxNodeSP& function_call )
