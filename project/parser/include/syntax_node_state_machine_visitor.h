@@ -3,6 +3,7 @@
 #include "syntax_node_empty_visitor.h"
 
 #include <memory>
+#include <deque>
 
 using Stack = std::deque< ISyntaxNodeSP >;
 static Stack last_n_syntax_nodes( const Stack& stack, size_t n )

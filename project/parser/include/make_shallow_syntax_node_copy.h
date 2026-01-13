@@ -76,6 +76,11 @@ public:
    {
       mCopy = std::make_shared< SemicolonSyntaxNode >( *node );
    }
+   
+   void visit( const ColonSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< ColonSyntaxNode >( *node );
+   }
 
    void visit( const StatmentSyntaxNodeSP& node ) override
    {
@@ -105,6 +110,16 @@ public:
    void visit( const CloseCircleBracketSyntaxNodeSP& node ) override
    {
       mCopy = std::make_shared< CloseCircleBracketSyntaxNode >( *node );
+   }
+   
+   void visit( const OpenSquareBracketSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< OpenSquareBracketSyntaxNode >( *node );
+   }
+
+   void visit( const CloseSquareBracketSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< CloseSquareBracketSyntaxNode >( *node );
    }
 
    void visit( const VaribleSyntaxNodeSP& node ) override

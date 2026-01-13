@@ -123,6 +123,11 @@ public:
          syntax_node = std::make_shared< SemicolonSyntaxNode >( lexical_token );
       };
       break;
+      case Token_Type::COLON:
+      {
+         syntax_node = std::make_shared< ColonSyntaxNode >( lexical_token );
+      };
+      break;
       case Token_Type::VAR:
       {
          syntax_node = std::make_shared< VarSyntaxNode >( lexical_token );
@@ -146,6 +151,16 @@ public:
       case Token_Type::CLOSE_CIRCLE_BRACKET:
       {
          syntax_node = std::make_shared< CloseCircleBracketSyntaxNode >( lexical_token );
+      };
+      break;
+      case Token_Type::OPEN_SQUARE_BRACKET:
+      {
+         syntax_node = std::make_shared< OpenSquareBracketSyntaxNode >( lexical_token );
+      };
+      break;
+      case Token_Type::CLOSE_SQUARE_BRACKET:
+      {
+         syntax_node = std::make_shared< CloseSquareBracketSyntaxNode >( lexical_token );
       };
       break;
       case Token_Type::PRINT:

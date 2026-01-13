@@ -16,6 +16,7 @@ enum class Token_Type
    OPEN_CIRCLE_BRACKET,
    CLOSE_CIRCLE_BRACKET,
    SEMICOLON,
+   COLON,
    RETURN,
    RETURN_STATMENT,
    EQUAL,
@@ -38,6 +39,8 @@ enum class Token_Type
    COMPUTATIONAL_EXPRESSION,
    OPEN_CURLY_BRACKET,
    CLOSE_CURLY_BRACKET,
+   OPEN_SQUARE_BRACKET,
+   CLOSE_SQUARE_BRACKET,
    SCOPE_STATMENT,
    CONDITIONAL_EXPRESSION,
    LESS_CONDITIONAL_EXPRESSION,
@@ -68,6 +71,7 @@ inline std::ostream& operator<<(std::ostream& os, Token_Type type) {
         case Token_Type::OPEN_CIRCLE_BRACKET: return os << "OPEN_CIRCLE_BRACKET";
         case Token_Type::CLOSE_CIRCLE_BRACKET: return os << "CLOSE_CIRCLE_BRACKET";
         case Token_Type::SEMICOLON: return os << "SEMICOLON";
+        case Token_Type::COLON: return os << "COLON";
         case Token_Type::RETURN: return os << "RETURN";
         case Token_Type::RETURN_STATMENT: return os << "RETURN_STATMENT";
         case Token_Type::EQUAL: return os << "EQUAL";
@@ -90,6 +94,8 @@ inline std::ostream& operator<<(std::ostream& os, Token_Type type) {
         case Token_Type::COMPUTATIONAL_EXPRESSION: return os << "COMPUTATIONAL_EXPRESSION";
         case Token_Type::OPEN_CURLY_BRACKET: return os << "OPEN_CURLY_BRACKET";
         case Token_Type::CLOSE_CURLY_BRACKET: return os << "CLOSE_CURLY_BRACKET";
+        case Token_Type::OPEN_SQUARE_BRACKET: return os << "OPEN_SQUARE_BRACKET";
+        case Token_Type::CLOSE_SQUARE_BRACKET: return os << "CLOSE_SQUARE_BRACKET";
         case Token_Type::SCOPE_STATMENT: return os << "SCOPE_STATMENT";
         case Token_Type::CONDITIONAL_EXPRESSION: return os << "CONDITIONAL_EXPRESSION";
         case Token_Type::LESS_CONDITIONAL_EXPRESSION: return os << "LESS_CONDITIONAL_EXPRESSION";

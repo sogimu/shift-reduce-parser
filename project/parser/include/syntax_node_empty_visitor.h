@@ -26,6 +26,7 @@ public:
       std::function< void( const BinExprSyntaxNodeSP& ) > bin_expr_syntax_node = [ this ]( const BinExprSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const EolSyntaxNodeSP& ) > eol_syntax_node = [ this ]( const EolSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const SemicolonSyntaxNodeSP& ) > semicolon_syntax_node = [ this ]( const SemicolonSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const ColonSyntaxNodeSP& ) > colon_syntax_node = [ this ]( const ColonSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const VarSyntaxNodeSP& ) > var_syntax_node = [ this ]( const VarSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const StatmentSyntaxNodeSP& ) > statment_syntax_node = [ this ]( const StatmentSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ScopeSyntaxNodeSP& ) > scope_statment_syntax_node = [ this ]( const ScopeSyntaxNodeSP& node ) { default_handler( node ); };
@@ -36,6 +37,10 @@ public:
       std::function< void( const OpenCircleBracketSyntaxNodeSP& ) > open_circle_bracket_syntax_node = [ this ]( const OpenCircleBracketSyntaxNodeSP& node )
       { default_handler( node ); };
       std::function< void( const CloseCircleBracketSyntaxNodeSP& ) > close_circle_bracket_syntax_node = [ this ]( const CloseCircleBracketSyntaxNodeSP& node )
+      { default_handler( node ); };
+      std::function< void( const OpenSquareBracketSyntaxNodeSP& ) > open_square_bracket_syntax_node = [ this ]( const OpenSquareBracketSyntaxNodeSP& node )
+      { default_handler( node ); };
+      std::function< void( const CloseSquareBracketSyntaxNodeSP& ) > close_square_bracket_syntax_node = [ this ]( const CloseSquareBracketSyntaxNodeSP& node )
       { default_handler( node ); };
       std::function< void( const VaribleSyntaxNodeSP& ) > varible_syntax_node = [ this ]( const VaribleSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const PrintStatmentSyntaxNodeSP& ) > print_statment_syntax_node = [ this ]( const PrintStatmentSyntaxNodeSP& node )
@@ -128,9 +133,15 @@ public:
    {
       mHandlers.bin_expr_syntax_node( node );
    }
+   
    void visit( const SemicolonSyntaxNodeSP& node ) override
    {
       mHandlers.semicolon_syntax_node( node );
+   }
+   
+   void visit( const ColonSyntaxNodeSP& node ) override
+   {
+      mHandlers.colon_syntax_node( node );
    }
 
    void visit( const StatmentSyntaxNodeSP& node ) override
@@ -161,6 +172,16 @@ public:
    void visit( const CloseCircleBracketSyntaxNodeSP& node ) override
    {
       mHandlers.close_circle_bracket_syntax_node( node );
+   }
+
+   void visit( const OpenSquareBracketSyntaxNodeSP& node ) override
+   {
+      mHandlers.open_square_bracket_syntax_node( node );
+   }
+
+   void visit( const CloseSquareBracketSyntaxNodeSP& node ) override
+   {
+      mHandlers.close_square_bracket_syntax_node( node );
    }
 
    void visit( const VaribleSyntaxNodeSP& node ) override

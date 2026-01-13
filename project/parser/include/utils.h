@@ -602,6 +602,12 @@ public:
          mResult = true;
    }
 
+   void visit( const ColonSyntaxNodeSP& /* node */ ) override
+   {
+      if constexpr( std::is_same_v< T, ColonSyntaxNode > )
+         mResult = true;
+   }
+
    void visit( const StatmentSyntaxNodeSP& /* node */ ) override
    {
       if constexpr( std::is_same_v< T, StatmentSyntaxNode > )
@@ -635,6 +641,18 @@ public:
    void visit( const CloseCircleBracketSyntaxNodeSP& /* node */ ) override
    {
       if constexpr( std::is_same_v< T, CloseCircleBracketSyntaxNode > )
+         mResult = true;
+   }
+
+   void visit( const OpenSquareBracketSyntaxNodeSP& /* node */ ) override
+   {
+      if constexpr( std::is_same_v< T, OpenSquareBracketSyntaxNode > )
+         mResult = true;
+   }
+
+   void visit( const CloseSquareBracketSyntaxNodeSP& /* node */ ) override
+   {
+      if constexpr( std::is_same_v< T, CloseSquareBracketSyntaxNode > )
          mResult = true;
    }
 

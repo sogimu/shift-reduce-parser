@@ -150,6 +150,16 @@ public:
                terminal_token_type = Token_Type::CLOSE_CURLY_BRACKET;
             };
             break;
+            case '[':
+            {
+               terminal_token_type = Token_Type::OPEN_SQUARE_BRACKET;
+            };
+            break;
+            case ']':
+            {
+               terminal_token_type = Token_Type::CLOSE_SQUARE_BRACKET;
+            };
+            break;
             case '=':
             {
                terminal_token_type = Token_Type::EQUAL;
@@ -168,6 +178,11 @@ public:
             case ';':
             {
                terminal_token_type = Token_Type::SEMICOLON;
+            };
+            break;
+            case ':':
+            {
+               terminal_token_type = Token_Type::COLON;
             };
             break;
             case ',':
@@ -310,7 +325,7 @@ private:
    const std::set< char > alphabet{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '_',
                                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
-   const std::set< char > terminals{ '+', '-', '/', '*', '(', ')', '=', '<', '>', ';', '{', '}', ',', '.' };
+   const std::set< char > terminals{ '+', '-', '/', '*', '(', ')', '=', '<', '>', ';', ':', '{', '}', '[', ']', ',', '.' };
 
    const std::unordered_map< std::string, Token_Type > token_by_text{
       { "if", Token_Type::IF }, 

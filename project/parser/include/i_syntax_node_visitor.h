@@ -4,6 +4,7 @@
 #include "terminals/bol_syntax_node.h"
 #include "terminals/close_circle_bracket_syntax_node.h"
 #include "terminals/close_curly_bracket_syntax_node.h"
+#include "terminals/close_square_bracket_syntax_node.h"
 #include "terminals/eol_syntax_node.h"
 #include "terminals/equal_syntax_node.h"
 #include "terminals/f_syntax_node.h"
@@ -19,11 +20,13 @@
 #include "terminals/int_syntax_node.h"
 #include "terminals/open_circle_bracket_syntax_node.h"
 #include "terminals/open_curly_bracket_syntax_node.h"
+#include "terminals/open_square_bracket_syntax_node.h"
 #include "terminals/plus_syntax_node.h"
 #include "terminals/minus_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/print_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
+#include "terminals/colon_syntax_node.h"
 #include "terminals/var_syntax_node.h"
 #include "terminals/slash_syntax_node.h"
 #include "terminals/return_syntax_node.h"
@@ -58,6 +61,7 @@ public:
    virtual void visit( const UnExprSyntaxNodeSP& ) = 0;
    virtual void visit( const BinExprSyntaxNodeSP& ) = 0;
    virtual void visit( const SemicolonSyntaxNodeSP& ) = 0;
+   virtual void visit( const ColonSyntaxNodeSP& ) = 0;
    virtual void visit( const VarSyntaxNodeSP& ) = 0;
    virtual void visit( const StatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const ScopeSyntaxNodeSP& ) = 0;
@@ -65,6 +69,8 @@ public:
    virtual void visit( const CloseCurlyBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const OpenCircleBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const CloseCircleBracketSyntaxNodeSP& ) = 0;
+   virtual void visit( const OpenSquareBracketSyntaxNodeSP& ) = 0;
+   virtual void visit( const CloseSquareBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const VaribleSyntaxNodeSP& ) = 0;
    virtual void visit( const PrintStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const PrintSyntaxNodeSP& ) = 0;

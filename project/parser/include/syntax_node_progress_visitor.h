@@ -47,6 +47,7 @@ public:
       std::function< HandlerReturn( const State& state, const EolSyntaxNodeSP& ) > eol_syntax_node = [ this ] ( const State& state,  const EolSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const SemicolonSyntaxNodeSP& ) > semicolon_syntax_node = [ this ] ( const State& state,  const SemicolonSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const StatmentSyntaxNodeSP& ) > statment_syntax_node = [ this ] ( const State& state,  const StatmentSyntaxNodeSP& node ) { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const ColonSyntaxNodeSP& ) > colon_syntax_node = [ this ] ( const State& state,  const ColonSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const ScopeSyntaxNodeSP& ) > scope_statment_syntax_node = [ this ] ( const State& state,  const ScopeSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const OpenCurlyBracketSyntaxNodeSP& ) > open_curly_bracket_syntax_node = [ this ] ( const State& state,  const OpenCurlyBracketSyntaxNodeSP& node )
       { return default_handler( state, node ); };
@@ -55,6 +56,10 @@ public:
       std::function< HandlerReturn( const State& state, const OpenCircleBracketSyntaxNodeSP& ) > open_circle_bracket_syntax_node = [ this ] ( const State& state,  const OpenCircleBracketSyntaxNodeSP& node )
       { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const CloseCircleBracketSyntaxNodeSP& ) > close_circle_bracket_syntax_node = [ this ] ( const State& state,  const CloseCircleBracketSyntaxNodeSP& node )
+      { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const OpenSquareBracketSyntaxNodeSP& ) > open_square_bracket_syntax_node = [ this ] ( const State& state,  const OpenSquareBracketSyntaxNodeSP& node )
+      { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const CloseSquareBracketSyntaxNodeSP& ) > close_square_bracket_syntax_node = [ this ] ( const State& state,  const CloseSquareBracketSyntaxNodeSP& node )
       { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const VaribleSyntaxNodeSP& ) > varible_syntax_node = [ this ] ( const State& state,  const VaribleSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const PrintStatmentSyntaxNodeSP& ) > print_statment_syntax_node = [ this ] ( const State& state,  const PrintStatmentSyntaxNodeSP& node )
@@ -181,13 +186,20 @@ public:
    {
       mHandlers.call( &Handlers::un_expr_syntax_node, mHandlers.state(), node );
    }
-   void visit( const BinExprSyntaxNodeSP& node ) override
+  
+  void visit( const BinExprSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::bin_expr_syntax_node, mHandlers.state(), node );
    }
-   void visit( const SemicolonSyntaxNodeSP& node ) override
+   
+  void visit( const SemicolonSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::semicolon_syntax_node, mHandlers.state(), node );
+   }
+   
+   void visit( const ColonSyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::colon_syntax_node, mHandlers.state(), node );
    }
 
    void visit( const StatmentSyntaxNodeSP& node ) override
@@ -218,6 +230,16 @@ public:
    void visit( const CloseCircleBracketSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::close_circle_bracket_syntax_node, mHandlers.state(), node );
+   }
+
+   void visit( const OpenSquareBracketSyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::open_square_bracket_syntax_node, mHandlers.state(), node );
+   }
+
+   void visit( const CloseSquareBracketSyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::close_square_bracket_syntax_node, mHandlers.state(), node );
    }
 
    void visit( const VaribleSyntaxNodeSP& node ) override
