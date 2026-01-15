@@ -42,6 +42,8 @@ enum class Token_Type
    OPEN_SQUARE_BRACKET,
    CLOSE_SQUARE_BRACKET,
    SCOPE_STATMENT,
+   ARRAY,
+   OBJECT,
    CONDITIONAL_EXPRESSION,
    LESS_CONDITIONAL_EXPRESSION,
    MORE_CONDITIONAL_EXPRESSION,
@@ -97,6 +99,8 @@ inline std::ostream& operator<<(std::ostream& os, Token_Type type) {
         case Token_Type::OPEN_SQUARE_BRACKET: return os << "OPEN_SQUARE_BRACKET";
         case Token_Type::CLOSE_SQUARE_BRACKET: return os << "CLOSE_SQUARE_BRACKET";
         case Token_Type::SCOPE_STATMENT: return os << "SCOPE_STATMENT";
+        case Token_Type::ARRAY: return os << "ARRAY";
+        case Token_Type::OBJECT: return os << "OBJECT";
         case Token_Type::CONDITIONAL_EXPRESSION: return os << "CONDITIONAL_EXPRESSION";
         case Token_Type::LESS_CONDITIONAL_EXPRESSION: return os << "LESS_CONDITIONAL_EXPRESSION";
         case Token_Type::MORE_CONDITIONAL_EXPRESSION: return os << "MORE_CONDITIONAL_EXPRESSION";

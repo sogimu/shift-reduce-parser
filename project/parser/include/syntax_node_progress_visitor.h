@@ -49,6 +49,7 @@ public:
       std::function< HandlerReturn( const State& state, const StatmentSyntaxNodeSP& ) > statment_syntax_node = [ this ] ( const State& state,  const StatmentSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const ColonSyntaxNodeSP& ) > colon_syntax_node = [ this ] ( const State& state,  const ColonSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const ScopeSyntaxNodeSP& ) > scope_statment_syntax_node = [ this ] ( const State& state,  const ScopeSyntaxNodeSP& node ) { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const ArraySyntaxNodeSP& ) > array_syntax_node = [ this ] ( const State& state,  const ArraySyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const OpenCurlyBracketSyntaxNodeSP& ) > open_curly_bracket_syntax_node = [ this ] ( const State& state,  const OpenCurlyBracketSyntaxNodeSP& node )
       { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const CloseCurlyBracketSyntaxNodeSP& ) > close_curly_bracket_syntax_node = [ this ] ( const State& state,  const CloseCurlyBracketSyntaxNodeSP& node )
@@ -210,6 +211,11 @@ public:
    void visit( const ScopeSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::scope_statment_syntax_node, mHandlers.state(), node );
+   }
+
+   void visit( const ArraySyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::array_syntax_node, mHandlers.state(), node );
    }
 
    void visit( const OpenCurlyBracketSyntaxNodeSP& node ) override

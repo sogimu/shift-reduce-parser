@@ -21,10 +21,6 @@ StatmentSyntaxNode::StatmentSyntaxNode( const StatmentSyntaxNode& statment_synta
   : ISyntaxNode{ Token_Type::STATMENT }
   , mTokens{ statment_syntax_node.mTokens }
 {
-  // for( const auto& child : mChildren )
-  // {
-  //   add_back( make_shallow_copy(child) );
-  // }
 }
 
 StatmentSyntaxNode::StatmentSyntaxNode( const ISyntaxNodeSP& syntax_node )

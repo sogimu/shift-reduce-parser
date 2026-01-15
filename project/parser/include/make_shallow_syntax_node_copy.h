@@ -91,6 +91,11 @@ public:
    {
       mCopy = std::make_shared< ScopeSyntaxNode >( *node );
    }
+   
+   void visit( const ArraySyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< ArraySyntaxNode >( *node );
+   }
 
    void visit( const OpenCurlyBracketSyntaxNodeSP& node ) override
    {

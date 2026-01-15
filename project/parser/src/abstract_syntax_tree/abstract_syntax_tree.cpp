@@ -48,6 +48,7 @@
 #include "grammars/function_call_grammar.h"
 #include "grammars/print_statment_grammar.h"
 #include "grammars/scope_grammar.h"
+#include "grammars/array_grammar.h"
 #include "grammars/varible_assigment_grammar.h"
 #include "grammars/return_statment_grammar.h"
 #include "i_grammar.h"
@@ -60,6 +61,7 @@
 AbstractSyntaxTree::AbstractSyntaxTree( const LexicalTokens& lexical_tokens )
  {
     std::vector< IGrammarSP > grammars{
+       std::make_shared< Array >(),
        std::make_shared< FunctionCall >(),
        std::make_shared< Print >(),
        std::make_shared< Return >(),

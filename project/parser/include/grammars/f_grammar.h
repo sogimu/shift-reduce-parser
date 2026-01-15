@@ -60,6 +60,7 @@ public:
                         check_type<AsteriskSyntaxNode>( lookahead ) || 
                         check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
                         check_type<CloseCurlyBracketSyntaxNode>( lookahead ) || 
+                        check_type<CloseSquareBracketSyntaxNode>( lookahead ) || 
                         check_type<SlashSyntaxNode>( lookahead ) || 
                         check_type<CommaSyntaxNode>( lookahead ) ||
                         check_type<EqualSyntaxNode>( lookahead ) ||
@@ -87,6 +88,7 @@ public:
                         check_type<AsteriskSyntaxNode>( lookahead ) || 
                         check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
                         check_type<CloseCurlyBracketSyntaxNode>( lookahead ) || 
+                        check_type<CloseSquareBracketSyntaxNode>( lookahead ) || 
                         check_type<SlashSyntaxNode>( lookahead ) || 
                         check_type<CommaSyntaxNode>( lookahead ) ||
                         check_type<EqualSyntaxNode>( lookahead ) ||
