@@ -26,11 +26,47 @@ TEST( SYNTAX_TREE_ARITHMETIC, INT_SEMICOLON )
    const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
 
    // ASSERT
-   const auto& d = std::make_shared< IntSyntaxNode >( lexical_tokens[1] );
+   const auto& i = std::make_shared< IntSyntaxNode >( lexical_tokens[1] );
+   const auto& f = std::make_shared< FSyntaxNode >( i );
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( f, lexical_tokens[2] );
+   AbstractSyntaxTree expected_syntax_tree { statment };
+
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, DOUBLE_SEMICOLON )
+{
+   // ARRANGE
+   const auto& input = R"""(1.0;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& d = std::make_shared< DoubleSyntaxNode >( lexical_tokens[1] );
    const auto& f = std::make_shared< FSyntaxNode >( d );
    const auto& statment = std::make_shared< StatmentSyntaxNode >( f, lexical_tokens[2] );
    AbstractSyntaxTree expected_syntax_tree { statment };
 
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_ARITHMETIC, MINUS_DOUBLE_SEMICOLON )
+{
+   // ARRANGE
+   const auto& input = R"""(-1.0;)""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& d = std::make_shared< DoubleSyntaxNode >( lexical_tokens[2] );
+   const auto& f = std::make_shared< FSyntaxNode >( d );
+   const auto& unexpr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, f, std::vector<LexicalTokens::LexicalToken>{ lexical_tokens[1] } );
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( unexpr, lexical_tokens[3] );
+   AbstractSyntaxTree expected_syntax_tree { statment };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
