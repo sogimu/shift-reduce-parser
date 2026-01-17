@@ -27,7 +27,6 @@
 #include "abstract_syntax_tree.h"
 #include "utils.h"
 #include "i_syntax_node.h"
-#include "make_deep_syntax_node_copy.h"
 #include "make_shallow_syntax_node_copy.h"
 #include "is_last_nodes.h"
 #include "function_store.h"

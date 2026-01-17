@@ -8,10 +8,6 @@ ScopeSyntaxNode::ScopeSyntaxNode( const ScopeSyntaxNode& scope )
    : ISyntaxNode{ Token_Type::SCOPE_STATMENT }
 {
    mTokens = scope.lexical_tokens();
-   // for( const auto& child : scope )
-   // {
-   //    add_back( make_shallow_copy( child ) );
-   // }
 }
 
 ScopeSyntaxNode::ScopeSyntaxNode( const ISyntaxNodeSP& expression, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )

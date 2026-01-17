@@ -32,6 +32,7 @@ public:
          COMMA,
          COLON,
          STRING,
+         PAIR
       };
 
       // OPEN_CURLY_BRACKET (STRING COLON F COMMA?)+ CLOSE_CURLY_BRACKET 
@@ -80,14 +81,10 @@ public:
             return find_grammar_matching_progress(stack, minimal_size, [&stack, &lookahead, &minimal_steps_number]( size_t n ) -> PlanOrProgress
             {
                 OpenCurlyBracketSyntaxNodeSP open_curly_bracket;
-                std::map< std::string, ISyntaxNodeSP > node_by_key;
-                std::vector< ISyntaxNodeSP > commas;
-                std::vector< ISyntaxNodeSP > colons;
-                std::vector< ISyntaxNodeSP > strings;
+                std::vector< ObjectPairSyntaxNodeSP > pairs;
+                std::vector< CommaSyntaxNodeSP > commas;
                 CloseCurlyBracketSyntaxNodeSP close_curly_bracket;
 
-                std::string last_key;
-                
                 const Stack& s = stack;
                 SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
                 using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
@@ -96,7 +93,6 @@ public:
 
                 handlers.default_handler = []( const State& state, const ISyntaxNodeSP& node ) -> HandlerReturn
                 { 
-                                                   (void) node;
                    return { State::ERROR, Impact::ERROR };
                 };
                 handlers.open_curly_bracket_syntax_node = [ &open_curly_bracket ]( const State& state, const OpenCurlyBracketSyntaxNodeSP& node ) -> HandlerReturn
@@ -108,55 +104,18 @@ public:
                    }
                    return { state, Impact::ERROR };
                 };
-                handlers.string_syntax_node = [ &strings, &last_key ]( const State& state, const StringSyntaxNodeSP& node ) -> HandlerReturn
+                handlers.object_pair_syntax_node = [ &pairs ]( const State& state, const ObjectPairSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::OPEN_CURLY_BRACKET || state == State::COMMA ) 
                    {
-                       last_key = node->value();
-                       strings.emplace_back( node );
-                       return { State::STRING, Impact::MOVE };
-                   }
-                   return { state, Impact::ERROR };
-                };
-                handlers.colon_syntax_node = [ &commas ]( const State& state, const ColonSyntaxNodeSP& node ) -> HandlerReturn
-                {
-                   if( state == State::STRING )
-                   {
-                      commas.emplace_back( node );
-                       return { State::COLON, Impact::MOVE };
-                   }
-                   return { state, Impact::ERROR };
-                };
-                handlers.f_syntax_node = [ &last_key, &node_by_key ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
-                {
-                   if( state == State::COLON )
-                   {
-                       node_by_key[last_key] = node;
-                       return { State::VALUE, Impact::MOVE };
-                   }
-                   return { state, Impact::ERROR };
-                };
-                handlers.array_syntax_node = [ &last_key, &node_by_key ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
-                {
-                   if( state == State::COLON )
-                   {
-                       node_by_key[last_key] = node;
-                       return { State::VALUE, Impact::MOVE };
-                   }
-                   return { state, Impact::ERROR };
-                };
-                handlers.object_syntax_node = [ &last_key, &node_by_key ]( const State& state, const ObjectSyntaxNodeSP& node ) -> HandlerReturn
-                {
-                   if( state == State::COLON )
-                   {
-                       node_by_key[last_key] = node;
-                       return { State::VALUE, Impact::MOVE };
+                       pairs.emplace_back( node );
+                       return { State::PAIR, Impact::MOVE };
                    }
                    return { state, Impact::ERROR };
                 };
                 handlers.comma_syntax_node = [ &commas ]( const State& state, const CommaSyntaxNodeSP& node ) -> HandlerReturn
                 {
-                   if( state == State::VALUE )
+                   if( state == State::PAIR )
                    {
                        commas.emplace_back( node );
                        return { State::COMMA, Impact::MOVE };
@@ -165,14 +124,14 @@ public:
                 };
                 handlers.close_curly_bracket_syntax_node = [ &close_curly_bracket, &lookahead ]( const State& state, const CloseCurlyBracketSyntaxNodeSP& node ) -> HandlerReturn
                 {
-                   if( state == State::VALUE || state == State::OPEN_CURLY_BRACKET )
+                   if( state == State::PAIR || state == State::OPEN_CURLY_BRACKET )
                    {
                      if( lookahead && ( check_type<SemicolonSyntaxNode>( lookahead ) || 
                                         check_type<CloseSquareBracketSyntaxNode>( lookahead ) ||
                                         check_type<CloseCurlyBracketSyntaxNode>( lookahead ) ||
                                         check_type<CommaSyntaxNode>( lookahead ) ) )
                      {
-                        close_curly_bracket = node;
+                         close_curly_bracket = node;
                          return { State::FINISH, Impact::MOVE };
                      }
                    }
@@ -189,22 +148,114 @@ public:
                 {
                     Plan plan;
                     plan.to_remove.nodes.push_back( open_curly_bracket );
-                    for( const auto& [ key, node ] : node_by_key )
-                       plan.to_remove.nodes.push_back( node );
                     for( const auto& comma : commas )
                        plan.to_remove.nodes.push_back( comma );
-                    for( const auto& key : strings )
-                       plan.to_remove.nodes.push_back( key );
-                    for( const auto& colon : colons )
-                       plan.to_remove.nodes.push_back( colon );
+                    for( const auto& pair : pairs )
+                       plan.to_remove.nodes.push_back( pair );
                     plan.to_remove.nodes.push_back( close_curly_bracket );
 
                     std::vector< LexicalTokens::LexicalToken > lexical_tokens { 
                                                   open_curly_bracket->lexical_tokens().at(0),
                                                   close_curly_bracket->lexical_tokens().at(0)
                                                   };
-                    const auto& array = std::make_shared< ObjectSyntaxNode >( node_by_key, lexical_tokens );
+                    const auto& array = std::make_shared< ObjectSyntaxNode >( pairs, lexical_tokens );
                     plan.to_add.nodes.push_back( array );
+                    plan_or_progress = plan;
+                }
+                else {
+                    plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+                }
+                return plan_or_progress;
+            });
+         } );
+      
+      // STRING COLON F|ARRAY|OBJECT 
+      mProductions.emplace_back(
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
+         {
+            const size_t minimal_size = 3;
+            size_t minimal_steps_number = 3;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &lookahead, &minimal_steps_number]( size_t n ) -> PlanOrProgress
+            {
+                StringSyntaxNodeSP key;
+                ColonSyntaxNodeSP colon;
+                ISyntaxNodeSP value;
+
+                const Stack& s = stack;
+                SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
+                using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+                using HandlerReturn = Handlers::HandlerReturn;
+                using Impact = Handlers::Impact;
+
+                handlers.default_handler = []( const State& state, const ISyntaxNodeSP& node ) -> HandlerReturn
+                { 
+                                                   (void) node;
+                   return { State::ERROR, Impact::ERROR };
+                };
+                handlers.string_syntax_node = [ &key ]( const State& state, const StringSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::START ) 
+                   {
+                       key = node;
+                       return { State::STRING, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.colon_syntax_node = [ &colon ]( const State& state, const ColonSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::STRING )
+                   {
+                       colon = node;
+                       return { State::COLON, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.f_syntax_node = [ &value ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::COLON )
+                   {
+                       value = node;
+                       return { State::FINISH, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.array_syntax_node = [ &value ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::COLON )
+                   {
+                       value = node;
+                       return { State::FINISH, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.object_syntax_node = [ &value ]( const State& state, const ObjectSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::COLON )
+                   {
+                       value = node;
+                       return { State::FINISH, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
+
+                PlanOrProgress plan_or_progress;
+                if( iteration_result.state == State::ERROR )
+                {
+                    plan_or_progress = Progress{ .readiness = 0 };
+                }  
+                else if( iteration_result.state == State::FINISH )
+                {
+                    Plan plan;
+                    plan.to_remove.nodes.push_back( key );
+                    plan.to_remove.nodes.push_back( colon );
+                    plan.to_remove.nodes.push_back( value );
+
+                    std::vector< LexicalTokens::LexicalToken > lexical_tokens { 
+                                                  colon->lexical_tokens().at(0),
+                                                  };
+                    const auto& object_pair = std::make_shared< ObjectPairSyntaxNode >( key, value, lexical_tokens );
+                    plan.to_add.nodes.push_back( object_pair );
                     plan_or_progress = plan;
                 }
                 else {

@@ -17,7 +17,6 @@ set(HEADERS
     include/i_syntax_node_visitor.h
     include/syntax_node_empty_visitor.h
     include/syntax_node_progress_visitor.h
-    include/make_deep_syntax_node_copy.h
     include/make_shallow_syntax_node_copy.h
     include/syntax_node_state_machine_visitor.h
     include/is_last_nodes.h
@@ -54,6 +53,7 @@ set(HEADERS
     include/syntax_nodes/nonterminals/statment_syntax_node.h
     include/syntax_nodes/nonterminals/scope_statment_syntax_node.h
     include/syntax_nodes/nonterminals/array_syntax_node.h
+    include/syntax_nodes/nonterminals/object_pair_syntax_node.h
     include/syntax_nodes/nonterminals/object_syntax_node.h
     include/syntax_nodes/nonterminals/print_statment_syntax_node.h
     include/syntax_nodes/nonterminals/if_statment_syntax_node.h
@@ -124,6 +124,7 @@ set(SOURCES
     src/syntax_nodes/nonterminals/varible_assigment_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/scope_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/array_syntax_node.cpp
+    src/syntax_nodes/nonterminals/object_pair_syntax_node.cpp
     src/syntax_nodes/nonterminals/object_syntax_node.cpp
     src/syntax_nodes/nonterminals/return_statment_syntax_node.cpp
     src/grammars/circle_brackets_grammar.cpp

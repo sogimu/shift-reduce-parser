@@ -17,11 +17,6 @@ UnExprSyntaxNode::UnExprSyntaxNode( const UnExprSyntaxNode& un_expr_syntax_node 
    , mType{ un_expr_syntax_node.type() }
 {
    mTokens = un_expr_syntax_node.lexical_tokens();
-   // for( const auto& child : mChildren )
-   // {
-   //     add_back( make_shallow_copy( child ) );
-   // }
-
 }
 
 UnExprSyntaxNode::UnExprSyntaxNode( const Type& type, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )

@@ -13,10 +13,6 @@ BinExprSyntaxNode::BinExprSyntaxNode( const BinExprSyntaxNode& bin_expr_syntax_n
    , mType{ bin_expr_syntax_node.type() }
 {
    mTokens = bin_expr_syntax_node.lexical_tokens();
-   // for( const auto& child : mChildren )
-   // {
-   //     add_back( make_shallow_copy( child ) );
-   // }
 }
 
 BinExprSyntaxNode::BinExprSyntaxNode( const Type& type )

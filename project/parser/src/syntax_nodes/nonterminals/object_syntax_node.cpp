@@ -16,14 +16,14 @@ ObjectSyntaxNode::ObjectSyntaxNode( const ISyntaxNodeSP& expression, const std::
    add_back( expression );
 }
 
-ObjectSyntaxNode::ObjectSyntaxNode( const std::map< std::string, ISyntaxNodeSP >& node_by_key, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
+ObjectSyntaxNode::ObjectSyntaxNode( const std::vector< ObjectPairSyntaxNodeSP >& pairs, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::OBJECT }
-   , mNodeByKey{ node_by_key }
 {
    mTokens = lexical_tokens;
-   for( const auto& [ key, node ] : mNodeByKey )
+   for( const auto& pair : pairs )
    {
-       add_back( node );
+       mNodeByKey[ pair->key_syntax_node()->value() ] = pair->value_syntax_node();
+       add_back( pair );
    }
 }
 void ObjectSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
@@ -47,8 +47,6 @@ bool ObjectSyntaxNode::compare( const ISyntaxNode& node ) const
    SyntaxNodeEmptyVisitor::Handlers handlers;
    handlers.object_syntax_node = [ this, &is_equal ]( const ObjectSyntaxNodeSP& node )
    {
-      // if( node->values() != this->values() )
-      //    return;
       if( node->Children().size() != this->Children().size() )
          return;
       if( node->lexical_tokens() != this->lexical_tokens() )

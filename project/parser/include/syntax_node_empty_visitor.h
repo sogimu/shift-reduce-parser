@@ -32,6 +32,7 @@ public:
       std::function< void( const ScopeSyntaxNodeSP& ) > scope_statment_syntax_node = [ this ]( const ScopeSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ArraySyntaxNodeSP& ) > array_syntax_node = [ this ]( const ArraySyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ObjectSyntaxNodeSP& ) > object_syntax_node = [ this ]( const ObjectSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const ObjectPairSyntaxNodeSP& ) > object_pair_syntax_node = [ this ]( const ObjectPairSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const OpenCurlyBracketSyntaxNodeSP& ) > open_curly_bracket_syntax_node = [ this ]( const OpenCurlyBracketSyntaxNodeSP& node )
       { default_handler( node ); };
       std::function< void( const CloseCurlyBracketSyntaxNodeSP& ) > close_curly_bracket_syntax_node = [ this ]( const CloseCurlyBracketSyntaxNodeSP& node )
@@ -164,6 +165,11 @@ public:
    void visit( const ObjectSyntaxNodeSP& node ) override
    {
       mHandlers.object_syntax_node( node );
+   }
+
+   void visit( const ObjectPairSyntaxNodeSP& node ) override
+   {
+      mHandlers.object_pair_syntax_node( node );
    }
 
    void visit( const OpenCurlyBracketSyntaxNodeSP& node ) override

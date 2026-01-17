@@ -9,10 +9,6 @@ FSyntaxNode::FSyntaxNode( const FSyntaxNode& f_syntax_node )
   : ISyntaxNode{ Token_Type::F }
   , mValue{ f_syntax_node.mValue }
 {
-  for( const auto& child : mChildren )
-  {
-    add_back( make_shallow_copy(child));
-  }
 }
 
 FSyntaxNode::FSyntaxNode( const MinusSyntaxNodeSP& minus, const DoubleSyntaxNodeSP& number )
