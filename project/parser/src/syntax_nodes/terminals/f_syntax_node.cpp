@@ -17,6 +17,7 @@ FSyntaxNode::FSyntaxNode( const FSyntaxNode& f_syntax_node )
 
 FSyntaxNode::FSyntaxNode( const MinusSyntaxNodeSP& minus, const DoubleSyntaxNodeSP& number )
   : ISyntaxNode{ Token_Type::F }
+  , mValue{ -1 * number->value() }
 {
   add_back( minus );
   add_back( number );
@@ -24,13 +25,14 @@ FSyntaxNode::FSyntaxNode( const MinusSyntaxNodeSP& minus, const DoubleSyntaxNode
 
 FSyntaxNode::FSyntaxNode( const IntSyntaxNodeSP& number )
   : ISyntaxNode{ Token_Type::F }
-  , mValue{ static_cast< double >( number->value() ) }
+  , mValue{ number->value() }
 {
   add_back( number );
 }
 
 FSyntaxNode::FSyntaxNode( const MinusSyntaxNodeSP& minus, const IntSyntaxNodeSP& number )
   : ISyntaxNode{ Token_Type::F }
+  , mValue{ -1 * number->value() }
 {
   add_back( minus );
   add_back( number );
@@ -45,12 +47,12 @@ FSyntaxNode::FSyntaxNode( const DoubleSyntaxNodeSP& number )
 
 FSyntaxNode::FSyntaxNode( const StringSyntaxNodeSP& string )
   : ISyntaxNode{ Token_Type::F }
-  // , mValue{ string->value() }
+  , mValue{ string->value() }
 {
   add_back( string );
 }
 
-double FSyntaxNode::value() const
+FSyntaxNodeValue FSyntaxNode::value() const
 {
   return mValue;
 }

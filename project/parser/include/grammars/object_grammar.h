@@ -136,6 +136,24 @@ public:
                    }
                    return { state, Impact::ERROR };
                 };
+                handlers.array_syntax_node = [ &last_key, &node_by_key ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::COLON )
+                   {
+                       node_by_key[last_key] = node;
+                       return { State::VALUE, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.object_syntax_node = [ &last_key, &node_by_key ]( const State& state, const ObjectSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::COLON )
+                   {
+                       node_by_key[last_key] = node;
+                       return { State::VALUE, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
                 handlers.comma_syntax_node = [ &commas ]( const State& state, const CommaSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::VALUE )

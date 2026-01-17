@@ -141,7 +141,22 @@ Json StackMachine::exec()
          handlers.f_syntax_node = [ &argument_stack ]( const FSyntaxNodeSP& node )
          {
             // std::cout << "f = " << node->value() << std::endl;
-            argument_stack.push_back( node->value() );
+            std::visit([&argument_stack](auto&& arg)
+            {
+                using T = std::decay_t<decltype(arg)>;
+                if constexpr (std::is_same_v<T, double>)
+                {
+                    argument_stack.push_back( arg );
+                } 
+                else if constexpr (std::is_same_v<T, int>)
+                {
+                    argument_stack.push_back( arg );
+                } 
+                else if constexpr (std::is_same_v<T, std::string>) 
+                {
+                    argument_stack.push_back( arg );
+                }
+            }, node->value().get());
             auto s = argument_stack;
             (void) s;
          };

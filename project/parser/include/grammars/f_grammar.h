@@ -102,6 +102,34 @@ public:
                    }
                 }
              };
+             handlers.string_syntax_node =
+                [ &f_node, &number, &state, &lookahead, &progress_counter ]( const StringSyntaxNodeSP& node )
+             {
+                if( state == State::START )
+                {
+                   state = State::INT;
+
+                   if( lookahead && ( 
+                        check_type<SemicolonSyntaxNode>( lookahead ) || 
+                        check_type<MinusSyntaxNode>( lookahead ) || 
+                        check_type<PlusSyntaxNode>( lookahead ) || 
+                        check_type<AsteriskSyntaxNode>( lookahead ) || 
+                        check_type<CloseCircleBracketSyntaxNode>( lookahead ) || 
+                        check_type<CloseCurlyBracketSyntaxNode>( lookahead ) || 
+                        check_type<CloseSquareBracketSyntaxNode>( lookahead ) || 
+                        check_type<SlashSyntaxNode>( lookahead ) || 
+                        check_type<CommaSyntaxNode>( lookahead ) ||
+                        check_type<EqualSyntaxNode>( lookahead ) ||
+                        check_type<LessSyntaxNode>( lookahead ) ||
+                        check_type<MoreSyntaxNode>( lookahead ) ) )
+                   {
+                     number = node;
+                     f_node = std::make_shared< FSyntaxNode >( node );
+                     progress_counter.Step();
+                     state = State::FINISH;
+                   }
+                }
+             };
             iterate_over_last_n_nodes( stack, 1, handlers );
             if( state != State::FINISH )
                return Progress{ .readiness = progress_counter.Status() };

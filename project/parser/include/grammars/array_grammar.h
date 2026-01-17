@@ -99,6 +99,24 @@ public:
                    }
                    return { state, Impact::ERROR };
                 };
+                handlers.array_syntax_node = [ &elements ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_SQUARE_BRACKET || state == State::COMMA )
+                   {
+                       elements.emplace_back( node );
+                       return { State::ELEMENT, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.object_syntax_node = [ &elements ]( const State& state, const ObjectSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_SQUARE_BRACKET || state == State::COMMA )
+                   {
+                       elements.emplace_back( node );
+                       return { State::ELEMENT, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
                 handlers.comma_syntax_node = [ &commas ]( const State& state, const CommaSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::ELEMENT )
@@ -123,6 +141,7 @@ public:
                    {
                      if( lookahead && ( check_type<SemicolonSyntaxNode>( lookahead ) || 
                                         check_type<CloseSquareBracketSyntaxNode>( lookahead ) ||
+                                        check_type<CloseCurlyBracketSyntaxNode>( lookahead ) ||
                                         check_type<CommaSyntaxNode>( lookahead ) ) )
                      {
                         close_square_bracket = node;
