@@ -108,8 +108,8 @@
 Json Interpreter::eval( const std::string& expression ) const
 {
   Json result;
-  try 
-  {
+  // try 
+  // {
     std::cout << "== Lexemes ==" << std::endl;
     LexicalTokens lexical_tokens( expression );
     std::cout << lexical_tokens << std::endl;
@@ -125,11 +125,11 @@ Json Interpreter::eval( const std::string& expression ) const
     std::cout << "== Executioning ==" << std::endl;
     StackMachine stack_machine{ cfg };
     result = stack_machine.exec();
-  } 
-  catch (const std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-  } 
+  // } 
+  // catch (const std::exception& e)
+  // {
+  //   std::cerr << e.what() << std::endl;
+  // } 
   
   return result;
 }

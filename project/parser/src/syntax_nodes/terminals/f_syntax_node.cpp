@@ -43,6 +43,13 @@ FSyntaxNode::FSyntaxNode( const DoubleSyntaxNodeSP& number )
   add_back( number );
 }
 
+FSyntaxNode::FSyntaxNode( const StringSyntaxNodeSP& string )
+  : ISyntaxNode{ Token_Type::F }
+  // , mValue{ string->value() }
+{
+  add_back( string );
+}
+
 double FSyntaxNode::value() const
 {
   return mValue;

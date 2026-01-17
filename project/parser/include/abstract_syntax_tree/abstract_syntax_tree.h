@@ -33,6 +33,7 @@
 #include "syntax_nodes/terminals/plus_syntax_node.h"
 #include "syntax_nodes/terminals/semicolon_syntax_node.h"
 #include "syntax_nodes/terminals/var_syntax_node.h"
+#include "syntax_nodes/terminals/string_syntax_node.h"
 #include "i_syntax_node.h"
 #include "lexical_tokens.h"
 #include "syntax_node_empty_visitor.h"
@@ -196,6 +197,11 @@ public:
       case Token_Type::RETURN:
       {
          syntax_node = std::make_shared< ReturnSyntaxNode >( lexical_token );
+      };
+      break;
+      case Token_Type::STRING:
+      {
+         syntax_node = std::make_shared< StringSyntaxNode >( lexical_token );
       };
       break;
       default:

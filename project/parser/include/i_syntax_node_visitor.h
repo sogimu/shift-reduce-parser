@@ -42,6 +42,7 @@
 #include "nonterminals/print_statment_syntax_node.h"
 #include "nonterminals/scope_statment_syntax_node.h"
 #include "nonterminals/array_syntax_node.h"
+#include "nonterminals/object_syntax_node.h"
 #include "nonterminals/varible_assigment_statment_syntax_node.h"
 #include "nonterminals/return_statment_syntax_node.h"
 #include "i_syntax_node.h"
@@ -67,6 +68,7 @@ public:
    virtual void visit( const StatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const ScopeSyntaxNodeSP& ) = 0;
    virtual void visit( const ArraySyntaxNodeSP& ) = 0;
+   virtual void visit( const ObjectSyntaxNodeSP& ) = 0;
    virtual void visit( const OpenCurlyBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const CloseCurlyBracketSyntaxNodeSP& ) = 0;
    virtual void visit( const OpenCircleBracketSyntaxNodeSP& ) = 0;

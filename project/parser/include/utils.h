@@ -626,6 +626,12 @@ public:
          mResult = true;
    }
 
+   void visit( const ObjectSyntaxNodeSP& /* node */ ) override
+   {
+      if constexpr( std::is_same_v< T, ObjectSyntaxNode > )
+         mResult = true;
+   }
+
    void visit( const OpenCurlyBracketSyntaxNodeSP& /* node */ ) override
    {
       if constexpr( std::is_same_v< T, OpenCurlyBracketSyntaxNode > )
@@ -909,6 +915,7 @@ static std::string to_string( const ISyntaxNodeSP& node )
         handlers.statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "STATMENT" << "}"; };
         handlers.scope_statment_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "SCOPE" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"  << "}"; };
         handlers.array_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "ARRAY" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"  << "}"; };
+        handlers.object_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "OBJECT" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"  << "}"; };
         handlers.open_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "OPEN_CURLY_BRACKET" << "}"; };
         handlers.close_curly_bracket_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "CLOSE_CURLY_BRACKET" << "}"; };
         handlers.varible_syntax_node = [ &s ]( const VaribleSyntaxNodeSP& node ) { s << "{" << "VARIBLE" << '(' << node->name() << ')' << "}"; };

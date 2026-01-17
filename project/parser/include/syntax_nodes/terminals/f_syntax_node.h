@@ -3,6 +3,7 @@
 #include "terminals/minus_syntax_node.h"
 #include "terminals/double_syntax_node.h"
 #include "terminals/int_syntax_node.h"
+#include "terminals/string_syntax_node.h"
 #include "enums.h"
 #include "i_syntax_node.h"
 
@@ -16,6 +17,7 @@ public:
    FSyntaxNode( const DoubleSyntaxNodeSP& number );
    FSyntaxNode( const MinusSyntaxNodeSP& minus, const IntSyntaxNodeSP& number );
    FSyntaxNode( const IntSyntaxNodeSP& number );
+   FSyntaxNode( const StringSyntaxNodeSP& string );
 
    double value() const;
 

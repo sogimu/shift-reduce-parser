@@ -1,6 +1,6 @@
-#include "nonterminals/array_syntax_node.h"
 #include <gtest/gtest.h>
 #include "utils/utils.h"
+#include "nonterminals/array_syntax_node.h"
 
 using namespace std;
 

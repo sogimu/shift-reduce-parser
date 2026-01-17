@@ -302,57 +302,57 @@ public:
             });
          } );
 
-      // ARRAY
-      mProductions.emplace_back(
-         [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
-         {
-            const size_t minimal_size = 1;
-            const size_t minimal_steps_number = 1;
-            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_size]( size_t n )->PlanOrProgress
-            {
-                ArraySyntaxNodeSP array_syntax_node;
-
-                SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
-                using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
-                using HandlerReturn = Handlers::HandlerReturn;
-                using Impact = Handlers::Impact;
-                handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn 
-                { 
-                    return { State::ERROR, Impact::ERROR };
-                };
-                handlers.array_syntax_node = [ &array_syntax_node ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
-                {
-                   if( state == State::START )
-                   {
-                      array_syntax_node = node;
-                      return { State::FINISH, Impact::MOVE };
-                   }
-                   return { state, Impact::ERROR };
-                };
-
-                auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
-
-                PlanOrProgress plan_or_progress;
-                if( iteration_result.state == State::ERROR )
-                {
-                    plan_or_progress = Progress{ .readiness = 0 };
-                }  
-                else if( iteration_result.state == State::FINISH )
-                {
-                    Plan plan;
-                    plan.to_remove.nodes.push_back( array_syntax_node );
-
-                    const auto& statment_syntax_node = std::make_shared< StatmentSyntaxNode >( array_syntax_node );
-                    plan.to_add.nodes.push_back( statment_syntax_node );
-                    plan_or_progress = plan;
-                }
-                else
-                {
-                    plan_or_progress = Progress{ .readiness = iteration_result.readiness };
-                }
-                return plan_or_progress;
-            });
-         } );
+      // // ARRAY
+      // mProductions.emplace_back(
+      //    [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
+      //    {
+      //       const size_t minimal_size = 1;
+      //       const size_t minimal_steps_number = 1;
+      //       return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_size]( size_t n )->PlanOrProgress
+      //       {
+      //           ArraySyntaxNodeSP array_syntax_node;
+      //
+      //           SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_size, State::START};
+      //           using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+      //           using HandlerReturn = Handlers::HandlerReturn;
+      //           using Impact = Handlers::Impact;
+      //           handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn 
+      //           { 
+      //               return { State::ERROR, Impact::ERROR };
+      //           };
+      //           handlers.array_syntax_node = [ &array_syntax_node ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
+      //           {
+      //              if( state == State::START )
+      //              {
+      //                 array_syntax_node = node;
+      //                 return { State::FINISH, Impact::MOVE };
+      //              }
+      //              return { state, Impact::ERROR };
+      //           };
+      //
+      //           auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
+      //
+      //           PlanOrProgress plan_or_progress;
+      //           if( iteration_result.state == State::ERROR )
+      //           {
+      //               plan_or_progress = Progress{ .readiness = 0 };
+      //           }  
+      //           else if( iteration_result.state == State::FINISH )
+      //           {
+      //               Plan plan;
+      //               plan.to_remove.nodes.push_back( array_syntax_node );
+      //
+      //               const auto& statment_syntax_node = std::make_shared< StatmentSyntaxNode >( array_syntax_node );
+      //               plan.to_add.nodes.push_back( statment_syntax_node );
+      //               plan_or_progress = plan;
+      //           }
+      //           else
+      //           {
+      //               plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+      //           }
+      //           return plan_or_progress;
+      //       });
+      //    } );
 
       // RETURN_STATMENT
       mProductions.emplace_back(
@@ -426,8 +426,9 @@ public:
             {
                if( state == State::START )
                {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ||
-                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) )
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) //||
+                                   // check_type< CloseCurlyBracketSyntaxNode >( lookahead ) 
+               )
                   {
                       f = node;
                       state = State::F;
@@ -440,8 +441,9 @@ public:
             {
                if( state == State::START )
                {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ||
-                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) //||
+                                   // check_type< CloseCurlyBracketSyntaxNode >( lookahead ) 
+              ) 
                  {
                      f = node;
                      state = State::F;
@@ -453,8 +455,9 @@ public:
             {
                if( state == State::START )
                {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ||
-                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) //||
+                                   // check_type< CloseCurlyBracketSyntaxNode >( lookahead ) 
+              ) 
                    {
                        f = node;
                        state = State::F;
@@ -466,8 +469,9 @@ public:
             {
                if( state == State::START )
                {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ||
-                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) //||
+                                   // check_type< CloseCurlyBracketSyntaxNode >( lookahead ) 
+              ) 
                   {
                       f = node;
                       state = State::F;
@@ -479,8 +483,9 @@ public:
             {
                if( state == State::START )
                {
-                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ||
-                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) //||
+                                   // check_type< CloseCurlyBracketSyntaxNode >( lookahead ) 
+              ) 
                   {
                       f = node;
                       state = State::F;
@@ -488,6 +493,35 @@ public:
                   }
                }
             };
+            handlers.object_syntax_node = [ &f, &state, &lookahead ]( const ObjectSyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) //||
+                                   // check_type< CloseCurlyBracketSyntaxNode >( lookahead ) 
+              ) 
+                  {
+                      f = node;
+                      state = State::F;
+                      state = State::FINISH;
+                  }
+               }
+            };
+            handlers.array_syntax_node = [ &f, &state, &lookahead ]( const ArraySyntaxNodeSP& node )
+            {
+               if( state == State::START )
+               {
+                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) //||
+                                   // check_type< CloseCurlyBracketSyntaxNode >( lookahead ) 
+              ) 
+                  {
+                      f = node;
+                      state = State::F;
+                      state = State::FINISH;
+                  }
+               }
+            };
+
 
             iterate_over_last_n_nodes( stack, 1, handlers );
 
