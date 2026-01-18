@@ -5,6 +5,7 @@
 #include "i_grammar.h"
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/close_circle_bracket_syntax_node.h"
+#include "terminals/close_square_bracket_syntax_node.h"
 #include "terminals/minus_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
@@ -171,6 +172,8 @@ public:
                    {
                      if( lookahead && ( check_type<SemicolonSyntaxNode>( lookahead ) || 
                                         check_type<CloseCircleBracketSyntaxNode>( lookahead ) ||
+                                        check_type<CloseCurlyBracketSyntaxNode>( lookahead ) ||
+                                        check_type<CloseSquareBracketSyntaxNode>( lookahead ) ||
                                         check_type<PlusSyntaxNode>( lookahead ) ||
                                         check_type<MinusSyntaxNode>( lookahead ) ||
                                         check_type<AsteriskSyntaxNode>( lookahead ) ||
@@ -211,29 +214,6 @@ public:
                 return plan_or_progress;
             });
 
-
-
-
-            // SyntaxNodeEmptyVisitor::Handlers handlers;
-            // handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-            //
-            // iterate_over_last_n_nodes( stack, distance_between_open_close_circle_bracket + 1, handlers );
-            //
-            // if( state != State::FINISH )
-            //    return {};
-            //
-            // Plan plan;
-            // plan.to_remove.nodes.push_back( name );
-            // plan.to_remove.nodes.push_back( open_circle_bracket );
-            // for( const auto& argument : arguments )
-            //    plan.to_remove.nodes.push_back( argument );
-            // for( const auto& comma : commas )
-            //    plan.to_remove.nodes.push_back( comma );
-            // plan.to_remove.nodes.push_back( close_circle_bracket );
-            //
-            // const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( name->value(), arguments );
-            // plan.to_add.nodes.push_back( function_call );
-            // return plan;
          } );
    }
 };

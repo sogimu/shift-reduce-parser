@@ -219,6 +219,15 @@ public:
                    }
                    return { state, Impact::ERROR };
                 };
+                handlers.function_call_syntax_node = [ &value ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::COLON )
+                   {
+                       value = node;
+                       return { State::FINISH, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
                 handlers.array_syntax_node = [ &value ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::COLON )
