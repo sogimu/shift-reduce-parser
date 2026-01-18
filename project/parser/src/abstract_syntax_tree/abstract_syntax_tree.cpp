@@ -62,8 +62,6 @@
 AbstractSyntaxTree::AbstractSyntaxTree( const LexicalTokens& lexical_tokens )
  {
     std::vector< IGrammarSP > grammars{
-       std::make_shared< Array >(),
-       std::make_shared< Object >(),
        std::make_shared< FunctionCall >(),
        std::make_shared< Print >(),
        std::make_shared< Return >(),
@@ -71,6 +69,8 @@ AbstractSyntaxTree::AbstractSyntaxTree( const LexicalTokens& lexical_tokens )
        std::make_shared< F >(),
        std::make_shared< BinExpr >(),
        std::make_shared< UnExpr >(),
+       std::make_shared< Array >(),
+       std::make_shared< Object >(),
        std::make_shared< VaribleAssigment >(),
        std::make_shared< Statment >(),
        std::make_shared< Scope >(),

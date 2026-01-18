@@ -90,6 +90,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -105,6 +106,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -120,6 +122,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                                                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -137,6 +140,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                                                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -163,6 +167,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead )  || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -178,6 +183,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead )  || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -193,6 +199,7 @@ public:
                                                                   if( lookahead && ( check_type< SemicolonSyntaxNode >( lookahead )  || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                                                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -210,6 +217,7 @@ public:
                                                                   if( lookahead && ( check_type< SemicolonSyntaxNode >( lookahead )  || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< BinExprSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
@@ -235,6 +243,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -250,6 +259,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -265,6 +275,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                                                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -282,6 +293,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                                                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -308,6 +320,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -323,6 +336,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -338,6 +352,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                                                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -355,6 +370,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                                                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -381,6 +397,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -396,6 +413,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
                                                                                    check_type< EqualSyntaxNode >( lookahead ) || 
                                                                                    check_type< LessSyntaxNode >( lookahead ) || 
@@ -411,6 +429,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                                                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 
@@ -428,6 +447,7 @@ public:
                                                                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
                                                                                    check_type< PlusSyntaxNode >( lookahead ) || 
                                                                                    check_type< MinusSyntaxNode >( lookahead ) || 
                                                                                    check_type< CommaSyntaxNode >( lookahead ) || 

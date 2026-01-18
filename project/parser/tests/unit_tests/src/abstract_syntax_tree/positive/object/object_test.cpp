@@ -49,6 +49,40 @@ TEST( SYNTAX_TREE_OBJECT, FROM_TWO_INT )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
+TEST( SYNTAX_TREE_OBJECT, FROM_ONE_INT )
+{
+   // ARRANGE
+   const auto& input = R"""(
+    {"key": 12};
+   )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& string0 = std::make_shared< StringSyntaxNode >( lexical_tokens[2] );
+   const auto& number0 = std::make_shared< IntSyntaxNode >( lexical_tokens[4] );
+   const auto& f0 = std::make_shared< FSyntaxNode >( number0 );
+   std::vector< LexicalTokens::LexicalToken > pair0_lexical_tokens
+   {
+      lexical_tokens[3]
+   };
+   const auto& pair0 = std::make_shared< ObjectPairSyntaxNode >( string0, f0, pair0_lexical_tokens );
+  
+   std::vector< LexicalTokens::LexicalToken > object_lexical_tokens
+   {
+      lexical_tokens[1], lexical_tokens[5]
+   };
+   std::vector< ObjectPairSyntaxNodeSP > pairs{ pair0 };
+   const auto& object = std::make_shared< ObjectSyntaxNode >( pairs, object_lexical_tokens );
+   
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( object, lexical_tokens[6] );
+  
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
 TEST( SYNTAX_TREE_OBJECT, FROM_FUNCTION_CALL )
 {
    // ARRANGE
@@ -69,6 +103,46 @@ TEST( SYNTAX_TREE_OBJECT, FROM_FUNCTION_CALL )
       lexical_tokens[3]
    };
    const auto& pair0 = std::make_shared< ObjectPairSyntaxNode >( string0, function_call, pair0_lexical_tokens );
+  
+   std::vector< LexicalTokens::LexicalToken > object_lexical_tokens
+   {
+      lexical_tokens[1], lexical_tokens[5]
+   };
+   std::vector< ObjectPairSyntaxNodeSP > pairs{ pair0 };
+   const auto& object = std::make_shared< ObjectSyntaxNode >( pairs, object_lexical_tokens );
+   
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( object, lexical_tokens[8] );
+  
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_OBJECT, FROM_BIN_EXPR )
+{
+   // ARRANGE
+   const auto& input = R"""(
+    {"key": 1+2};
+   )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& string0 = std::make_shared< StringSyntaxNode >( lexical_tokens[2] );
+   const auto& d0 = std::make_shared< IntSyntaxNode >( lexical_tokens[4] );
+   const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
+
+   const auto& d1 = std::make_shared< IntSyntaxNode >( lexical_tokens[6] );
+   const auto& f1 = std::make_shared< FSyntaxNode >( d1 );
+  
+   std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[5] };
+   const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, f1, bin_expr_lexical_tokens );
+   std::vector< LexicalTokens::LexicalToken > pair0_lexical_tokens
+   {
+      lexical_tokens[3]
+   };
+   const auto& pair0 = std::make_shared< ObjectPairSyntaxNode >( string0, bin_expr, pair0_lexical_tokens );
   
    std::vector< LexicalTokens::LexicalToken > object_lexical_tokens
    {

@@ -169,7 +169,7 @@ public:
             });
          } );
       
-      // STRING COLON F|ARRAY|OBJECT 
+      // STRING COLON F|ARRAY|OBJECT|FUNCTION_CALL|BIN_EXPR 
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -192,7 +192,7 @@ public:
                                                    (void) node;
                    return { State::ERROR, Impact::ERROR };
                 };
-                handlers.string_syntax_node = [ &key ]( const State& state, const StringSyntaxNodeSP& node ) -> HandlerReturn
+                handlers.string_syntax_node = [ &key, &lookahead ]( const State& state, const StringSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::START ) 
                    {
@@ -210,39 +210,68 @@ public:
                    }
                    return { state, Impact::ERROR };
                 };
-                handlers.f_syntax_node = [ &value ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
+                handlers.f_syntax_node = [ &value, &lookahead ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::COLON )
                    {
-                       value = node;
-                       return { State::FINISH, Impact::MOVE };
+                      if( lookahead && check_type< CommaSyntaxNode >( lookahead ) ||
+                                       check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                      {
+                         value = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
                    }
                    return { state, Impact::ERROR };
                 };
-                handlers.function_call_syntax_node = [ &value ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                handlers.bin_expr_syntax_node = [ &value, &lookahead ]( const State& state, const BinExprSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::COLON )
                    {
-                       value = node;
-                       return { State::FINISH, Impact::MOVE };
+                      if( lookahead && check_type< CommaSyntaxNode >( lookahead ) ||
+                                       check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                      {
+                         value = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
                    }
                    return { state, Impact::ERROR };
                 };
-                handlers.array_syntax_node = [ &value ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
+                handlers.function_call_syntax_node = [ &value, &lookahead ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::COLON )
                    {
-                       value = node;
-                       return { State::FINISH, Impact::MOVE };
+                      if( lookahead && check_type< CommaSyntaxNode >( lookahead ) ||
+                                       check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                      {
+                         value = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
                    }
                    return { state, Impact::ERROR };
                 };
-                handlers.object_syntax_node = [ &value ]( const State& state, const ObjectSyntaxNodeSP& node ) -> HandlerReturn
+                handlers.array_syntax_node = [ &value, &lookahead ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::COLON )
                    {
-                       value = node;
-                       return { State::FINISH, Impact::MOVE };
+                      if( lookahead && check_type< CommaSyntaxNode >( lookahead ) ||
+                                       check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                      {
+                         value = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.object_syntax_node = [ &value, &lookahead ]( const State& state, const ObjectSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::COLON )
+                   {
+                      if( lookahead && check_type< CommaSyntaxNode >( lookahead ) ||
+                                       check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                      {
+                         value = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
                    }
                    return { state, Impact::ERROR };
                 };

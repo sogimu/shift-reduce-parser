@@ -117,6 +117,15 @@ public:
                    }
                    return { state, Impact::ERROR };
                 };
+                handlers.bin_expr_syntax_node = [ &elements ]( const State& state, const BinExprSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_SQUARE_BRACKET || state == State::COMMA )
+                   {
+                      elements.emplace_back( node );
+                       return { State::ELEMENT, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
                 handlers.function_call_syntax_node = [ &elements ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::OPEN_SQUARE_BRACKET || state == State::COMMA )
