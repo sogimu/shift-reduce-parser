@@ -44,6 +44,8 @@ StackMachine::StackMachine( const ControlFlowGraph& cfg )
 Json StackMachine::exec()
 {
    VaribleStore varible_store;
+   varible_store.pushScope();
+
    FunctionStore function_store;
    std::deque< Json > argument_stack;
    std::deque< FunctionCallSyntaxNodeSP > function_call_stack;
@@ -138,10 +140,19 @@ Json StackMachine::exec()
       [ &varible_store, &function_store, &argument_stack, &function_call_stack, &stack ]( const ISyntaxNodeSP& node )
       {
          SyntaxNodeEmptyVisitor::Handlers handlers;
+         handlers.string_syntax_node = [ &argument_stack ]( const StringSyntaxNodeSP& node )
+         {
+             auto s = argument_stack;
+             (void) s;
+            // std::cout << "f = " << node->value() << std::endl;
+             argument_stack.push_back( node->value() );
+         };
          handlers.f_syntax_node = [ &argument_stack ]( const FSyntaxNodeSP& node )
          {
+             auto s = argument_stack;
+             (void) s;
             // std::cout << "f = " << node->value() << std::endl;
-            std::visit([&argument_stack](auto&& arg)
+            std::visit([&argument_stack, &s](auto&& arg)
             {
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (std::is_same_v<T, double>)
@@ -157,8 +168,36 @@ Json StackMachine::exec()
                     argument_stack.push_back( arg );
                 }
             }, node->value().get());
+         };
+         handlers.array_syntax_node = [ &argument_stack ]( const ArraySyntaxNodeSP& node )
+         {
             auto s = argument_stack;
             (void) s;
+            // std::cout << "f = " << node->value() << std::endl;
+            std::vector<Json> arrays_elements;
+            for(auto i=0; i < node->Children().size(); ++i)
+            {
+               auto value = argument_stack.back();
+               argument_stack.pop_back();
+               arrays_elements.insert( arrays_elements.begin(), value );
+            }
+            argument_stack.push_back( arrays_elements );
+         };
+         handlers.object_syntax_node = [ &argument_stack ]( const ObjectSyntaxNodeSP& node )
+         {
+             auto s = argument_stack;
+             (void) s;
+            // std::cout << "f = " << node->value() << std::endl;
+            std::map<std::string, Json> object_elements;
+            for(auto i=0; i < node->Children().size(); ++i)
+            {
+               auto value = argument_stack.back();
+               argument_stack.pop_back();
+               auto key = argument_stack.back();
+               argument_stack.pop_back();
+               object_elements.emplace( key.get_string(), value );
+            }
+            argument_stack.push_back( object_elements );
          };
          handlers.name_syntax_node = [ &argument_stack, &varible_store ]( const NameSyntaxNodeSP& varible )
          {
@@ -273,6 +312,8 @@ Json StackMachine::exec()
          handlers.varible_assigment_statment_syntax_node = [ &varible_store, &argument_stack ]( const VaribleAssigmentStatmentSyntaxNodeSP& varible_assigment )
          {
             // const auto& source = varible_assigment->source();
+            auto s = argument_stack;
+            (void) s;
             const auto& target = varible_assigment->target();
             const auto& target_name = target->value();
             auto value = argument_stack.back();

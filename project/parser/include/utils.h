@@ -843,7 +843,8 @@ static std::string to_string( const ISyntaxNodeSP& node )
         handlers.minus_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MINUS" << "}"; };
         handlers.asterisk_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ASTERISK" << "}"; };
         handlers.slash_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SLASH" << "}"; };
-        handlers.double_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "NUMBER" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"; };
+        handlers.int_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "INT" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"; };
+        handlers.double_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "DOUBLE" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"; };
         handlers.f_syntax_node = [ &s, print_lexical_tokens ]( const FSyntaxNodeSP& node ) { s << "{" << "F" << '(' << node->value() << ')' << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"; };
         handlers.bin_expr_syntax_node = [ &s ]( const BinExprSyntaxNodeSP& node )
         { 

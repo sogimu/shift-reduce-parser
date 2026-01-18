@@ -134,6 +134,60 @@ TEST( SYNTAX_TREE_GLOBAL_VARIBLE_ASSIGN, FUNCTION_CALL )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
+TEST( SYNTAX_TREE_GLOBAL_VARIBLE_ASSIGN, ARRAY )
+{
+   // ARRANGE
+   const auto& input = R"""(
+      a=[];
+   )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[1] );
+
+   std::vector< LexicalTokens::LexicalToken > array_lexical_tokens
+   {
+      lexical_tokens[3], lexical_tokens[4]
+   };
+   const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{}, array_lexical_tokens );
+
+   const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name0, array, lexical_tokens[2], VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL );
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( varible_assigment, lexical_tokens[5] );
+   
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_GLOBAL_VARIBLE_ASSIGN, OBJECT )
+{
+   // ARRANGE
+   const auto& input = R"""(
+      a={};
+   )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[1] );
+
+   std::vector< LexicalTokens::LexicalToken > object_lexical_tokens
+   {
+      lexical_tokens[3], lexical_tokens[4]
+   };
+   const auto& object = std::make_shared< ObjectSyntaxNode >( std::vector< ObjectPairSyntaxNodeSP >{}, object_lexical_tokens );
+
+   const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name0, object, lexical_tokens[2], VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL );
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( varible_assigment, lexical_tokens[5] );
+   
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
 TEST( SYNTAX_TREE_LOCAL_VARIBLE_ASSIGN, F )
 {
    // ARRANGE
@@ -260,3 +314,58 @@ TEST( SYNTAX_TREE_LOCAL_VARIBLE_ASSIGN, FUNCTION_CALL )
    AbstractSyntaxTree expected_syntax_tree { statment };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
+
+TEST( SYNTAX_TREE_LOCAL_VARIBLE_ASSIGN, ARRAY )
+{
+   // ARRANGE
+   const auto& input = R"""(
+      var a=[];
+   )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
+
+   std::vector< LexicalTokens::LexicalToken > array_lexical_tokens
+   {
+      lexical_tokens[4], lexical_tokens[5]
+   };
+   const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{}, array_lexical_tokens );
+
+   const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name0, array, lexical_tokens[3], VaribleAssigmentStatmentSyntaxNode::Context::LOCAL );
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( varible_assigment, lexical_tokens[6] );
+   
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
+TEST( SYNTAX_TREE_LOCAL_VARIBLE_ASSIGN, OBJECT )
+{
+   // ARRANGE
+   const auto& input = R"""(
+      var a={};
+   )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
+
+   std::vector< LexicalTokens::LexicalToken > object_lexical_tokens
+   {
+      lexical_tokens[4], lexical_tokens[5]
+   };
+   const auto& object = std::make_shared< ObjectSyntaxNode >( std::vector< ObjectPairSyntaxNodeSP >{}, object_lexical_tokens );
+
+   const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name0, object, lexical_tokens[3], VaribleAssigmentStatmentSyntaxNode::Context::LOCAL );
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( varible_assigment, lexical_tokens[6] );
+   
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
