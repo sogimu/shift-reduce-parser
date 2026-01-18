@@ -35,6 +35,32 @@ TEST( SYNTAX_TREE_ARRAY, FROM_TWO_INT )
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
+TEST( SYNTAX_TREE_ARRAY, FROM_ONE_NAME )
+{
+   // ARRANGE
+   const auto& input = R"""(
+    [a];
+   )""";
+
+   // ACT
+   const auto& lexical_tokens = LexicalTokens( input );
+   const auto& syntax_tree = AbstractSyntaxTree( lexical_tokens );
+
+   // ASSERT
+   const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
+   
+   std::vector< LexicalTokens::LexicalToken > array_lexical_tokens
+   {
+      lexical_tokens[1], lexical_tokens[3]
+   };
+   const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{ name0 }, array_lexical_tokens );
+   
+   const auto& statment = std::make_shared< StatmentSyntaxNode >( array, lexical_tokens[4] );
+  
+   AbstractSyntaxTree expected_syntax_tree { statment };
+   EXPECT_EQ( syntax_tree, expected_syntax_tree );
+}
+
 TEST( SYNTAX_TREE_ARRAY, FROM_ONE_FUNCTION_CALL )
 {
    // ARRANGE

@@ -29,7 +29,7 @@ public:
          COMMA,
       };
 
-      // OPEN_SQUARE_BRACKET (F COMMA?)+ CLOSE_SQUARE_BRACKET 
+      // OPEN_SQUARE_BRACKET (F|ARRAY|OBJECT|BIN_EXPR|FUNCTION_CALL|NAME COMMA?)+ CLOSE_SQUARE_BRACKET 
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -127,6 +127,15 @@ public:
                    return { state, Impact::ERROR };
                 };
                 handlers.function_call_syntax_node = [ &elements ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_SQUARE_BRACKET || state == State::COMMA )
+                   {
+                      elements.emplace_back( node );
+                       return { State::ELEMENT, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.name_syntax_node = [ &elements ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::OPEN_SQUARE_BRACKET || state == State::COMMA )
                    {

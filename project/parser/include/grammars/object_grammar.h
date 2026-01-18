@@ -169,7 +169,7 @@ public:
             });
          } );
       
-      // STRING COLON F|ARRAY|OBJECT|FUNCTION_CALL|BIN_EXPR 
+      // STRING COLON F|ARRAY|OBJECT|FUNCTION_CALL|BIN_EXPR|NAME 
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -211,6 +211,19 @@ public:
                    return { state, Impact::ERROR };
                 };
                 handlers.f_syntax_node = [ &value, &lookahead ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::COLON )
+                   {
+                      if( lookahead && check_type< CommaSyntaxNode >( lookahead ) ||
+                                       check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                      {
+                         value = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.name_syntax_node = [ &value, &lookahead ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::COLON )
                    {
@@ -266,7 +279,7 @@ public:
                 {
                    if( state == State::COLON )
                    {
-                      if( lookahead && check_type< CommaSyntaxNode >( lookahead ) ||
+                      if( lookahead && check_type< ColonSyntaxNode >( lookahead ) ||
                                        check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
                       {
                          value = node;
