@@ -1178,5 +1178,69 @@ public:
                                                               return plan_or_progress;
                                                               });
            } );
+      
+      // BIN_EXPR SEMICOLON
+      mProductions.emplace_back(
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
+         {
+            const size_t minimal_size = 2;
+            size_t minimal_steps_number = 2;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
+                                                            
+            {
+              BinExprSyntaxNodeSP bin_expr;
+              SemicolonSyntaxNodeSP semicolon;
+
+              const Stack& s = stack;
+              SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
+              using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+              using HandlerReturn = Handlers::HandlerReturn;
+              using Impact = Handlers::Impact;
+
+              handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn
+              { 
+                 return { State::ERROR, Impact::ERROR };
+              };
+              handlers.bin_expr_syntax_node = [ &bin_expr ]( const State& state, const BinExprSyntaxNodeSP& node ) -> HandlerReturn
+              {
+                 if( state == State::START )
+                 {
+                    bin_expr = node;
+                    return { State::BIN_EXPR, Impact::MOVE };
+                 }
+                 return { state, Impact::ERROR };
+              };
+              handlers.semicolon_syntax_node = [ &semicolon ]( const State& state, const SemicolonSyntaxNodeSP& node ) -> HandlerReturn
+              {
+                 if( state == State::BIN_EXPR )
+                 {
+                    semicolon = node;
+                    return { State::FINISH, Impact::MOVE };
+                 }
+                 return { state, Impact::ERROR };
+              };
+              auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
+
+              PlanOrProgress plan_or_progress;
+              if( iteration_result.state == State::ERROR )
+              {
+                  plan_or_progress = Progress{ .readiness = 0 };
+              }  
+              else if( iteration_result.state == State::FINISH )
+              {
+                  Plan plan;
+                  plan.to_remove.nodes.push_back( bin_expr );
+                  plan.to_remove.nodes.push_back( semicolon );
+
+                  plan.to_add.nodes.push_back( bin_expr );
+                  plan_or_progress = plan;
+              }
+              else
+              {
+                  plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+              }
+              return plan_or_progress;
+            });
+         } );
    }
 };

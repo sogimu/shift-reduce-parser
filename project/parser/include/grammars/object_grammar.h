@@ -32,10 +32,11 @@ public:
          COMMA,
          COLON,
          STRING,
-         PAIR
+         PAIR,
+         OBJECT
       };
 
-      // OPEN_CURLY_BRACKET (STRING COLON F COMMA?)+ CLOSE_CURLY_BRACKET 
+      // OPEN_CURLY_BRACKET OBJECT_PAIR+ CLOSE_CURLY_BRACKET 
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -124,11 +125,16 @@ public:
                 };
                 handlers.close_curly_bracket_syntax_node = [ &close_curly_bracket, &lookahead ]( const State& state, const CloseCurlyBracketSyntaxNodeSP& node ) -> HandlerReturn
                 {
+                     auto lwef = lookahead;
+                       (void) lwef;
+                   lwef.get();
+                  
                    if( state == State::PAIR || state == State::OPEN_CURLY_BRACKET )
                    {
                      if( lookahead && ( check_type<SemicolonSyntaxNode>( lookahead ) || 
                                         check_type<CloseSquareBracketSyntaxNode>( lookahead ) ||
                                         check_type<CloseCurlyBracketSyntaxNode>( lookahead ) ||
+                                        check_type<CloseCircleBracketSyntaxNode>( lookahead ) ||
                                         check_type<CommaSyntaxNode>( lookahead ) ) )
                      {
                          close_curly_bracket = node;
@@ -158,8 +164,8 @@ public:
                                                   open_curly_bracket->lexical_tokens().at(0),
                                                   close_curly_bracket->lexical_tokens().at(0)
                                                   };
-                    const auto& array = std::make_shared< ObjectSyntaxNode >( pairs, lexical_tokens );
-                    plan.to_add.nodes.push_back( array );
+                    const auto& object = std::make_shared< ObjectSyntaxNode >( pairs, lexical_tokens );
+                    plan.to_add.nodes.push_back( object );
                     plan_or_progress = plan;
                 }
                 else {
@@ -313,6 +319,70 @@ public:
                     plan_or_progress = Progress{ .readiness = iteration_result.readiness };
                 }
                 return plan_or_progress;
+            });
+         } );
+      
+      // OBJECT SEMICOLON
+      mProductions.emplace_back(
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
+         {
+            const size_t minimal_size = 2;
+            size_t minimal_steps_number = 2;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
+                                                            
+            {
+              ObjectSyntaxNodeSP object;
+              SemicolonSyntaxNodeSP semicolon;
+
+              const Stack& s = stack;
+              SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
+              using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+              using HandlerReturn = Handlers::HandlerReturn;
+              using Impact = Handlers::Impact;
+
+              handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn
+              { 
+                 return { State::ERROR, Impact::ERROR };
+              };
+              handlers.object_syntax_node = [ &object ]( const State& state, const ObjectSyntaxNodeSP& node ) -> HandlerReturn
+              {
+                 if( state == State::START )
+                 {
+                    object = node;
+                    return { State::OBJECT, Impact::MOVE };
+                 }
+                 return { state, Impact::ERROR };
+              };
+              handlers.semicolon_syntax_node = [ &semicolon ]( const State& state, const SemicolonSyntaxNodeSP& node ) -> HandlerReturn
+              {
+                 if( state == State::OBJECT )
+                 {
+                    semicolon = node;
+                    return { State::FINISH, Impact::MOVE };
+                 }
+                 return { state, Impact::ERROR };
+              };
+              auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
+
+              PlanOrProgress plan_or_progress;
+              if( iteration_result.state == State::ERROR )
+              {
+                  plan_or_progress = Progress{ .readiness = 0 };
+              }  
+              else if( iteration_result.state == State::FINISH )
+              {
+                  Plan plan;
+                  plan.to_remove.nodes.push_back( object );
+                  plan.to_remove.nodes.push_back( semicolon );
+
+                  plan.to_add.nodes.push_back( object );
+                  plan_or_progress = plan;
+              }
+              else
+              {
+                  plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+              }
+              return plan_or_progress;
             });
          } );
    }

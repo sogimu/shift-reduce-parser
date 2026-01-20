@@ -27,6 +27,7 @@ public:
          CLOSE_SQUARE_BRACKET,
          ELEMENT,
          COMMA,
+         ARRAY
       };
 
       // OPEN_SQUARE_BRACKET (F|ARRAY|OBJECT|BIN_EXPR|FUNCTION_CALL|NAME COMMA?)+ CLOSE_SQUARE_BRACKET 
@@ -169,6 +170,7 @@ public:
                      if( lookahead && ( check_type<SemicolonSyntaxNode>( lookahead ) || 
                                         check_type<CloseSquareBracketSyntaxNode>( lookahead ) ||
                                         check_type<CloseCurlyBracketSyntaxNode>( lookahead ) ||
+                                        check_type<CloseCircleBracketSyntaxNode>( lookahead ) ||
                                         check_type<CommaSyntaxNode>( lookahead ) ) )
                      {
                         close_square_bracket = node;
@@ -206,6 +208,70 @@ public:
                     plan_or_progress = Progress{ .readiness = iteration_result.readiness };
                 }
                 return plan_or_progress;
+            });
+         } );
+      
+      // ARRAY SEMICOLON
+      mProductions.emplace_back(
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
+         {
+            const size_t minimal_size = 2;
+            size_t minimal_steps_number = 2;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
+                                                            
+            {
+              ArraySyntaxNodeSP array;
+              SemicolonSyntaxNodeSP semicolon;
+
+              const Stack& s = stack;
+              SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
+              using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+              using HandlerReturn = Handlers::HandlerReturn;
+              using Impact = Handlers::Impact;
+
+              handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn
+              { 
+                 return { State::ERROR, Impact::ERROR };
+              };
+              handlers.array_syntax_node = [ &array ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
+              {
+                 if( state == State::START )
+                 {
+                    array = node;
+                    return { State::ARRAY, Impact::MOVE };
+                 }
+                 return { state, Impact::ERROR };
+              };
+              handlers.semicolon_syntax_node = [ &semicolon ]( const State& state, const SemicolonSyntaxNodeSP& node ) -> HandlerReturn
+              {
+                 if( state == State::ARRAY )
+                 {
+                    semicolon = node;
+                    return { State::FINISH, Impact::MOVE };
+                 }
+                 return { state, Impact::ERROR };
+              };
+              auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
+
+              PlanOrProgress plan_or_progress;
+              if( iteration_result.state == State::ERROR )
+              {
+                  plan_or_progress = Progress{ .readiness = 0 };
+              }  
+              else if( iteration_result.state == State::FINISH )
+              {
+                  Plan plan;
+                  plan.to_remove.nodes.push_back( array );
+                  plan.to_remove.nodes.push_back( semicolon );
+
+                  plan.to_add.nodes.push_back( array );
+                  plan_or_progress = plan;
+              }
+              else
+              {
+                  plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+              }
+              return plan_or_progress;
             });
          } );
    }

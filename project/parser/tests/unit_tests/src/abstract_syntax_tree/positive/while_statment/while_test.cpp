@@ -30,8 +30,7 @@ TEST( SYNTAX_TREE_WHILE, F_EQUAL_F )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > while_lexical_tokens{ lexical_tokens[1] };
    const auto& while_statment = std::make_shared< WhileStatmentSyntaxNode >( bin_expr, scope, while_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( while_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { while_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -57,8 +56,7 @@ TEST( SYNTAX_TREE_WHILE, F )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > while_lexical_tokens{ lexical_tokens[1] };
    const auto& while_statment = std::make_shared< WhileStatmentSyntaxNode >( f, scope, while_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( while_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { while_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -83,8 +81,7 @@ TEST( SYNTAX_TREE_WHILE, NAME )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > while_lexical_tokens{ lexical_tokens[1] };
    const auto& while_statment = std::make_shared< WhileStatmentSyntaxNode >( name, scope, while_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( while_statment, lexical_tokens[7] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { while_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -114,8 +111,7 @@ TEST( SYNTAX_TREE_WHILE, BIN_EXPR )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > while_lexical_tokens{ lexical_tokens[1] };
    const auto& while_statment = std::make_shared< WhileStatmentSyntaxNode >( bin_expr, scope, while_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( while_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { while_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -143,8 +139,7 @@ TEST( SYNTAX_TREE_WHILE, UN_EXPR )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > while_lexical_tokens{ lexical_tokens[1] };
    const auto& while_statment = std::make_shared< WhileStatmentSyntaxNode >( un_expr, scope, while_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( while_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { while_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -173,8 +168,7 @@ TEST( SYNTAX_TREE_WHILE, FUNCTION_CALL )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > while_lexical_tokens{ lexical_tokens[1] };
    const auto& while_statment = std::make_shared< WhileStatmentSyntaxNode >( function_call, scope, while_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( while_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { while_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -203,8 +197,7 @@ TEST( SYNTAX_TREE_WHILE, IF_SEMICOLON )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > while_lexical_tokens{ lexical_tokens[1] };
    const auto& while_statment = std::make_shared< WhileStatmentSyntaxNode >( function_call, scope, while_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( while_statment, lexical_tokens[10] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { while_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }

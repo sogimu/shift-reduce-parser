@@ -29,9 +29,7 @@ TEST( SYNTAX_TREE_ARRAY, FROM_TWO_INT )
    };
    const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{ f0, f1, f2 }, array_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( array, lexical_tokens[8] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { array };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -55,9 +53,7 @@ TEST( SYNTAX_TREE_ARRAY, FROM_ONE_NAME )
    };
    const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{ name0 }, array_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( array, lexical_tokens[4] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { array };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -82,9 +78,7 @@ TEST( SYNTAX_TREE_ARRAY, FROM_ONE_FUNCTION_CALL )
    };
    const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{ function_call }, array_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( array, lexical_tokens[6] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { array };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -112,9 +106,7 @@ TEST( SYNTAX_TREE_ARRAY, FROM_TWO_FUNCTION_CALL )
    };
    const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{ function_call0, function_call1 }, array_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( array, lexical_tokens[10] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { array };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -146,9 +138,7 @@ TEST( SYNTAX_TREE_ARRAY, FROM_BIN_EXPR )
    };
    const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{ bin_expr }, array_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( array, lexical_tokens[6] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { array };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -170,8 +160,6 @@ TEST( SYNTAX_TREE_ARRAY, EMPTY )
    };
    const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{}, array_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( array, lexical_tokens[3] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { array };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }

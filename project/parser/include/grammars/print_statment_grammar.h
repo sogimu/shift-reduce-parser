@@ -29,6 +29,7 @@ public:
          OPEN_CIRCLE_BRACKET,
          ARGUMENT,
          CLOSE_CIRCLE_BRACKET,
+         PRINT_STATMENT
       };
 
       // PRINT OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL CLOSE_CIRCLE_BRACKET SEMICOLON
@@ -144,6 +145,70 @@ public:
 
                   const auto& print_statment_node = std::make_shared< PrintStatmentSyntaxNode >( argument );
                   plan.to_add.nodes.push_back( print_statment_node );
+                  plan_or_progress = plan;
+              }
+              else
+              {
+                  plan_or_progress = Progress{ .readiness = iteration_result.readiness };
+              }
+              return plan_or_progress;
+            });
+         } );
+      
+      // PRINT_STATMENT SEMICOLON
+      mProductions.emplace_back(
+         []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
+         {
+            const size_t minimal_size = 2;
+            size_t minimal_steps_number = 2;
+            return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
+                                                            
+            {
+              PrintStatmentSyntaxNodeSP print;
+              SemicolonSyntaxNodeSP semicolon;
+
+              const Stack& s = stack;
+              SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
+              using Handlers = SyntaxNodeProgressVisitor<State>::Handlers;
+              using HandlerReturn = Handlers::HandlerReturn;
+              using Impact = Handlers::Impact;
+
+              handlers.default_handler = []( const State& state, const ISyntaxNodeSP& ) -> HandlerReturn
+              { 
+                 return { State::ERROR, Impact::ERROR };
+              };
+              handlers.print_statment_syntax_node = [ &print ]( const State& state, const PrintStatmentSyntaxNodeSP& node ) -> HandlerReturn
+              {
+                 if( state == State::START )
+                 {
+                    print = node;
+                    return { State::PRINT_STATMENT, Impact::MOVE };
+                 }
+                 return { state, Impact::ERROR };
+              };
+              handlers.semicolon_syntax_node = [ &semicolon ]( const State& state, const SemicolonSyntaxNodeSP& node ) -> HandlerReturn
+              {
+                 if( state == State::PRINT_STATMENT )
+                 {
+                    semicolon = node;
+                    return { State::FINISH, Impact::MOVE };
+                 }
+                 return { state, Impact::ERROR };
+              };
+              auto iteration_result = iterate_over_last_n_nodesv2< State >( stack, n, handlers );
+
+              PlanOrProgress plan_or_progress;
+              if( iteration_result.state == State::ERROR )
+              {
+                  plan_or_progress = Progress{ .readiness = 0 };
+              }  
+              else if( iteration_result.state == State::FINISH )
+              {
+                  Plan plan;
+                  plan.to_remove.nodes.push_back( print );
+                  plan.to_remove.nodes.push_back( semicolon );
+
+                  plan.to_add.nodes.push_back( print );
                   plan_or_progress = plan;
               }
               else

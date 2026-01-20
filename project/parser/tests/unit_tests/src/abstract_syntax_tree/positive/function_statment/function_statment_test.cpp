@@ -27,8 +27,7 @@ TEST( SYNTAX_TREE_FUNCTION_STATMENT, ZERO_ARGUMENT )
                                                                                    std::vector< ISyntaxNodeSP >{}, 
                                                                                    scope, function_statment_lexical_tokens );
 
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( function_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { function_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -56,8 +55,7 @@ TEST( SYNTAX_TREE_FUNCTION_STATMENT, ONE_ARGUMENT )
                                                                                    std::vector< ISyntaxNodeSP >{name1}, 
                                                                                    scope, function_statment_lexical_tokens );
 
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( function_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { function_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -86,7 +84,6 @@ TEST( SYNTAX_TREE_FUNCTION_STATMENT, TWO_ARGUMENT )
                                                                                    std::vector< ISyntaxNodeSP >{ name1, name2 }, 
                                                                                    scope, function_statment_lexical_tokens );
 
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( function_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { function_statment };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }

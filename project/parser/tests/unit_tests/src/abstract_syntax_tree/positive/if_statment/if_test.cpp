@@ -32,8 +32,7 @@ TEST( SYNTAX_TREE_IF, F_EQUAL_F )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > if_lexical_tokens{ lexical_tokens[1] };
    const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >( bin_expr, scope, if_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( if_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { if_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -59,8 +58,7 @@ TEST( SYNTAX_TREE_IF, F )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > if_lexical_tokens{ lexical_tokens[1] };
    const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >( f, scope, if_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( if_statment, lexical_tokens[7] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { if_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -85,8 +83,7 @@ TEST( SYNTAX_TREE_IF, NAME )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > if_lexical_tokens{ lexical_tokens[1] };
    const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >( name, scope, if_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( if_statment, lexical_tokens[7] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { if_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -116,8 +113,7 @@ TEST( SYNTAX_TREE_IF, BIN_EXPR )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > if_lexical_tokens{ lexical_tokens[1] };
    const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >( bin_expr, scope, if_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( if_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { if_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -145,8 +141,7 @@ TEST( SYNTAX_TREE_IF, UN_EXPR )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > if_lexical_tokens{ lexical_tokens[1] };
    const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >( un_expr, scope, if_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( if_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { if_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -175,8 +170,7 @@ TEST( SYNTAX_TREE_IF, FUNCTION_CALL )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > if_lexical_tokens{ lexical_tokens[1] };
    const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >( function_call, scope, if_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( if_statment );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { if_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -205,8 +199,7 @@ TEST( SYNTAX_TREE_IF, IF_SEMICOLON )
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
    std::vector< LexicalTokens::LexicalToken > if_lexical_tokens{ lexical_tokens[1] };
    const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >( function_call, scope, if_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( if_statment, lexical_tokens[10] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { if_statment };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }

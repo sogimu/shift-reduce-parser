@@ -28,8 +28,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, INT_SEMICOLON )
    // ASSERT
    const auto& i = std::make_shared< IntSyntaxNode >( lexical_tokens[1] );
    const auto& f = std::make_shared< FSyntaxNode >( i );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( f, lexical_tokens[2] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { f };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -46,8 +45,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, DOUBLE_SEMICOLON )
    // ASSERT
    const auto& d = std::make_shared< DoubleSyntaxNode >( lexical_tokens[1] );
    const auto& f = std::make_shared< FSyntaxNode >( d );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( f, lexical_tokens[2] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { f };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -65,8 +63,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, MINUS_DOUBLE_SEMICOLON )
    const auto& d = std::make_shared< DoubleSyntaxNode >( lexical_tokens[2] );
    const auto& f = std::make_shared< FSyntaxNode >( d );
    const auto& unexpr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, f, std::vector<LexicalTokens::LexicalToken>{ lexical_tokens[1] } );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( unexpr, lexical_tokens[3] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { unexpr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -83,8 +80,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, MINUS_INT_SEMICOLON )
    const auto& d = std::make_shared< IntSyntaxNode >( lexical_tokens[2] );
    const auto& f = std::make_shared< FSyntaxNode >( d );
    const auto& unexpr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, f, std::vector<LexicalTokens::LexicalToken>{ lexical_tokens[1] } );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( unexpr, lexical_tokens[3] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { unexpr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -107,8 +103,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, UN_EXPR_LAST )
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, f0, unexpr, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[5] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -131,8 +126,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, UN_EXPR_NOT_LAST )
 
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[3] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, unexpr, f1, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[5] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -160,8 +154,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_MINUS_NUMBER_DIVIDE_NUMBER_CLO
    
    std::vector< LexicalTokens::LexicalToken > bin_expr1_lexical_tokens{ lexical_tokens[3] };
    const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, f0, bin_expr0, bin_expr1_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr1, lexical_tokens[8] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr1 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -183,8 +176,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_MULTIPLY_OPEN_BRACKET_NUMBER_C
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[3] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Multiply, f0, f1, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[8] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -200,8 +192,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, OPEN_BRACKET_NUMBER_CLOSE_BRACKET )
    // ASSERT
    const auto& d = std::make_shared< IntSyntaxNode >( lexical_tokens[2] );
    const auto& f = std::make_shared< FSyntaxNode >( d );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( f, lexical_tokens[4] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { f };
 
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -224,8 +215,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_PLUS )
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, f1, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[4] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -247,8 +237,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_EQUAL_F )
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2], lexical_tokens[3] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Equal, f0, f1, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[5] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -269,8 +258,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_EQUAL_NAME )
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2], lexical_tokens[3] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Equal, f0, name, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[5] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -291,8 +279,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_LESS_NAME )
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Less, f0, name, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[4] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -313,8 +300,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_MORE_NAME )
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::More, f0, name, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[4] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -349,8 +335,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_EQUAL_BIN_EXPR )
    std::vector< LexicalTokens::LexicalToken > bin_expr2_lexical_tokens{ lexical_tokens[4], lexical_tokens[5] };
    const auto& bin_expr2 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Equal, bin_expr0, bin_expr1, bin_expr2_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr2, lexical_tokens[9] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr2 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -385,8 +370,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_MORE_EQUAL_BIN_EXPR )
    std::vector< LexicalTokens::LexicalToken > bin_expr2_lexical_tokens{ lexical_tokens[4], lexical_tokens[5] };
    const auto& bin_expr2 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::MoreEqual, bin_expr0, bin_expr1, bin_expr2_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr2, lexical_tokens[9] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr2 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -421,8 +405,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_LESS_EQUAL_BIN_EXPR )
    std::vector< LexicalTokens::LexicalToken > bin_expr2_lexical_tokens{ lexical_tokens[4], lexical_tokens[5] };
    const auto& bin_expr2 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::LessEqual, bin_expr0, bin_expr1, bin_expr2_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr2, lexical_tokens[9] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr2 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -457,8 +440,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_LESS_BIN_EXPR )
    std::vector< LexicalTokens::LexicalToken > bin_expr2_lexical_tokens{ lexical_tokens[4] };
    const auto& bin_expr2 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Less, bin_expr0, bin_expr1, bin_expr2_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr2, lexical_tokens[8] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr2 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -493,8 +475,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_BIN_EXPR_MORE_BIN_EXPR )
    std::vector< LexicalTokens::LexicalToken > bin_expr2_lexical_tokens{ lexical_tokens[4] };
    const auto& bin_expr2 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::More, bin_expr0, bin_expr1, bin_expr2_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr2, lexical_tokens[8] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr2 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -515,8 +496,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, F_PLUS_VARIBLE )
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, name, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[4] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -540,8 +520,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, F_PLUS_FUNCTION_CALL )
    
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, function_call, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[7] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -563,8 +542,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_DIVISION )
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Division, f0, f1, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[4] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -593,8 +571,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, MANY_PLUSs )
    std::vector< LexicalTokens::LexicalToken > bin_expr1_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, bin_expr0, bin_expr1_lexical_tokens );
   
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr1, lexical_tokens[6] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr1 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -623,8 +600,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, MANY_MINUSES )
    std::vector< LexicalTokens::LexicalToken > bin_expr1_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, f0, bin_expr0, bin_expr1_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr1, lexical_tokens[6] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr1 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -653,8 +629,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION0 )
    std::vector< LexicalTokens::LexicalToken > bin_expr1_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, bin_expr0, bin_expr1_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr1, lexical_tokens[6] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr1 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -681,8 +656,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION1 )
    std::vector< LexicalTokens::LexicalToken > bin_expr1_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, name0, bin_expr0, bin_expr1_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr1, lexical_tokens[6] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr1 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -714,8 +688,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION2 )
    std::vector< LexicalTokens::LexicalToken > bin_expr2_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr2 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, f, bin_expr1, bin_expr2_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr2, lexical_tokens[8] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr2 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -748,8 +721,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CIRCLE_CASE0 )
    std::vector< LexicalTokens::LexicalToken > bin_expr1_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, bin_expr0, bin_expr1_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr1, lexical_tokens[8] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr1 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -782,8 +754,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, CIRCLE_CASE1 )
    std::vector< LexicalTokens::LexicalToken > bin_expr1_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, bin_expr0, bin_expr1_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr1, lexical_tokens[8] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr1 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -805,8 +776,7 @@ TEST( SYNTAX_TREE_ARITHMETIC, ONE_MINUS )
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, f0, f1, bin_expr_lexical_tokens );
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( bin_expr, lexical_tokens[4] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 

@@ -43,9 +43,7 @@ TEST( SYNTAX_TREE_OBJECT, FROM_TWO_INT )
    std::vector< ObjectPairSyntaxNodeSP > pairs{ pair0, pair1 };
    const auto& object = std::make_shared< ObjectSyntaxNode >( pairs, object_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( object, lexical_tokens[10] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { object };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -77,9 +75,7 @@ TEST( SYNTAX_TREE_OBJECT, FROM_ONE_INT )
    std::vector< ObjectPairSyntaxNodeSP > pairs{ pair0 };
    const auto& object = std::make_shared< ObjectSyntaxNode >( pairs, object_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( object, lexical_tokens[6] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { object };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -111,9 +107,7 @@ TEST( SYNTAX_TREE_OBJECT, FROM_FUNCTION_CALL )
    std::vector< ObjectPairSyntaxNodeSP > pairs{ pair0 };
    const auto& object = std::make_shared< ObjectSyntaxNode >( pairs, object_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( object, lexical_tokens[8] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { object };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -144,9 +138,7 @@ TEST( SYNTAX_TREE_OBJECT, FROM_VARIBLE )
    std::vector< ObjectPairSyntaxNodeSP > pairs{ pair0 };
    const auto& object = std::make_shared< ObjectSyntaxNode >( pairs, object_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( object, lexical_tokens[6] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { object };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -184,9 +176,7 @@ TEST( SYNTAX_TREE_OBJECT, FROM_BIN_EXPR )
    std::vector< ObjectPairSyntaxNodeSP > pairs{ pair0 };
    const auto& object = std::make_shared< ObjectSyntaxNode >( pairs, object_lexical_tokens );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( object, lexical_tokens[8] );
-  
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { object };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -208,8 +198,6 @@ TEST( SYNTAX_TREE_OBJECT, EMPTY )
    };
    const auto& object = std::make_shared< ObjectSyntaxNode >( std::vector< ObjectPairSyntaxNodeSP >{}, object_lexical_tokens );
 
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( object, lexical_tokens[3] );
-
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { object };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }

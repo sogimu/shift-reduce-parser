@@ -21,8 +21,7 @@ TEST( SYNTAX_TREE_PRINT, F )
    const auto& f = std::make_shared< FSyntaxNode >( number );
    const auto& print = std::make_shared< PrintStatmentSyntaxNode >( f );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( print, lexical_tokens[5] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { print };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -41,8 +40,7 @@ TEST( SYNTAX_TREE_PRINT, VARIBALE )
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[3] );
    const auto& print = std::make_shared< PrintStatmentSyntaxNode >( name );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( print, lexical_tokens[5] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { print };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -63,7 +61,6 @@ TEST( SYNTAX_TREE_PRINT, FUNCTION_CALL )
    
    const auto& print = std::make_shared< PrintStatmentSyntaxNode >( function_call );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( print, lexical_tokens[7] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { print };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }

@@ -2,6 +2,7 @@
 
 #include "nonterminals/statment_syntax_node.h"
 #include "i_grammar.h"
+#include "nonterminals/varible_assigment_statment_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 
@@ -105,7 +106,105 @@ public:
                                                                }
                                                                return { state, Impact::NO_MOVE };
                                                             };
+                                                            handlers.print_statment_syntax_node = [ &expressions ]( const State& state, const PrintStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CURLY_BRACKET )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::SCOPE_STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.f_syntax_node = [ &expressions ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CURLY_BRACKET )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::SCOPE_STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
                                                             handlers.scope_statment_syntax_node = [ &expressions ]( const State& state, const ScopeSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CURLY_BRACKET )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::SCOPE_STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::SCOPE_STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::SCOPE_STATMENT, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            
+                                                            handlers.function_statment_syntax_node = [ &expressions ]( const State& state, const FunctionStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CURLY_BRACKET )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::SCOPE_STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::SCOPE_STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::SCOPE_STATMENT, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            
+                                                            handlers.function_call_syntax_node = [ &expressions ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CURLY_BRACKET )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::SCOPE_STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::SCOPE_STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::SCOPE_STATMENT, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+
+                                                            handlers.varible_assigment_statment_syntax_node = [ &expressions ]( const State& state, const VaribleAssigmentStatmentSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::OPEN_CURLY_BRACKET )
                                                                {
@@ -247,58 +346,5 @@ public:
                                                             });
          } );
 
-      // // BOL STATMENT EOL
-      // mProductions.emplace_back(
-      //    [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress 
-      //    {
-      //       BolSyntaxNodeSP bol;
-      //       StatmentSyntaxNodeSP expression;
-      //       EolSyntaxNodeSP eol;
-      //
-      //       State state = State::START;
-      //
-      //       SyntaxNodeEmptyVisitor::Handlers handlers;
-      //       handlers.default_handler = [ &state ]( const ISyntaxNodeSP& ) { state = State::ERROR; };
-      //       handlers.bol_syntax_node = [ &bol, &state ]( const BolSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::START )
-      //          {
-      //             bol = node;
-      //             state = State::BOL;
-      //          }
-      //       };
-      //       handlers.statment_syntax_node = [ &expression, &state ]( const StatmentSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::BOL )
-      //          {
-      //             expression = node;
-      //             state = State::STATMENT;
-      //          }
-      //       };
-      //       handlers.eol_syntax_node = [ &eol, &state ]( const EolSyntaxNodeSP& node )
-      //       {
-      //          if( state == State::STATMENT )
-      //          {
-      //             eol = node;
-      //             state = State::EOL;
-      //             state = State::FINISH;
-      //          }
-      //       };
-      //
-      //       iterate_over_last_n_nodes( stack, 3, handlers );
-      //
-      //       if( state != State::FINISH )
-      //          return (state == State::ERROR) ? 0 : 10;
-      //
-      //       Plan plan;
-      //       plan.to_remove.nodes.push_back( bol );
-      //       plan.to_remove.nodes.push_back( expression );
-      //       plan.to_remove.nodes.push_back( eol );
-      //
-      //       std::vector< ISyntaxNodeSP > expressions{ expression };
-      //       const auto& scope_node = std::make_shared< ScopeSyntaxNode >( expressions );
-      //       plan.to_add.nodes.push_back( scope_node );
-      //       return plan;
-      //    } );
    }
 };

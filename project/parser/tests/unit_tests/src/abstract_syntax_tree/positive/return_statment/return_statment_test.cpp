@@ -21,8 +21,7 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, F )
    const auto& f = std::make_shared< FSyntaxNode >( number );
    const auto& return_syntax_node = std::make_shared< ReturnStatmentSyntaxNode >( f, lexical_tokens[1] );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( return_syntax_node, lexical_tokens[3] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { return_syntax_node };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -49,8 +48,7 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, BIN_EXPR )
    const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, f1, bin_expr_lexical_tokens );
    const auto& return_syntax_node = std::make_shared< ReturnStatmentSyntaxNode >( bin_expr, lexical_tokens[1] );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( return_syntax_node, lexical_tokens[5] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { return_syntax_node };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -74,8 +72,7 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, UN_EXPR )
    const auto& un_expr = std::make_shared< UnExprSyntaxNode >( UnExprSyntaxNode::Type::Negation, f, un_expr_lexical_tokens );
    const auto& return_syntax_node = std::make_shared< ReturnStatmentSyntaxNode >( un_expr, lexical_tokens[1] );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( return_syntax_node, lexical_tokens[4] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { return_syntax_node };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -97,8 +94,7 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, FUNCTION_CALL )
    const auto& function_call = std::make_shared< FunctionCallSyntaxNode >( name, std::vector< ISyntaxNodeSP >{ f } );
    const auto& return_syntax_node = std::make_shared< ReturnStatmentSyntaxNode >( function_call, lexical_tokens[1] );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( return_syntax_node, lexical_tokens[6] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { return_syntax_node };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
 
@@ -117,7 +113,6 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, NAME )
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
    const auto& return_syntax_node = std::make_shared< ReturnStatmentSyntaxNode >( name, lexical_tokens[1] );
    
-   const auto& statment = std::make_shared< StatmentSyntaxNode >( return_syntax_node, lexical_tokens[3] );
-   AbstractSyntaxTree expected_syntax_tree { statment };
+   AbstractSyntaxTree expected_syntax_tree { return_syntax_node };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
