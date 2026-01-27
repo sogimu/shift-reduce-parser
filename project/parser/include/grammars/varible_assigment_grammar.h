@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nonterminals/function_call_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include "nonterminals/object_pair_syntax_node.h"
 #include "terminals/close_curly_bracket_syntax_node.h"
 #include "terminals/name_syntax_node.h"
@@ -32,7 +33,7 @@ public:
          OPEN_CURLY_BRACKET
       };
 
-      // VAR NAME EQUAL F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL [SEMICOLON|CLOSE_CURLY_BRACKET]
+      // VAR NAME|MEMBER_EXPRESSION EQUAL F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL|MEMBER_EXPRESSION [SEMICOLON|CLOSE_CURLY_BRACKET]
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -41,7 +42,7 @@ public:
             return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
                                                             {
                                                             VarSyntaxNodeSP var;
-                                                            NameSyntaxNodeSP name;
+                                                            ISyntaxNodeSP target;
                                                             EqualSyntaxNodeSP equal;
                                                             ISyntaxNodeSP value;
 
@@ -65,11 +66,29 @@ public:
                                                                }
                                                                return { state, Impact::ERROR };
                                                             };
-                                                            handlers.name_syntax_node = [ &name, &value, &lookahead ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
+                                                            handlers.name_syntax_node = [ &target, &value, &lookahead ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::VAR )
                                                                {
-                                                                   name = node;
+                                                                   target = node;
+                                                                   return { State::NAME, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::EQUAL )
+                                                               {
+                                                                   if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
+                                                                                    check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
+                                                                   {
+                                                                       value = node;
+                                                                       return { State::FINISH, Impact::MOVE };
+                                                                   }
+                                                               }
+                                                               return { state, Impact::ERROR };
+                                                            };
+                                                            handlers.member_expression_syntax_node = [ &target, &value, &lookahead ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::VAR )
+                                                               {
+                                                                   target = node;
                                                                    return { State::NAME, Impact::MOVE };
                                                                }
                                                                else if( state == State::EQUAL )
@@ -144,6 +163,19 @@ public:
                                                                }
                                                                return { state, Impact::ERROR };
                                                             };
+                                                            handlers.member_expression_syntax_node = [ &value, &lookahead ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::EQUAL )
+                                                               {
+                                                                   if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
+                                                                                    check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
+                                                                   {
+                                                                       value = node;
+                                                                       return { State::FINISH, Impact::MOVE };
+                                                                   }
+                                                               }
+                                                               return { state, Impact::ERROR };
+                                                            };
                                                             handlers.array_syntax_node = [ &value, &lookahead ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::EQUAL )
@@ -182,11 +214,11 @@ public:
                                                             {
                                                                 Plan plan;
                                                                 plan.to_remove.nodes.push_back( var );
-                                                                plan.to_remove.nodes.push_back( name );
+                                                                plan.to_remove.nodes.push_back( target );
                                                                 plan.to_remove.nodes.push_back( equal );
                                                                 plan.to_remove.nodes.push_back( value );
 
-                                                                const auto& varible_assigment_statment_syntax_node = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name, value, equal->lexical_tokens().at(0), VaribleAssigmentStatmentSyntaxNode::Context::LOCAL );
+                                                                const auto& varible_assigment_statment_syntax_node = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( target, value, equal->lexical_tokens().at(0), VaribleAssigmentStatmentSyntaxNode::Context::LOCAL );
                                                                 plan.to_add.nodes.push_back( varible_assigment_statment_syntax_node );
                                                                 plan_or_progress = plan;
                                                             }
@@ -306,7 +338,7 @@ public:
                                                             });
          } );
 
-      // NAME EQUAL F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL [SEMICOLON|CLOSE_CURLY_BRACKET]
+      // NAME EQUAL F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL|MEMBER_EXPRESSION [SEMICOLON|CLOSE_CURLY_BRACKET]
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -314,9 +346,9 @@ public:
             const size_t minimal_steps_number = 3;
             return find_grammar_matching_progress(stack, minimal_size, [&stack, &minimal_steps_number, &lookahead]( size_t n )->PlanOrProgress
                                                             {
-                                                            NameSyntaxNodeSP name;
+                                                            ISyntaxNodeSP target;
                                                             EqualSyntaxNodeSP equal;
-                                                            ISyntaxNodeSP value;
+                                                            ISyntaxNodeSP source;
 
                                                             const Stack& s = stack;
                                                             SyntaxNodeProgressVisitor< State >::Handlers handlers{ minimal_steps_number, State::START};
@@ -329,11 +361,11 @@ public:
                                                                return { State::ERROR, Impact::ERROR };
                                                             };
 
-                                                            handlers.name_syntax_node = [ &name, &value, &lookahead ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
+                                                            handlers.name_syntax_node = [ &target, &source, &lookahead ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::START )
                                                                {
-                                                                   name = node;
+                                                                   target = node;
                                                                    return { State::NAME, Impact::MOVE };
                                                                }
                                                                else if( state == State::EQUAL )
@@ -341,7 +373,7 @@ public:
                                                                    if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
                                                                                     check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
                                                                    {
-                                                                       value = node;
+                                                                       source = node;
                                                                        return { State::FINISH, Impact::MOVE };
                                                                    }
                                                                }
@@ -356,81 +388,99 @@ public:
                                                                }
                                                                return { state, Impact::ERROR };
                                                             };
-                                                            handlers.f_syntax_node = [ &value, &lookahead ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
+                                                            handlers.f_syntax_node = [ &source, &lookahead ]( const State& state, const FSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::EQUAL )
                                                                {
                                                                    if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
                                                                                     check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
                                                                    {
-                                                                       value = node;
+                                                                       source = node;
                                                                        return { State::FINISH, Impact::MOVE };
                                                                    }
                                                                }
                                                                return { state, Impact::ERROR };
                                                             };
-                                                            handlers.bin_expr_syntax_node = [ &value, &lookahead ]( const State& state, const BinExprSyntaxNodeSP& node ) -> HandlerReturn
+                                                            handlers.bin_expr_syntax_node = [ &source, &lookahead ]( const State& state, const BinExprSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::EQUAL )
                                                                {
                                                                    if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
                                                                                     check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
                                                                    {
-                                                                       value = node;
+                                                                       source = node;
                                                                        return { State::FINISH, Impact::MOVE };
                                                                    }
                                                                }
                                                                return { state, Impact::ERROR };
                                                             };
-                                                            handlers.un_expr_syntax_node = [ &value, &lookahead ]( const State& state, const UnExprSyntaxNodeSP& node ) -> HandlerReturn
+                                                            handlers.un_expr_syntax_node = [ &source, &lookahead ]( const State& state, const UnExprSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::EQUAL )
                                                                {
                                                                    if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
                                                                                     check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
                                                                    {
-                                                                       value = node;
+                                                                       source = node;
                                                                        return { State::FINISH, Impact::MOVE };
                                                                    }
                                                                }
                                                                return { state, Impact::ERROR };
                                                             };
-                                                            handlers.function_call_syntax_node = [ &value, &lookahead ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                                                            handlers.function_call_syntax_node = [ &source, &lookahead ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::EQUAL )
                                                                {
                                                                    if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
                                                                                     check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
                                                                    {
-                                                                       value = node;
+                                                                       source = node;
+                                                                       return { State::FINISH, Impact::MOVE };
+                                                                   }
+                                                               }
+                                                               return { state, Impact::ERROR };
+                                                            };
+                                                            handlers.member_expression_syntax_node = [ &source, &target, &lookahead ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::START )
+                                                               {
+                                                                   target = node;
+                                                                   return { State::NAME, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::EQUAL )
+                                                               {
+                                                                   if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
+                                                                                    check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
+                                                                   {
+                                                                       source = node;
                                                                        return { State::FINISH, Impact::MOVE };
                                                                    }
                                                                }
                                                                return { state, Impact::ERROR };
                                                             };
 
-                                                            handlers.array_syntax_node = [ &value, &lookahead ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
+                                                            handlers.array_syntax_node = [ &source, &lookahead ]( const State& state, const ArraySyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::EQUAL )
                                                                {
                                                                    if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
                                                                                     check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
                                                                    {
-                                                                       value = node;
+                                                                       source = node;
                                                                        return { State::FINISH, Impact::MOVE };
                                                                    }
                                                                }
                                                                return { state, Impact::ERROR };
                                                             };
                                                             
-                                                            handlers.object_syntax_node = [ &value, &lookahead ]( const State& state, const ObjectSyntaxNodeSP& node ) -> HandlerReturn
+                                                            handlers.object_syntax_node = [ &source, &lookahead ]( const State& state, const ObjectSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::EQUAL )
                                                                {
                                                                    if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
                                                                                     check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
                                                                    {
-                                                                       value = node;
+                                                                       source = node;
                                                                        return { State::FINISH, Impact::MOVE };
                                                                    }
                                                                }
@@ -447,11 +497,11 @@ public:
                                                             else if( iteration_result.state == State::FINISH )
                                                             {
                                                                 Plan plan;
-                                                                plan.to_remove.nodes.push_back( name );
+                                                                plan.to_remove.nodes.push_back( target );
                                                                 plan.to_remove.nodes.push_back( equal );
-                                                                plan.to_remove.nodes.push_back( value );
+                                                                plan.to_remove.nodes.push_back( source );
 
-                                                                const auto& varible_assigment_statment_syntax_node = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name, value, equal->lexical_tokens().at(0) );
+                                                                const auto& varible_assigment_statment_syntax_node = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( target, source, equal->lexical_tokens().at(0) );
                                                                 plan.to_add.nodes.push_back( varible_assigment_statment_syntax_node );
                                                                 plan_or_progress = plan;
                                                             }

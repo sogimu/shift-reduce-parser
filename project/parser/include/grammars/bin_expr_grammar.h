@@ -3,6 +3,7 @@
 #include "lexical_tokens.h"
 #include "nonterminals/bin_expr_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/close_curly_bracket_syntax_node.h"
 #include "terminals/comma_syntax_node.h"
@@ -54,7 +55,7 @@ public:
          ANY_NODE
       };
       
-      // F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL +|-|*|/ F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL [SEMICOLON|CLOSE_CIRCLE_BRACKET,BIN_EXPR,COMMA,EQUAL] 
+      // F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL|MEMBER_EXPRESSION +|-|*|/ F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL|MEMBER_EXPRESSION [SEMICOLON|CLOSE_CIRCLE_BRACKET,BIN_EXPR,COMMA,EQUAL] 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -460,6 +461,83 @@ public:
                                                                }
                                                                return { state, Impact::NO_MOVE };
                                                             };
+                                                            handlers.member_expression_syntax_node = [ &operation_type, &a, &b, &lookahead ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::START )
+                                                               {
+                                                                  a = node;
+                                                                  return { State::F, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::PLUS )
+                                                               {
+                                                                  b = node;
+                                                                  operation_type = BinExprSyntaxNode::Type::Addition;
+                                                                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CommaSyntaxNode >( lookahead ) || 
+                                                                                   check_type< EqualSyntaxNode >( lookahead ) || 
+                                                                                   check_type< LessSyntaxNode >( lookahead ) || 
+                                                                                   check_type< MoreSyntaxNode >( lookahead ) )
+                                                                  {
+                                                                    return { State::FINISH, Impact::MOVE };
+                                                                  }
+                                                               }
+                                                               else if( state == State::MINUS )
+                                                               {
+                                                                  b = node;
+                                                                  operation_type = BinExprSyntaxNode::Type::Substruction;
+                                                                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CommaSyntaxNode >( lookahead ) || 
+                                                                                   check_type< EqualSyntaxNode >( lookahead ) || 
+                                                                                   check_type< LessSyntaxNode >( lookahead ) || 
+                                                                                   check_type< MoreSyntaxNode >( lookahead ) )
+                                                                  {
+                                                                    return { State::FINISH, Impact::MOVE };
+                                                                  }
+                                                               }
+                                                               else if( state == State::MULTIPLY )
+                                                               {
+                                                                  b = node;
+                                                                  operation_type = BinExprSyntaxNode::Type::Multiply;
+                                                                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< PlusSyntaxNode >( lookahead ) || 
+                                                                                   check_type< MinusSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CommaSyntaxNode >( lookahead ) || 
+                                                                                   check_type< EqualSyntaxNode >( lookahead ) || 
+                                                                                   check_type< LessSyntaxNode >( lookahead ) || 
+                                                                                   check_type< MoreSyntaxNode >( lookahead ) )
+                                                                  {
+                                                                    return { State::FINISH, Impact::MOVE };
+                                                                  }
+                                                               }
+                                                               else if( state == State::DIVISION )
+                                                               {
+                                                                  b = node;
+                                                                  operation_type = BinExprSyntaxNode::Type::Division;
+                                                                  if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseCircleBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseCurlyBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CloseSquareBracketSyntaxNode >( lookahead ) || 
+                                                                                   check_type< PlusSyntaxNode >( lookahead ) || 
+                                                                                   check_type< MinusSyntaxNode >( lookahead ) || 
+                                                                                   check_type< CommaSyntaxNode >( lookahead ) || 
+                                                                                   check_type< EqualSyntaxNode >( lookahead ) || 
+                                                                                   check_type< LessSyntaxNode >( lookahead ) || 
+                                                                                   check_type< MoreSyntaxNode >( lookahead ) )
+                                                                  {
+                                                                    return { State::FINISH, Impact::MOVE };
+                                                                  }
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
                                                             handlers.plus_syntax_node = [ &operation, &operation_type ]( const State& state, const PlusSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::F )
@@ -523,7 +601,7 @@ public:
                                                             });
          } );
 
-      // F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL EQUAL EQUAL|LESS EQUAL|MORE EQUAL F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL[!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
+      // F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL|MEMBER_EXPRESSION EQUAL EQUAL|LESS EQUAL|MORE EQUAL F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL|MEMBER_EXPRESSION [!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -773,6 +851,51 @@ public:
                                                                }
                                                                return { state, Impact::NO_MOVE };
                                                             };
+                                                            handlers.member_expression_syntax_node = [ &operation_type, &a, &b, &lookahead ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::START )
+                                                               {
+                                                                  a = node;
+                                                                  return { State::F, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::EQUAL_EXPRESSION1 )
+                                                               {
+                                                                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                                                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                                                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                                                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                                                                  {
+                                                                    b = node;
+                                                                    operation_type = BinExprSyntaxNode::Type::Equal;
+                                                                    return { State::FINISH, Impact::MOVE };
+                                                                  }
+                                                               }
+                                                               else if( state == State::MORE_EQUAL )
+                                                               {
+                                                                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                                                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                                                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                                                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                                                                  {
+                                                                    b = node;
+                                                                    operation_type = BinExprSyntaxNode::Type::MoreEqual;
+                                                                    return { State::FINISH, Impact::MOVE };
+                                                                  }
+                                                               }
+                                                               else if( state == State::LESS_EQUAL )
+                                                               {
+                                                                  if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                                                                   !check_type< MinusSyntaxNode >( lookahead ) && 
+                                                                                   !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                                                                   !check_type< SlashSyntaxNode >( lookahead ) )
+                                                                  {
+                                                                    b = node;
+                                                                    operation_type = BinExprSyntaxNode::Type::LessEqual;
+                                                                    return { State::FINISH, Impact::MOVE };
+                                                                  }
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
                                                             handlers.equal_syntax_node = [ &equal0, &equal1 ]( const State& state, const EqualSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::F )
@@ -868,7 +991,7 @@ public:
                                                             });
          } );
       
-      // F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL LESS|MORE F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL [!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
+      // F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL|MEMBER_EXPRESSION LESS|MORE F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL|MEMBER_EXPRESSION [!PLUS&&!MINUS&&!ASTERIX&&!SLASH] 
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -1025,6 +1148,39 @@ public:
                return { state, Impact::NO_MOVE };
             };
             handlers.function_call_syntax_node = [ &operation_type, &a, &b, &lookahead ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+            {
+                if( state == State::START )
+                {
+                   a = node;
+                  return { State::F, Impact::MOVE };
+                }
+                else if( state == State::MORE )
+                {
+                   if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                    !check_type< MinusSyntaxNode >( lookahead ) && 
+                                    !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                    !check_type< SlashSyntaxNode >( lookahead ) )
+                   {
+                     b = node;
+                     operation_type = BinExprSyntaxNode::Type::More;
+                     return { State::FINISH, Impact::MOVE };
+                   }
+                }
+                else if( state == State::LESS )
+                {
+                   if( lookahead && !check_type< PlusSyntaxNode >( lookahead ) && 
+                                    !check_type< MinusSyntaxNode >( lookahead ) && 
+                                    !check_type< AsteriskSyntaxNode >( lookahead ) && 
+                                    !check_type< SlashSyntaxNode >( lookahead ) )
+                   {
+                     b = node;
+                     operation_type = BinExprSyntaxNode::Type::Less;
+                     return { State::FINISH, Impact::MOVE };
+                   }
+                }
+               return { state, Impact::NO_MOVE };
+            };
+            handlers.member_expression_syntax_node = [ &operation_type, &a, &b, &lookahead ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
             {
                 if( state == State::START )
                 {

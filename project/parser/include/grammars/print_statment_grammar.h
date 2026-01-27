@@ -1,5 +1,6 @@
 #pragma once
 
+#include "nonterminals/member_expression_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "terminals/close_circle_bracket_syntax_node.h"
 #include "terminals/name_syntax_node.h"
@@ -111,6 +112,15 @@ public:
                  return { state, Impact::ERROR };
               };
               handlers.function_call_syntax_node = [ &argument ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+              {
+                 if( state == State::OPEN_CIRCLE_BRACKET )
+                 {
+                    argument = node;
+                    return { State::ARGUMENT, Impact::MOVE };
+                 }
+                 return { state, Impact::ERROR };
+              };
+              handlers.member_expression_syntax_node = [ &argument ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
               {
                  if( state == State::OPEN_CIRCLE_BRACKET )
                  {

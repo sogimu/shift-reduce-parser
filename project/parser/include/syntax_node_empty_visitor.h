@@ -24,6 +24,7 @@ public:
       std::function< void( const FSyntaxNodeSP& ) > f_syntax_node = [ this ]( const FSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const UnExprSyntaxNodeSP& ) > un_expr_syntax_node = [ this ]( const UnExprSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const BinExprSyntaxNodeSP& ) > bin_expr_syntax_node = [ this ]( const BinExprSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const MemberExpressionSyntaxNodeSP& ) > member_expression_syntax_node = [ this ]( const MemberExpressionSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const EolSyntaxNodeSP& ) > eol_syntax_node = [ this ]( const EolSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const SemicolonSyntaxNodeSP& ) > semicolon_syntax_node = [ this ]( const SemicolonSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const ColonSyntaxNodeSP& ) > colon_syntax_node = [ this ]( const ColonSyntaxNodeSP& node ) { default_handler( node ); };
@@ -132,9 +133,15 @@ public:
    {
       mHandlers.un_expr_syntax_node( node );
    }
+   
    void visit( const BinExprSyntaxNodeSP& node ) override
    {
       mHandlers.bin_expr_syntax_node( node );
+   }
+   
+   void visit( const MemberExpressionSyntaxNodeSP& node ) override
+   {
+      mHandlers.member_expression_syntax_node( node );
    }
    
    void visit( const SemicolonSyntaxNodeSP& node ) override

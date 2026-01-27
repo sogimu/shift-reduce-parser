@@ -2,6 +2,7 @@
 
 #include "i_syntax_node.h"
 #include "nonterminals/bin_expr_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include "nonterminals/un_expr_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "i_grammar.h"
@@ -32,7 +33,7 @@ public:
          WHILE_STATMENT
       };
 
-      // WHILE OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL CLOSE_CIRCLE_BRACKET SCOPE
+      // WHILE OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR|NAME|FUNCTION_CALL|MEMBER_EXPRESSION CLOSE_CIRCLE_BRACKET SCOPE
       mProductions.emplace_back(
          [ /* this */ ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -112,6 +113,15 @@ public:
                    return { state, Impact::ERROR };
                 };
                 handlers.function_call_syntax_node = [ &conditional_expression ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_CIRCLE_BRACKET )
+                   {
+                      conditional_expression = node;
+                       return { State::CONDITION, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.member_expression_syntax_node = [ &conditional_expression ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::OPEN_CIRCLE_BRACKET )
                    {

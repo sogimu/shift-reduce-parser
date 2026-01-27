@@ -2,6 +2,7 @@
 
 #include "i_grammar.h"
 #include "i_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include "nonterminals/object_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "terminals/open_square_bracket_syntax_node.h"
@@ -175,7 +176,7 @@ public:
             });
          } );
       
-      // STRING COLON F|ARRAY|OBJECT|FUNCTION_CALL|BIN_EXPR|NAME 
+      // STRING COLON F|ARRAY|OBJECT|FUNCTION_CALL|BIN_EXPR|NAME|MEMBER_EXPRESSION 
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -256,6 +257,19 @@ public:
                    return { state, Impact::ERROR };
                 };
                 handlers.function_call_syntax_node = [ &value, &lookahead ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::COLON )
+                   {
+                      if( lookahead && check_type< CommaSyntaxNode >( lookahead ) ||
+                                       check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
+                      {
+                         value = node;
+                         return { State::FINISH, Impact::MOVE };
+                      }
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.member_expression_syntax_node = [ &value, &lookahead ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::COLON )
                    {

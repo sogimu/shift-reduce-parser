@@ -2,6 +2,7 @@
 
 #include "i_grammar.h"
 #include "i_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include "syntax_node_empty_visitor.h"
 #include "syntax_node_progress_visitor.h"
 #include "utils/dfs_pre_order_range.h"
@@ -590,9 +591,15 @@ public:
          mResult = true;
    }
   
-  void visit( const BinExprSyntaxNodeSP& ) override
+   void visit( const BinExprSyntaxNodeSP& ) override
    {
       if constexpr( std::is_same_v< T, BinExprSyntaxNode > )
+         mResult = true;
+   }
+   
+   void visit( const MemberExpressionSyntaxNodeSP& ) override
+   {
+      if constexpr( std::is_same_v< T, MemberExpressionSyntaxNode > )
          mResult = true;
    }
 
@@ -914,6 +921,7 @@ static std::string to_string( const ISyntaxNodeSP& node )
 
            s << "{" << "UN_EXPR" << '(' << type << ')' << "}";
         };
+        handlers.member_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MEMBER_EXPRESSION" << "}"; };
         handlers.eol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EOL" << "}"; };
         handlers.semicolon_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SEMICOLON" << "}"; };
         handlers.return_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN" << "}"; };

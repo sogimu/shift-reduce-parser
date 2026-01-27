@@ -34,7 +34,7 @@ bool NameSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-std::string NameSyntaxNode::value() const
+const std::string& NameSyntaxNode::value() const
 {
    return mValue;
 }

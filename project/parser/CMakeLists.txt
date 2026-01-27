@@ -53,6 +53,7 @@ set(HEADERS
     include/syntax_nodes/nonterminals/statment_syntax_node.h
     include/syntax_nodes/nonterminals/scope_statment_syntax_node.h
     include/syntax_nodes/nonterminals/array_syntax_node.h
+    include/syntax_nodes/nonterminals/member_expression_syntax_node.h
     include/syntax_nodes/nonterminals/object_pair_syntax_node.h
     include/syntax_nodes/nonterminals/object_syntax_node.h
     include/syntax_nodes/nonterminals/print_statment_syntax_node.h
@@ -124,6 +125,7 @@ set(SOURCES
     src/syntax_nodes/nonterminals/varible_assigment_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/scope_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/array_syntax_node.cpp
+    src/syntax_nodes/nonterminals/member_expression_syntax_node.cpp
     src/syntax_nodes/nonterminals/object_pair_syntax_node.cpp
     src/syntax_nodes/nonterminals/object_syntax_node.cpp
     src/syntax_nodes/nonterminals/return_statment_syntax_node.cpp

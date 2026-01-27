@@ -148,7 +148,9 @@ public:
     inline bool get_bool() const { assert(is_bool()); return scalar_.b; }
     inline const std::string& get_string() const { assert(is_string()); return *str_; }
     inline const std::vector<Json>& get_array() const { assert(is_array()); return *array_; }
+    inline std::vector<Json>& get_array() { assert(is_array()); return *array_; }
     inline const std::map<std::string, Json>& get_object() const { assert(is_object()); return *object_; }
+    inline std::map<std::string, Json>& get_object() { assert(is_object()); return *object_; }
 
     // Операторы индексирования (для объекта и массива)
           Json& operator[](size_t idx)       { assert(is_array()); return (*array_)[idx]; }

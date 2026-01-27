@@ -7,12 +7,14 @@
 #include <stdexcept>
 IfStatmentSyntaxNode::IfStatmentSyntaxNode( const IfStatmentSyntaxNode& if_statment_syntax_node )
    : ISyntaxNode{ Token_Type::IF_STATMENT }
+   , mConditionalExpression{ if_statment_syntax_node.mConditionalExpression }
+   , mTokens{ if_statment_syntax_node.lexical_tokens() }
 {
-   mTokens = if_statment_syntax_node.lexical_tokens();
 }
 
 IfStatmentSyntaxNode::IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::IF_STATMENT }
+   , mConditionalExpression{ conditional_expression }
 {
    mTokens = lexical_tokens;
    add_back( conditional_expression );
@@ -50,10 +52,10 @@ bool IfStatmentSyntaxNode::compare( const ISyntaxNode& node ) const
    return is_equal;
 }
 
-// ConditionalExpressionSyntaxNodeSP IfStatmentSyntaxNode::conditional_expression() const
-// {
-//    return std::dynamic_pointer_cast< ConditionalExpressionSyntaxNode >( this->operator[]( 0 ) );
-// }
+ISyntaxNodeSP IfStatmentSyntaxNode::conditional_expression() const
+{
+   return mConditionalExpression;
+}
 
 ScopeSyntaxNodeSP IfStatmentSyntaxNode::true_scope() const
 {

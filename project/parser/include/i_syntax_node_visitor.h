@@ -34,6 +34,7 @@
 #include "nonterminals/varible_syntax_node.h"
 #include "nonterminals/un_expr_syntax_node.h"
 #include "nonterminals/bin_expr_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/while_statment_syntax_node.h"
@@ -63,6 +64,7 @@ public:
    virtual void visit( const FSyntaxNodeSP& ) = 0;
    virtual void visit( const UnExprSyntaxNodeSP& ) = 0;
    virtual void visit( const BinExprSyntaxNodeSP& ) = 0;
+   virtual void visit( const MemberExpressionSyntaxNodeSP& ) = 0;
    virtual void visit( const SemicolonSyntaxNodeSP& ) = 0;
    virtual void visit( const ColonSyntaxNodeSP& ) = 0;
    virtual void visit( const VarSyntaxNodeSP& ) = 0;

@@ -14,8 +14,8 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, NUMBER_INT )
    auto result = naive_stack_machine.eval( input );
 
    // ASSERT
-   EXPECT_EQ( result.is_double(), true );
-   EXPECT_EQ( result.get_double(), 1 );
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 1 );
 }
 
 TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, BIN_EXPR_INT_ADDITION_INT )
@@ -28,8 +28,8 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, BIN_EXPR_INT_ADDITION_INT )
    auto result = naive_stack_machine.eval( input );
 
    // ASSERT
-   EXPECT_EQ( result.is_double(), true );
-   EXPECT_EQ( result.get_double(), 3 );
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 3 );
 }
 
 TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, BIN_EXPR_DOUBLE_ADDITION_DOUBLE )
@@ -56,8 +56,8 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, RETURN_INT )
    auto result = naive_stack_machine.eval( input );
 
    // ASSERT
-   EXPECT_EQ( result.is_double(), true );
-   EXPECT_EQ( result.get_double(), 1 );
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 1 );
 }
 
 TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, FUNCTION_CALL_INT )
@@ -70,7 +70,6 @@ TEST( NAIVE_STACK_INTERPRETER_ARITHMETIC, FUNCTION_CALL_INT )
    auto result = interpreter.eval( input );
 
    // ASSERT
-   EXPECT_EQ( result.is_double(), true );
-   EXPECT_EQ( result.get_double(), 2 );
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 2 );
 }
-

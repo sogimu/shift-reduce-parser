@@ -29,6 +29,7 @@ enum class Token_Type
    DIVISION,
    UnExpr,
    BinExpr,
+   MEMBER_EXPRESSION,
    IF,
    WHILE,
    F,
@@ -87,6 +88,7 @@ inline std::ostream& operator<<(std::ostream& os, Token_Type type) {
         case Token_Type::DIVISION: return os << "DIVISION";
         case Token_Type::UnExpr: return os << "UnExpr";
         case Token_Type::BinExpr: return os << "BinExpr";
+        case Token_Type::MEMBER_EXPRESSION: return os << "MEMBER_EXPRESSION";
         case Token_Type::IF: return os << "IF";
         case Token_Type::WHILE: return os << "WHILE";
         case Token_Type::F: return os << "F";

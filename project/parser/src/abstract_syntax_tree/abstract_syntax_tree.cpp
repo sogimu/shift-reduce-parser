@@ -13,7 +13,7 @@
 #include "grammars/un_expr_grammar.h"
 #include "grammars/bin_expr_grammar.h"
 #include "grammars/circle_brackets_grammar.h"
-#include "grammars/statment_grammar.h"
+#include "grammars/member_expression_grammar.h"
 #include "grammars/f_grammar.h"
 #include "grammars/if_statment_grammar.h"
 #include "grammars/while_statment_grammar.h"
@@ -218,11 +218,11 @@ AbstractSyntaxTree::AbstractSyntaxTree( const LexicalTokens& lexical_tokens )
        std::make_shared< Print >(),
        std::make_shared< Return >(),
        std::make_shared< CircleBrackets >(),
+       std::make_shared< MemberExpression >(),
        std::make_shared< F >(),
        std::make_shared< BinExpr >(),
        std::make_shared< UnExpr >(),
        std::make_shared< VaribleAssigment >(),
-       // std::make_shared< Statment >(),
        std::make_shared< Array >(),
        std::make_shared< Object >(),
        std::make_shared< Scope >(),

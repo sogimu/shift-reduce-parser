@@ -18,7 +18,7 @@ public:
    
    bool compare( const ISyntaxNode& node ) const override;
 
-   std::string value() const;
+   const std::string& value() const;
 
 private:
    std::string mValue;

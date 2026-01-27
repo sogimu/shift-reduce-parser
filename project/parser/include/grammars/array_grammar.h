@@ -2,6 +2,7 @@
 
 #include "i_grammar.h"
 #include "nonterminals/array_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "terminals/open_square_bracket_syntax_node.h"
 #include "terminals/close_square_bracket_syntax_node.h"
@@ -137,6 +138,15 @@ public:
                    return { state, Impact::ERROR };
                 };
                 handlers.name_syntax_node = [ &elements ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_SQUARE_BRACKET || state == State::COMMA )
+                   {
+                      elements.emplace_back( node );
+                       return { State::ELEMENT, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.member_expression_syntax_node = [ &elements ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::OPEN_SQUARE_BRACKET || state == State::COMMA )
                    {

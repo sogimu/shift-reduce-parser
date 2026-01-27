@@ -167,6 +167,15 @@ public:
                    }
                    return { state, Impact::ERROR };
                 };
+                handlers.member_expression_syntax_node = [ &arguments ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
+                   {
+                      arguments.push_back( node );
+                      return { State::ARGUMENT, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
                 handlers.comma_syntax_node = [ &commas ]( const State& state, const CommaSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::ARGUMENT )

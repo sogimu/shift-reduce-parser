@@ -1,6 +1,7 @@
 #pragma once
 
 #include "i_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/bol_syntax_node.h"
 #include "terminals/close_circle_bracket_syntax_node.h"
@@ -36,7 +37,7 @@ public:
          INCORRECT_FIRST_NODE
       };
 
-      // !F&&!BIN_EXPR | !UN_EXPR | !NAME | !FUNCTION_CALL MINUS F | BIN_EXPR | UN_EXPR | NAME | FUNCTION_CALL
+      // !F&&!BIN_EXPR | !UN_EXPR | !NAME | !FUNCTION_CALL MINUS F | BIN_EXPR | UN_EXPR | NAME | FUNCTION_CALL | MEMBER_EXPRESSION
       mProductions.emplace_back(
          [  ]( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -121,6 +122,20 @@ public:
                                                              };
                                                              handlers.function_call_syntax_node =
                                                                 [ &f ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                                                             {
+                                                                if( state == State::START )
+                                                                {
+                                                                  return { State::INCORRECT_FIRST_NODE, Impact::ERROR };
+                                                                }
+                                                                else if( state == State::MINUS )
+                                                                {
+                                                                  f = node;
+                                                                  return { State::FINISH, Impact::MOVE };
+                                                                }
+                                                                return { state, Impact::ERROR };
+                                                              };
+                                                             handlers.member_expression_syntax_node =
+                                                                [ &f ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
                                                              {
                                                                 if( state == State::START )
                                                                 {

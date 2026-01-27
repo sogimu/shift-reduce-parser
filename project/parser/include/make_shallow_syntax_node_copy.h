@@ -4,6 +4,7 @@
 #include "i_syntax_node_visitor.h"
 
 #include "nonterminals/function_statment_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include <memory>
 
 namespace
@@ -67,9 +68,15 @@ public:
    {
       mCopy = std::make_shared< UnExprSyntaxNode >( *node );
    }
+   
    void visit( const BinExprSyntaxNodeSP& node ) override
    {
       mCopy = std::make_shared< BinExprSyntaxNode >( *node );
+   }
+   
+   void visit( const MemberExpressionSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< MemberExpressionSyntaxNode >( *node );
    }
 
    void visit( const SemicolonSyntaxNodeSP& node ) override

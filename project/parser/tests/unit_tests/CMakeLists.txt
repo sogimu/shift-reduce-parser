@@ -28,6 +28,7 @@ add_executable(${PROJECT_NAME}
     src/abstract_syntax_tree/positive/array/array_test.cpp
     src/abstract_syntax_tree/positive/object/object_test.cpp
     src/abstract_syntax_tree/positive/scope_statment/scope_test.cpp
+    src/abstract_syntax_tree/positive/member_expression/member_expression_test.cpp
     src/abstract_syntax_tree/positive/varible_assign_expression/varible_assign_expression_test.cpp
     src/abstract_syntax_tree/positive/print_statment/print_statment_test.cpp
     src/abstract_syntax_tree/positive/return_statment/return_statment_test.cpp

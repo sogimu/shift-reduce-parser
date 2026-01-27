@@ -10,8 +10,10 @@ endif()
 
 add_executable(${PROJECT_NAME}
     src/arithmetic_expression/arithmetic_test.cpp
+    src/if_statment/if_statment_test.cpp
+    src/function_call/function_call_test.cpp
+    src/varible_assignment/varible_assignment_test.cpp
     src/cfg/positive/arithmetic_expression/arithmetic_test.cpp
-    src/cfg/positive/if_statment/if_test.cpp
     src/cfg/positive/scope_statment/scope_test.cpp
     src/main.cpp
 )

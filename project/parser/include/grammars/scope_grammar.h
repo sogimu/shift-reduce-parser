@@ -1,5 +1,8 @@
 #pragma once
 
+#include "nonterminals/if_statment_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
+#include "nonterminals/return_statment_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "i_grammar.h"
 #include "nonterminals/varible_assigment_statment_syntax_node.h"
@@ -88,6 +91,63 @@ public:
                                                                return { state, Impact::NO_MOVE };
                                                             };
                                                             handlers.statment_syntax_node = [ &expressions ]( const State& state, const StatmentSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CURLY_BRACKET )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::SCOPE_STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.if_statment_syntax_node = [ &expressions ]( const State& state, const IfStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CURLY_BRACKET )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::SCOPE_STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.while_statment_syntax_node = [ &expressions ]( const State& state, const WhileStatmentSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CURLY_BRACKET )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::SCOPE_STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
+                                                            handlers.return_statment_syntax_node = [ &expressions ]( const State& state, const ReturnStatmentSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::OPEN_CURLY_BRACKET )
                                                                {
@@ -204,6 +264,25 @@ public:
                                                                return { state, Impact::NO_MOVE };
                                                             };
 
+                                                            handlers.member_expression_syntax_node = [ &expressions ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
+                                                            {
+                                                               if( state == State::OPEN_CURLY_BRACKET )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::SCOPE_STATMENT, Impact::MOVE };
+                                                               }
+                                                               else if( state == State::SCOPE_STATMENT )
+                                                               {
+                                                                  expressions.emplace_back( node );
+                                                                  return { State::SCOPE_STATMENT, Impact::MOVE };
+                                                               }
+                                                               return { state, Impact::NO_MOVE };
+                                                            };
                                                             handlers.varible_assigment_statment_syntax_node = [ &expressions ]( const State& state, const VaribleAssigmentStatmentSyntaxNodeSP& node ) -> HandlerReturn
                                                             {
                                                                if( state == State::OPEN_CURLY_BRACKET )

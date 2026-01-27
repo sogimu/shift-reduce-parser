@@ -33,6 +33,17 @@ VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const Na
     add_back( source_name );
     add_lexical_token(token);
 }
+
+VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const ISyntaxNodeSP& target, const ISyntaxNodeSP& source, LexicalTokens::LexicalToken token, Context context )
+
+   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT_STATMENT }
+   , mContext{ context }
+{
+    add_back( target );
+    add_back( source );
+    add_lexical_token(token);
+}
+
 NameSyntaxNodeSP VaribleAssigmentStatmentSyntaxNode::target() const
 {
    return std::dynamic_pointer_cast< NameSyntaxNode >( this->operator[]( 0 ) );

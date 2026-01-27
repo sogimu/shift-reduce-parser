@@ -3,6 +3,7 @@
 #include "i_syntax_node.h"
 #include "i_grammar.h"
 #include "nonterminals/if_statment_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include "nonterminals/scope_statment_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
 #include "utils.h"
@@ -30,7 +31,7 @@ public:
          IF_STATMENT
       };
 
-      // IF OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR|FUNCTION_CALL|NAME CLOSE_CIRCLE_BRACKET SCOPE|OBJECT(empty!)
+      // IF OPEN_CIRCLE_BRACKET F|BIN_EXPR|UN_EXPR|FUNCTION_CALL|NAME|MEMBER_EXPRESSION CLOSE_CIRCLE_BRACKET SCOPE|OBJECT(empty!)
       mProductions.emplace_back(
          []( const Stack& stack, const ISyntaxNodeSP& lookahead ) -> PlanOrProgress
          {
@@ -111,6 +112,15 @@ public:
                    return { state, Impact::ERROR };
                 };
                 handlers.function_call_syntax_node = [ &condition ]( const State& state, const FunctionCallSyntaxNodeSP& node ) -> HandlerReturn
+                {
+                   if( state == State::OPEN_CIRCLE_BRACKET )
+                   {
+                      condition = node;
+                       return { State::CONDITION, Impact::MOVE };
+                   }
+                   return { state, Impact::ERROR };
+                };
+                handlers.member_expression_syntax_node = [ &condition ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
                 {
                    if( state == State::OPEN_CIRCLE_BRACKET )
                    {

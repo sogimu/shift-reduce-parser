@@ -3,6 +3,7 @@
 #include "i_syntax_node_visitor.h"
 
 #include "nonterminals/function_statment_syntax_node.h"
+#include "nonterminals/member_expression_syntax_node.h"
 #include <functional>
 #include <memory>
 // #include "utils.h"
@@ -44,6 +45,7 @@ public:
       std::function< HandlerReturn( const State& state, const FSyntaxNodeSP& ) > f_syntax_node = [ this ] ( const State& state,  const FSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const UnExprSyntaxNodeSP& ) > un_expr_syntax_node = [ this ] ( const State& state,  const UnExprSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const BinExprSyntaxNodeSP& ) > bin_expr_syntax_node = [ this ] ( const State& state,  const BinExprSyntaxNodeSP& node ) { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const MemberExpressionSyntaxNodeSP& ) > member_expression_syntax_node = [ this ] ( const State& state,  const MemberExpressionSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const EolSyntaxNodeSP& ) > eol_syntax_node = [ this ] ( const State& state,  const EolSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const SemicolonSyntaxNodeSP& ) > semicolon_syntax_node = [ this ] ( const State& state,  const SemicolonSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const StatmentSyntaxNodeSP& ) > statment_syntax_node = [ this ] ( const State& state,  const StatmentSyntaxNodeSP& node ) { return default_handler( state, node ); };
@@ -190,12 +192,17 @@ public:
       mHandlers.call( &Handlers::un_expr_syntax_node, mHandlers.state(), node );
    }
   
-  void visit( const BinExprSyntaxNodeSP& node ) override
+   void visit( const BinExprSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::bin_expr_syntax_node, mHandlers.state(), node );
    }
+  
+   void visit( const MemberExpressionSyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::member_expression_syntax_node, mHandlers.state(), node );
+   }
    
-  void visit( const SemicolonSyntaxNodeSP& node ) override
+   void visit( const SemicolonSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::semicolon_syntax_node, mHandlers.state(), node );
    }

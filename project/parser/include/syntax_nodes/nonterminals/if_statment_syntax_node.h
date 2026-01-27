@@ -20,12 +20,13 @@ public:
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
 
-   // ConditionalExpressionSyntaxNodeSP conditional_expression() const;
+   ISyntaxNodeSP conditional_expression() const;
    ScopeSyntaxNodeSP true_scope() const;
    ScopeSyntaxNodeSP false_scope() const;
    std::vector< LexicalTokens::LexicalToken > lexical_tokens() const override;
 private:
   std::vector< LexicalTokens::LexicalToken > mTokens;
+  ISyntaxNodeSP mConditionalExpression;
 };
 
 using IfStatmentSyntaxNodeSP = std::shared_ptr< IfStatmentSyntaxNode >;
