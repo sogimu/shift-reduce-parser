@@ -15,8 +15,12 @@ add_executable(${PROJECT_NAME}
     src/varible_assignment/varible_assignment_test.cpp
     src/cfg/positive/arithmetic_expression/arithmetic_test.cpp
     src/cfg/positive/scope_statment/scope_test.cpp
+    src/cfg/positive/if_statment/if_statment_test.cpp
     src/main.cpp
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC naive_stack_interpreter GTest::gtest_main)
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+
+# Регистрация тестов для CTest
+add_test(NAME naive_stack_interpreter_unit_tests COMMAND ${PROJECT_NAME})

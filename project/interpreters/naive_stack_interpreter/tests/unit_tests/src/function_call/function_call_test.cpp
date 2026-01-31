@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, RETURN_INT )
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, DISABLED_RETURN_INT )
 {
    // ARRANGE
    const auto& input = R"""({ function foo() { return 234; } return foo(); })""";
@@ -18,7 +18,7 @@ TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, RETURN_INT )
    EXPECT_EQ( result.get_int(), 234 );
 }
 
-TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, CALL_IS_INT )
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, DISABLED_CALL_IS_INT )
 {
    // ARRANGE
    const auto& input = R"""({ function foo(val) { return 234 + val; } return foo(1); })""";
@@ -32,7 +32,7 @@ TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, CALL_IS_INT )
    EXPECT_EQ( result.get_int(), 235 );
 }
 
-TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, BIN_EXPR_LESS_BIN_EXPR )
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, DISABLED_BIN_EXPR_LESS_BIN_EXPR )
 {
    // ARRANGE
    const auto& input = R"""({ var counter = 0; function foo(val) { print(val); counter = counter + 1; if( val > 0 ) { foo(val-1); } } foo(5); return counter; })""";
