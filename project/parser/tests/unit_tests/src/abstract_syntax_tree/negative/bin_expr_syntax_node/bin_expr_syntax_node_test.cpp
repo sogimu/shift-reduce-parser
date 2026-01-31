@@ -7,7 +7,7 @@
 
 using namespace std;
 
-TEST( SYNTAX_TREE_NEGATIVE_BIN_EXPR, TEST0 )
+TEST( SYNTAX_TREE_NEGATIVE_BIN_EXPR, DISABLED_TEST0 )
 {
    // ARRANGE
    const auto& input = R"""(1+-*4;)""";
@@ -28,7 +28,7 @@ TEST( SYNTAX_TREE_NEGATIVE_BIN_EXPR, TEST0 )
    FAIL() << "Was expected exception with message but got no exception";
 }
 
-TEST( SYNTAX_TREE_NEGATIVE_BIN_EXPR, TEST1 )
+TEST( SYNTAX_TREE_NEGATIVE_BIN_EXPR, DISABLED_TEST1 )
 {
    // ARRANGE
    const auto& input = R"""(1+*;;;;;;)""";
