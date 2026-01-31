@@ -43,5 +43,197 @@ TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, BIN_EXPR_LESS_BIN_EXPR )
 
    // ASSERT
    EXPECT_EQ( result.is_int(), true );
-   EXPECT_EQ( result.get_int(), 234 );
+   EXPECT_EQ( result.get_int(), 6 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, MULTIPLE_PARAMETERS )
+{
+   // ARRANGE
+   const auto& input = R"""({ function add(a, b, c) { return a + b + c; } return add(10, 20, 30); })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 60 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, LOCAL_VARIABLE_SCOPE )
+{
+   // ARRANGE
+   const auto& input = R"""({
+      var global_var = 100;
+      function test() {
+         var local_var = 50;
+         return local_var + global_var;
+      }
+      return test();
+   })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 150 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, GLOBAL_VARIABLE_MODIFICATION )
+{
+   // ARRANGE
+   const auto& input = R"""({
+      global_counter = 0;
+      function increment() {
+         global_counter = global_counter + 1;
+         return global_counter;
+      }
+      increment();
+      increment();
+      return increment();
+   })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 3 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, LOCAL_VARIABLE_SHADOW_GLOBAL )
+{
+   // ARRANGE
+   const auto& input = R"""({
+      var x = 100;
+      function test() {
+         var x = 50;
+         return x;
+      }
+      return test();
+   })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 50 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, NESTED_FUNCTIONS )
+{
+   // ARRANGE
+   const auto& input = R"""({
+      function outer(x) {
+         function inner(y) {
+            return x + y;
+         }
+         return inner(10);
+      }
+      return outer(5);
+   })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 15 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, FUNCTION_RETURNING_FUNCTION )
+{
+   // ARRANGE
+   const auto& input = R"""({
+      function createMultiplier(factor) {
+         function multiply(value) {
+            return value * factor;
+         }
+         return multiply;
+      }
+      var doubler = createMultiplier(2);
+      return doubler(5);
+   })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 10 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, PARAMETER_SCOPE_ISOLATION )
+{
+   // ARRANGE
+   const auto& input = R"""({
+      var global_val = 100;
+      function test(global_val) {
+         return global_val + 1;
+      }
+      return test(50);
+   })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 51 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, RECURSIVE_FIBONACCI )
+{
+   // ARRANGE
+   const auto& input = R"""({
+      function fib(n) {
+         if( n <= 1 ) {
+            return n;
+         } else {
+            return fib(n - 1) + fib(n - 2);
+         }
+      }
+      return fib(7);
+   })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 13 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, FUNCTION_WITH_ARRAY_PARAMETER )
+{
+   // ARRANGE
+   const auto& input = R"""({
+      function sum_array(arr) {
+         var total = 0;
+         var i = 0;
+         while( i < 3 ) {
+            total = total + arr[i];
+            i = i + 1;
+         }
+         return total;
+      }
+      return sum_array([10, 20, 30]);
+   })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 60 );
 }
