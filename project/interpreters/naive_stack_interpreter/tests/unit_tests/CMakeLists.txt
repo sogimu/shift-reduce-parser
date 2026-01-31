@@ -18,6 +18,7 @@ add_executable(${PROJECT_NAME}
     src/complex_scenarios/complex_scenarios_test.cpp
     src/cfg/positive/arithmetic_expression/arithmetic_test.cpp
     src/cfg/positive/scope_statment/scope_test.cpp
+    src/cfg/positive/if_statment/if_statment_test.cpp
     src/main.cpp
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC naive_stack_interpreter GTest::gtest_main)
