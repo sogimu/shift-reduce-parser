@@ -23,3 +23,6 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PUBLIC naive_stack_interpreter GTest::gtest_main)
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+
+# Регистрация тестов для CTest
+add_test(NAME naive_stack_interpreter_unit_tests COMMAND ${PROJECT_NAME})
