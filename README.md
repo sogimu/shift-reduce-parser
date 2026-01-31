@@ -71,9 +71,10 @@ make -j$(nproc)
 
 ### Переменные и присвоение
 ```javascript
-> var x = 42;
-> var y = x * 2;
-> y;
+> { var x = 42;
+ var y = x * 2;
+ print( y );
+}
 84
 ```
 
@@ -91,32 +92,32 @@ x is large
 
 ### Функции
 ```javascript
-> function add(a, b) {
+> { function add(a, b) {
     return a + b;
   };
 
-> add(10, 20);
+ add(10, 20); }
 30
 ```
 
 ### Массивы и объекты
 ```javascript
-> var arr = [1, 2, 3];
-> arr[0];
+> { var arr = [1, 2, 3];
+  print( arr[0]; ); }
 1
 
-> var obj = {"name": "John", "age": 30};
-> obj.name;
+> { var obj = {"name": "John", "age": 30};
+ print( obj.name); }
 "John"
 ```
 
 ### Циклы
 ```javascript
-> var i = 0;
-> while (i < 3) {
+> { var i = 0;
+ while (i < 3) {
     print(i);
     i = i + 1;
-  };
+  }; }
 0
 1
 2
@@ -170,38 +171,6 @@ ctest --verbose
 - ✅ Объекты и массивы (25+ тестов)
 - ✅ Циклы и области видимости (15+ тестов)
 
-## 🔧 Грамматика языка
-
-Проект поддерживает следующие конструкции:
-
-```
-# Литералы
-NUMBER     → INTEGER | DOUBLE
-STRING     → "..." 
-BOOLEAN    → true | false
-
-# Выражения  
-EXPR       → EXPR + EXPR | EXPR - EXPR | EXPR * EXPR | EXPR / EXPR
-           | -EXPR | (EXPR) | NUMBER | STRING | VARIABLE | FUNCTION_CALL
-
-# Сравнения
-CONDITION  → EXPR == EXPR | EXPR < EXPR | EXPR > EXPR 
-           | EXPR <= EXPR | EXPR >= EXPR
-
-# Инструкции
-STATEMENT  → var NAME = EXPR;
-           | if (CONDITION) SCOPE
-           | while (CONDITION) SCOPE  
-           | function NAME(PARAMS) SCOPE
-           | return EXPR;
-           | print(EXPR);
-
-# Области
-SCOPE      → { STATEMENT* }
-```
-
-Полную грамматику см. в [`documentation/grammars.md`](documentation/grammars.md).
-
 ## 🤝 Вклад в проект
 
 Мы приветствуем вклад сообщества! Вот как можно помочь:
@@ -227,20 +196,12 @@ git commit -m "Add amazing feature"
 git push origin feature/amazing-feature
 ```
 
-## 📈 Производительность
-
-- **Парсинг**: ~50,000 строк кода в секунду
-- **Выполнение**: ~1,000,000 операций в секунду
-- **Память**: O(n) относительно размера AST
-
 ## 🛣️ Roadmap
 
 - [ ] **JIT-компиляция** для повышения производительности
 - [ ] **Отладчик** с breakpoint'ами
 - [ ] **Модульная система** (import/export)
 - [ ] **Стандартная библиотека** (Math, String, Array)
-- [ ] **TypeScript-подобная** система типов
-- [ ] **LSP сервер** для IDE-интеграции
 
 ## 📄 Лицензия
 
