@@ -130,7 +130,20 @@ set(SOURCES
     src/syntax_nodes/nonterminals/object_syntax_node.cpp
     src/syntax_nodes/nonterminals/return_statment_syntax_node.cpp
     src/grammars/circle_brackets_grammar.cpp
-)
+    src/grammars/bin_expr_grammar.cpp
+    src/grammars/f_grammar.cpp
+    src/grammars/array_grammar.cpp
+    src/grammars/function_call_grammar.cpp
+    src/grammars/function_statment_grammar.cpp
+    src/grammars/member_expression_grammar.cpp
+    src/grammars/object_grammar.cpp
+    src/grammars/print_statment_grammar.cpp
+    src/grammars/return_statment_grammar.cpp
+    src/grammars/while_statment_grammar.cpp
+    src/grammars/varible_assigment_grammar.cpp
+    src/grammars/scope_grammar.cpp
+    src/grammars/un_expr_grammar.cpp
+    src/grammars/if_statment_grammar.cpp)
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
