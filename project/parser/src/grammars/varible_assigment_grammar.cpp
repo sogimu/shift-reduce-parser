@@ -3,15 +3,15 @@
 #include "nonterminals/function_call_syntax_node.h"
 #include "nonterminals/member_expression_syntax_node.h"
 #include "nonterminals/object_pair_syntax_node.h"
+#include "nonterminals/varible_syntax_node.h"
 #include "terminals/close_curly_bracket_syntax_node.h"
 #include "terminals/name_syntax_node.h"
 #include "terminals/open_curly_bracket_syntax_node.h"
 #include "terminals/semicolon_syntax_node.h"
-#include "i_grammar.h"
 #include "syntax_node_empty_visitor.h"
 #include "utils.h"
 #include "nonterminals/varible_assigment_statment_syntax_node.h"
-
+#include <memory>
 #include <vector>
 
 VaribleAssigment::VaribleAssigment()
@@ -75,7 +75,8 @@ VaribleAssigment::VaribleAssigment()
                                                                if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
                                                                                 check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
                                                                {
-                                                                   value = node;
+                                                                   std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
+                                                                   value = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
                                                                    return { State::FINISH, Impact::MOVE };
                                                                }
                                                            }
@@ -215,6 +216,7 @@ VaribleAssigment::VaribleAssigment()
                                                             plan.to_remove.nodes.push_back( equal );
                                                             plan.to_remove.nodes.push_back( value );
 
+                                                            std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
                                                             const auto& varible_assigment_statment_syntax_node = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( target, value, equal->lexical_tokens().at(0), VaribleAssigmentStatmentSyntaxNode::Context::LOCAL );
                                                             plan.to_add.nodes.push_back( varible_assigment_statment_syntax_node );
                                                             plan_or_progress = plan;
@@ -370,7 +372,8 @@ VaribleAssigment::VaribleAssigment()
                                                                if( lookahead && check_type<SemicolonSyntaxNode>( lookahead ) || 
                                                                                 check_type<CloseCurlyBracketSyntaxNode>( lookahead ) )
                                                                {
-                                                                   source = node;
+                                                                   std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
+                                                                   source = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
                                                                    return { State::FINISH, Impact::MOVE };
                                                                }
                                                            }

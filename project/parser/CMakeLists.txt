@@ -43,6 +43,7 @@ set(HEADERS
     include/syntax_nodes/terminals/open_square_bracket_syntax_node.h
     include/syntax_nodes/terminals/close_square_bracket_syntax_node.h
     include/syntax_nodes/terminals/if_syntax_node.h
+    include/syntax_nodes/terminals/else_syntax_node.h
     include/syntax_nodes/terminals/var_syntax_node.h
     include/syntax_nodes/terminals/function_syntax_node.h
     include/syntax_nodes/terminals/name_syntax_node.h
@@ -108,6 +109,7 @@ set(SOURCES
     src/syntax_nodes/terminals/open_square_bracket_syntax_node.cpp
     src/syntax_nodes/terminals/close_square_bracket_syntax_node.cpp
     src/syntax_nodes/terminals/if_syntax_node.cpp
+    src/syntax_nodes/terminals/else_syntax_node.cpp
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/function_syntax_node.cpp

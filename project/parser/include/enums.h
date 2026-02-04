@@ -31,6 +31,7 @@ enum class Token_Type
    BinExpr,
    MEMBER_EXPRESSION,
    IF,
+   ELSE,
    WHILE,
    F,
    ASSIGMENT,

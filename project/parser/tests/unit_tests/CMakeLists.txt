@@ -20,6 +20,7 @@ add_executable(${PROJECT_NAME}
     src/lexical_tokens/strings/strings_test.cpp
     src/lexical_tokens/arrays/arrays_test.cpp
     src/lexical_tokens/objects/objects_test.cpp
+    src/lexical_tokens/if/if_test.cpp
     src/abstract_syntax_tree/positive/arithmetic_expression/arithmetic_test.cpp
     src/abstract_syntax_tree/positive/if_statment/if_test.cpp
     src/abstract_syntax_tree/positive/while_statment/while_test.cpp

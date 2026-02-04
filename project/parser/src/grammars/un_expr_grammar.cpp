@@ -16,7 +16,6 @@
 #include "utils.h"
 
 #include <vector>
-
 UnExpr::UnExpr()
 {
   enum class State
@@ -112,8 +111,8 @@ UnExpr::UnExpr()
                                                             }
                                                             else if( state == State::MINUS )
                                                             {
-                                                              f = node;
-                                                              return { State::FINISH, Impact::MOVE };
+                                                                f = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
+                                                                return { State::FINISH, Impact::MOVE };
                                                             }
                                                              return { state, Impact::ERROR };
                                                          };

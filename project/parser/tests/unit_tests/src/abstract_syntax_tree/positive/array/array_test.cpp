@@ -46,12 +46,13 @@ TEST( SYNTAX_TREE_ARRAY, FROM_ONE_NAME )
 
    // ASSERT
    const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
+   const auto& varible0 = std::make_shared< VaribleSyntaxNode >( name0, name0->lexical_tokens() );
    
    std::vector< LexicalTokens::LexicalToken > array_lexical_tokens
    {
       lexical_tokens[1], lexical_tokens[3]
    };
-   const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{ name0 }, array_lexical_tokens );
+   const auto& array = std::make_shared< ArraySyntaxNode >( std::vector< ISyntaxNodeSP >{ varible0 }, array_lexical_tokens );
    
    AbstractSyntaxTree expected_syntax_tree { array };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );

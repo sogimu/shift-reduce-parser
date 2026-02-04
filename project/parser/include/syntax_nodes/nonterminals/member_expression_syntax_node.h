@@ -3,7 +3,7 @@
 #include "enums.h"
 #include "i_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
-#include "terminals/name_syntax_node.h"
+#include "nonterminals/varible_syntax_node.h"
 
 #include <variant>
 #include <vector>
@@ -15,7 +15,7 @@ class MemberExpressionSyntaxNode : public ISyntaxNode, public std::enable_shared
 {
 public:
    MemberExpressionSyntaxNode( const MemberExpressionSyntaxNode& member_expression );
-   MemberExpressionSyntaxNode( const NameSyntaxNodeSP& target, const ISyntaxNodeSP& key_or_index_node, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens );
+   MemberExpressionSyntaxNode( const VaribleSyntaxNodeSP& target, const ISyntaxNodeSP& key_or_index_node, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens );
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
    std::vector< LexicalTokens::LexicalToken > lexical_tokens() const override;

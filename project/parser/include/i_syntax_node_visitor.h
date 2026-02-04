@@ -9,6 +9,7 @@
 #include "terminals/equal_syntax_node.h"
 #include "terminals/f_syntax_node.h"
 #include "terminals/if_syntax_node.h"
+#include "terminals/else_syntax_node.h"
 #include "terminals/while_syntax_node.h"
 #include "terminals/less_syntax_node.h"
 #include "terminals/minus_syntax_node.h"
@@ -86,6 +87,7 @@ public:
    virtual void visit( const LessSyntaxNodeSP& ) = 0;
    virtual void visit( const MoreSyntaxNodeSP& ) = 0;
    virtual void visit( const IfSyntaxNodeSP& ) = 0;
+   virtual void visit( const ElseSyntaxNodeSP& ) = 0;
    virtual void visit( const IfStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileStatmentSyntaxNodeSP& ) = 0;

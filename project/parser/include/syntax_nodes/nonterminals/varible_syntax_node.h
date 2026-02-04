@@ -12,15 +12,14 @@ class VaribleSyntaxNode : public ISyntaxNode, public std::enable_shared_from_thi
 
 {
 public:
-   VaribleSyntaxNode();
-   VaribleSyntaxNode( const NameSyntaxNodeSP& name_syntax_node );
-   VaribleSyntaxNode( const std::string& name );
+   VaribleSyntaxNode( const NameSyntaxNodeSP& name_syntax_node, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens );
    std::string name() const;
 
    void accept( const std::shared_ptr< ISyntaxNodeVisitor >& visitor ) override;
    bool compare( const ISyntaxNode& node ) const override;
-
+   std::vector< LexicalTokens::LexicalToken > lexical_tokens() const override;
 private:
+   std::vector< LexicalTokens::LexicalToken > mTokens;
    std::string mName;
 };
 

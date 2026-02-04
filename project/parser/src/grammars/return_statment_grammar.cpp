@@ -102,7 +102,8 @@ Return::Return()
                {
                   if( lookahead && check_type< SemicolonSyntaxNode >( lookahead ) ) 
                   {
-                      argument = node;
+                     std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
+                     argument = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
                      return { State::FINISH, Impact::MOVE };
                   }
                }

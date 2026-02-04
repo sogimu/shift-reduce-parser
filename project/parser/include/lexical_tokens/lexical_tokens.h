@@ -329,6 +329,7 @@ private:
 
    const std::unordered_map< std::string, Token_Type > token_by_text{
       { "if", Token_Type::IF }, 
+      { "else", Token_Type::ELSE }, 
       { "while", Token_Type::WHILE }, 
       { "print", Token_Type::PRINT }, 
       { "return", Token_Type::RETURN }, 

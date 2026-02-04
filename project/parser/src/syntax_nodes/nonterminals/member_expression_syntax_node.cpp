@@ -13,7 +13,7 @@ MemberExpressionSyntaxNode::MemberExpressionSyntaxNode( const MemberExpressionSy
    mTokens = scope.lexical_tokens();
 }
 
-MemberExpressionSyntaxNode::MemberExpressionSyntaxNode( const NameSyntaxNodeSP& target, const ISyntaxNodeSP& key_or_index_node, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
+MemberExpressionSyntaxNode::MemberExpressionSyntaxNode( const VaribleSyntaxNodeSP& target, const ISyntaxNodeSP& key_or_index_node, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::MEMBER_EXPRESSION }
 {
     mTokens = lexical_tokens;

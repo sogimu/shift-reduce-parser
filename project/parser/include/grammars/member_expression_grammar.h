@@ -7,5 +7,3 @@ class MemberExpression : public IGrammar
 public:
    MemberExpression();
 };
-
-

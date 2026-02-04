@@ -76,7 +76,8 @@ Print::Print()
           {
              if( state == State::OPEN_CIRCLE_BRACKET )
              {
-                argument = node;
+                 std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
+                 argument = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
                 return { State::ARGUMENT, Impact::MOVE };
              }
              return { state, Impact::ERROR };

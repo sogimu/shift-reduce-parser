@@ -59,6 +59,7 @@ public:
       std::function< void( const LessSyntaxNodeSP& ) > less_syntax_node = [ this ]( const LessSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const MoreSyntaxNodeSP& ) > more_syntax_node = [ this ]( const MoreSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const IfSyntaxNodeSP& ) > if_syntax_node = [ this ]( const IfSyntaxNodeSP& node ) { default_handler( node ); };
+      std::function< void( const ElseSyntaxNodeSP& ) > else_syntax_node = [ this ]( const ElseSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const IfStatmentSyntaxNodeSP& ) > if_statment_syntax_node = [ this ]( const IfStatmentSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const WhileSyntaxNodeSP& ) > while_syntax_node = [ this ]( const WhileSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const WhileStatmentSyntaxNodeSP& ) > while_statment_syntax_node = [ this ]( const WhileStatmentSyntaxNodeSP& node )
@@ -262,6 +263,11 @@ public:
    void visit( const IfSyntaxNodeSP& node ) override
    {
       mHandlers.if_syntax_node( node );
+   }
+
+   void visit( const ElseSyntaxNodeSP& node ) override
+   {
+      mHandlers.else_syntax_node( node );
    }
 
    void visit( const IfStatmentSyntaxNodeSP& node ) override

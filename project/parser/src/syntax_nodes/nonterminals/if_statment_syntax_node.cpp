@@ -12,14 +12,26 @@ IfStatmentSyntaxNode::IfStatmentSyntaxNode( const IfStatmentSyntaxNode& if_statm
 {
 }
 
-IfStatmentSyntaxNode::IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
+IfStatmentSyntaxNode::IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& true_scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
    : ISyntaxNode{ Token_Type::IF_STATMENT }
    , mConditionalExpression{ conditional_expression }
 {
    mTokens = lexical_tokens;
    add_back( conditional_expression );
-   add_back( scope );
+   add_back( true_scope );
 }
+
+IfStatmentSyntaxNode::IfStatmentSyntaxNode( const ISyntaxNodeSP& conditional_expression, const ScopeSyntaxNodeSP& true_scope, const ScopeSyntaxNodeSP& false_scope, const std::vector< LexicalTokens::LexicalToken >& lexical_tokens )
+   : ISyntaxNode{ Token_Type::IF_STATMENT }
+   , mConditionalExpression{ conditional_expression }
+{
+   mTokens = lexical_tokens;
+   add_back( conditional_expression );
+   add_back( true_scope );
+   if( false_scope )
+       add_back( false_scope );
+}
+
 void IfStatmentSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
 {
    visitor->visit( shared_from_this() );
@@ -59,17 +71,17 @@ ISyntaxNodeSP IfStatmentSyntaxNode::conditional_expression() const
 
 ScopeSyntaxNodeSP IfStatmentSyntaxNode::true_scope() const
 {
-   const auto& true_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( *rbegin() );
+   const auto& true_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( *std::next(rbegin()) );
    if( !true_scope )
-      throw std::runtime_error( "True scope not found in if expression" );
+      throw std::runtime_error( "True scope not found in if statment" );
    return true_scope;
 }
 
 ScopeSyntaxNodeSP IfStatmentSyntaxNode::false_scope() const
 {
-   const auto& false_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( *std::next(rbegin()) );
+   const auto& false_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( *rbegin() );
    if( !false_scope )
-      throw std::runtime_error( "False scope not found in if expression" );
+      throw std::runtime_error( "False scope not found in if statment" );
    return false_scope;
 }
 

@@ -44,7 +44,7 @@ MemberExpression::MemberExpression()
         size_t minimal_steps_number = 4;
         return find_grammar_matching_progress(stack, minimal_size, [&stack, &lookahead, &minimal_steps_number]( size_t n ) -> PlanOrProgress
         {
-            NameSyntaxNodeSP target;
+            VaribleSyntaxNodeSP target;
             OpenSquareBracketSyntaxNodeSP open_square_bracket;
             ISyntaxNodeSP key_or_index_node;
             CloseSquareBracketSyntaxNodeSP close_square_bracket;
@@ -63,12 +63,15 @@ MemberExpression::MemberExpression()
             {
                if( state == State::START )
                {
-                   target = node;
+                   // target = node;
+                   std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
+                   target = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
                    return { State::NAME, Impact::MOVE };
                }
                else if( state == State::OPEN_SQUARE_BRACKET )
                {
-                   key_or_index_node = node;
+                   std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
+                   key_or_index_node = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
                    return { State::KEY_OR_INDEX, Impact::MOVE };
                }
                return { state, Impact::ERROR };

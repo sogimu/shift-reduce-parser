@@ -234,7 +234,8 @@ Object::Object()
                   if( lookahead && check_type< CommaSyntaxNode >( lookahead ) ||
                                    check_type< CloseCurlyBracketSyntaxNode >( lookahead ) ) 
                   {
-                     value = node;
+                     std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
+                     value = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
                      return { State::FINISH, Impact::MOVE };
                   }
                }

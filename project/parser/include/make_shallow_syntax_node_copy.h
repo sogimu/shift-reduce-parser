@@ -198,6 +198,11 @@ public:
    {
       mCopy = std::make_shared< IfSyntaxNode >( *node );
    }
+   
+   void visit( const ElseSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< ElseSyntaxNode >( *node );
+   }
 
    void visit( const IfStatmentSyntaxNodeSP& node ) override
    {
