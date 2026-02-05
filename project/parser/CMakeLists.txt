@@ -66,17 +66,17 @@ set(HEADERS
     include/syntax_nodes/nonterminals/varible_syntax_node.h
     include/syntax_nodes/nonterminals/return_statment_syntax_node.h
     include/grammars/f_grammar.h
-    # include/grammars/un_expr_grammar.h
-    # include/grammars/print_statment_grammar.h
-    # include/grammars/if_statment_grammar.h
-    # include/grammars/while_statment_grammar.h
-    # include/grammars/statment_grammar.h
-    # include/grammars/varible_assigment_grammar.h
+    include/grammars/un_expr_grammar.h
+    include/grammars/print_statment_grammar.h
+    include/grammars/if_statment_grammar.h
+    include/grammars/while_statment_grammar.h
+    #include/grammars/statment_grammar.h
+    include/grammars/varible_assigment_grammar.h
     include/grammars/circle_brackets_grammar.h
-    # include/grammars/scope_grammar.h
-    # include/grammars/function_statment_grammar.h
-    # include/grammars/function_call_grammar.h
-    # include/grammars/return_statment_grammar.h
+    include/grammars/scope_grammar.h
+    include/grammars/function_statment_grammar.h
+    include/grammars/function_call_grammar.h
+    include/grammars/return_statment_grammar.h
     include/grammars/array_grammar.h
     include/grammars/object_grammar.h
 )

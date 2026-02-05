@@ -28,7 +28,7 @@ MemberExpression::MemberExpression()
      START,
      FINISH,
      ERROR,
-     NAME,
+     SOURCE,
      OPEN_SQUARE_BRACKET,
      CLOSE_SQUARE_BRACKET,
      STRING,
@@ -44,7 +44,7 @@ MemberExpression::MemberExpression()
         size_t minimal_steps_number = 4;
         return find_grammar_matching_progress(stack, minimal_size, [&stack, &lookahead, &minimal_steps_number]( size_t n ) -> PlanOrProgress
         {
-            VaribleSyntaxNodeSP target;
+            ISyntaxNodeSP source;
             OpenSquareBracketSyntaxNodeSP open_square_bracket;
             ISyntaxNodeSP key_or_index_node;
             CloseSquareBracketSyntaxNodeSP close_square_bracket;
@@ -59,19 +59,32 @@ MemberExpression::MemberExpression()
             { 
                return { State::ERROR, Impact::ERROR };
             };
-            handlers.name_syntax_node = [ &target, &key_or_index_node ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
+            handlers.name_syntax_node = [ &source, &key_or_index_node ]( const State& state, const NameSyntaxNodeSP& node ) -> HandlerReturn
             {
                if( state == State::START )
                {
-                   // target = node;
                    std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
-                   target = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
-                   return { State::NAME, Impact::MOVE };
+                   source = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
+                   return { State::SOURCE, Impact::MOVE };
                }
                else if( state == State::OPEN_SQUARE_BRACKET )
                {
                    std::vector< LexicalTokens::LexicalToken > lexical_tokens {};
                    key_or_index_node = std::make_shared<VaribleSyntaxNode>( node, node->lexical_tokens() );
+                   return { State::KEY_OR_INDEX, Impact::MOVE };
+               }
+               return { state, Impact::ERROR };
+            };
+            handlers.member_expression_syntax_node = [ &source, &key_or_index_node ]( const State& state, const MemberExpressionSyntaxNodeSP& node ) -> HandlerReturn
+            {
+               if( state == State::START )
+               {
+                   source = node;
+                   return { State::SOURCE, Impact::MOVE };
+               }
+               else if( state == State::OPEN_SQUARE_BRACKET )
+               {
+                   key_or_index_node = node;
                    return { State::KEY_OR_INDEX, Impact::MOVE };
                }
                return { state, Impact::ERROR };
@@ -119,7 +132,7 @@ MemberExpression::MemberExpression()
             };
             handlers.open_square_bracket_syntax_node = [ &open_square_bracket ]( const State& state, const OpenSquareBracketSyntaxNodeSP& node ) -> HandlerReturn
             {
-               if( state == State::NAME )
+               if( state == State::SOURCE )
                {
                    open_square_bracket = node;
                    return { State::OPEN_SQUARE_BRACKET, Impact::MOVE };
@@ -134,6 +147,7 @@ MemberExpression::MemberExpression()
                                     check_type<CloseCircleBracketSyntaxNode>( lookahead ) ||
                                     check_type<CloseCurlyBracketSyntaxNode>( lookahead ) ||
                                     check_type<CloseSquareBracketSyntaxNode>( lookahead ) ||
+                                    check_type<OpenSquareBracketSyntaxNode>( lookahead ) ||
                                     check_type<EqualSyntaxNode>( lookahead ) ||
                                     check_type<PlusSyntaxNode>( lookahead ) ||
                                     check_type<MinusSyntaxNode>( lookahead ) ||
@@ -159,17 +173,17 @@ MemberExpression::MemberExpression()
             else if( iteration_result.state == State::FINISH )
             {
                 Plan plan;
-                plan.to_remove.nodes.push_back( target );
+                plan.to_remove.nodes.push_back( source );
                 plan.to_remove.nodes.push_back( open_square_bracket );
                 plan.to_remove.nodes.push_back( key_or_index_node );
                 plan.to_remove.nodes.push_back( close_square_bracket );
 
                 std::vector< LexicalTokens::LexicalToken > lexical_tokens { 
-                                              target->lexical_tokens().at(0),
+                                              source->lexical_tokens().at(0),
                                               open_square_bracket->lexical_tokens().at(0),
                                               close_square_bracket->lexical_tokens().at(0)
                                               };
-                const auto& array = std::make_shared< MemberExpressionSyntaxNode >( target, key_or_index_node, lexical_tokens );
+                const auto& array = std::make_shared< MemberExpressionSyntaxNode >( source, key_or_index_node, lexical_tokens );
                 plan.to_add.nodes.push_back( array );
                 plan_or_progress = plan;
             }

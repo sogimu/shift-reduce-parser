@@ -71,7 +71,7 @@ ISyntaxNodeSP IfStatmentSyntaxNode::conditional_expression() const
 
 ScopeSyntaxNodeSP IfStatmentSyntaxNode::true_scope() const
 {
-   const auto& true_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( *std::next(rbegin()) );
+   const auto& true_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( operator[](0) );
    if( !true_scope )
       throw std::runtime_error( "True scope not found in if statment" );
    return true_scope;
@@ -79,9 +79,11 @@ ScopeSyntaxNodeSP IfStatmentSyntaxNode::true_scope() const
 
 ScopeSyntaxNodeSP IfStatmentSyntaxNode::false_scope() const
 {
-   const auto& false_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( *rbegin() );
+   if( Children().size() != 2 )
+       return nullptr;
+   const auto& false_scope = std::dynamic_pointer_cast< ScopeSyntaxNode >( operator[](1) );
    if( !false_scope )
-      throw std::runtime_error( "False scope not found in if statment" );
+       return nullptr;
    return false_scope;
 }
 
