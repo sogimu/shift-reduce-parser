@@ -18,7 +18,7 @@ TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, RETURN_INT )
    EXPECT_EQ( result.get_int(), 234 );
 }
 
-TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, IS_INT )
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, CALL_IS_INT )
 {
    // ARRANGE
    const auto& input = R"""({ function foo(val) { return 234 + val; } return foo(1); })""";
