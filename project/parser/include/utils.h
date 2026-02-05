@@ -747,6 +747,12 @@ public:
          mResult = true;
    }
 
+   void visit( const ElseSyntaxNodeSP& /* node */ ) override
+   {
+      if constexpr( std::is_same_v< T, ElseSyntaxNode > )
+         mResult = true;
+   }
+
    void visit( const IfStatmentSyntaxNodeSP& /* node */ ) override
    {
       if constexpr( std::is_same_v< T, IfStatmentSyntaxNode > )
@@ -921,7 +927,7 @@ static std::string to_string( const ISyntaxNodeSP& node )
 
            s << "{" << "UN_EXPR" << '(' << type << ')' << "}";
         };
-        handlers.member_expression_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MEMBER_EXPRESSION" << "}"; };
+        handlers.member_expression_syntax_node = [ &s, print_lexical_tokens ]( const ISyntaxNodeSP& node ) { s << "{" << "MEMBER_EXPRESSION" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}" << "}"; };
         handlers.eol_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "EOL" << "}"; };
         handlers.semicolon_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "SEMICOLON" << "}"; };
         handlers.return_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "RETURN" << "}"; };
@@ -940,11 +946,12 @@ static std::string to_string( const ISyntaxNodeSP& node )
         handlers.less_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "LESS" << "}"; };
         handlers.more_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "MORE" << "}"; };
         handlers.if_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF" << "}"; };
+        handlers.else_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "ELSE" << "}"; };
         handlers.if_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_STATMENT" << "}"; };
         handlers.while_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE" << "}"; };
         handlers.while_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_STATMENT" << "}"; };
         handlers.function_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION" << "}"; };
-        handlers.function_call_syntax_node = [ &s ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << "}"; };
+        handlers.function_call_syntax_node = [ &s, print_lexical_tokens ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"   << "}"; };
         handlers.function_statment_syntax_node = [ &s ]( const FunctionStatmentSyntaxNodeSP& node )
         { s << "{" << "FUNCTION_STATMENT" << " (" << node->name() << ")" << "}"; };
         handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };

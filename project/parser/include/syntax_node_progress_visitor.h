@@ -79,6 +79,7 @@ public:
       std::function< HandlerReturn( const State& state, const LessSyntaxNodeSP& ) > less_syntax_node = [ this ] ( const State& state,  const LessSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const MoreSyntaxNodeSP& ) > more_syntax_node = [ this ] ( const State& state,  const MoreSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const IfSyntaxNodeSP& ) > if_syntax_node = [ this ] ( const State& state,  const IfSyntaxNodeSP& node ) { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const ElseSyntaxNodeSP& ) > else_syntax_node = [ this ] ( const State& state,  const ElseSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const IfStatmentSyntaxNodeSP& ) > if_statment_syntax_node = [ this ] ( const State& state,  const IfStatmentSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const WhileSyntaxNodeSP& ) > while_syntax_node = [ this ] ( const State& state,  const WhileSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const WhileStatmentSyntaxNodeSP& ) > while_statment_syntax_node = [ this ] ( const State& state,  const WhileStatmentSyntaxNodeSP& node )
@@ -320,6 +321,11 @@ public:
    void visit( const IfSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::if_syntax_node, mHandlers.state(), node );
+   }
+
+   void visit( const ElseSyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::else_syntax_node, mHandlers.state(), node );
    }
 
    void visit( const IfStatmentSyntaxNodeSP& node ) override

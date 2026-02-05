@@ -125,11 +125,12 @@ TEST( SYNTAX_TREE_OBJECT, FROM_VARIBLE )
    // ASSERT
    const auto& string0 = std::make_shared< StringSyntaxNode >( lexical_tokens[2] );
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[4] );
+   const auto& varible = std::make_shared< VaribleSyntaxNode >( name, name->lexical_tokens() );
    std::vector< LexicalTokens::LexicalToken > pair0_lexical_tokens
    {
       lexical_tokens[3]
    };
-   const auto& pair0 = std::make_shared< ObjectPairSyntaxNode >( string0, name, pair0_lexical_tokens );
+   const auto& pair0 = std::make_shared< ObjectPairSyntaxNode >( string0, varible, pair0_lexical_tokens );
   
    std::vector< LexicalTokens::LexicalToken > object_lexical_tokens
    {

@@ -40,6 +40,7 @@
 #include "syntax_nodes/terminals/close_curly_bracket_syntax_node.h"
 #include "syntax_nodes/terminals/eol_syntax_node.h"
 #include "syntax_nodes/terminals/if_syntax_node.h"
+#include "syntax_nodes/terminals/else_syntax_node.h"
 #include "syntax_nodes/terminals/while_syntax_node.h"
 #include "syntax_nodes/terminals/minus_syntax_node.h"
 #include "syntax_nodes/terminals/name_syntax_node.h"
@@ -167,6 +168,11 @@ ISyntaxNodeSP createSyntaxNodeFromToken( const LexicalTokens::LexicalToken& lexi
   case Token_Type::IF:
   {
      syntax_node = std::make_shared< IfSyntaxNode >( lexical_token );
+  };
+  break;
+  case Token_Type::ELSE:
+  {
+     syntax_node = std::make_shared< ElseSyntaxNode >( lexical_token );
   };
   break;
   case Token_Type::WHILE:

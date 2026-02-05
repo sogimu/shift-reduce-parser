@@ -35,25 +35,35 @@
 
 template<typename A>
 class CopyOrRef {
-    // Вариант с хранением либо копии, либо ссылки через указатель
-    std::variant<A, A*> data;
-
 public:
+    enum class Type
+    {
+        COPY,
+        REFERENCE
+    };
     // Конструктор от копии
-    CopyOrRef(const A& a) : data(A(a)) {}
+    CopyOrRef(const A& a)
+        : data{ A(a) }
+        , mType{ Type::COPY } 
+    {}
 
     // Конструктор от ссылки (явное)
-    CopyOrRef(A& a) : data(&a) {}
+    CopyOrRef(A& a) 
+        : data{ &a }
+        , mType{ Type::REFERENCE } 
+    {}
 
     // Получить доступ к объекту
-    A& get() {
+    A& get()
+    {
         if (std::holds_alternative<A>(data))
             return std::get<A>(data);
         else
             return *std::get<A*>(data);
     }
 
-    const A& get() const {
+    const A& get() const
+    {
         if (std::holds_alternative<A>(data))
             return std::get<A>(data);
         else
@@ -61,13 +71,29 @@ public:
     }
 
     // Оператор неявного приведения к типу A&
-    operator A&() {
+    operator A&()
+    {
         return get();
     }
 
-    operator const A&() const {
+    operator const A&() const
+    {
         return get();
     }
+
+    CopyOrRef<A> copy()
+    {
+        return std::as_const(*this).get();
+    }
+
+    Type type() const
+    {
+        return mType;
+    }
+private:
+    // Вариант с хранением либо копии, либо ссылки через указатель
+    std::variant<A, A*> data;
+    Type mType;
 };
 
 struct FunctionCallMeta
@@ -89,33 +115,32 @@ Json StackMachine::exec()
    FunctionStore function_store;
    std::deque< CopyOrRef<Json> > argument_stack;
    std::deque< FunctionCallSyntaxNodeSP > function_call_stack;
-
-    auto get_value = [&argument_stack, &varible_store](const ISyntaxNodeSP& value_syntax_node ) -> Json
+    
+   std::function<Json(const ISyntaxNodeSP&)> get_value;
+   get_value = [&argument_stack, &varible_store, &get_value](const ISyntaxNodeSP& value_syntax_node ) -> Json
     {   auto& s = argument_stack;
         (void) s;
         if( check_type<NameSyntaxNode>( value_syntax_node ) )
         {
-            auto varible_name = argument_stack.back();
+            auto value = argument_stack.back();
             if( !argument_stack.empty() )
                argument_stack.pop_back();
-            return varible_store[ varible_name.get().get_string() ];
-            // std::cout << "Write " << target_name << " .Value is " << value << ". Context: " << context << std::endl;
         }
         else if( check_type<MemberExpressionSyntaxNode>( value_syntax_node ) )
         {
-            auto key_or_index = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
-            auto varible_name = argument_stack.back();
-            if( !argument_stack.empty() )
-               argument_stack.pop_back();
+            auto key_or_index = get_value( value_syntax_node->operator[](1) );
+            // if( !argument_stack.empty() )
+               // argument_stack.pop_back();
+            auto container = get_value( value_syntax_node->operator[](0) ); 
+            // if( !argument_stack.empty() )
+               // argument_stack.pop_back();
             // varible.get() = value;
-             auto& container = varible_store[ varible_name.get().get_string() ];
+             // auto& container = varible_store[ varible_name.get_string() ];
              if( container.is_array() )
              {
-                if( key_or_index.get().is_int() )
+                if( key_or_index.is_int() )
                 {
-                   return container.get_array()[key_or_index.get().get_int()];
+                   return container.get_array()[key_or_index.get_int()];
                 }
                 else
                 {
@@ -124,9 +149,9 @@ Json StackMachine::exec()
              }
              else if( container.is_object() )
              {
-                if( key_or_index.get().is_string() )
+                if( key_or_index.is_string() )
                 {
-                   return container.get_object()[key_or_index.get().get_string()];
+                   return container.get_object()[key_or_index.get_string()];
                 }
                 else
                 {
@@ -179,9 +204,18 @@ Json StackMachine::exec()
                        children = std::list< ISyntaxNodeSP >{ true_scope };
                        return;
                    }    
+                   else
+                   {
+                       const auto& false_scope = if_statment->false_scope();
+                       if( !false_scope )
+                           children = {};
+                       else
+                           children = std::list< ISyntaxNodeSP >{ false_scope };
+                       return;
+                   }    
                    children = {};
                 }
-                argument_stack.pop_back();
+                // argument_stack.pop_back();
             }
             else
             {
@@ -245,25 +279,34 @@ Json StackMachine::exec()
              auto& s = argument_stack;
              (void) s;
              argument_stack.push_back( CopyOrRef<Json>{ node->value() } );
-            // std::cout << "f = " << node->value() << std::endl;
+            std::cout << "string = " << node->value() << std::endl;
          };
          handlers.int_syntax_node = [ &argument_stack ]( const IntSyntaxNodeSP& node )
          {
              auto& s = argument_stack;
              (void) s;
              argument_stack.push_back( CopyOrRef<Json>{ node->value() } );
-            // std::cout << "f = " << node->value() << std::endl;
+            std::cout << "f = " << node->value() << std::endl;
          };
          handlers.double_syntax_node = [ &argument_stack ]( const DoubleSyntaxNodeSP& node )
          {
              auto& s = argument_stack;
              (void) s;
              argument_stack.push_back( CopyOrRef<Json>{ node->value() } );
-            // std::cout << "f = " << node->value() << std::endl;
+            std::cout << "double = " << node->value() << std::endl;
          };
-         handlers.name_syntax_node = [ &argument_stack, &varible_store ]( const NameSyntaxNodeSP& varible )
+         handlers.name_syntax_node = [ &argument_stack, &varible_store ]( const NameSyntaxNodeSP& name )
          {
-            argument_stack.push_back( CopyOrRef<Json>( varible->value() ) );
+            argument_stack.push_back( CopyOrRef<Json>( name->value() ) );
+            std::cout << "name = " << name->value() << std::endl;
+         };
+         handlers.varible_syntax_node = [ &argument_stack, &varible_store ]( const VaribleSyntaxNodeSP& varible )
+         {
+            auto& s = argument_stack;
+            (void) s;
+            auto& varible_value_ref = varible_store[ varible->name() ];
+            argument_stack.push_back( CopyOrRef<Json>( varible_value_ref ) );
+            std::cout << "varible: " << varible->name() << std::endl;
          };
          handlers.array_syntax_node = [ &argument_stack, &get_value ]( const ArraySyntaxNodeSP& node )
          {
@@ -274,7 +317,10 @@ Json StackMachine::exec()
             for( auto it=node->rbegin(); it!= node->rend(); ++it )
             {
                const auto& child = *it;
-               const auto& value = get_value( child );
+               auto value = argument_stack.back();
+               if( !argument_stack.empty() )
+                  argument_stack.pop_back();
+               // const auto& value = get_value( child );
                arrays_elements.insert( arrays_elements.begin(), value );
             }
             argument_stack.push_back( CopyOrRef<Json>{ arrays_elements } );
@@ -288,9 +334,15 @@ Json StackMachine::exec()
             for( auto it=node->rbegin(); it!= node->rend(); ++it )
             {
                const auto& child = *it;
-               const auto& value = get_value( child->operator[](1) );
-               const auto& key = get_value( child->operator[](0) );
-               object_elements.emplace( key.get_string(), value );
+               auto value = argument_stack.back();
+               if( !argument_stack.empty() )
+                  argument_stack.pop_back();
+               // const auto& value = get_value( child->operator[](1) );
+               auto key = argument_stack.back();
+               if( !argument_stack.empty() )
+                  argument_stack.pop_back();
+               // const auto& key = get_value( child->operator[](0) );
+               object_elements.emplace( key.get().get_string(), value );
             }
             argument_stack.push_back( CopyOrRef<Json>{ object_elements } );
          };
@@ -310,8 +362,14 @@ Json StackMachine::exec()
             // auto lhs = argument_stack.back().get();
             // if( !argument_stack.empty() )
             //    argument_stack.pop_back();
-            const auto& rhs = get_value( node->operator[](1) );
-            const auto& lhs = get_value( node->operator[](0) );
+            // const auto& rhs = get_value( node->operator[](1) );
+             auto rhs = argument_stack.back();
+             if( !argument_stack.empty() )
+                argument_stack.pop_back();
+            // const auto& lhs = get_value( node->operator[](0) );
+             auto lhs = argument_stack.back();
+             if( !argument_stack.empty() )
+                argument_stack.pop_back();
             if( node->type() == BinExprSyntaxNode::Type::Addition )
             {
               const auto& result = lhs + rhs;
@@ -338,7 +396,7 @@ Json StackMachine::exec()
             }
             else if( node->type() == BinExprSyntaxNode::Type::Equal )
             {
-              const auto& result = lhs == rhs;
+              const auto& result = lhs.get() == rhs.get();
               // std::cout << std::to_string( lhs ) << " == " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
               argument_stack.push_back( CopyOrRef<Json>{ result } );
             }
@@ -377,13 +435,61 @@ Json StackMachine::exec()
          };
          handlers.return_statment_syntax_node = [ &function_call_stack, &argument_stack, &varible_store, &get_value ]( const ReturnStatmentSyntaxNodeSP& return_statment )
          {
-             const auto& value = get_value( return_statment->operator[](0) );
-             argument_stack.push_back( value );
+             auto& s = argument_stack;
+             (void) s;
+             // const auto& value = get_value( return_statment->operator[](0) );
+             auto value = argument_stack.back();
+             if( !argument_stack.empty() )
+                argument_stack.pop_back();
+             // const auto& v = value.get();
+             argument_stack.push_back( value.copy() );
          };
          handlers.print_statment_syntax_node = [ &argument_stack, &varible_store, &get_value ]( const PrintStatmentSyntaxNodeSP& print_statment )
          {
-             const auto& value = get_value( print_statment->operator[](0) );
-             std::cout << "print: " << value << std::endl;
+             auto value = argument_stack.back();
+             if( !argument_stack.empty() )
+                argument_stack.pop_back();
+             // return varible_name.get().get_int();
+             // const auto& value = get_value( print_statment->operator[](0) );
+             std::cout << "print: " << value.get() << std::endl;
+         };
+         handlers.member_expression_syntax_node = [ &argument_stack, &varible_store, &get_value ]( const MemberExpressionSyntaxNodeSP& member_expression )
+         {
+             auto& s = argument_stack;
+             (void) s;
+             auto key_or_index = argument_stack.back();
+             if( !argument_stack.empty() )
+                argument_stack.pop_back();
+             auto container = argument_stack.back();
+             if( !argument_stack.empty() )
+                argument_stack.pop_back();
+             if( container.get().is_array() )
+             {
+                if( key_or_index.get().is_int() )
+                {
+                   auto& value_by_ref = container.get().get_array()[key_or_index.get().get_int()];
+                   argument_stack.push_back( CopyOrRef<Json>{ value_by_ref } );
+                }
+                else
+                {
+                    throw std::runtime_error("Element of array can not be accesed not by index!");
+                }
+             }
+             else if( container.get().is_object() )
+             {
+                if( key_or_index.get().is_string() )
+                {
+                   auto& value_by_ref = container.get().get_object()[key_or_index.get().get_string()];
+                   argument_stack.push_back( CopyOrRef<Json>{ value_by_ref } );
+                }
+                else
+                {
+                    throw std::runtime_error("Element of object can not be accesed not by key!");
+                }
+             }
+             // const auto& value = get_value( member_expression );
+             // argument_stack.push_back( CopyOrRef<Json>{ value_by_ref } );
+             // std::cout << "member_expression value: " << value << std::endl;
          };
          handlers.varible_assigment_statment_syntax_node = [ &varible_store, &argument_stack, &get_value ]( const VaribleAssigmentStatmentSyntaxNodeSP& varible_assigment )
          {
@@ -393,59 +499,74 @@ Json StackMachine::exec()
             
             if( check_type<NameSyntaxNode>( varible_assigment->operator[]( 0 ) ) )
             {
-                const auto& varible_value = get_value( varible_assigment->operator[](1) );
-                auto varible_name = argument_stack.back();
+                // const auto& varible_value = get_value( varible_assigment->operator[](1) );
+                auto varible_value = argument_stack.back().get();
+                if( !argument_stack.empty() )
+                   argument_stack.pop_back();
+                
+                auto varible_name = argument_stack.back().get();
                 if( !argument_stack.empty() )
                    argument_stack.pop_back();
                 // varible.get() = value;
                 std::string context;
                 if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL )
                 {
-                   varible_store[ varible_name.get().get_string() ] = varible_value;
+                   varible_store[ varible_name.get_string() ] = varible_value;
                    context = "Global";
                 }
                 else if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::LOCAL )
                 {
-                   varible_store.writeValueToLocalVarible( varible_name.get().get_string(), varible_value );
+                   varible_store.writeValueToLocalVarible( varible_name.get_string(), varible_value );
                    context = "Local";
                 }
                 // std::cout << "Write " << target_name << " .Value is " << value << ". Context: " << context << std::endl;
             }
             else if( check_type<MemberExpressionSyntaxNode>( varible_assigment->operator[]( 0 ) ) )
             {
-                const auto& member_value = get_value( varible_assigment->operator[](1) );
-                auto key_or_index = argument_stack.back();
+                varible_store.print();
+                auto varible_value = argument_stack.back();
                 if( !argument_stack.empty() )
                    argument_stack.pop_back();
-                auto varible_name = argument_stack.back();
+                
+                auto target = argument_stack.back();
                 if( !argument_stack.empty() )
                    argument_stack.pop_back();
-                if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL )
-                {
-                   auto& container = varible_store[ varible_name.get().get_string() ];
-                   if( container.is_array() )
-                   {
-                      if( key_or_index.get().is_int() )
-                      {
-                         container.get_array()[key_or_index.get().get_int()] = member_value;
-                      }
-                      else
-                      {
-                          throw std::runtime_error("Element of array can not be accesed not by index!");
-                      }
-                   }
-                   else if( container.is_object() )
-                   {
-                      if( key_or_index.get().is_string() )
-                      {
-                         container.get_object()[key_or_index.get().get_string()] = member_value;
-                      }
-                      else
-                      {
-                          throw std::runtime_error("Element of object can not be accesed not by key!");
-                      }
-                   }
-                }
+                target.get() = varible_value;
+                varible_store.print();
+                
+                // const auto& member_value = get_value( varible_assigment->operator[](1) );
+                // auto key_or_index = argument_stack.back();
+                // if( !argument_stack.empty() )
+                //    argument_stack.pop_back();
+                // auto varible_name = argument_stack.back();
+                // if( !argument_stack.empty() )
+                //    argument_stack.pop_back();
+                // if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL )
+                // {
+                //    auto& container = varible_store[ varible_name.get().get_string() ];
+                //    if( container.is_array() )
+                //    {
+                //       if( key_or_index.get().is_int() )
+                //       {
+                //          container.get_array()[key_or_index.get().get_int()] = member_value;
+                //       }
+                //       else
+                //       {
+                //           throw std::runtime_error("Element of array can not be accesed not by index!");
+                //       }
+                //    }
+                //    else if( container.is_object() )
+                //    {
+                //       if( key_or_index.get().is_string() )
+                //       {
+                //          container.get_object()[key_or_index.get().get_string()] = member_value;
+                //       }
+                //       else
+                //       {
+                //           throw std::runtime_error("Element of object can not be accesed not by key!");
+                //       }
+                //    }
+                // }
             }
             varible_store.print();
          };

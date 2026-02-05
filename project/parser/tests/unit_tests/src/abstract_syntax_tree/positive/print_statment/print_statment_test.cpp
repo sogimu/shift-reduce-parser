@@ -38,7 +38,8 @@ TEST( SYNTAX_TREE_PRINT, VARIBALE )
 
    // ASSERT
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[3] );
-   const auto& print = std::make_shared< PrintStatmentSyntaxNode >( name );
+   const auto& varible = std::make_shared< VaribleSyntaxNode >( name, name->lexical_tokens() );
+   const auto& print = std::make_shared< PrintStatmentSyntaxNode >( varible );
    
    AbstractSyntaxTree expected_syntax_tree { print };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );

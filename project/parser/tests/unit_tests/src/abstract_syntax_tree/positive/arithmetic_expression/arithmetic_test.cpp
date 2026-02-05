@@ -255,9 +255,10 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_EQUAL_NAME )
    const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
 
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[4] );
+   const auto& varible = std::make_shared< VaribleSyntaxNode >( name, name->lexical_tokens() );
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2], lexical_tokens[3] };
-   const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Equal, f0, name, bin_expr_lexical_tokens );
+   const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Equal, f0, varible, bin_expr_lexical_tokens );
    AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -276,9 +277,10 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_LESS_NAME )
    const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
 
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[3] );
+   const auto& varible = std::make_shared< VaribleSyntaxNode >( name, name->lexical_tokens() );
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
-   const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Less, f0, name, bin_expr_lexical_tokens );
+   const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Less, f0, varible, bin_expr_lexical_tokens );
    AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -297,9 +299,10 @@ TEST( SYNTAX_TREE_ARITHMETIC, CONDITION_F_MORE_NAME )
    const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
 
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[3] );
+   const auto& varible = std::make_shared< VaribleSyntaxNode >( name, name->lexical_tokens() );
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
-   const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::More, f0, name, bin_expr_lexical_tokens );
+   const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::More, f0, varible, bin_expr_lexical_tokens );
    AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -493,9 +496,10 @@ TEST( SYNTAX_TREE_ARITHMETIC, F_PLUS_VARIBLE )
    const auto& f0 = std::make_shared< FSyntaxNode >( d0 );
 
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[3] );
+   const auto& varible = std::make_shared< VaribleSyntaxNode >( name, name->lexical_tokens() );
   
    std::vector< LexicalTokens::LexicalToken > bin_expr_lexical_tokens{ lexical_tokens[2] };
-   const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, name, bin_expr_lexical_tokens );
+   const auto& bin_expr = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Addition, f0, varible, bin_expr_lexical_tokens );
    AbstractSyntaxTree expected_syntax_tree { bin_expr };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
 }
@@ -644,17 +648,19 @@ TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION1 )
 
    // ASSERT
    const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[1] );
+   const auto& varible0 = std::make_shared< VaribleSyntaxNode >( name0, name0->lexical_tokens() );
 
    const auto& number = std::make_shared< IntSyntaxNode >( lexical_tokens[3] );
    const auto& f = std::make_shared< FSyntaxNode >( number );
   
    const auto& name1 = std::make_shared< NameSyntaxNode >( lexical_tokens[5] );
+   const auto& varible1 = std::make_shared< VaribleSyntaxNode >( name1, name1->lexical_tokens() );
    
    std::vector< LexicalTokens::LexicalToken > bin_expr0_lexical_tokens{ lexical_tokens[4] };
-   const auto& bin_expr0 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Division, f, name1, bin_expr0_lexical_tokens );
+   const auto& bin_expr0 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Division, f, varible1, bin_expr0_lexical_tokens );
    
    std::vector< LexicalTokens::LexicalToken > bin_expr1_lexical_tokens{ lexical_tokens[2] };
-   const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, name0, bin_expr0, bin_expr1_lexical_tokens );
+   const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, varible0, bin_expr0, bin_expr1_lexical_tokens );
    
    AbstractSyntaxTree expected_syntax_tree { bin_expr1 };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
@@ -674,16 +680,19 @@ TEST( SYNTAX_TREE_ARITHMETIC, ADVANCE_EXPRESSION2 )
    const auto& f = std::make_shared< FSyntaxNode >( number );
   
    const auto& name0 = std::make_shared< NameSyntaxNode >( lexical_tokens[3] );
+   const auto& varible0 = std::make_shared< VaribleSyntaxNode >( name0, name0->lexical_tokens() );
 
    const auto& name1 = std::make_shared< NameSyntaxNode >( lexical_tokens[5] );
+   const auto& varible1 = std::make_shared< VaribleSyntaxNode >( name1, name0->lexical_tokens() );
    
    const auto& name2 = std::make_shared< NameSyntaxNode >( lexical_tokens[7] );
+   const auto& varible2 = std::make_shared< VaribleSyntaxNode >( name2, name0->lexical_tokens() );
    
    std::vector< LexicalTokens::LexicalToken > bin_expr0_lexical_tokens{ lexical_tokens[4] };
-   const auto& bin_expr0 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Multiply, name0, name1, bin_expr0_lexical_tokens );
+   const auto& bin_expr0 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Multiply, varible0, varible1, bin_expr0_lexical_tokens );
    
    std::vector< LexicalTokens::LexicalToken > bin_expr1_lexical_tokens{ lexical_tokens[6] };
-   const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, bin_expr0, name2, bin_expr1_lexical_tokens );
+   const auto& bin_expr1 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, bin_expr0, varible2, bin_expr1_lexical_tokens );
    
    std::vector< LexicalTokens::LexicalToken > bin_expr2_lexical_tokens{ lexical_tokens[2] };
    const auto& bin_expr2 = std::make_shared< BinExprSyntaxNode >( BinExprSyntaxNode::Type::Substruction, f, bin_expr1, bin_expr2_lexical_tokens );

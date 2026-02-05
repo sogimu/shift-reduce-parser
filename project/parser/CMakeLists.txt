@@ -43,6 +43,7 @@ set(HEADERS
     include/syntax_nodes/terminals/open_square_bracket_syntax_node.h
     include/syntax_nodes/terminals/close_square_bracket_syntax_node.h
     include/syntax_nodes/terminals/if_syntax_node.h
+    include/syntax_nodes/terminals/else_syntax_node.h
     include/syntax_nodes/terminals/var_syntax_node.h
     include/syntax_nodes/terminals/function_syntax_node.h
     include/syntax_nodes/terminals/name_syntax_node.h
@@ -65,17 +66,17 @@ set(HEADERS
     include/syntax_nodes/nonterminals/varible_syntax_node.h
     include/syntax_nodes/nonterminals/return_statment_syntax_node.h
     include/grammars/f_grammar.h
-    # include/grammars/un_expr_grammar.h
-    # include/grammars/print_statment_grammar.h
-    # include/grammars/if_statment_grammar.h
-    # include/grammars/while_statment_grammar.h
-    # include/grammars/statment_grammar.h
-    # include/grammars/varible_assigment_grammar.h
+    include/grammars/un_expr_grammar.h
+    include/grammars/print_statment_grammar.h
+    include/grammars/if_statment_grammar.h
+    include/grammars/while_statment_grammar.h
+    #include/grammars/statment_grammar.h
+    include/grammars/varible_assigment_grammar.h
     include/grammars/circle_brackets_grammar.h
-    # include/grammars/scope_grammar.h
-    # include/grammars/function_statment_grammar.h
-    # include/grammars/function_call_grammar.h
-    # include/grammars/return_statment_grammar.h
+    include/grammars/scope_grammar.h
+    include/grammars/function_statment_grammar.h
+    include/grammars/function_call_grammar.h
+    include/grammars/return_statment_grammar.h
     include/grammars/array_grammar.h
     include/grammars/object_grammar.h
 )
@@ -108,6 +109,7 @@ set(SOURCES
     src/syntax_nodes/terminals/open_square_bracket_syntax_node.cpp
     src/syntax_nodes/terminals/close_square_bracket_syntax_node.cpp
     src/syntax_nodes/terminals/if_syntax_node.cpp
+    src/syntax_nodes/terminals/else_syntax_node.cpp
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/function_syntax_node.cpp
@@ -130,7 +132,20 @@ set(SOURCES
     src/syntax_nodes/nonterminals/object_syntax_node.cpp
     src/syntax_nodes/nonterminals/return_statment_syntax_node.cpp
     src/grammars/circle_brackets_grammar.cpp
-)
+    src/grammars/bin_expr_grammar.cpp
+    src/grammars/f_grammar.cpp
+    src/grammars/array_grammar.cpp
+    src/grammars/function_call_grammar.cpp
+    src/grammars/function_statment_grammar.cpp
+    src/grammars/member_expression_grammar.cpp
+    src/grammars/object_grammar.cpp
+    src/grammars/print_statment_grammar.cpp
+    src/grammars/return_statment_grammar.cpp
+    src/grammars/while_statment_grammar.cpp
+    src/grammars/varible_assigment_grammar.cpp
+    src/grammars/scope_grammar.cpp
+    src/grammars/un_expr_grammar.cpp
+    src/grammars/if_statment_grammar.cpp)
 
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 

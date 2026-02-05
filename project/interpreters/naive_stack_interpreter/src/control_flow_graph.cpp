@@ -151,7 +151,7 @@ ControlFlowGraph::ControlFlowGraph( const AbstractSyntaxTree& ast )
                 std::vector<ISyntaxNodeSP> scope_expressions{ scope, node };
                 const auto& scope_statment = std::make_shared<ScopeSyntaxNode>(scope_expressions, scope_lexical_tokens);
                 std::vector< LexicalTokens::LexicalToken > if_lexical_tokens;
-                const auto& if_statment = std::make_shared<IfStatmentSyntaxNode>(nullptr, scope_statment, if_lexical_tokens);
+                const auto& if_statment = std::make_shared<IfStatmentSyntaxNode>(condition, scope_statment, if_lexical_tokens);
                 if_statment->remove(0);
                 node->add_back(if_statment);
             }

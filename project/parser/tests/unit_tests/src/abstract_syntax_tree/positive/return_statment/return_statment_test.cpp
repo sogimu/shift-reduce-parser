@@ -111,7 +111,8 @@ TEST( SYNTAX_TREE_RETURN_STATMENT, NAME )
 
    // ASSERT
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
-   const auto& return_syntax_node = std::make_shared< ReturnStatmentSyntaxNode >( name, lexical_tokens[1] );
+   const auto& varible = std::make_shared< VaribleSyntaxNode >( name, name->lexical_tokens() );
+   const auto& return_syntax_node = std::make_shared< ReturnStatmentSyntaxNode >( varible, lexical_tokens[1] );
    
    AbstractSyntaxTree expected_syntax_tree { return_syntax_node };
    EXPECT_EQ( syntax_tree, expected_syntax_tree );
