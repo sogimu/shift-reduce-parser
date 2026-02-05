@@ -33,7 +33,7 @@ add_executable(${PROJECT_NAME}
     src/abstract_syntax_tree/positive/varible_assign_expression/varible_assign_expression_test.cpp
     src/abstract_syntax_tree/positive/print_statment/print_statment_test.cpp
     src/abstract_syntax_tree/positive/return_statment/return_statment_test.cpp
-    # src/abstract_syntax_tree/negative/bin_expr_syntax_node/bin_expr_syntax_node_test.cpp
+    src/abstract_syntax_tree/negative/bin_expr_syntax_node/bin_expr_syntax_node_test.cpp
     src/main.cpp
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE parser GTest::gtest_main)
