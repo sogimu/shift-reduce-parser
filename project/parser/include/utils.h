@@ -87,14 +87,34 @@ public:
       const auto& childern_value = node->Children();
       push( childern_value, true );
    }
-
-   void popUntil( const ISyntaxNodeSP& target_node )
+   
+   void cancelDescentFromSubtree( const ISyntaxNodeSP& subtree_root, const std::function<void(const ISyntaxNodeSP&)>& post_func )
    {
       for( auto it = mStack.rbegin(); it != mStack.rend(); )
       {
          // auto& [ node, is_pre_order ] = stack.top();
          auto& [ node, is_pre_order ] = *it;
-         if( node == target_node )
+         if( node == subtree_root )
+            break;
+         if( is_pre_order == false )
+         {
+            post_func( node ); 
+            it = decltype( it )( mStack.erase( std::next( it ).base() ) );
+         }
+         else
+         {
+            ++it;
+         }
+      }
+   }
+
+   void unsheduleDescentToSubtree( const ISyntaxNodeSP& subtree_root )
+   {
+      for( auto it = mStack.rbegin(); it != mStack.rend(); )
+      {
+         // auto& [ node, is_pre_order ] = stack.top();
+         auto& [ node, is_pre_order ] = *it;
+         if( node == subtree_root )
             break;
          if( is_pre_order )
          {
@@ -770,6 +790,12 @@ public:
          mResult = true;
    }
 
+   void visit( const GotoSyntaxNodeSP& /* node */ ) override
+   {
+      if constexpr( std::is_same_v< T, GotoSyntaxNode > )
+         mResult = true;
+   }
+
    void visit( const FunctionStatmentSyntaxNodeSP& /*node*/ ) override
    {
       if constexpr( std::is_same_v< T, FunctionStatmentSyntaxNode > )
@@ -950,6 +976,7 @@ static std::string to_string( const ISyntaxNodeSP& node )
         handlers.if_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "IF_STATMENT" << "}"; };
         handlers.while_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE" << "}"; };
         handlers.while_statment_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "WHILE_STATMENT" << "}"; };
+        handlers.goto_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "GOTO" << "}"; };
         handlers.function_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION" << "}"; };
         handlers.function_call_syntax_node = [ &s, print_lexical_tokens ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"   << "}"; };
         handlers.function_statment_syntax_node = [ &s ]( const FunctionStatmentSyntaxNodeSP& node )

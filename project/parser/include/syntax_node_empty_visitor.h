@@ -64,6 +64,8 @@ public:
       std::function< void( const WhileSyntaxNodeSP& ) > while_syntax_node = [ this ]( const WhileSyntaxNodeSP& node ) { default_handler( node ); };
       std::function< void( const WhileStatmentSyntaxNodeSP& ) > while_statment_syntax_node = [ this ]( const WhileStatmentSyntaxNodeSP& node )
       { default_handler( node ); };
+      std::function< void( const GotoSyntaxNodeSP& ) > goto_syntax_node = [ this ]( const GotoSyntaxNodeSP& node )
+      { default_handler( node ); };
       std::function< void( const FunctionStatmentSyntaxNodeSP& ) > function_statment_syntax_node = [ this ]( const FunctionStatmentSyntaxNodeSP& node )
       { default_handler( node ); };
       std::function< void( const FunctionSyntaxNodeSP& ) > function_syntax_node = [ this ]( const FunctionSyntaxNodeSP& node ) { default_handler( node ); };
@@ -282,6 +284,11 @@ public:
    void visit( const WhileStatmentSyntaxNodeSP& node ) override
    {
       mHandlers.while_statment_syntax_node( node );
+   }
+
+   void visit( const GotoSyntaxNodeSP& node ) override
+   {
+      mHandlers.goto_syntax_node( node );
    }
 
    void visit( const FunctionStatmentSyntaxNodeSP& node ) override

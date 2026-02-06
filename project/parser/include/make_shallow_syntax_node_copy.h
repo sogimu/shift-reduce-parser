@@ -218,6 +218,11 @@ public:
       mCopy = std::make_shared< WhileStatmentSyntaxNode >( *node );
    }
 
+   void visit( const GotoSyntaxNodeSP& node ) override
+   {
+      mCopy = std::make_shared< GotoSyntaxNode >( *node );
+   }
+
    void visit( const FunctionStatmentSyntaxNodeSP& node ) override
    {
       mCopy = std::make_shared< FunctionStatmentSyntaxNode >( *node );

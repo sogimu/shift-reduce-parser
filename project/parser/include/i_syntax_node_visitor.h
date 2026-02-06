@@ -39,6 +39,7 @@
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/if_statment_syntax_node.h"
 #include "nonterminals/while_statment_syntax_node.h"
+#include "nonterminals/goto_syntax_node.h"
 #include "nonterminals/function_statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
 #include "nonterminals/print_statment_syntax_node.h"
@@ -91,6 +92,7 @@ public:
    virtual void visit( const IfStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileSyntaxNodeSP& ) = 0;
    virtual void visit( const WhileStatmentSyntaxNodeSP& ) = 0;
+   virtual void visit( const GotoSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionStatmentSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionSyntaxNodeSP& ) = 0;
    virtual void visit( const FunctionCallSyntaxNodeSP& ) = 0;
