@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <map>
+#include <unordered_map>
 #include <ostream>
 #include <string>
 
@@ -12,7 +13,7 @@ class VaribleStore
 public:
    void pushScope()
    {
-      mScope.emplace_back( std::map< std::string, Json >{} );
+      mScope.emplace_back( std::unordered_map< std::string, Json >{} );
    }
 
    void popScope()
@@ -74,5 +75,5 @@ public:
    }
 
 private:
-   mutable std::deque< std::map< std::string, Json > > mScope;
+   mutable std::deque< std::unordered_map< std::string, Json > > mScope;
 };

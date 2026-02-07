@@ -1,26 +1,30 @@
-# 🚀 Shift-Reduce Parser & JavaScript Interpreter
+# Shift-Reduce Parser & JavaScript Interpreter
 
-> Высокопроизводительный парсер и интерпретатор для JavaScript-подобного языка, построенный на алгоритме Shift-Reduce
+> Parser and interpreter for JavaScript-like language built on Shift-Reduce algorithm
 
 [![Workflow Status](https://github.com/sogimu/shift-reduce-parser/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/sogimu/shift-reduce-parser/actions/workflows/cmake-single-platform.yml)
 
-## ⭐ Особенности
+## Overview
 
-- 🔥 **LR-парсер (Bottom-Up)** — эффективный алгоритм Shift-Reduce для синтаксического анализа
-- 🎯 **Полноценный интерпретатор** — выполнение JavaScript-подобного кода в реальном времени  
-- 📊 **Богатый синтаксис** — поддержка арифметики, условий, функций, объектов и массивов
-- 🧪 **Comprehensive Testing** — более 100 unit-тестов для надежности
-- 💡 **REPL-интерфейс** — интерактивная консоль для быстрого тестирования
-- 🏗️ **Модульная архитектура** — четкое разделение парсера и интерпретатора
+This project is an educational implementation of a JavaScript-like interpreter using LR (bottom-up) parsing. Started as a learning exercise, it demonstrates core compiler construction concepts and may evolve into a more comprehensive language implementation.
 
-## 🚀 Быстрый старт
+## Features
 
-### Системные требования
-- **C++20** совместимый компилятор (GCC 10+, Clang 10+, MSVC 19.29+)
+- **LR Parser (Bottom-Up)** — efficient Shift-Reduce algorithm for syntax analysis
+- **Full Interpreter** — real-time execution of JavaScript-like code  
+- **Rich Syntax** — support for arithmetic, conditionals, functions, objects and arrays
+- **Comprehensive Testing** — 100+ unit tests for reliability
+- **REPL Interface** — interactive console for quick testing
+- **Modular Architecture** — clean separation of parser and interpreter
+
+## Quick Start
+
+### Requirements
+- **C++20** compatible compiler (GCC 10+, Clang 10+, MSVC 19.29+)
 - **CMake 3.6+**
-- **libreadline-dev** (только для REPL на Linux)
+- **libreadline-dev** (Linux only, for REPL)
 
-### Установка зависимостей
+### Dependencies
 
 **Ubuntu/Debian:**
 ```bash
@@ -33,186 +37,115 @@ sudo apt-get install build-essential cmake libreadline-dev
 brew install cmake readline
 ```
 
-### Сборка проекта
+### Build
 
 ```bash
-# Клонирование репозитория
 git clone https://github.com/sogimu/shift-reduce-parser.git
 cd shift-reduce-parser
-
-# Создание директории сборки
 mkdir build && cd build
-
-# Конфигурация и сборка
 cmake ..
 make -j$(nproc)
 ```
 
-### Запуск REPL
+### Run REPL
 
 ```bash
-# Из директории build
 ./project/interpreters/naive_stack_interpreter/repl/repl
 ```
 
-## 🎯 Примеры использования
+## Examples
 
-### Арифметические выражения
+### Basic Arithmetic
 ```javascript
 > 2 + 3 * 4;
 14
 
 > (5 - 2) / 3;
 1
-
-> -10 + 5;
--5
 ```
 
-### Переменные и присвоение
+### Variables
 ```javascript
 > { var x = 42;
- var y = x * 2;
- print( y );
+  var y = x * 2;
+  print(y);
 }
 84
 ```
 
-### Условные конструкции
+### Conditionals
 ```javascript
 > if (x > 40) {
     print("x is large");
   };
 x is large
-
-> if (5 > 10) {
-    print("never");
-  };
 ```
 
-### Функции
+### Functions
 ```javascript
 > { function add(a, b) {
     return a + b;
   };
-
- add(10, 20); }
+  add(10, 20); }
 30
 ```
 
-### Массивы и объекты
+### Objects and Arrays
 ```javascript
 > { var arr = [1, 2, 3];
-  print( arr[0]; ); }
+  print(arr[0]); }
 1
 
 > { var obj = {"name": "John", "age": 30};
- print( obj.name); }
+  print(obj.name); }
 "John"
 ```
 
-### Циклы
-```javascript
-> { var i = 0;
- while (i < 3) {
-    print(i);
-    i = i + 1;
-  }; }
-0
-1
-2
-```
-
-## 🏗️ Архитектура проекта
+## Architecture
 
 ```
 project/
-├── parser/           # LR-парсер и AST
-│   ├── include/      # Заголовочные файлы
-│   ├── src/          # Реализация парсера
-│   └── tests/        # Unit-тесты парсера
-├── interpreters/     # Интерпретаторы
+├── parser/           # LR parser and AST
+├── interpreters/     # Execution engines
 │   └── naive_stack_interpreter/
-│       ├── include/  # Заголовки интерпретатора
-│       ├── src/      # Стековая машина
-│       ├── repl/     # REPL-интерфейс
-│       └── tests/    # Integration-тесты
-└── libs/            # Внешние библиотеки (GoogleTest)
+└── libs/            # External libraries (GoogleTest)
 ```
 
-### Ключевые компоненты:
+### Key Components:
 
-- **[`LexicalTokens`](project/parser/include/lexical_tokens/lexical_tokens.h)** — лексический анализатор
-- **[`AbstractSyntaxTree`](project/parser/include/abstract_syntax_tree/abstract_syntax_tree.h)** — построение AST
-- **[`StackMachine`](project/interpreters/naive_stack_interpreter/include/stack_machine.h)** — стековый интерпретатор
-- **[`Interpreter`](project/interpreters/naive_stack_interpreter/include/interpreter.h)** — высокоуровневый интерфейс
+- [`LexicalTokens`](project/parser/include/lexical_tokens/lexical_tokens.h) — lexical analyzer
+- [`AbstractSyntaxTree`](project/parser/include/abstract_syntax_tree/abstract_syntax_tree.h) — AST construction
+- [`StackMachine`](project/interpreters/naive_stack_interpreter/include/stack_machine.h) — stack-based interpreter
+- [`Interpreter`](project/interpreters/naive_stack_interpreter/include/interpreter.h) — high-level interface
 
-## 🧪 Тестирование
+## Testing
 
-### Запуск всех тестов
+### Run All Tests
 ```bash
 cd build
 ctest --verbose
 ```
 
-### Запуск конкретных тестов
+### Run Specific Tests
 ```bash
-# Тесты парсера
+# Parser tests
 ./project/parser/tests/unit_tests/parser_tests
 
-# Тесты интерпретатора  
+# Interpreter tests  
 ./project/interpreters/naive_stack_interpreter/tests/unit_tests/interpreter_tests
 ```
 
-### Покрытие тестами
-- ✅ Арифметические выражения (40+ тестов)
-- ✅ Условные конструкции (15+ тестов)
-- ✅ Функции и вызовы (20+ тестов)
-- ✅ Объекты и массивы (25+ тестов)
-- ✅ Циклы и области видимости (15+ тестов)
+## Roadmap
 
-## 🤝 Вклад в проект
+- [ ] **Test262** compliance testing
+- [ ] **Debugger** with breakpoints
+- [ ] **Module system** (import/export)
+- [ ] **Standard library** (Math, String, Array)
 
-Мы приветствуем вклад сообщества! Вот как можно помочь:
+## License
 
-1. **🐛 Сообщайте о багах** через Issues
-2. **💡 Предлагайте новые возможности** 
-3. **📖 Улучшайте документацию**
-4. **🧪 Добавляйте тесты**
-
-### Разработка
-
-```bash
-# Форк репозитория
-git clone https://github.com/YOUR_USERNAME/shift-reduce-parser.git
-
-# Создание ветки для фичи
-git checkout -b feature/amazing-feature
-
-# Коммиты
-git commit -m "Add amazing feature"
-
-# Push и Pull Request
-git push origin feature/amazing-feature
-```
-
-## 🛣️ Roadmap
-
-- [ ] **JIT-компиляция** для повышения производительности
-- [ ] **Отладчик** с breakpoint'ами
-- [ ] **Модульная система** (import/export)
-- [ ] **Стандартная библиотека** (Math, String, Array)
-
-## 📄 Лицензия
-
-Этот проект распространяется под лицензией MIT. См. [`LICENSE`](LICENSE) для подробностей.
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for details.
 
 ---
 
-<div align="center">
-
-**[⭐ Поставьте звезду](https://github.com/sogimu/shift-reduce-parser/stargazers)** • **[📁 Fork проекта](https://github.com/sogimu/shift-reduce-parser/fork)** • **[🐛 Сообщить о баге](https://github.com/sogimu/shift-reduce-parser/issues)**
-
-*Сделано с ❤️ для сообщества разработчиков*
-
-</div>
+*Built as an educational project with potential for serious development*

@@ -84,6 +84,8 @@ public:
       std::function< HandlerReturn( const State& state, const WhileSyntaxNodeSP& ) > while_syntax_node = [ this ] ( const State& state,  const WhileSyntaxNodeSP& node ) { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const WhileStatmentSyntaxNodeSP& ) > while_statment_syntax_node = [ this ] ( const State& state,  const WhileStatmentSyntaxNodeSP& node )
       { return default_handler( state, node ); };
+      std::function< HandlerReturn( const State& state, const GotoSyntaxNodeSP& ) > goto_syntax_node = [ this ] ( const State& state,  const GotoSyntaxNodeSP& node )
+      { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const FunctionStatmentSyntaxNodeSP& ) > function_statment_syntax_node = [ this ] ( const State& state,  const FunctionStatmentSyntaxNodeSP& node )
       { return default_handler( state, node ); };
       std::function< HandlerReturn( const State& state, const FunctionSyntaxNodeSP& ) > function_syntax_node = [ this ] ( const State& state,  const FunctionSyntaxNodeSP& node ) { return default_handler( state, node ); };
@@ -340,6 +342,11 @@ public:
    void visit( const WhileStatmentSyntaxNodeSP& node ) override
    {
       mHandlers.call( &Handlers::while_statment_syntax_node, mHandlers.state(), node );
+   }
+
+   void visit( const GotoSyntaxNodeSP& node ) override
+   {
+      mHandlers.call( &Handlers::goto_syntax_node, mHandlers.state(), node );
    }
 
    void visit( const FunctionStatmentSyntaxNodeSP& node ) override

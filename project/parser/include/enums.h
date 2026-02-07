@@ -33,6 +33,7 @@ enum class Token_Type
    IF,
    ELSE,
    WHILE,
+   GOTO,
    F,
    ASSIGMENT,
    NAME,
@@ -93,6 +94,7 @@ inline std::ostream& operator<<(std::ostream& os, Token_Type type) {
         case Token_Type::IF: return os << "IF";
         case Token_Type::ELSE: return os << "ELSE";
         case Token_Type::WHILE: return os << "WHILE";
+        case Token_Type::GOTO: return os << "GOTO";
         case Token_Type::F: return os << "F";
         case Token_Type::ASSIGMENT: return os << "ASSIGMENT";
         case Token_Type::NAME: return os << "NAME";

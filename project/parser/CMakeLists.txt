@@ -62,6 +62,7 @@ set(HEADERS
     include/syntax_nodes/nonterminals/function_statment_syntax_node.h
     include/syntax_nodes/nonterminals/function_call_syntax_node.h
     include/syntax_nodes/nonterminals/while_statment_syntax_node.h
+    include/syntax_nodes/nonterminals/goto_syntax_node.h
     include/syntax_nodes/nonterminals/varible_assigment_statment_syntax_node.h
     include/syntax_nodes/nonterminals/varible_syntax_node.h
     include/syntax_nodes/nonterminals/return_statment_syntax_node.h
@@ -111,7 +112,6 @@ set(SOURCES
     src/syntax_nodes/terminals/if_syntax_node.cpp
     src/syntax_nodes/terminals/else_syntax_node.cpp
     src/syntax_nodes/terminals/while_syntax_node.cpp
-    src/syntax_nodes/terminals/while_syntax_node.cpp
     src/syntax_nodes/terminals/function_syntax_node.cpp
     src/syntax_nodes/terminals/name_syntax_node.cpp
     src/syntax_nodes/terminals/string_syntax_node.cpp
@@ -124,6 +124,7 @@ set(SOURCES
     src/syntax_nodes/nonterminals/function_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/function_call_syntax_node.cpp
     src/syntax_nodes/nonterminals/while_statment_syntax_node.cpp
+    src/syntax_nodes/nonterminals/goto_syntax_node.cpp
     src/syntax_nodes/nonterminals/varible_assigment_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/scope_statment_syntax_node.cpp
     src/syntax_nodes/nonterminals/array_syntax_node.cpp
