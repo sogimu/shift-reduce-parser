@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TEST( NAIVE_STACK_INTERPRETER_WHILE_STATMENT, DISABLED_SIMPLE_COUNTER )
+TEST( NAIVE_STACK_INTERPRETER_WHILE_STATMENT, SIMPLE_COUNTER )
 {
     // ARRANGE
     const auto& input = R"""({ var counter = 0; while( counter < 5 ) { counter = counter + 1; } return counter; })""";
@@ -18,7 +18,7 @@ TEST( NAIVE_STACK_INTERPRETER_WHILE_STATMENT, DISABLED_SIMPLE_COUNTER )
     EXPECT_EQ( result.get_int(), 5 );
 }
 
-TEST( NAIVE_STACK_INTERPRETER_WHILE_STATMENT, DISABLED_ACCUMULATOR )
+TEST( NAIVE_STACK_INTERPRETER_WHILE_STATMENT, ACCUMULATOR )
 {
     // ARRANGE
     const auto& input = R"""({ var sum = 0; var i = 1; while( i <= 10 ) { sum = sum + i; i = i + 1; } return sum; })""";

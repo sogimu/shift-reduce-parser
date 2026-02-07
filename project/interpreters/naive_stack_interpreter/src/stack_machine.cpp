@@ -170,9 +170,6 @@ Json StackMachine::exec()
        return {};
     };
 
-   std::vector< ISyntaxNodeSP > stack;
-   const auto& post_func = [ &varible_store, &function_store, &argument_stack, &function_call_stack, &stack, &get_value ]( const ISyntaxNodeSP& node )
-    {
        SyntaxNodeEmptyVisitor::Handlers handlers;
        handlers.string_syntax_node = [ &argument_stack ]( const StringSyntaxNodeSP& node )
        {
@@ -481,6 +478,9 @@ Json StackMachine::exec()
            function_call_stack.pop_back();
        };
        const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
+   std::vector< ISyntaxNodeSP > stack;
+   const auto& post_func = [ &visitor, &varible_store, &function_store, &argument_stack, &function_call_stack, &stack, &get_value ]( const ISyntaxNodeSP& node )
+    {
        node->accept( visitor );
 
      

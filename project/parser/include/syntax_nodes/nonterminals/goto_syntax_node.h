@@ -15,7 +15,8 @@ public:
    bool compare( const ISyntaxNode& node ) const override;
    ISyntaxNodeSP target() const;
 private:
-   ISyntaxNodeSP mNode;
+   using ISyntaxNodeWP = std::weak_ptr< ISyntaxNode >;
+   ISyntaxNodeWP mNode;
 };
 
 using GotoSyntaxNodeSP = std::shared_ptr< GotoSyntaxNode >;

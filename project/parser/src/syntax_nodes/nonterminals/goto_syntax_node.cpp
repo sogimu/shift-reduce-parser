@@ -19,7 +19,7 @@ GotoSyntaxNode::GotoSyntaxNode( const ISyntaxNodeSP& node )
 
 ISyntaxNodeSP GotoSyntaxNode::target() const
 {
-    return mNode;
+    return mNode.lock();
 }
 
 void GotoSyntaxNode::accept( const ISyntaxNodeVisitorSP& visitor )
