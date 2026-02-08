@@ -294,7 +294,7 @@ Json StackMachine::exec()
           else if( node->type() == BinExprSyntaxNode::Type::Equal )
           {
             const auto& result = lhs.get() == rhs.get();
-            // std::cout << std::to_string( lhs ) << " == " << std::to_string( rhs ) << " = " << std::to_string( result ) << std::endl;
+            std::cout << lhs.get() << " == " << rhs.get() << " = " << result << std::endl;
             argument_stack.push_back( CopyOrRef<Json>{ result } );
           }
           else if( node->type() == BinExprSyntaxNode::Type::Less )
@@ -355,22 +355,37 @@ Json StackMachine::exec()
                std::printf("%d\n", value.get().get_int());
            else if( value.get().is_double() )
                std::printf("%f\n", value.get().get_double());
+           else if( value.get().is_bool() )
+               std::printf("%i\n", value.get().get_bool());
+           else 
+               std::cout << value.get() << std::endl;
        };
        handlers.member_expression_syntax_node = [ &argument_stack, &varible_store, &get_value ]( const MemberExpressionSyntaxNodeSP& member_expression )
        {
            auto& s = argument_stack;
            (void) s;
-           auto key_or_index = argument_stack.back();
+           auto key_or_index = argument_stack.back().get();
            if( !argument_stack.empty() )
               argument_stack.pop_back();
-           auto container = argument_stack.back();
+           auto& container = argument_stack.back().get();
            if( !argument_stack.empty() )
               argument_stack.pop_back();
-           if( container.get().is_array() )
+           if( container.is_array() )
            {
-              if( key_or_index.get().is_int() )
+              if( key_or_index.is_int() )
               {
-                 auto& value_by_ref = container.get().get_array()[key_or_index.get().get_int()];
+                 std::vector<Json>& container_as_array = container.get_array();
+                 const auto& index = key_or_index.get_int();
+                 if( index < 0 )
+                 {
+                     argument_stack.push_back( CopyOrRef<Json>({}) );
+                     return;
+                 }
+                 if( container_as_array.size() <= index )
+                 {
+                     container_as_array.resize( index+1 );
+                 }
+                 auto& value_by_ref = container_as_array.at( index );
                  argument_stack.push_back( CopyOrRef<Json>{ value_by_ref } );
               }
               else
@@ -378,11 +393,11 @@ Json StackMachine::exec()
                   throw std::runtime_error("Element of array can not be accesed not by index!");
               }
            }
-           else if( container.get().is_object() )
+           else if( container.is_object() )
            {
-              if( key_or_index.get().is_string() )
+              if( key_or_index.is_string() )
               {
-                 auto& value_by_ref = container.get().get_object()[key_or_index.get().get_string()];
+                 auto& value_by_ref = container.get_object()[key_or_index.get_string()];
                  argument_stack.push_back( CopyOrRef<Json>{ value_by_ref } );
               }
               else

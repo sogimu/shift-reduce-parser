@@ -2,6 +2,7 @@
 #include "nonterminals/array_syntax_node.h"
 #include "nonterminals/statment_syntax_node.h"
 #include "nonterminals/function_call_syntax_node.h"
+#include "nonterminals/varible_syntax_node.h"
 #include "terminals/asterisk_syntax_node.h"
 #include "terminals/close_circle_bracket_syntax_node.h"
 #include "terminals/close_square_bracket_syntax_node.h"
@@ -93,12 +94,12 @@ FunctionCall::FunctionCall()
              {
                 if( state == State::START )
                 {
-                   name = node;
+                    name = node;
                     return { State::NAME, Impact::MOVE };
                 }
                 else if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
                 {
-                   arguments.emplace_back( node );
+                    arguments.emplace_back( std::make_shared<VaribleSyntaxNode>(node, node->lexical_tokens()) );
                     return { State::ARGUMENT, Impact::MOVE };
                 }
                 return { state, Impact::ERROR };
@@ -107,7 +108,7 @@ FunctionCall::FunctionCall()
              {
                 if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
                 {
-                   arguments.emplace_back( node );
+                    arguments.emplace_back( node );
                     return { State::ARGUMENT, Impact::MOVE };
                 }
                 return { state, Impact::ERROR };
@@ -116,7 +117,7 @@ FunctionCall::FunctionCall()
              {
                 if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
                 {
-                   arguments.emplace_back( node );
+                    arguments.emplace_back( node );
                     return { State::ARGUMENT, Impact::MOVE };
                 }
                 return { state, Impact::ERROR };
@@ -125,7 +126,7 @@ FunctionCall::FunctionCall()
              {
                 if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
                 {
-                   arguments.emplace_back( node );
+                    arguments.emplace_back( node );
                     return { State::ARGUMENT, Impact::MOVE };
                 }
                 return { state, Impact::ERROR };
@@ -134,7 +135,7 @@ FunctionCall::FunctionCall()
              {
                 if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
                 {
-                   arguments.emplace_back( node );
+                    arguments.emplace_back( node );
                     return { State::ARGUMENT, Impact::MOVE };
                 }
                 return { state, Impact::ERROR };
@@ -143,7 +144,7 @@ FunctionCall::FunctionCall()
              {
                 if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
                 {
-                   arguments.emplace_back( node );
+                    arguments.emplace_back( node );
                     return { State::ARGUMENT, Impact::MOVE };
                 }
                 return { state, Impact::ERROR };
@@ -152,7 +153,7 @@ FunctionCall::FunctionCall()
              {
                 if( state == State::OPEN_CIRCLE_BRACKET || state == State::COMMA )
                 {
-                   arguments.emplace_back( node );
+                    arguments.emplace_back( node );
                     return { State::ARGUMENT, Impact::MOVE };
                 }
                 return { state, Impact::ERROR };
@@ -170,7 +171,7 @@ FunctionCall::FunctionCall()
              {
                 if( state == State::ARGUMENT )
                 {
-                   commas.emplace_back( node );
+                    commas.emplace_back( node );
                     return { State::COMMA, Impact::MOVE };
                 }
                 return { state, Impact::ERROR };
@@ -179,7 +180,7 @@ FunctionCall::FunctionCall()
              {
                 if( state == State::NAME )
                 {
-                   open_circle_bracket = node;
+                    open_circle_bracket = node;
                     return { State::OPEN_CIRCLE_BRACKET, Impact::MOVE };
                 }
                 return { state, Impact::ERROR };
@@ -198,7 +199,7 @@ FunctionCall::FunctionCall()
                                      check_type<SlashSyntaxNode>( lookahead ) ||
                                      check_type<CommaSyntaxNode>( lookahead ) ) )
                   {
-                     close_circle_bracket = node;
+                      close_circle_bracket = node;
                       return { State::FINISH, Impact::MOVE };
                   }
                 }

@@ -18,6 +18,19 @@ TEST( NAIVE_STACK_INTERPRETER_MEMBER_EXPRESSION, ARRAY_READ_INDEX )
     EXPECT_EQ( result.get_int(), 20 );
 }
 
+TEST( NAIVE_STACK_INTERPRETER_MEMBER_EXPRESSION, EMPTY_ARRAY_READ_INDEX )
+{
+    // ARRANGE
+    const auto& input = R"""({ var arr = []; return arr[1]; })""";
+
+    // ACT
+    Interpreter interpreter;
+    auto result = interpreter.eval( input );
+
+    // ASSERT
+    EXPECT_EQ( result.is_null(), true );
+}
+
 TEST( NAIVE_STACK_INTERPRETER_MEMBER_EXPRESSION, ARRAY_WRITE_INDEX )
 {
     // ARRANGE
@@ -30,6 +43,20 @@ TEST( NAIVE_STACK_INTERPRETER_MEMBER_EXPRESSION, ARRAY_WRITE_INDEX )
     // ASSERT
     EXPECT_EQ( result.is_int(), true );
     EXPECT_EQ( result.get_int(), 99 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_MEMBER_EXPRESSION, EMPTY_ARRAY_WRITE_INDEX )
+{
+    // ARRANGE
+    const auto& input = R"""({ var arr = []; arr[1] = 42; return arr[1]; })""";
+
+    // ACT
+    Interpreter interpreter;
+    auto result = interpreter.eval( input );
+
+    // ASSERT
+    EXPECT_EQ( result.is_int(), true );
+    EXPECT_EQ( result.get_int(), 42 );
 }
 
 TEST( NAIVE_STACK_INTERPRETER_MEMBER_EXPRESSION, ARRAY_MODIFY_AND_RETURN_ARRAY )

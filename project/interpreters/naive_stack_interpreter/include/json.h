@@ -675,6 +675,10 @@ inline bool operator==( const Json& lhs, const Json& rhs )
     return lhs.get_array() == rhs.get_array();
   else if( lhs.is_object() && rhs.is_object() )
     return lhs.get_object() == rhs.get_object();
+  else if( lhs.is_double() && rhs.is_int() )
+    return static_cast< int >( lhs.get_double() ) == rhs.get_int();
+  else if( lhs.is_int() && rhs.is_double() )
+    return lhs.get_int() == static_cast< int >( rhs.get_double() );
 
   return false;
 }
@@ -689,6 +693,10 @@ inline bool operator<( const Json& lhs, const Json& rhs )
     return lhs.get_int() < rhs.get_int();
   else if( lhs.is_string() && rhs.is_string() )
     return lhs.get_string() < rhs.get_string();
+  else if( lhs.is_double() && rhs.is_int() )
+    return static_cast< int >( lhs.get_double() ) < rhs.get_int();
+  else if( lhs.is_int() && rhs.is_double() )
+    return lhs.get_int() < static_cast< int >( rhs.get_double() );
 
   return false;
 }
@@ -703,6 +711,10 @@ inline bool operator<=( const Json& lhs, const Json& rhs )
     return lhs.get_int() <= rhs.get_int();
   else if( lhs.is_string() && rhs.is_string() )
     return lhs.get_string() <= rhs.get_string();
+  else if( lhs.is_double() && rhs.is_int() )
+    return static_cast< int >( lhs.get_double() ) <= rhs.get_int();
+  else if( lhs.is_int() && rhs.is_double() )
+    return lhs.get_int() <= static_cast< int >( rhs.get_double() );
 
   return false;
 }
@@ -717,6 +729,10 @@ inline bool operator>( const Json& lhs, const Json& rhs )
     return lhs.get_int() > rhs.get_int();
   else if( lhs.is_string() && rhs.is_string() )
     return lhs.get_string() > rhs.get_string();
+  else if( lhs.is_double() && rhs.is_int() )
+    return static_cast< int >( lhs.get_double() ) > rhs.get_int();
+  else if( lhs.is_int() && rhs.is_double() )
+    return lhs.get_int() > static_cast< int >( rhs.get_double() );
 
   return false;
 }
@@ -731,6 +747,10 @@ inline bool operator>=( const Json& lhs, const Json& rhs )
     return lhs.get_int() >= rhs.get_int();
   else if( lhs.is_string() && rhs.is_string() )
     return lhs.get_string() >= rhs.get_string();
+  else if( lhs.is_double() && rhs.is_int() )
+    return static_cast< int >( lhs.get_double() ) >= rhs.get_int();
+  else if( lhs.is_int() && rhs.is_double() )
+    return lhs.get_int() >= static_cast< int >( rhs.get_double() );
 
   return false;
 }
