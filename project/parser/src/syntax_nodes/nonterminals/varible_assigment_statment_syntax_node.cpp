@@ -15,6 +15,14 @@ VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const Va
 
 }
 
+VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, LexicalTokens::LexicalToken token, Context context )
+   : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT_STATMENT }
+   , mContext{ context }
+{
+    add_back( name );
+    add_lexical_token(token);
+}
+
 VaribleAssigmentStatmentSyntaxNode::VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, const ISyntaxNodeSP& node, LexicalTokens::LexicalToken token, Context context )
    : ISyntaxNode{ Token_Type::VARIBLE_ASSIGMENT_STATMENT }
    , mContext{ context }

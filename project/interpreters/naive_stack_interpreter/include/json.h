@@ -9,9 +9,27 @@
 #include <variant>
 #include <cassert>
 #include <iomanip>
+#include "../../parser/include/i_syntax_node.h"
 
 class Json {
 public:
+    class Function
+    {
+    private:
+        std::string mText;
+        std::shared_ptr<ISyntaxNode> mAst;
+
+    public:
+        Function() = default;
+        Function(const std::string& text, std::shared_ptr<ISyntaxNode> ast) : mText(text), mAst(ast) {}
+
+        const std::string& get_text() const { return mText; }
+        std::shared_ptr<ISyntaxNode> get_ast() const { return mAst; }
+
+        bool operator==(const Function& other) const {
+            return mText == other.mText && mAst == other.mAst;
+        }
+    };
     enum class Type {
         Null,
         Int,
@@ -19,7 +37,8 @@ public:
         Bool,
         String,
         Array,
-        Object
+        Object,
+        Function
     };
 
 private:
@@ -38,6 +57,7 @@ private:
     std::string* str_ = nullptr;
     std::vector<Json>* array_ = nullptr;
     std::map<std::string, Json>* object_ = nullptr;
+    Function function_ = Function("", nullptr);
 
     void clear() {
         switch(type_) {
@@ -65,6 +85,7 @@ private:
             case Type::String: str_ = new std::string(*other.str_); break;
             case Type::Array: array_ = new std::vector<Json>(*other.array_); break;
             case Type::Object: object_ = new std::map<std::string, Json>(*other.object_); break;
+            case Type::Function: function_ = other.function_; break;
             default: break;
         }
     }
@@ -80,6 +101,8 @@ public:
     Json(const std::string& v) : type_(Type::String), str_(new std::string(v)) {}
     Json(const std::vector<Json>& v) : type_(Type::Array), array_(new std::vector<Json>(v)) {}
     Json(const std::map<std::string, Json>& v) : type_(Type::Object), object_(new std::map<std::string, Json>(v)) {}
+    Json(const Function& v) : type_(Type::Function), function_{v} {}
+    Json(Function&& v) : type_(Type::Function), function_{std::move(v)} {}
 
     // Копирование
     Json(const Json& other) {
@@ -101,6 +124,7 @@ public:
         str_ = other.str_;
         array_ = other.array_;
         object_ = other.object_;
+        function_ = std::move(other.function_);
 
         other.type_ = Type::Null;
         other.str_ = nullptr;
@@ -117,11 +141,13 @@ public:
             str_ = other.str_;
             array_ = other.array_;
             object_ = other.object_;
+            function_ = std::move(other.function_);
 
             other.type_ = Type::Null;
             other.str_ = nullptr;
             other.array_ = nullptr;
             other.object_ = nullptr;
+            other.function_ = Function("", nullptr);
         }
         return *this;
     }
@@ -141,6 +167,7 @@ public:
     inline bool is_string() const { return type_ == Type::String; }
     inline bool is_array() const { return type_ == Type::Array; }
     inline bool is_object() const { return type_ == Type::Object; }
+    inline bool is_function() const { return type_ == Type::Function; }
 
     // Геттеры значений (без проверки типа)
     inline int get_int() const { assert(is_int()); return scalar_.i; }
@@ -151,6 +178,8 @@ public:
     inline std::vector<Json>& get_array() { assert(is_array()); return *array_; }
     inline const std::map<std::string, Json>& get_object() const { assert(is_object()); return *object_; }
     inline std::map<std::string, Json>& get_object() { assert(is_object()); return *object_; }
+    inline const Function& get_function() const { assert(is_function()); return function_; }
+    inline Function& get_function() { assert(is_function()); return function_; }
 
     // Операторы индексирования (для объекта и массива)
           Json& operator[](size_t idx)       { assert(is_array()); return (*array_)[idx]; }
@@ -434,6 +463,9 @@ inline std::ostream& operator<<(std::ostream& os, const Json& j) {
         case Json::Type::Bool:
             os << (j.get_bool() ? "true" : "false");
             break;
+        case Json::Type::Function:
+            os << "{\"type\":\"function\",\"text\":\"" << j.get_function().get_text() << "\"}";
+            break;
         case Json::Type::String: {
             os << '"';
             const std::string& s = j.get_string();
@@ -675,6 +707,8 @@ inline bool operator==( const Json& lhs, const Json& rhs )
     return lhs.get_array() == rhs.get_array();
   else if( lhs.is_object() && rhs.is_object() )
     return lhs.get_object() == rhs.get_object();
+  else if( lhs.is_function() && rhs.is_function() )
+    return lhs.get_function() == rhs.get_function();
   else if( lhs.is_double() && rhs.is_int() )
     return static_cast< int >( lhs.get_double() ) == rhs.get_int();
   else if( lhs.is_int() && rhs.is_double() )

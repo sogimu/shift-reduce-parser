@@ -30,7 +30,6 @@
 #include "i_syntax_node.h"
 #include "make_shallow_syntax_node_copy.h"
 #include "is_last_nodes.h"
-#include "function_store.h"
 
 ControlFlowGraph::ControlFlowGraph( const ISyntaxNodeSP& cfg_root )
     : mRoot{ cfg_root }
@@ -85,10 +84,9 @@ ControlFlowGraph::ControlFlowGraph( const AbstractSyntaxTree& ast )
      );
 
      // Transform IfStatmentSyntaxNode, WhileStatmentSyntaxNode, FunctionCallSyntaxNode 
-     FunctionStore function_store;
      iterative_dfs3<ISyntaxNodeSP>(
          transformed_tree,
-         [ &function_store ]( const std::vector<ISyntaxNodeSP>& stack ) -> bool
+         []( const std::vector<ISyntaxNodeSP>& stack ) -> bool
          {
             auto it = stack.rbegin();
             const auto& node = *it;
@@ -97,104 +95,85 @@ ControlFlowGraph::ControlFlowGraph( const AbstractSyntaxTree& ast )
             const auto& parent_of_statment = *it;
             
             SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.scope_statment_syntax_node =
-               [ &function_store ]( const ScopeSyntaxNodeSP& /* scope */ )
-            {
-               // create scope in a VaribleStore
-               function_store.pushScope();
-               // std::cout << "Scope begin" << std::endl;
-            };
             handlers.function_statment_syntax_node =
-               [ &function_store ]( const FunctionStatmentSyntaxNodeSP& function_statment )
+               []( const FunctionStatmentSyntaxNodeSP& function_statment )
             {
               const auto& function_name = function_statment->name();
               const auto& arguments_number = function_statment->Children().size() - 2;
-              function_store.insert( { function_name, arguments_number }, function_statment );
             };
             const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
             node->accept( visitor );
             return false;
          },
-         [ &function_store ]( [[maybe_unused]] const std::vector<ISyntaxNodeSP>& stack )
+         []( [[maybe_unused]] const std::vector<ISyntaxNodeSP>& stack )
          {
             auto it = stack.rbegin();
-            const auto& while_node = *it;
+            const auto& node = *it;
             std::advance( it, 1 );
             const auto& parent_it = *it;
             const auto& parent_of_statment = *it;
             
-            SyntaxNodeEmptyVisitor::Handlers handlers;
-            handlers.scope_statment_syntax_node =
-               [ &function_store ]( const ScopeSyntaxNodeSP& /* scope */ )
+            if( IsNode< IfStatmentSyntaxNode >( node ) )
             {
-               function_store.popScope();
-            };
-            const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
-            while_node->accept( visitor );
-            
-            if( IsNode< IfStatmentSyntaxNode >( while_node ) )
-            {
-               const auto& condition = while_node->operator[](0);
+               const auto& condition = node->operator[](0);
                
-                if( auto if_statment_it = std::find( parent_of_statment->begin(), parent_of_statment->end(), while_node );
+                if( auto if_statment_it = std::find( parent_of_statment->begin(), parent_of_statment->end(), node );
                     if_statment_it != parent_of_statment->end() )
                 {
                    parent_of_statment->insert(if_statment_it, condition);          
                 }
-               while_node->remove(0);
+               node->remove(0);
             }
-            else if( IsNode< WhileStatmentSyntaxNode >( while_node ) )
+            else if( IsNode< WhileStatmentSyntaxNode >( node ) )
             {
-                const auto& while_condition = while_node->operator[]( 0 );
-                const auto& while_scope = while_node->operator[]( 1 );
-                while_node->remove(1);
-                const auto& goto_node = std::make_shared< GotoSyntaxNode >( while_node );
+                const auto& while_condition = node->operator[]( 0 );
+                const auto& while_scope = node->operator[]( 1 );
+                node->remove(1);
+                const auto& goto_node = std::make_shared< GotoSyntaxNode >( node );
                 std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens;
                 std::vector<ISyntaxNodeSP> scope_expressions{ while_scope, goto_node };
                 const auto& scope_statment = std::make_shared< ScopeSyntaxNode >( scope_expressions, scope_lexical_tokens );
                 std::vector< LexicalTokens::LexicalToken > if_lexical_tokens;
                 const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >( while_condition, scope_statment, if_lexical_tokens );
                 if_statment->remove( 0 );
-                while_node->add_back( if_statment );
+                node->add_back( if_statment );
             }
-            else if( IsNode< FunctionCallSyntaxNode >( while_node ) )
+            else if( IsNode< FunctionStatmentSyntaxNode >( node ) )
             {
-               const auto& function_call = std::dynamic_pointer_cast< FunctionCallSyntaxNode >(while_node);
-               auto argument_index = while_node->Children().size()-1;
+                const auto& function = std::dynamic_pointer_cast< FunctionStatmentSyntaxNode >( node );
+                const auto& original_scope = node->operator[]( function->arguments().size() );
+                node->remove( function->arguments().size() );
+                LexicalTokens::LexicalToken argument_lexical_token;
+                
+                std::vector<ISyntaxNodeSP> scope_expressions{};
+                const auto& arguments = function->arguments();
+                for( auto it=arguments.rbegin(); it!=arguments.rend(); ++it  )
+                {
+                    const auto& argument = *it;
+                    ISyntaxNodeSP s;
+                    const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( argument, argument_lexical_token, VaribleAssigmentStatmentSyntaxNode::Context::LOCAL );
+                    scope_expressions.push_back( varible_assigment );
+                }
+                scope_expressions.push_back( original_scope );
+                std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens;
+                const auto& scope_statment = std::make_shared< ScopeSyntaxNode >( scope_expressions, scope_lexical_tokens );
+                node->add_back( scope_statment );
+                // std::vector< LexicalTokens::LexicalToken > if_lexical_tokens;
+                // const auto& if_statment = std::make_shared< IfStatmentSyntaxNode >( while_condition, scope_statment, if_lexical_tokens );
+                // if_statment->remove( 0 );
+                // node->add_back( if_statment );
+            }
+            else if( IsNode< FunctionCallSyntaxNode >( node ) )
+            {
+               const auto& function_call = std::dynamic_pointer_cast< FunctionCallSyntaxNode >(node);
+               auto argument_index = node->Children().size()-1;
                
               std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens;
               std::vector<ISyntaxNodeSP> scope_expressions;
         
               const auto& function_call_arguments = function_call->arguments();
               
-              const auto& function_statment = function_store[ { function_call->name(), function_call_arguments.size() } ]; 
-              
-              const auto& function_statment_arguments = function_statment->arguments();
- 
-              for( auto index = 0; index < function_call_arguments.size(); ++index )
-              {
-                 const auto& function_argument = function_statment_arguments[ index ];
-                 const auto& call_argument = function_call_arguments[ index ];
-                  
-                  LexicalTokens::LexicalToken argument_lexical_token;
-                  const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( function_argument, call_argument, argument_lexical_token, VaribleAssigmentStatmentSyntaxNode::Context::LOCAL );
-                  scope_expressions.push_back( varible_assigment );
-              }
-
-               // for( const auto& argument : function_call_arguments )
-               // {
-               //    std::vector< LexicalTokens::LexicalToken > argument_lexical_tokens;
-               //    function_statment->
-               //    const auto& varible_assigment = std::make_shared< VaribleAssigmentStatmentSyntaxNode >( name, argument, argument_lexical_tokens );
-               //    scope_expressions.push_back( varible_assigment );
-               // }
-               for( int i=while_node->Children().size()-1; i>=0; --i )
-               {
-                  while_node->remove(i);
-                  // --argument_index;
-               }
-                const auto& scope_statment = std::make_shared<ScopeSyntaxNode>(scope_expressions, scope_lexical_tokens);
-               while_node->add_back(scope_statment) ;
+              node->remove(0);
             }
          },
          get_children_reverse_iterators );

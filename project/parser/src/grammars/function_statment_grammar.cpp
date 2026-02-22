@@ -206,7 +206,9 @@ FunctionStatment::FunctionStatment()
                 plan.to_remove.nodes.push_back( close_circle_bracket );
                 plan.to_remove.nodes.push_back( scope_statment );
                 std::vector< LexicalTokens::LexicalToken > lexical_tokens { 
-                                              function->lexical_tokens().at(0)
+                                              function->lexical_tokens().at(0),
+                                              open_circle_bracket->lexical_tokens().at(0),
+                                              close_circle_bracket->lexical_tokens().at(0)
                                               };
                 const auto& function_node = std::make_shared< FunctionStatmentSyntaxNode >( name, arguments, scope_statment, lexical_tokens );
                 plan.to_add.nodes.push_back( function_node );

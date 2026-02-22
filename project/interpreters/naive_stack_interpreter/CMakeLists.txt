@@ -3,7 +3,6 @@ project(naive_stack_interpreter VERSION 0.0.1 LANGUAGES CXX)
 
 set(HEADERS
     include/varible_store.h
-    include/function_store.h
     include/control_flow_graph.h
     include/stack_machine.h
     include/json.h
