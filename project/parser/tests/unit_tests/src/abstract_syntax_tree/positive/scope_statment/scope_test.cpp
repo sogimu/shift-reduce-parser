@@ -144,7 +144,7 @@ TEST( SYNTAX_TREE_SCOPE, FUNCTION_DECLARATION_FUNCTION_CALL )
    const auto& name1 = std::make_shared< NameSyntaxNode >( lexical_tokens[5] );
    std::vector< LexicalTokens::LexicalToken > scope0_lexical_tokens{ lexical_tokens[7], lexical_tokens[8]  };
    const auto& scope0 = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope0_lexical_tokens );
-   std::vector< LexicalTokens::LexicalToken > function_statment_lexical_tokens{ lexical_tokens[2]  };
+   std::vector< LexicalTokens::LexicalToken > function_statment_lexical_tokens{ lexical_tokens[2], lexical_tokens[4], lexical_tokens[6]  };
    const auto& function_statment = std::make_shared< FunctionStatmentSyntaxNode >( name0, 
                                                                                    std::vector< ISyntaxNodeSP >{name1}, 
                                                                                    scope0, function_statment_lexical_tokens );
