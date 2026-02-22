@@ -18,7 +18,7 @@ TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, RETURN_INT )
    EXPECT_EQ( result.get_int(), 234 );
 }
 
-TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, CALL_IS_INT )
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, CALL_WITH_INT )
 {
    // ARRANGE
    const auto& input = R"""({ function foo(val) { return 234 + val; } return foo(1); })""";
@@ -30,6 +30,20 @@ TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, CALL_IS_INT )
    // ASSERT
    EXPECT_EQ( result.is_int(), true );
    EXPECT_EQ( result.get_int(), 235 );
+}
+
+TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, CALL_WITH_INT_TWO_TIMES )
+{
+   // ARRANGE
+   const auto& input = R"""({ function foo(val) { return 234 + val; } return foo(1) + foo(2); })""";
+
+   // ACT
+   Interpreter interpreter;
+   auto result = interpreter.eval( input );
+
+   // ASSERT
+   EXPECT_EQ( result.is_int(), true );
+   EXPECT_EQ( result.get_int(), 471 );
 }
 
 TEST( NAIVE_STACK_INTERPRETER_FUNCTION_CALL, BIN_EXPR_LESS_BIN_EXPR )

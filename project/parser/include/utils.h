@@ -979,8 +979,8 @@ static std::string to_string( const ISyntaxNodeSP& node )
         handlers.goto_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "GOTO" << "}"; };
         handlers.function_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "FUNCTION" << "}"; };
         handlers.function_call_syntax_node = [ &s, print_lexical_tokens ]( const FunctionCallSyntaxNodeSP& node ) { s << "{" << "FUNCTION_CALL" << " (" << node->name() << ")" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}"   << "}"; };
-        handlers.function_statment_syntax_node = [ &s ]( const FunctionStatmentSyntaxNodeSP& node )
-        { s << "{" << "FUNCTION_STATMENT" << " (" << node->name() << ")" << "}"; };
+        handlers.function_statment_syntax_node = [ &s, print_lexical_tokens ]( const FunctionStatmentSyntaxNodeSP& node )
+        { s << "{" << "FUNCTION_STATMENT" << " (" << node->name() << ")" << " {" << print_lexical_tokens( node->lexical_tokens() ) << "}" << "}"; };
         handlers.print_syntax_node = [ &s ]( const ISyntaxNodeSP& ) { s << "{" << "PRINT" << "}"; };
         handlers.varible_assigment_statment_syntax_node = [ &s ]( const VaribleAssigmentStatmentSyntaxNodeSP& node )
         {

@@ -22,7 +22,7 @@ TEST( SYNTAX_TREE_FUNCTION_STATMENT, ZERO_ARGUMENT )
    const auto& name = std::make_shared< NameSyntaxNode >( lexical_tokens[2] );
    std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens{ lexical_tokens[5], lexical_tokens[6]  };
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
-   std::vector< LexicalTokens::LexicalToken > function_statment_lexical_tokens{ lexical_tokens[1]  };
+   std::vector< LexicalTokens::LexicalToken > function_statment_lexical_tokens{ lexical_tokens[1], lexical_tokens[3], lexical_tokens[4] };
    const auto& function_statment = std::make_shared< FunctionStatmentSyntaxNode >( name, 
                                                                                    std::vector< ISyntaxNodeSP >{}, 
                                                                                    scope, function_statment_lexical_tokens );
@@ -50,7 +50,7 @@ TEST( SYNTAX_TREE_FUNCTION_STATMENT, ONE_ARGUMENT )
    const auto& name1 = std::make_shared< NameSyntaxNode >( lexical_tokens[4] );
    std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens{ lexical_tokens[6], lexical_tokens[7]  };
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
-   std::vector< LexicalTokens::LexicalToken > function_statment_lexical_tokens{ lexical_tokens[1]  };
+   std::vector< LexicalTokens::LexicalToken > function_statment_lexical_tokens{ lexical_tokens[1], lexical_tokens[3], lexical_tokens[5]  };
    const auto& function_statment = std::make_shared< FunctionStatmentSyntaxNode >( name0, 
                                                                                    std::vector< ISyntaxNodeSP >{name1}, 
                                                                                    scope, function_statment_lexical_tokens );
@@ -79,7 +79,7 @@ TEST( SYNTAX_TREE_FUNCTION_STATMENT, TWO_ARGUMENT )
    const auto& name2 = std::make_shared< NameSyntaxNode >( lexical_tokens[6] );
    std::vector< LexicalTokens::LexicalToken > scope_lexical_tokens{ lexical_tokens[8], lexical_tokens[9]  };
    const auto& scope = std::make_shared< ScopeSyntaxNode >( std::vector< ISyntaxNodeSP > {}, scope_lexical_tokens );
-   std::vector< LexicalTokens::LexicalToken > function_statment_lexical_tokens{ lexical_tokens[1]  };
+   std::vector< LexicalTokens::LexicalToken > function_statment_lexical_tokens{ lexical_tokens[1], lexical_tokens[3], lexical_tokens[7]  };
    const auto& function_statment = std::make_shared< FunctionStatmentSyntaxNode >( name0, 
                                                                                    std::vector< ISyntaxNodeSP >{ name1, name2 }, 
                                                                                    scope, function_statment_lexical_tokens );

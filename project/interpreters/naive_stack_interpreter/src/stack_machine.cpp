@@ -22,9 +22,10 @@
 #include "control_flow_graph.h"
 #include "utils.h"
 #include "varible_store.h"
-#include "function_store.h"
 #include "i_syntax_node.h"
+#include "copy_or_ref.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <functional>
 #include <iostream>
@@ -33,69 +34,6 @@
 #include <string>
 #include <vector>
 #include <variant>
-
-template<typename A>
-class CopyOrRef {
-public:
-    enum class Type
-    {
-        COPY,
-        REFERENCE
-    };
-    // Конструктор от копии
-    CopyOrRef(const A& a)
-        : data{ A(a) }
-        , mType{ Type::COPY } 
-    {}
-
-    // Конструктор от ссылки (явное)
-    CopyOrRef(A& a) 
-        : data{ &a }
-        , mType{ Type::REFERENCE } 
-    {}
-
-    // Получить доступ к объекту
-    A& get()
-    {
-        if (std::holds_alternative<A>(data))
-            return std::get<A>(data);
-        else
-            return *std::get<A*>(data);
-    }
-
-    const A& get() const
-    {
-        if (std::holds_alternative<A>(data))
-            return std::get<A>(data);
-        else
-            return *std::get<A*>(data);
-    }
-
-    // Оператор неявного приведения к типу A&
-    operator A&()
-    {
-        return get();
-    }
-
-    operator const A&() const
-    {
-        return get();
-    }
-
-    CopyOrRef<A> copy()
-    {
-        return std::as_const(*this).get();
-    }
-
-    Type type() const
-    {
-        return mType;
-    }
-private:
-    // Вариант с хранением либо копии, либо ссылки через указатель
-    std::variant<A, A*> data;
-    Type mType;
-};
 
 struct FunctionCallMeta
 {
@@ -113,7 +51,6 @@ Json StackMachine::exec()
    VaribleStore varible_store;
    varible_store.pushScope();
 
-   FunctionStore function_store;
    std::deque< CopyOrRef<Json> > argument_stack;
    std::deque< FunctionCallSyntaxNodeSP > function_call_stack;
     
@@ -322,11 +259,10 @@ Json StackMachine::exec()
             argument_stack.push_back( CopyOrRef<Json>{ result } );
           }
        };
-       handlers.scope_statment_syntax_node = [ &varible_store, &function_store ]( const ScopeSyntaxNodeSP& /*  scope */ )
+       handlers.scope_statment_syntax_node = [ &varible_store ]( const ScopeSyntaxNodeSP& scope )
        {
           // delete scope in a VaribleStore
           varible_store.popScope();
-          function_store.popScope();
           // argument_stack.clear();
           // std::cout << "Scope end" << std::endl;
        };
@@ -343,6 +279,8 @@ Json StackMachine::exec()
        };
        handlers.print_statment_syntax_node = [ &argument_stack, &varible_store, &get_value ]( const PrintStatmentSyntaxNodeSP& print_statment )
        {
+           auto& s = argument_stack;
+           (void) s;
            auto value = argument_stack.back();
            if( !argument_stack.empty() )
               argument_stack.pop_back();
@@ -357,6 +295,8 @@ Json StackMachine::exec()
                std::printf("%f\n", value.get().get_double());
            else if( value.get().is_bool() )
                std::printf("%i\n", value.get().get_bool());
+           else if( value.get().is_function() )
+               std::printf("%s\n", value.get().get_function().get_text().c_str());
            else 
                std::cout << value.get() << std::endl;
        };
@@ -417,27 +357,56 @@ Json StackMachine::exec()
           
           if( check_type<NameSyntaxNode>( varible_assigment->operator[]( 0 ) ) )
           {
-              // const auto& varible_value = get_value( varible_assigment->operator[](1) );
-              auto varible_value = argument_stack.back().get();
-              if( !argument_stack.empty() )
-                 argument_stack.pop_back();
-              
-              auto varible_name = argument_stack.back().get();
-              if( !argument_stack.empty() )
-                 argument_stack.pop_back();
-              // varible.get() = value;
-              std::string context;
-              if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL )
+              if( varible_assigment->Children().size() == 2 )
               {
-                 varible_store[ varible_name.get_string() ] = varible_value;
-                 context = "Global";
+                  // const auto& varible_value = get_value( varible_assigment->operator[](1) );
+                  auto varible_value = argument_stack.back().get();
+                  if( !argument_stack.empty() )
+                     argument_stack.pop_back();
+                  
+                  auto varible_name = argument_stack.back().get();
+                  if( !argument_stack.empty() )
+                     argument_stack.pop_back();
+                  // varible.get() = value;
+                  std::string context;
+                  if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL )
+                  {
+                     varible_store[ varible_name.get_string() ] = varible_value;
+                     context = "Global";
+                  }
+                  else if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::LOCAL )
+                  {
+                     varible_store.writeValueToLocalVarible( varible_name.get_string(), varible_value );
+                     context = "Local";
+                  }
+                  // std::cout << "Write " << target_name << " .Value is " << value << ". Context: " << context << std::endl;
               }
-              else if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::LOCAL )
+              else 
               {
-                 varible_store.writeValueToLocalVarible( varible_name.get_string(), varible_value );
-                 context = "Local";
-              }
-              // std::cout << "Write " << target_name << " .Value is " << value << ". Context: " << context << std::endl;
+                  // const auto& varible_value = get_value( varible_assigment->operator[](1) );
+                  auto varible_name = argument_stack.back().get();
+                  if( !argument_stack.empty() )
+                     argument_stack.pop_back();
+                  
+                  auto varible_value = argument_stack.back().get();
+                  if( !argument_stack.empty() )
+                     argument_stack.pop_back();
+                  
+                  // varible.get() = value;
+                  std::string context;
+                  if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::GLOBAL )
+                  {
+                     varible_store[ varible_name.get_string() ] = varible_value;
+                     context = "Global";
+                  }
+                  else if( varible_assigment->context() == VaribleAssigmentStatmentSyntaxNode::Context::LOCAL )
+                  {
+                     varible_store.writeValueToLocalVarible( varible_name.get_string(), varible_value );
+                     context = "Local";
+                  }
+                  // std::cout << "Write " << target_name << " .Value is " << value << ". Context: " << context << std::endl;
+              }            
+            
           }
           else if( check_type<MemberExpressionSyntaxNode>( varible_assigment->operator[]( 0 ) ) )
           {
@@ -494,28 +463,27 @@ Json StackMachine::exec()
        };
        const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
    std::vector< ISyntaxNodeSP > stack;
-   const auto& post_func = [ &visitor, &varible_store, &function_store, &argument_stack, &function_call_stack, &stack, &get_value ]( const ISyntaxNodeSP& node )
+   const auto& post_func = [ &visitor, &varible_store, &argument_stack, &function_call_stack, &stack, &get_value ]( const ISyntaxNodeSP& node )
     {
        node->accept( visitor );
 
      
        stack.pop_back();
    };
-   const auto& pre_func = [ &varible_store, &function_store, &function_call_stack, &argument_stack, &stack, &get_value, &post_func ]( const ISyntaxNodeSP& node, StackDFS< ISyntaxNodeSP >& stack_dfs )
+   const auto& pre_func = [ &varible_store, &function_call_stack, &argument_stack, &stack, &get_value, &post_func ]( const ISyntaxNodeSP& node, StackDFS< ISyntaxNodeSP >& stack_dfs )
   {
       stack.emplace_back( node );
      auto children = node->Children();
      SyntaxNodeEmptyVisitor::Handlers handlers;
      handlers.scope_statment_syntax_node =
-        [ &varible_store, &function_store ]( const ScopeSyntaxNodeSP& /* scope */ )
+        [ &varible_store ]( const ScopeSyntaxNodeSP& scope )
 
      {
         // create scope in a VaribleStore
         varible_store.pushScope();
-        function_store.pushScope();
         // std::cout << "Scope begin" << std::endl;
      },
-     handlers.if_statment_syntax_node = [ &children, &argument_stack, &get_value, &varible_store, &function_store, &stack_dfs ]( const IfStatmentSyntaxNodeSP& if_statment )
+     handlers.if_statment_syntax_node = [ &children, &argument_stack, &get_value, &varible_store, &stack_dfs ]( const IfStatmentSyntaxNodeSP& if_statment )
      {
         auto& ss = stack_dfs;
         (void) ss;
@@ -528,9 +496,10 @@ Json StackMachine::exec()
             const auto& condition = get_value( if_statment->conditional_expression() );
             if( !condition.is_null() )
             {
-               if( ( condition.is_double() && condition.get_double() > 0.0 ) || 
-                   ( condition.is_int()    && condition.get_int() > 0 )      || 
-                   ( condition.is_bool()   && condition.get_bool() == true ) )
+               if( ( condition.is_double()   && condition.get_double() > 0.0 ) || 
+                   ( condition.is_int()      && condition.get_int() > 0 )      || 
+                   ( condition.is_bool()     && condition.get_bool() == true ) ||
+                   ( condition.is_function() ) ) 
                {
                    const auto& true_scope = if_statment->true_scope();
                    children = std::list< ISyntaxNodeSP >{ true_scope };
@@ -554,22 +523,80 @@ Json StackMachine::exec()
            children = {};
         }
      };
-     handlers.goto_syntax_node = [ &function_store, &children, &stack_dfs, &post_func ]( const GotoSyntaxNodeSP& goto_syntax_node )
+     handlers.goto_syntax_node = [ &children, &stack_dfs, &post_func ]( const GotoSyntaxNodeSP& goto_syntax_node )
      {
         const auto& target = goto_syntax_node->target();
         stack_dfs.cancelDescentFromSubtree(target, post_func);
         children = target->Children();
      };
-     handlers.function_statment_syntax_node = [ &function_store, &children ]( const FunctionStatmentSyntaxNodeSP& function )
+     handlers.function_statment_syntax_node = [ &children, &varible_store ]( const FunctionStatmentSyntaxNodeSP& function )
      {
-        const auto& function_name = function->name();
-        const auto& arguments_number = function->Children().size() - 2;
-        function_store.insert( { function_name, arguments_number }, function );
+        auto tokens = function->lexical_tokens();
+        
+        const auto& whole_childrens = DfsRange< ISyntaxNodeSP >{ function->Children() };
+        for( const auto& child : whole_childrens )
+        {
+            const auto& child_tokens = child.get()->lexical_tokens();
+            tokens.insert(tokens.end(), child_tokens.begin(), child_tokens.end());
+        }
+
+        std::sort( tokens.begin(), tokens.end(), []( const LexicalTokens::LexicalToken& a, const LexicalTokens::LexicalToken& b )
+        {
+            if( a.line != b.line )
+                return a.line < b.line;
+            return a.col < b.col;
+        });
+
+        std::string function_text;
+        size_t current_line = 0;
+        size_t current_col = 0;
+        for( const auto& token : tokens )
+        {
+            if( current_line == 0 && current_col == 0 )
+            {
+                current_line = token.line;
+                current_col = token.col;
+            }
+
+            if( token.line > current_line )
+            {
+                size_t line_diff = token.line - current_line;
+                for( size_t i = 0; i < line_diff; ++i )
+                    function_text += '\n';
+                current_line = token.line;
+                current_col = 0;
+            }
+
+            if( token.col > current_col )
+            {
+                size_t col_diff = token.col - current_col;
+                for( size_t i = 0; i < col_diff; ++i )
+                    function_text += ' ';
+            }
+
+            function_text += token.text;
+            current_col = token.col + token.length;
+        }
+
+        const Json::Function f{function_text, function};
+        varible_store[ function->name() ] = f;
+        
         children = {};
      };
-     handlers.function_call_syntax_node = [ &function_call_stack ]( const FunctionCallSyntaxNodeSP& function_call )
+     handlers.function_call_syntax_node = [ &function_call_stack, &argument_stack, &varible_store, &children ]( const FunctionCallSyntaxNodeSP& function_call )
      { 
-         function_call_stack.emplace_back( function_call );
+          auto& s = argument_stack;
+          (void) s;
+          auto& a = children;
+          (void) a;
+          const auto& function_ref = varible_store[ function_call->name() ];
+          if( function_ref.is_function() )
+          {
+              const auto& function_syntax_node = std::dynamic_pointer_cast<FunctionStatmentSyntaxNode>( function_ref.get_function().get_ast() );
+              children.push_back( function_syntax_node->scope() ); 
+          }
+         
+          function_call_stack.emplace_back( function_call );
      };
      // handlers.varible_assigment_statment_syntax_node = [ &children ]( const VaribleAssigmentStatmentSyntaxNodeSP& varible_assigment )
      // {
@@ -595,19 +622,7 @@ Json StackMachine::exec()
      const auto& visitor = std::make_shared< SyntaxNodeEmptyVisitor >( handlers );
      node->accept( visitor );
      
-     if( IsLastNodesIs<FunctionCallSyntaxNode, ScopeSyntaxNode>( stack ) )
-     {
-         auto& s = stack;
-         (void) s;
-         auto scope_it = stack.rbegin();
-         auto function_call_it = std::next(scope_it);
-         const auto& function_call = std::dynamic_pointer_cast< FunctionCallSyntaxNode >( *function_call_it );
-         const auto& function_statment = function_store[ function_call->signature() ];
-         children.push_back( function_statment->scope() ); 
-     }
-     
      stack_dfs.push( children );
-     // return children;
   };
    
    iterative_managed_dfs(

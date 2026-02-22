@@ -22,6 +22,7 @@ public:
       LOCAL
    };
    VaribleAssigmentStatmentSyntaxNode( const VaribleAssigmentStatmentSyntaxNode& node );
+   VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, LexicalTokens::LexicalToken token, Context context = Context::GLOBAL );
    VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& name, const ISyntaxNodeSP& node, LexicalTokens::LexicalToken token, Context context = Context::GLOBAL );
    VaribleAssigmentStatmentSyntaxNode( const NameSyntaxNodeSP& target_name, const NameSyntaxNodeSP& source_name, LexicalTokens::LexicalToken token, Context context = Context::GLOBAL );
    VaribleAssigmentStatmentSyntaxNode( const ISyntaxNodeSP& target, const ISyntaxNodeSP& node, LexicalTokens::LexicalToken token, Context context = Context::GLOBAL );
